@@ -7,6 +7,6 @@
 #include <iostream>
 #include <vector>
 
-int findMostDifferent(std::vector<int>& arr, int argc, char** argv);
+int findMostDifferent(std::vector<int>& arr);
 
 #endif  // _FIND_MOST_DIFFERENT_
