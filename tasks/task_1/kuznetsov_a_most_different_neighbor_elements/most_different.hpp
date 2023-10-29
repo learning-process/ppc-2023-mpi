@@ -1,12 +1,13 @@
-#ifndef _FIND_MOST_DIFFERENT_
-#define _FIND_MOST_DIFFERENT_
+#ifndef _MOST_DIFFERENT_
+#define _MOST_DIFFERENT_
 
 #include <mpi.h>
 
-#include <cmath>
-#include <iostream>
+#include <random>
 #include <vector>
 
-int findMostDifferent(std::vector<int>& arr);
+std::vector<int> createRandomArray(size_t size, int low, int up);
+int sequentialFindMostDifferent(const std::vector<int>& arr);
+int parallelFindMostDifferent(const std::vector<int>& arr);
 
-#endif  // _FIND_MOST_DIFFERENT_
+#endif  // _MOST_DIFFERENT_
