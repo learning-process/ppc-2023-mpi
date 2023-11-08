@@ -11,7 +11,7 @@
 
 void Seq_linearStretchingHistogram(std::vector<int>* local_img, int global_min,
                         int global_max, int new_min, int new_max);
-int Par_linearStretchingHistogram(std::vector<int>* image, int new_min,
+void Par_linearStretchingHistogram(std::vector<int>* image, int new_min,
                                                 int new_max, int n, int m);
 int generateRandomNumbers(int min, int max);
 

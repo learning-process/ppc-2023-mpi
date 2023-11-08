@@ -83,9 +83,9 @@ TEST(Parallel_Contrast_Enha, Test_half_zero) {
     int new_min = 0;
     int new_max = 255;
 
-    std::vector<int> image{0, 1, 0,
+    std::vector<int> image{0, 0, 0,
                             1, 1, 1,
-                            0, 1, 0};
+                            0, 0, 0};
     std::vector copyImage(image);
 
     Par_linearStretchingHistogram(&image, new_min, new_max, n, m);
@@ -104,8 +104,8 @@ TEST(Parallel_Contrast_Enha, Test_base) {
     boost::mpi::communicator comm;
     int rankProc = comm.rank();
 
-    int n = 8;
-    int m = 2;
+    int n = 4;
+    int m = 4;
     int new_min = 0;
     int new_max = 255;
 

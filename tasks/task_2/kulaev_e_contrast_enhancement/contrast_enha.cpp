@@ -11,7 +11,7 @@ void Seq_linearStretchingHistogram(std::vector<int>* local_img, int global_min,
     }
 }
 
-int Par_linearStretchingHistogram(std::vector<int>* image, int new_min, int new_max, int n, int m) {
+void Par_linearStretchingHistogram(std::vector<int>* image, int new_min, int new_max, int n, int m) {
     boost::mpi::communicator comm;
 
     int rankProc = comm.rank();
@@ -19,9 +19,7 @@ int Par_linearStretchingHistogram(std::vector<int>* image, int new_min, int new_
 
     int imageSize = image->size();
 
-    if (imageSize == 0 || imageSize < n * m) {
-        return 0;
-    }
+    if (imageSize == 0 || imageSize < n * m) return;
 
     int chunk_size  = imageSize / numProc;
     int remainder = imageSize % numProc;
