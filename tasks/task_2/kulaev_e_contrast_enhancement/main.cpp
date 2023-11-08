@@ -9,13 +9,15 @@ TEST(Parallel_Contrast_Enha, Test_not_elems) {
     boost::mpi::communicator comm;
     int rankProc = comm.rank();
 
+    int n = 0;
+    int m = 0;
     int new_min = 0;
     int new_max = 255;
 
     std::vector<int> image{};
     std::vector copyImage(image);
 
-    Par_linearStretchingHistogram(&image, new_min, new_max);
+    Par_linearStretchingHistogram(&image, new_min, new_max, n, m);
 
     if (rankProc == 0) {
         ASSERT_EQ(image, copyImage);
@@ -26,13 +28,15 @@ TEST(Parallel_Contrast_Enha, Test_only_zero) {
     boost::mpi::communicator comm;
     int rankProc = comm.rank();
 
+    int n = 10;
+    int m = 10;
     int new_min = 0;
     int new_max = 255;
 
-    std::vector<int> image(100, 0);
+    std::vector<int> image(n * m, 0);
     std::vector copyImage(image);
 
-    Par_linearStretchingHistogram(&image, new_min, new_max);
+    Par_linearStretchingHistogram(&image, new_min, new_max, n, m);
 
     if (rankProc == 0) {
         int old_min = *std::min_element(copyImage.begin(), copyImage.end());
@@ -48,15 +52,17 @@ TEST(Parallel_Contrast_Enha, Test_rand_elems) {
     boost::mpi::communicator comm;
     int rankProc = comm.rank();
 
+    int n = 25;
+    int m = 25;
     int new_min = 0;
     int new_max = 255;
 
-    std::vector<int> image(625);
+    std::vector<int> image(n * m);
     for (auto &elem : image) elem = generateRandomNumbers(0, 255);
 
     std::vector copyImage(image);
 
-    Par_linearStretchingHistogram(&image, new_min, new_max);
+    Par_linearStretchingHistogram(&image, new_min, new_max, n, m);
 
     if (rankProc == 0) {
         int old_min = *std::min_element(copyImage.begin(), copyImage.end());
@@ -72,6 +78,8 @@ TEST(Parallel_Contrast_Enha, Test_half_zero) {
     boost::mpi::communicator comm;
     int rankProc = comm.rank();
 
+    int n = 3;
+    int m = 3;
     int new_min = 0;
     int new_max = 255;
 
@@ -80,7 +88,7 @@ TEST(Parallel_Contrast_Enha, Test_half_zero) {
                             0, 1, 0};
     std::vector copyImage(image);
 
-    Par_linearStretchingHistogram(&image, new_min, new_max);
+    Par_linearStretchingHistogram(&image, new_min, new_max, n, m);
 
     if (rankProc == 0) {
         int old_min = *std::min_element(copyImage.begin(), copyImage.end());
@@ -96,6 +104,8 @@ TEST(Parallel_Contrast_Enha, Test_base) {
     boost::mpi::communicator comm;
     int rankProc = comm.rank();
 
+    int n = 8;
+    int m = 2;
     int new_min = 0;
     int new_max = 255;
 
@@ -103,7 +113,7 @@ TEST(Parallel_Contrast_Enha, Test_base) {
                             10, 12, 15, 16, 17, 18, 255, 0};
     std::vector copyImage(image);
 
-    Par_linearStretchingHistogram(&image, new_min, new_max);
+    Par_linearStretchingHistogram(&image, new_min, new_max, n, m);
 
     if (rankProc == 0) {
         int old_min = *std::min_element(copyImage.begin(), copyImage.end());
