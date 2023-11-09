@@ -23,5 +23,5 @@ for file in $FILES_MPI; do
     fi
     echo "NUM_PROC: " $NUM_PROC
 
-    mpirun -np $NUM_PROC $file --gtest_repeat=10 || exit 1
+    mpirun -np 2 $file --gtest_repeat=10 || exit 1
 done
