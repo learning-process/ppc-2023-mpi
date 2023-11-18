@@ -124,6 +124,7 @@ int main(int argc, char* argv[]) {
   }
   result_code = RUN_ALL_TESTS();
   MPI_Finalize();
+  
   return result_code;
   return 0;
 }
