@@ -15,13 +15,13 @@ TEST(Gather_Realization, TestWithIntVals) {
   int* sendArr = new int[n];
   int* rbuf = nullptr;
   int* refResult = nullptr;
-  double t1, t2,t3,t4;
+  double t1, t2, t3, t4;
   for (int i = 0; i < n; i++) {
     sendArr[i] = rankProc + i;
   }
   if (rankProc == rootProc) {
-    rbuf = (int*)malloc(numProc * n * sizeof(int));
-    refResult = (int*)malloc(numProc * n * sizeof(int));
+    rbuf = reinterpret_cast<int*>(malloc(numProc * n * sizeof(int)));
+    refResult = reinterpret_cast<int*>(malloc(numProc * n * sizeof(int)));
     t1 = MPI_Wtime();
   }
   int returnCode = Gather(sendArr, n, MPI_INT, rbuf, n, MPI_INT, rootProc, comm);
@@ -57,8 +57,8 @@ TEST(Gather_Realization, TestWithDoubleVals) {
     sendArr[i] = rankProc + i / 2;
   }
   if (rankProc == rootProc) {
-    rbuf = (double*)malloc(numProc * n * sizeof(double));
-    refResult = (double*)malloc(numProc * n * sizeof(double));
+    rbuf = reinterpret_cast<double*>(malloc(numProc * n * sizeof(double)));
+    refResult = reinterpret_cast<double*>(malloc(numProc * n * sizeof(double)));
     t1 = MPI_Wtime();
   }
   int returnCode = Gather(sendArr, n, MPI_DOUBLE, rbuf, n, MPI_DOUBLE, rootProc, comm);
@@ -95,8 +95,8 @@ TEST(Gather_Realization, TestWithFloatVals) {
     sendArr[i] = rankProc + i / 2;
   }
   if (rankProc == rootProc) {
-    rbuf = (float*)malloc(numProc * n * sizeof(float));
-    refResult = (float*)malloc(numProc * n * sizeof(float));
+    rbuf = reinterpret_cast<float*>(malloc(numProc * n * sizeof(float)));
+    refResult = reinterpret_cast<float*>(malloc(numProc * n * sizeof(float)));
     t1 = MPI_Wtime();
   }
   int returnCode = Gather(sendArr, n, MPI_FLOAT, rbuf, n, MPI_FLOAT, rootProc, comm);
@@ -125,16 +125,15 @@ TEST(Gather_Realization, TestCountError) {
   int rootProc = 0;
   float sendArr[100];
   float* rbuf = nullptr;
-  float* refResult = nullptr;
   for (int i = 0; i < 100; i++) {
     sendArr[i] = rankProc + i / 2;
   }
   if (rankProc == rootProc) {
-    rbuf = (float*)malloc(numProc * 100 * sizeof(float));
+    rbuf = reinterpret_cast<float*>(malloc(numProc * 100 * sizeof(float)));
   }
   int returnCode = Gather(sendArr, 100, MPI_FLOAT, rbuf, 50, MPI_FLOAT, rootProc, comm);
   if (rankProc == rootProc) {
-    EXPECT_EQ(MPI_ERR_COUNT,returnCode );
+    EXPECT_EQ(MPI_ERR_COUNT, returnCode);
     free(rbuf);
   }
 }
@@ -147,12 +146,11 @@ TEST(Gather_Realization, TestRootError) {
   int rootProc = -5;
   float sendArr[100];
   float* rbuf = nullptr;
-  float* refResult = nullptr;
   for (int i = 0; i < 100; i++) {
     sendArr[i] = rankProc + i / 2;
   }
   if (rankProc == rootProc) {
-    rbuf = (float*)malloc(numProc * 100 * sizeof(float));
+    rbuf = reinterpret_cast<float*>(malloc(numProc * 100 * sizeof(float)));
   }
   int returnCode = Gather(sendArr, 100, MPI_FLOAT, rbuf, 100, MPI_FLOAT, rootProc, comm);
   if (rankProc == 0) {
@@ -169,12 +167,11 @@ TEST(Gather_Realization, TestTypeError) {
   int rootProc = 0;
   float sendArr[100];
   float* rbuf = nullptr;
-  float* refResult = nullptr;
   for (int i = 0; i < 100; i++) {
     sendArr[i] = rankProc + i / 2;
   }
   if (rankProc == rootProc) {
-    rbuf = (float*)malloc(numProc * 100 * sizeof(float));
+    rbuf = reinterpret_cast<float*>(malloc(numProc * 100 * sizeof(float)));
   }
   int returnCode = Gather(sendArr, 100, MPI_CHAR, rbuf, 100, MPI_CHAR, rootProc, comm);
   if (rankProc == rootProc) {
