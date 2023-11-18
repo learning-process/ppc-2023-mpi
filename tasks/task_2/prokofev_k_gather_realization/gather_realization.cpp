@@ -20,9 +20,8 @@ int Gather(const void* sbuf, int scount, MPI_Datatype stype, void* rbuf, int rco
       if (i != rankProc)
         MPI_Recv(reinterpret_cast<char*>(rbuf) + i * rcount * sizeofType, rcount, rtype, i, 0, comm, MPI_STATUS_IGNORE);
     }
-  }else
+  } else {
     MPI_Send(sbuf, scount, stype, root, 0, comm);
+  }
   return MPI_SUCCESS;
 }
-
-
