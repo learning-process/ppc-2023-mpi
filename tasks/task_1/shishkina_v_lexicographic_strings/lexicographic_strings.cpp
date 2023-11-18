@@ -1,6 +1,7 @@
 // Copyright 2023 Shishkina Valeria
 
 #include "tasks/task_1/shishkina_v_lexicographic_strings/lexicographic_strings.h"
+#include <algorithm> for max [build/include_max]
 
 int isLexicograpic(char* str1, char* str2) {
   int local_result = 0;
