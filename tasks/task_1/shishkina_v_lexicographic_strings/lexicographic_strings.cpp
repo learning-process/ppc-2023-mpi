@@ -1,6 +1,5 @@
 // Copyright 2023 Shishkina Valeria
-
-#include "tasks/task_1/shishkina_v_lexicographic_strings/lexicographic_strings.h"
+#include "task_1/shishkina_v_lexicographic_strings/lexicographic_strings.h"
 
 int isLexicograpic(char* str1, char* str2) {
   int local_result = 0;

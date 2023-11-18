@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <iostream>
 
-
 int isLexicograpic(char* str1, char* str2);
 int parallelLexicographicStrings(char* str1, char* str2);
 
