@@ -1,6 +1,6 @@
 get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 enable_testing()
-
+ 
 if( USE_MPI )
     if( UNIX )
         set(CMAKE_C_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-uninitialized")
