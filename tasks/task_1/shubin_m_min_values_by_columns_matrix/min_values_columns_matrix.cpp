@@ -50,59 +50,49 @@ std::vector<int> getColumnMin_par(const std::vector<int> &matr,
     }
   }
 
-  std::vector<int> min_v,
-                   sendc,
-                   displ,
-                   loc_vec,
-                   res_vec;
-  MPI_Datatype datatype,
-               column;
-  int wsize = 0,
-      rank = 0,
-      chunk = 0,
-      remainder = 0,
+  int ProcRank, ProcNum;
+  MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+  MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+  int size = col / ProcNum,
+      rem = col % ProcNum,
       min_vs = 0;
+  std::vector<int> sendcnts(ProcNum);
+  std::vector<int> recvcnts(ProcNum);
+  std::vector<int> displs_1(ProcNum);
+  std::vector<int> displs_2(ProcNum);
+  std::vector<int> transm_col(size * row);
+  std::vector<int> min_v(col);
 
-  MPI_Comm_size(MPI_COMM_WORLD, &wsize);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  chunk = col / wsize;
-  remainder = col % wsize;
-  loc_vec.resize(chunk * row);
-
-  if (rank == 0) {
-    min_v.resize(col);
-    sendc.resize(wsize, chunk);
-    sendc[0] = sendc[0] + remainder;
-    displ.resize(wsize, 0);
-    for (int i = 1; i < wsize; i++)
-      displ[i] = displ[i - 1] + sendc[i - 1];
-    loc_vec.resize((chunk + remainder) * row);
+  if (ProcRank == 0) {
+    for (int i = 0; i < ProcNum; i++) {
+      sendcnts[i] = size * row;
+      displs_1[i] = 0;
+      recvcnts[i] = size;
+      displs_2[i] = 0;
+    }
+    sendcnts[0] += rem * row;
+    recvcnts[0] += rem;
+    for (int i = 1; i < ProcNum; i++) {
+      displs_1[i] = displs_1[i - 1] + sendcnts[i - 1];
+      displs_2[i] = displs_2[i - 1] + recvcnts[i - 1];
+    }
+    transm_col.resize((size + rem) * row);
   }
 
-  MPI_Type_vector(col, 1, row, MPI_INT, &datatype);
-  MPI_Type_commit(&datatype);
-  MPI_Type_create_resized(datatype, 0, sizeof(int) * 1, &column);
-  MPI_Type_commit(&column);
-
-  MPI_Scatterv(trsp_matr.data(),
-               sendc.data(), displ.data(),
-               column,
-               loc_vec.data(),
-               static_cast<int>(loc_vec.size()),
+  MPI_Scatterv(trsp_matr.data(), sendcnts.data(), displs_1.data(), MPI_INT, transm_col.data(), transm_col.size(),
                MPI_INT, 0, MPI_COMM_WORLD);
 
-  int loc_size = loc_vec.size() / row;
-  for (int i = 0; i < loc_size; i++) {
+  std::vector<int> res_vec;
+  int k = transm_col.size() / row;
+  for (int i = 0; i < k; i++) {
     min_vs = std::numeric_limits<int>::max();
-    for (int j = 0; j < row; j++)
-      min_vs = std::min(min_vs, loc_vec[i * row + j]);
+    for (int j = 0; j < row; j++) {
+      min_vs = std::min(min_vs, transm_col[i * row + j]);
+    }
     res_vec.push_back(min_vs);
   }
 
-  MPI_Gatherv(res_vec.data(), res_vec.size(),
-              MPI_INT, min_v.data(),
-              sendc.data(), displ.data(),
+  MPI_Gatherv(res_vec.data(), res_vec.size(), MPI_INT, min_v.data(), recvcnts.data(), displs_2.data(),
               MPI_INT, 0, MPI_COMM_WORLD);
 
   return min_v;

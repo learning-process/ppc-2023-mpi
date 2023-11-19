@@ -5,7 +5,7 @@
 TEST(Min_Values_Columns_Matrix, Test_min_given_matrix) {
   const int ROW = 3,
             COL = 4;
-  std::vector<int> matr = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+  std::vector<int> matr = { 5, 6, 7, 8, -1, -2, -3, -4, 9, 10, 11, 12 },
     min_v_par,
     min_v_seq;
   int rank = 0;
