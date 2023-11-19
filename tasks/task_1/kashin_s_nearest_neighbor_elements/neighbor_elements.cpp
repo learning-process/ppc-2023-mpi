@@ -1,3 +1,4 @@
+// Copyright 2023 Kashin Stepa
 #include "task_1/kashin_s_nearest_neighbor_elements/neighbor_elements.h"
 
 int difference(const int& a, const int& b) {
@@ -47,7 +48,7 @@ std::pair<int, int> par_neighbor_elements(const std::vector<int>& v) {
 
     parts[world_size - 1] = (world_size - 1) * chunk;
 
-    std::pair<int,int> answer(INT_MAX, -1);
+    std::pair<int, int> answer(INT_MAX, -1);
 
     std::vector<int> local_arr(send_counts[rank]);
 
@@ -61,7 +62,7 @@ std::pair<int, int> par_neighbor_elements(const std::vector<int>& v) {
             0,
             MPI_COMM_WORLD);
 
-    std::pair<int,int> local_max_diff = neighbor_elements(local_arr);
+    std::pair<int, int> local_max_diff = neighbor_elements(local_arr);
     local_max_diff.second += parts[rank];
 
     MPI_Reduce(&local_max_diff,
@@ -75,7 +76,7 @@ std::pair<int, int> par_neighbor_elements(const std::vector<int>& v) {
     return answer;
 }
 
-std::vector<int> create_random_vector(size_t size, unsigned int minDiff,unsigned int maxDiff) {
+std::vector<int> create_random_vector(size_t size, unsigned int minDiff, unsigned int maxDiff) {
     std::vector<int> v(size);
 
     if (v.size() < 2) return v;
