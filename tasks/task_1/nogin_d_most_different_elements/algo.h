@@ -1,7 +1,7 @@
 // Copyright 2023 Nogin Denis
 
-#ifndef TASKS_TASK_1_NOGIN_D_MOST_DIFFERENT_NEIGHBOR_ELEMENTS_ALGO_H_
-#define TASKS_TASK_1_NOGIN_D_MOST_DIFFERENT_NEIGHBOR_ELEMENTS_ALGO_H_
+#ifndef TASKS_TASK_1_NOGIN_D_MOST_DIFFERENT_ELEMENTS_ALGO_H_
+#define TASKS_TASK_1_NOGIN_D_MOST_DIFFERENT_ELEMENTS_ALGO_H_
 
 #include <mpi.h>
 #include <iostream>
@@ -18,4 +18,4 @@ std::pair<int, int> parallelMostDifferentNeighborElements(const std::vector<int>
 
 std::vector<int> randomVector(int sizeVec, int minValue, int maxValue);
 
-#endif  // TASKS_TASK_1_NOGIN_D_MOST_DIFFERENT_NEIGHBOR_ELEMENTS_ALGO_H_
+#endif  // TASKS_TASK_1_NOGIN_D_MOST_DIFFERENT_ELEMENTS_ALGO_H_
