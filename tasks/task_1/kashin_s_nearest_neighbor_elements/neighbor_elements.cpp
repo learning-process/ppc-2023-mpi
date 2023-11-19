@@ -6,7 +6,7 @@ int difference(const int& a, const int& b) {
 }
 
 std::pair<int, int> neighbor_elements(const std::vector<int>& v) {
-    if (v.size() < 2) return std::pair<int, int>(INT_MAX, -1);
+    if (v.size() < 2) return std::pair<int, int>(-1, -1);
 
     std::pair<int, int> ans;
     ans.first = difference(v[0], v[1]);
@@ -24,7 +24,7 @@ std::pair<int, int> neighbor_elements(const std::vector<int>& v) {
 std::pair<int, int> par_neighbor_elements(const std::vector<int>& v) {
     int world_size = 0, rank = 0;
 
-    if (v.size() < 2) return std::pair<int, int>(INT_MAX, -1);
+    if (v.size() < 2) return std::pair<int, int>(-1, -1);
 
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -48,7 +48,7 @@ std::pair<int, int> par_neighbor_elements(const std::vector<int>& v) {
 
     parts[world_size - 1] = (world_size - 1) * chunk;
 
-    std::pair<int, int> answer(INT_MAX, -1);
+    std::pair<int, int> answer(-1, -1);
 
     std::vector<int> local_arr(send_counts[rank]);
 
