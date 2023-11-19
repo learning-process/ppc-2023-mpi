@@ -24,7 +24,7 @@ TEST(Nearest_Neighbor_Elements, Test_one_different) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    std::vector<int> v = create_random_vector(1000,0,1);
+    std::vector<int> v = create_random_vector(1000, 0, 1);
     std::pair<int, int> result = par_neighbor_elements(v);
 
     if (rankProc == 0) {
@@ -39,7 +39,7 @@ TEST(Nearest_Neighbor_Elements, Test_not_elems) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    std::vector<int> v = create_random_vector(0,0,1000);
+    std::vector<int> v = create_random_vector(0, 0, 1000);
     std::pair<int, int> result = par_neighbor_elements(v);
 
     if (rankProc == 0) {
@@ -54,7 +54,7 @@ TEST(Nearest_Neighbor_Elements, Test_normal_situation) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    std::vector<int> v = create_random_vector(100,1,101);
+    std::vector<int> v = create_random_vector(100, 1, 101);
     std::pair<int, int> result = par_neighbor_elements(v);
 
     if (rankProc == 0) {
@@ -69,7 +69,7 @@ TEST(Nearest_Neighbor_Elements, Test_big_situation) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    std::vector<int> v = create_random_vector(10000000,0,100);
+    std::vector<int> v = create_random_vector(10000000, 0, 100);
     std::pair<int, int> result = par_neighbor_elements(v);
 
     if (rankProc == 0) {
