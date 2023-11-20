@@ -8,9 +8,7 @@
 
 TEST(MPI_TEST, Test1) {
   int rankProc = 0;
-  // int numProc = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  // MPI_Comm_size(MPI_COMM_WORLD, &numProc);
   char str1[] = "";
   char str2[] = "aaa";
 
@@ -23,9 +21,7 @@ TEST(MPI_TEST, Test1) {
 
 TEST(MPI_TEST, Test2) {
   int rankProc = 0;
-  // int numProc = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  // MPI_Comm_size(MPI_COMM_WORLD, &numProc);
   char str1[] = "aaa";
   char str2[] = "";
 
@@ -38,9 +34,7 @@ TEST(MPI_TEST, Test2) {
 
 TEST(MPI_TEST, Test3) {
   int rankProc = 0;
-  // int numProc = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  // MPI_Comm_size(MPI_COMM_WORLD, &numProc);
   char str1[] = "abcde";
   char str2[] = "abcdef";
 
@@ -53,9 +47,7 @@ TEST(MPI_TEST, Test3) {
 
 TEST(MPI_TEST, Test4) {
   int rankProc = 0;
-  // int numProc = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  // MPI_Comm_size(MPI_COMM_WORLD, &numProc);
   char str1[] = "banana";
   char str2[] = "apple";
 
@@ -68,9 +60,7 @@ TEST(MPI_TEST, Test4) {
 
 TEST(MPI_TEST, Test5) {
   int rankProc = 0;
-  // int numProc = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  // MPI_Comm_size(MPI_COMM_WORLD, &numProc);
   char str1[] = "";
   char str2[] = "";
 
@@ -83,9 +73,7 @@ TEST(MPI_TEST, Test5) {
 
 TEST(MPI_TEST, Test6) {
   int rankProc = 0;
-  // int numProc = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  // MPI_Comm_size(MPI_COMM_WORLD, &numProc);
   char str1[] = "apple";
   char str2[] = "banana";
 
@@ -98,9 +86,7 @@ TEST(MPI_TEST, Test6) {
 
 TEST(MPI_TEST, Test7) {
   int rankProc = 0;
-  // int numProc = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  // MPI_Comm_size(MPI_COMM_WORLD, &numProc);
   char str1[] = "aba";
   char str2[] = "bbb";
 

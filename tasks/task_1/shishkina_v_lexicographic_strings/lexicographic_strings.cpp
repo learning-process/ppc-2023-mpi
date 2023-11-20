@@ -22,7 +22,6 @@ int parallelLexicographicStrings(char* str1, char* str2) {
   int lenStr1 = strlen(str1);
   int lenStr2 = strlen(str2);
 
-  // количество элементов для каждого процесса
   int* sendcounts = new int[size];
   int remainder = std::max(lenStr1, lenStr2) % size;
   int portion = std::max(lenStr1, lenStr2) / size;
@@ -33,28 +32,24 @@ int parallelLexicographicStrings(char* str1, char* str2) {
     }
   }
 
-  // Распределяем элементы строк между процессами
   int* displ = new int[size];
   int _displ = 0;
   for (int i = 0; i < size; i++) {
     displ[i] = _displ;
     _displ += sendcounts[i];
   }
-  // количество элементов для каждого процесса
+
   int local_count1 = sendcounts[rank];
   int local_count2 = sendcounts[rank];
 
-  // Создаем локальные буферы
   char* local_str1 = new char[local_count1];
   char* local_str2 = new char[local_count2];
 
-  // Рассылаем по процессам
   MPI_Scatterv(str1, sendcounts, displ, MPI_CHAR, local_str1, local_count1,
                MPI_CHAR, 0, comm);
   MPI_Scatterv(str2, sendcounts, displ, MPI_CHAR, local_str2, local_count2,
                MPI_CHAR, 0, comm);
 
-  // Проверяем лексикографический порядок
   int local_result = isLexicograpic(str1, str2);
   int global_result;
   MPI_Reduce(&local_result, &global_result, 1, MPI_INT, MPI_LAND, 0, comm);
