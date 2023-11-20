@@ -3,11 +3,100 @@
 
 #include "./int_rect.h"
 
-TEST(TESTS, Test_1) { ASSERT_EQ(1, 1); }
-TEST(TESTS, Test_2) { ASSERT_EQ(1, 1); }
-TEST(TESTS, Test_3) { ASSERT_EQ(1, 1); }
-TEST(TESTS, Test_4) { ASSERT_EQ(1, 1); }
-TEST(TESTS, Test_5) { ASSERT_EQ(1, 1); }
+TEST(TESTS, Test_1) {
+  int rank = 0;
+  MPI_Comm comm = MPI_COMM_WORLD;
+  MPI_Comm_rank(comm, &rank);
+
+  double a = 10.5;
+  double b = 20.9;
+  double epsilon = 0.01;
+  uint32_t n = 1'000'000;
+  auto func = [](double x) { return x; };
+
+  double par_result = parIntegrationRectangle(a, b, n, func, comm);
+
+  if (rank == 0) {
+    double seq_result = seqIntegrationRectangle(a, b, n, func);
+    ASSERT_TRUE(isEqual(seq_result, par_result, epsilon));
+  }
+}
+
+TEST(TESTS, Test_2) {
+  int rank = 0;
+  MPI_Comm comm = MPI_COMM_WORLD;
+  MPI_Comm_rank(comm, &rank);
+
+  double a = 10.5;
+  double b = 20.9;
+  double epsilon = 0.01;
+  uint32_t n = 1'000'000;
+  auto func = [](double x) { return x * x; };
+
+  double par_result = parIntegrationRectangle(a, b, n, func, comm);
+
+  if (rank == 0) {
+    double seq_result = seqIntegrationRectangle(a, b, n, func);
+    ASSERT_TRUE(isEqual(seq_result, par_result, epsilon));
+  }
+}
+
+TEST(TESTS, Test_3) {
+  int rank = 0;
+  MPI_Comm comm = MPI_COMM_WORLD;
+  MPI_Comm_rank(comm, &rank);
+
+  double a = 10.5;
+  double b = 20.9;
+  double epsilon = 0.01;
+  uint32_t n = 1'000'000;
+  auto func = [](double x) { return sin(x); };
+
+  double par_result = parIntegrationRectangle(a, b, n, func, comm);
+
+  if (rank == 0) {
+    double seq_result = seqIntegrationRectangle(a, b, n, func);
+    ASSERT_TRUE(isEqual(seq_result, par_result, epsilon));
+  }
+}
+
+TEST(TESTS, Test_4) {
+  int rank = 0;
+  MPI_Comm comm = MPI_COMM_WORLD;
+  MPI_Comm_rank(comm, &rank);
+
+  double a = 10.5;
+  double b = 20.9;
+  double epsilon = 0.01;
+  uint32_t n = 1'000'000;
+  auto func = [](double x) { return x * cos(x); };
+
+  double par_result = parIntegrationRectangle(a, b, n, func, comm);
+
+  if (rank == 0) {
+    double seq_result = seqIntegrationRectangle(a, b, n, func);
+    ASSERT_TRUE(isEqual(seq_result, par_result, epsilon));
+  }
+}
+
+TEST(TESTS, Test_5) {
+  int rank = 0;
+  MPI_Comm comm = MPI_COMM_WORLD;
+  MPI_Comm_rank(comm, &rank);
+
+  double a = 10.5;
+  double b = 20.9;
+  double epsilon = 0.01;
+  uint32_t n = 1'000'000;
+  auto func = [](double x) { return pow(sin(x), 2.0) + pow(cos(x), 2.0); };
+
+  double par_result = parIntegrationRectangle(a, b, n, func, comm);
+
+  if (rank == 0) {
+    double seq_result = seqIntegrationRectangle(a, b, n, func);
+    ASSERT_TRUE(isEqual(seq_result, par_result, epsilon));
+  }
+}
 
 int main(int argc, char** argv) {
   int result_code = 0;
