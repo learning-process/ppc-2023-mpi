@@ -5,7 +5,7 @@
 #include <tuple>
 #include <vector>
 #include <limits>
-#include "./nearest_neighbor_elements.h"
+#include "task_1/safronov_nearest_neighbour_elements/nearest_neighbour_elements.h"
 
 
 TEST(TESTS, ExampleCase) {

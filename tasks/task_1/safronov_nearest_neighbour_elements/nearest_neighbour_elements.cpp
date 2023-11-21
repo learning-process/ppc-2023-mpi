@@ -4,7 +4,7 @@
 #include <tuple>
 #include <vector>
 #include <limits>
-#include "task_1/safronov_nearest_neighbor_elements/nearest_neighbor_elements.h"
+#include "task_1/safronov_nearest_neighbour_elements/nearest_neighbour_elements.h"
 
 
 std::tuple<int, int, int> findClosestNeighbors(
@@ -26,7 +26,8 @@ std::tuple<int, int, int> findClosestNeighbors(
 
 
     int closest_diff, prev_index, next_index;
-    MPI_Allreduce(&min_diff, &closest_diff, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);
+    MPI_Allreduce(&min_diff, &closest_diff, 1, MPI_INT, MPI_MIN,
+    MPI_COMM_WORLD);
     MPI_Allreduce(&min_index, &prev_index, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);
     MPI_Allreduce(&min_index, &next_index, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
 
