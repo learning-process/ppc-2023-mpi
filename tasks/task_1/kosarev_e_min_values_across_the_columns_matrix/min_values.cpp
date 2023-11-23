@@ -1,78 +1,65 @@
 // Copyright 2023 Kosarev Egor
 #include <mpi.h>
-#include <climits>
-#include <iostream>
-#include <algorithm>
 #include <random>
-#include "task_1/kosarev_e_min_values_across_the_columns_matrix/min_values.h"
 
-std::vector<int> getRandomMatrix(int n, int m) {
+std::vector<int> getRandomMatrix(int rows, int cols) {
     std::random_device device;
     std::mt19937 generator(device());
     constexpr int mod = 1000;
-    std::vector<int> ans(n * m);
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            ans[i * m + j] = generator() % mod - mod / 2;
+    std::vector<int> ans(rows * cols);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            ans[i * cols + j] = generator() % mod - mod / 2;
         }
     }
     return ans;
 }
 
-std::vector<int> getParallelMin(const std::vector<int>& A, int n, int m) {
-    int rank = 0;
-    int countProc = 0;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &countProc);
+std::vector<int> GetMinCols(const std::vector<int>& matrix, const int rows, const int cols) {
+    std::vector<int> Min(cols, INT_MAX);
 
-    int delta = m / countProc;
-    int remain = m % countProc;
-    std::vector<int> answer;
-    std::vector<int> sendcounts;
-    std::vector<int> displs;
-    std::vector<int> mydata(delta * n);
-
-    if (rank == 0) {
-        answer.resize(m, INT_MAX);
-        sendcounts.resize(countProc, delta);
-        sendcounts[0] += remain;
-        displs.resize(countProc, 0);
-        for (int i = 1; i < countProc; i++) {
-            displs[i] = displs[i - 1] + sendcounts[i - 1];
+    for (int j = 0; j < rows * cols; j = j + cols) {
+        for (int i = 0; i < cols; i++) {
+            int index = i + j;
+            if (matrix[index] < Min[i]) {
+                Min[i] = matrix[index];
+            }
         }
-        mydata.resize((delta + remain) * n);
     }
 
-    MPI_Datatype mytype, column;
-    MPI_Type_vector(n, 1, m, MPI_INT, &mytype);
-    MPI_Type_commit(&mytype);
-    MPI_Type_create_resized(mytype, 0, sizeof(int) * 1, &column);
-    MPI_Type_commit(&column);
-    MPI_Scatterv(A.data(), sendcounts.data(), displs.data(), column, mydata.data(),
-        static_cast<int>(mydata.size()), MPI_INT, 0, MPI_COMM_WORLD);
-    std::vector<int> anst;
-    int sizemx = mydata.size() / n;
-    for (int i = 0; i < sizemx; i++) {
-        int mn = INT_MAX;
-        for (int j = 0; j < n; j++) {
-            mn = std::min(mn, mydata[i * n + j]);
-        }
-        anst.push_back(mn);
-    }
-
-    MPI_Gatherv(anst.data(), anst.size(), MPI_INT, answer.data(), sendcounts.data(), displs.data(), MPI_INT, 0,
-        MPI_COMM_WORLD);
-    return answer;
+    return Min;
 }
 
-std::vector<int> getSequentialMin(const std::vector<int>& A, int n, int m) {
-    std::vector<int> ans(m);
-    for (int i = 0; i < m; i++) {
-        int mn = 1e9;
-        for (int j = 0; j < n; j++) {
-            mn = std::min(mn, A[j * m + i]);
-        }
-        ans[i] = mn;
+std::vector<int> GetMinColsParallel(const std::vector<int>& matrix, const int rows, const int cols) {
+    int Rows = 0, Cols = 0, numProc, rankProc;
+    std::vector<int> Matrix;
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+
+    if (rankProc == 0) {
+        int np = 0;
+        if (rows % numProc != 0)
+            np = (rows / numProc + 1) * numProc - rows;
+
+        Matrix = std::vector<int>((rows + np) * cols);
+
+        for (int i = 0; i < rows * cols; i++)
+            Matrix.at(i) = matrix.at(i);
+        for (int i = rows * cols; i < (rows + np) * cols; i++)
+            Matrix.at(i) = INT_MAX;
+
+        Rows = rows + np;
+        Cols = cols;
     }
-    return ans;
+    MPI_Bcast(&Rows, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&Cols, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    Rows = Rows / numProc;
+    std::vector<int> Buffer = std::vector<int>(Rows * Cols);
+
+    MPI_Scatter(Matrix.data(), Rows * Cols, MPI_INT, Buffer.data(), Rows * Cols, MPI_INT, 0, MPI_COMM_WORLD);
+    std::vector<int> Min(Cols, INT_MAX);
+    std::vector<int> tmpMin = GetMinCols(Buffer, Rows, Cols);
+    MPI_Reduce(tmpMin.data(), Min.data(), Cols, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
+    return Min;
 }
