@@ -42,7 +42,7 @@ TEST(Parallel_Vector_Average, Random_Values_And_Size) {
     int sz = 1 + (std::rand() % 100);
     std::vector<int> v(sz);
     if (world_rank == 0) {
-        v = getRandomVector(20);
+        v = getRandomVector(sz);
     }
     double av1 = getParallelAverage(v);
     if (world_rank == 0) {
@@ -69,7 +69,7 @@ TEST(Parallel_Vector_Average, zeros) {
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    std::vector<int> v(20);
+    std::vector<int> v(20, 0);
     double av = getParallelAverage(v);
     if (world_rank == 0) {
         ASSERT_EQ(av, 0);
