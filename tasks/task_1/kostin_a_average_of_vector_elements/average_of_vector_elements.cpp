@@ -53,5 +53,5 @@ double getParallelAverage(std::vector<int> vec) {
 
     double DgeneralSum = static_cast<double> (generalSum);
     double Dsize_vector = static_cast<double> (size_vector);
-    return DgeneralSum/Dsize_vector;
+    return DgeneralSum / Dsize_vector;
 }
