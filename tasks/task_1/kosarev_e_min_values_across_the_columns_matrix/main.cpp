@@ -29,6 +29,7 @@ TEST(MPI_TESTS, Test_random2) {
     std::vector<int>matr;
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+
     if (rankProc == 0) {
         matr = getRandomMatrix(n, m);
     }
