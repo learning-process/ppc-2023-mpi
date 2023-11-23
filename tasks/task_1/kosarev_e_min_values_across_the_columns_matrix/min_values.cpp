@@ -1,6 +1,7 @@
 // Copyright 2023 Kosarev Egor
 #include <mpi.h>
 #include <random>
+#include "task_1/kosarev_e_min_values_across_the_columns_matrix/min_values.h"
 
 std::vector<int> getRandomMatrix(int rows, int cols) {
     std::random_device device;
