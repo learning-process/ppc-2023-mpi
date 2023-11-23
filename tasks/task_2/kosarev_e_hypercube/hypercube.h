@@ -3,7 +3,6 @@
 #define TASKS_TASK_2_KOSAREV_E_HYPERCUBE_HYPERCUBE_H_
 
 #include <mpi.h>
-
 #include <vector>
 #include <random>
 
