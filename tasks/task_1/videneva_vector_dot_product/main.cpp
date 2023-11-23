@@ -1,5 +1,6 @@
 // Copyright 2023 Videneva Ekaterina
 
+
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
@@ -26,6 +27,8 @@ TEST(DotProductTest, TestVectorDifferentSize) {
     }
 }
 
+
+
 TEST(DotProductTest, TestVectorEmpty) {
     int world_size;
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
@@ -43,6 +46,8 @@ TEST(DotProductTest, TestVectorEmpty) {
         ASSERT_EQ(reference_product, global_product);
     }
 }
+
+
 
 TEST(DotProductTest, TestZeroVector) {
     int world_size;

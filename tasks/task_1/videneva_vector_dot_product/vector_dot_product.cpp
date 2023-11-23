@@ -15,6 +15,7 @@ std::vector<int> getRandomVector(int sz) {
     return vec;
 }
 
+
 int scalar_product(const std::vector<int>& vec1, const std::vector<int>& vec2) {
     if (vec1.size() != vec2.size()) {
         return 1;
