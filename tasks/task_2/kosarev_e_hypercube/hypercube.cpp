@@ -47,8 +47,7 @@ int getNextVert(int sender, int dest) {
 
         if ((sender & mask) == 0) {
             return sender + mask;
-        }
-        else {
+        } else {
             return sender - mask;
         }
     }
