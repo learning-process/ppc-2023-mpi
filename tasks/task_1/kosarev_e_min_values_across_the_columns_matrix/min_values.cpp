@@ -1,6 +1,8 @@
 // Copyright 2023 Kosarev Egor
 #include <mpi.h>
 #include <random>
+#include <climits>
+#include <iostream>
 #include "task_1/kosarev_e_min_values_across_the_columns_matrix/min_values.h"
 
 std::vector<int> getRandomMatrix(int rows, int cols) {
@@ -17,7 +19,7 @@ std::vector<int> getRandomMatrix(int rows, int cols) {
 }
 
 std::vector<int> GetMinCols(const std::vector<int>& matrix, const int rows, const int cols) {
-    std::vector<int> Min(cols, INT_MAX);
+    std::vector<int> Min(cols, 1e9);
 
     for (int j = 0; j < rows * cols; j = j + cols) {
         for (int i = 0; i < cols; i++) {
