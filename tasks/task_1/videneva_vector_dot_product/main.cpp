@@ -1,6 +1,4 @@
 // Copyright 2023 Videneva Ekaterina
-
-
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
