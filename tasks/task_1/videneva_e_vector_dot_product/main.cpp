@@ -1,5 +1,4 @@
 // Copyright 2023 Videneva Ekaterina
-
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
@@ -18,8 +17,6 @@ TEST(DotProductTest, TestVectorDifferentSize) {
     vec2 = {5, 4, 3, 2, 1};
 
     int global_product = Parall_product(vec1, vec2);
-    
-
     if (rank == 0) {
         int reference_product = scalar_product(vec1, vec2);
         ASSERT_EQ(reference_product, global_product);

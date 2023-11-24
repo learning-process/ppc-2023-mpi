@@ -1,5 +1,4 @@
 // Copyright 2023 Videneva Ekaterina
-
 #include "task_1/videneva_e_vector_dot_product/vector_dot_product.h"
 
 int generateRandomNumbers(int min, int max) {
