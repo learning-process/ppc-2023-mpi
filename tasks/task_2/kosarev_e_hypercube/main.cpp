@@ -109,7 +109,6 @@ TEST(Hypercube_MPI, Test_Hypercube_Send_Big_Data) {
 }
 
 
-
 int main(int argc, char** argv) {
     int result_code = 0;
 
