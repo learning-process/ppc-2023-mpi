@@ -36,6 +36,7 @@ std::vector<int> GetMinCols(const std::vector<int>& matrix, const int rows, cons
 std::vector<int> GetMinColsParallel(const std::vector<int>& matrix, const int rows, const int cols) {
     int Rows = 0, Cols = 0, numProc, rankProc;
     std::vector<int> Matrix;
+
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
 
