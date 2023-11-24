@@ -16,4 +16,4 @@ int generateRandomNumbers(int min, int max);
 std::vector<int> getRandomVector(int sz);
 
 
-#endif  // TASKS_TASK_1_VIDENEVA_VECTOR_DOT_PRODUCT_VECTOR_DOT_PRODUCT_H_
+#endif  // TASKS_TASK_1_VIDENEVA_E_VECTOR_DOT_PRODUCT_VECTOR_DOT_PRODUCT_H_
