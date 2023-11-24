@@ -38,7 +38,6 @@ int calculateNextVertex(int sender, int dest) {
     if (sender == dest) {
         return sender;
     }
-
     int mask = 1;
     while (true) {
         if ((sender & mask) == (dest & mask)) {
