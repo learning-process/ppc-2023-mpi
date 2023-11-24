@@ -41,16 +41,12 @@ double getParallelAverage(std::vector<int> vec) {
         if (i > 0)
             displs[i] = displs[i - 1] + send_counts[i - 1];
     }
-
     std::vector<int> recv_buf(send_counts[world_rank]);
-
     MPI_Scatterv(vec.data(), send_counts.data(), displs.data(), MPI_INT,
                  recv_buf.data(), send_counts[world_rank], MPI_INT, 0, MPI_COMM_WORLD);
     int generalSum = 0;
     int partialSum = getSequentialSum(recv_buf);
-
     MPI_Reduce(&partialSum, &generalSum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-
     double DgeneralSum = static_cast<double> (generalSum);
     double Dsize_vector = static_cast<double> (size_vector);
     return DgeneralSum / Dsize_vector;
