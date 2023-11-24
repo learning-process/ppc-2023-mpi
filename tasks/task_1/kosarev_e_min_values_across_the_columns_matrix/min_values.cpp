@@ -10,6 +10,7 @@ std::vector<int> getRandomMatrix(int rows, int cols) {
     std::mt19937 generator(device());
     constexpr int mod = 1000;
     std::vector<int> ans(rows * cols);
+
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             ans[i * cols + j] = generator() % mod - mod / 2;
