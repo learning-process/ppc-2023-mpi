@@ -80,6 +80,5 @@ void sendHyperCubeData(void* buffer, int count, MPI_Datatype dataType, int root,
     if (ProcRank == 0) {
         pathToDest->push_back(root);
     }
-
     sendHyperCubeData(buffer, count, dataType, nextVertex, dest, tag, communicator, pathToDest);
 }
