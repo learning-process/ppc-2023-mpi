@@ -1,4 +1,5 @@
 // Copyright 2023 Kosarev Egor
+
 #include <mpi.h>
 #include <random>
 #include <climits>
