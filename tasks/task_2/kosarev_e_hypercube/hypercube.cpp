@@ -1,23 +1,24 @@
 // Copyright 2023 Kosarev Egor
 #include "task_2/kosarev_e_hypercube/hypercube.h"
 
-int* getRandomVector(int size, int seed) {
+
+int* generateRandomVector(int size, int seed) {
     if (size <= 0) {
         throw(-1);
     }
 
     int* randomVector = new int[size];
 
-    std::mt19937 gen(seed);
+    std::mt19937 generator(seed);
 
     for (int i = 0; i < size; i++) {
-        randomVector[i] = gen() % 100;
+        randomVector[i] = generator() % 100;
     }
 
     return randomVector;
 }
 
-bool isHyperCube(int procNum) {
+bool checkHyperCube(int procNum) {
     if (procNum <= 0) {
         throw(-1);
     }
@@ -33,7 +34,7 @@ bool isHyperCube(int procNum) {
     return false;
 }
 
-int getNextVert(int sender, int dest) {
+int calculateNextVertex(int sender, int dest) {
     if (sender == dest) {
         return sender;
     }
@@ -47,40 +48,41 @@ int getNextVert(int sender, int dest) {
 
         if ((sender & mask) == 0) {
             return sender + mask;
-        } else {
+        }
+        else {
             return sender - mask;
         }
     }
 }
 
-void sendHyperCube(void* buf, int count, MPI_Datatype datatype, int root,
-    int dest, int tag, MPI_Comm comm,
+void sendHyperCubeData(void* buffer, int count, MPI_Datatype dataType, int root,
+    int dest, int tag, MPI_Comm communicator,
     std::vector<int>* pathToDest) {
-    int procRank;
-    MPI_Comm_rank(comm, &procRank);
+    int ProcRank;
+    MPI_Comm_rank(communicator, &ProcRank);
 
     if (root == dest) {
-        if (procRank == 0) {
+        if (ProcRank == 0) {
             pathToDest->push_back(root);
         }
 
         return;
     }
 
-    int nextVert = getNextVert(root, dest);
+    int nextVertex = calculateNextVertex(root, dest);
 
-    if (procRank == root) {
-        MPI_Send(buf, count, datatype, nextVert, tag, comm);
+    if (ProcRank == root) {
+        MPI_Send(buffer, count, dataType, nextVertex, tag, communicator);
     }
 
-    if (procRank == nextVert) {
+    if (ProcRank == nextVertex) {
         MPI_Status status;
-        MPI_Recv(buf, count, datatype, root, tag, comm, &status);
+        MPI_Recv(buffer, count, dataType, root, tag, communicator, &status);
     }
 
-    if (procRank == 0) {
+    if (ProcRank == 0) {
         pathToDest->push_back(root);
     }
 
-    sendHyperCube(buf, count, datatype, nextVert, dest, tag, comm, pathToDest);
+    sendHyperCubeData(buffer, count, dataType, nextVertex, dest, tag, communicator, pathToDest);
 }

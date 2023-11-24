@@ -6,11 +6,11 @@
 #include <vector>
 #include <random>
 
-int* getRandomVector(int size, int seed);
+int* generateRandomVector(int size, int seed);
 
-bool isHyperCube(int procNum);
+bool checkHyperCube(int procNum);
 
-void sendHyperCube(void* buf, int count, MPI_Datatype datatype, int root,
-    int dest, int tag, MPI_Comm comm, std::vector<int>* pathToDest);
+void sendHyperCubeData(void* buffer, int count, MPI_Datatype datatype, int root,
+    int dest, int tag, MPI_Comm communicator, std::vector<int>* pathToDest);
 
 #endif  // TASKS_TASK_2_KOSAREV_E_HYPERCUBE_HYPERCUBE_H_

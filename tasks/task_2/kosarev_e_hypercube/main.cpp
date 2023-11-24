@@ -4,7 +4,7 @@
 
 
 TEST(Hypercube_MPI, Test_Is_Hypercube) {
-    ASSERT_EQ(isHyperCube(5), false);
+    ASSERT_EQ(checkHyperCube(5), false);
 }
 
 TEST(Hypercube_MPI, Test_Hypercube_Send_From_0_To_1) {
@@ -19,7 +19,7 @@ TEST(Hypercube_MPI, Test_Hypercube_Send_From_0_To_1) {
         }
 
         std::vector<int> pathToDest;
-        sendHyperCube(&data, 1, MPI_INT, 0, 1, 0, MPI_COMM_WORLD, &pathToDest);
+        sendHyperCubeData(&data, 1, MPI_INT, 0, 1, 0, MPI_COMM_WORLD, &pathToDest);
 
         std::vector<int> correctPathToDest = { 0, 1 };
         if (ProcRank == 1) {
@@ -43,7 +43,7 @@ TEST(Hypercube_MPI, Test_Hypercube_Send_From_0_To_3) {
         }
 
         std::vector<int> pathToDest;
-        sendHyperCube(&data, 1, MPI_INT, 0, 3, 0, MPI_COMM_WORLD,
+        sendHyperCubeData(&data, 1, MPI_INT, 0, 3, 0, MPI_COMM_WORLD,
             &pathToDest);
 
         std::vector<int> correctPathToDest = { 0, 1, 3 };
@@ -68,7 +68,7 @@ TEST(Hypercube_MPI, Test_Hypercube_Send_From_1_To_6) {
         }
 
         std::vector<int> pathToDest;
-        sendHyperCube(&data, 1, MPI_INT, 1, 6, 0, MPI_COMM_WORLD,
+        sendHyperCubeData(&data, 1, MPI_INT, 1, 6, 0, MPI_COMM_WORLD,
             &pathToDest);
 
         std::vector<int> correctPathToDest = { 1, 0, 2, 6 };
@@ -88,7 +88,7 @@ TEST(Hypercube_MPI, Test_Hypercube_Send_Big_Data) {
 
     if (ProcNum >= 2) {
         int* data = new int[1000000];
-        int* correctData = getRandomVector(1000000, 42);
+        int* correctData = generateRandomVector(1000000, 42);
 
         if (ProcRank == 0) {
             for (int i = 0; i < 1000000; i++) {
@@ -97,7 +97,7 @@ TEST(Hypercube_MPI, Test_Hypercube_Send_Big_Data) {
         }
 
         std::vector<int> pathToDest;
-        sendHyperCube(data, 1000000, MPI_INT, 0, 1, 0, MPI_COMM_WORLD,
+        sendHyperCubeData(data, 1000000, MPI_INT, 0, 1, 0, MPI_COMM_WORLD,
             &pathToDest);
 
         if (ProcRank == 1) {
