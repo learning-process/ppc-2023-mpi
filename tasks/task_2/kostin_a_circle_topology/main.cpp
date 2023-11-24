@@ -11,7 +11,7 @@ TEST(Circle_Topology, Test_1) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     int from = 1, to = 3;
     int data = 0;
-    if (world_size > 1){
+    if (world_size > 1) {
         if (world_rank == from)
             data = 20;
         send_data(&data, from, to);
@@ -27,7 +27,7 @@ TEST(Circle_Topology, From_Is_To) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     int from = 1, to = 1;
     int data = 0;
-    if (world_size > 1){
+    if (world_size > 1) {
         if (world_rank == from)
         data = 20;
         send_data(&data, from, to);
@@ -44,7 +44,7 @@ TEST(Circle_Topology, Random) {
     int from = std::rand() % world_size;
     int to = std::rand() % world_size;
     int data = 0;
-    if (world_size > 1){
+    if (world_size > 1) {
         if (world_rank == from)
             data = 20;
         send_data(&data, from, to);
@@ -61,7 +61,7 @@ TEST(Circle_Topology, From_Begin_To_End) {
     int from = 0;
     int to = world_size - 1;
     int data = 0;
-    if (world_size > 1){
+    if (world_size > 1) {
         if (world_rank == from)
             data = 20;
         send_data(&data, from, to);
@@ -78,7 +78,7 @@ TEST(Circle_Topology, From_End_To_Begin) {
     int from = world_size - 1;
     int to = 0;
     int data = 0;
-    if (world_size > 1){
+    if (world_size > 1) {
         if (world_rank == from)
             data = 20;
         send_data(&data, from, to);
