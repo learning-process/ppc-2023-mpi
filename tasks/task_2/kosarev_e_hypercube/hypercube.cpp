@@ -60,7 +60,6 @@ void sendHyperCubeData(void* buffer, int count, MPI_Datatype dataType, int root,
     std::vector<int>* pathToDest) {
     int ProcRank;
     MPI_Comm_rank(communicator, &ProcRank);
-
     if (root == dest) {
         if (ProcRank == 0) {
             pathToDest->push_back(root);
