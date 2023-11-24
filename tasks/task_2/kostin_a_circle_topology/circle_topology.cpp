@@ -26,11 +26,12 @@ void send_data(int* data, int fromProc, int toProc) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     if (fromProc == toProc)
         return;
-    if (world_rank == fromProc)
+    if (world_rank == fromProc) {
         MPI_Send(data, 1, MPI_INT, next_rank(world_rank), 0, MPI_COMM_WORLD);
-    else if (world_rank != toProc) {
+    } else if (world_rank != toProc) {
         MPI_Recv(data, 1, MPI_INT, prev_rank(world_rank), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Send(data, 1, MPI_INT, next_rank(world_rank), 0, MPI_COMM_WORLD);
-    } else if (world_rank == toProc)
+    } else if (world_rank == toProc) {
         MPI_Recv(data, 1, MPI_INT, prev_rank(world_rank), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
 }
