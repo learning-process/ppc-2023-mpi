@@ -1,6 +1,6 @@
 // Copyright 2023 Shishkina Valeria
-#ifndef TASKS_TASK_2_SHISHKINA_L_MULTIPLICATE_MATRIX_H_
-#define TASKS_TASK_2_SHISHKINA_L_MULTIPLICATE_MATRIX_H_
+#ifndef TASKS_TASK_2_SHISHKINA_L_MULTIPLICATEMATRIX_MULTIPLICATEMATRIX_H_
+#define TASKS_TASK_2_SHISHKINA_L_MULTIPLICATEMATRIX_MULTIPLICATEMATRIX_H_
 
 #include <mpi.h>
 
@@ -15,4 +15,4 @@ std::vector<int> matrixMultiplicationParallel(std::vector<int>* A,
                                               std::vector<int>* B,
                                               std::vector<int>* C, int maxSize);
 
-#endif  // TASKS_TASK_2_SHISHKINA_L_MULTIPLICATE_MATRIX_H_
+#endif  // TASKS_TASK_2_SHISHKINA_L_MULTIPLICATEMATRIX_MULTIPLICATEMATRIX_H_
