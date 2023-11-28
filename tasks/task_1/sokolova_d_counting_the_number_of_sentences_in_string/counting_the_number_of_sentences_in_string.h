@@ -13,5 +13,6 @@
 
 int countSentences(std::string line);
 int parallelCountSentencesInString(const std::string& str);
+std::string getRandomSentence();
 
 #endif  // TASKS_TASK_1_SOKOLOVA_D_COUNTING_THE_NUMBER_OF_SENTENCES_IN_STRING_COUNTING_THE_NUMBER_OF_SENTENCES_IN_STRING_H_

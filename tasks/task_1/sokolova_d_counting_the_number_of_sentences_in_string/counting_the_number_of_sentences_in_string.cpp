@@ -9,6 +9,25 @@
 
 
 
+std::string getRandomSentence() {
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    const std::string characters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!? ";
+    int sentenceLength = std::rand() % 100;
+    std::string randomSentence;
+    const std::string punctuations = ".!?";
+    for (int i = 0; i < sentenceLength; ++i) {
+        int charIndex = std::rand() % characters.size();
+        randomSentence += characters[charIndex];
+    }
+
+    randomSentence[0] = std::toupper(randomSentence[0]);
+    int punctuationIndex = std::rand() % punctuations.size();
+    randomSentence += punctuations[punctuationIndex];
+
+    return randomSentence;
+}
 int countSentences(std::string line) {
     int count = 0;
     for (char c : line) {
@@ -22,7 +41,7 @@ int countSentences(std::string line) {
 }
 
 int parallelCountSentencesInString(const std::string& str) {
-    int rank, size, local_count = 0, global_count = 0;
+    /*int rank, size, local_count = 0, global_count = 0;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -51,6 +70,34 @@ int parallelCountSentencesInString(const std::string& str) {
 
     MPI_Reduce(&localSum, &globalSum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
+    return globalSum;*/
+    int sizeWorld = 0;
+    int rank = 0;
+    int localCount = 0, globalCount = 0;
+    size_t size = str.size();
 
-    return globalSum;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &sizeWorld);
+
+    int basicSize = size / sizeWorld;
+    int remainder = size % sizeWorld;
+
+    std::vector<int> stringSize(sizeWorld);
+    std::vector<int> displacement(sizeWorld);
+
+    int d = 0;
+    for (int i = 0; i < sizeWorld; ++i) {
+        stringSize[i] = (i < remainder) ? basicSize + 1 : basicSize;
+        displacement[i] = d;
+        d += stringSize[i];
+    }
+
+
+    std::string localString = str.substr(displacement[rank], stringSize[rank]);
+
+    localCount = countSentences(localString);
+    MPI_Reduce(&localCount, &globalCount,
+        1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    return globalCount;
 }

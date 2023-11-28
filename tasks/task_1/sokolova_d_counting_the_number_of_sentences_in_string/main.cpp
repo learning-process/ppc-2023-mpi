@@ -12,34 +12,16 @@ TEST(ParallelCountSentencesTest, NoEndingPunctuation) {
     int result = parallelCountSentencesInString(sentence);
     EXPECT_EQ(result, 0);
 }
-TEST(ParallelCountSentencesTest, SpecialCharacters) {
-    std::string sentence = "Sentence with special characters!@#$";
-    int result = parallelCountSentencesInString(sentence);
-    EXPECT_EQ(result, 1);
+TEST(CountSentencesTest, SentencesWithPunctuation) {
+    std::string sentence = "This is the first sentence."
+        " What about the second sentence ? This is the third sentence!";
+    int result = countSentences(sentence);
+    EXPECT_EQ(result, 3);
 }
 TEST(CountSentencesTest, MathematicalExpressions) {
     std::string sentence = "The square root of 25 is 5. 2+2=4, and 3+3 is 6.";
     int result = countSentences(sentence);
     EXPECT_EQ(result, 2);
-}
-std::string getRandomSentence() {
-    srand(static_cast<unsigned int>(time(nullptr)));
-
-    const std::string characters =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!? ";
-    int sentenceLength = std::rand() % 100;
-    std::string randomSentence;
-    const std::string punctuations = ".!?";
-    for (int i = 0; i < sentenceLength; ++i) {
-        int charIndex = std::rand() % characters.size();
-        randomSentence += characters[charIndex];
-    }
-
-    randomSentence[0] = std::toupper(randomSentence[0]);
-    int punctuationIndex = std::rand() % punctuations.size();
-    randomSentence += punctuations[punctuationIndex];
-
-    return randomSentence;
 }
 TEST(ParallelCountSentencesInStringTest, RandomSentence) {
     std::string globalSentence;
