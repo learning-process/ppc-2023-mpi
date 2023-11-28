@@ -45,3 +45,4 @@ void send_data(int* data, int fromProc, int toProc) {
         MPI_Recv(data, 1, MPI_INT, prev_rank(world_rank), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 }
+
