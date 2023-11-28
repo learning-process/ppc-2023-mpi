@@ -1,13 +1,17 @@
-// Copyright 2023 Nesterov Alexander
-#ifndef TASKS_EXAMPLES_TEST_MPI_OPS_MPI_H_
-#define TASKS_EXAMPLES_TEST_MPI_OPS_MPI_H_
+// Copyright 2023 Sokolova Daria
+#ifndef TASKS_TASK_1_SOKOLOVA_D_COUNTING_THE_NUMBER_OF_SENTENCES_IN_STRING_COUNTING_THE_NUMBER_OF_SENTENCES_IN_STRING_H_
+#define TASKS_TASK_1_SOKOLOVA_D_COUNTING_THE_NUMBER_OF_SENTENCES_IN_STRING_COUNTING_THE_NUMBER_OF_SENTENCES_IN_STRING_H_
 
+#include <mpi.h>
+#include <gtest/gtest.h>
 #include <vector>
 #include <string>
+#include <random>
+#include <boost/mpi/communicator.hpp>
+#include <boost/mpi/collectives.hpp>
 
-std::vector<int> getRandomVector(int  sz);
-int getParallelOperations(std::vector<int> global_vec,
-                          int count_size_vector, const std::string& ops);
-int getSequentialOperations(std::vector<int> vec, const std::string& ops);
 
-#endif  // TASKS_EXAMPLES_TEST_MPI_OPS_MPI_H_
+int countSentences(std::string line);
+int parallelCountSentencesInString(const std::string& str);
+
+#endif  // TASKS_TASK_1_SOKOLOVA_D_COUNTING_THE_NUMBER_OF_SENTENCES_IN_STRING_COUNTING_THE_NUMBER_OF_SENTENCES_IN_STRING_H_

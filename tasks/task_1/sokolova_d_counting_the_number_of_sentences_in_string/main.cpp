@@ -1,104 +1,66 @@
-// Copyright 2023 Nesterov Alexander
-#include <gtest/gtest.h>
-#include <vector>
+﻿  //  Copyright 2023 Sokolova Daria
 #include "./counting_the_number_of_sentences_in_string.h"
-#include <boost/mpi/environment.hpp>
-#include <boost/mpi/communicator.hpp>
 
-TEST(Parallel_Operations_MPI, Test_Sum) {
-    boost::mpi::communicator world;
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
 
-    if (world.rank() == 0) {
-        global_vec = getRandomVector(count_size_vector);
+TEST(ParallelCountSentencesTest, EmptyString) {
+    std::string sentence = "";
+    int result = parallelCountSentencesInString(sentence);
+    EXPECT_EQ(result, 0);
+}
+TEST(ParallelCountSentencesTest, NoEndingPunctuation) {
+    std::string sentence = "Sentence without ending punctuation";
+    int result = parallelCountSentencesInString(sentence);
+    EXPECT_EQ(result, 0);
+}
+TEST(ParallelCountSentencesTest, SpecialCharacters) {
+    std::string sentence = "Sentence with special characters!@#$";
+    int result = parallelCountSentencesInString(sentence);
+    EXPECT_EQ(result, 1);
+}
+TEST(CountSentencesTest, MathematicalExpressions) {
+    std::string sentence = "The square root of 25 is 5. 2+2=4, and 3+3 is 6.";
+    int result = countSentences(sentence);
+    EXPECT_EQ(result, 2);
+}
+std::string getRandomSentence() {
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    const std::string characters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!? ";
+    int sentenceLength = std::rand() % 100;
+    std::string randomSentence;
+    const std::string punctuations = ".!?";
+    for (int i = 0; i < sentenceLength; ++i) {
+        int charIndex = std::rand() % characters.size();
+        randomSentence += characters[charIndex];
     }
 
-    int global_sum = getParallelOperations(global_vec, count_size_vector, "+");
+    randomSentence[0] = std::toupper(randomSentence[0]);
+    int punctuationIndex = std::rand() % punctuations.size();
+    randomSentence += punctuations[punctuationIndex];
 
-    if (world.rank() == 0) {
-        int reference_sum = getSequentialOperations(global_vec, "+");
-        ASSERT_EQ(reference_sum, global_sum);
+    return randomSentence;
+}
+TEST(ParallelCountSentencesInStringTest, RandomSentence) {
+    std::string globalSentence;
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    globalSentence = getRandomSentence();
+
+    int globalSentenceCount = parallelCountSentencesInString(globalSentence);
+
+    if (rank == 0) {
+        int referenceCount = countSentences(globalSentence);
+        ASSERT_EQ(referenceCount, globalSentenceCount);
     }
 }
-
-TEST(Parallel_Operations_MPI, Test_Diff) {
-    boost::mpi::communicator world;
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
-
-    if (world.rank() == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_diff = getParallelOperations(global_vec, count_size_vector, "-");
-
-    if (world.rank() == 0) {
-        int reference_diff = getSequentialOperations(global_vec, "-");
-        ASSERT_EQ(reference_diff, global_diff);
-    }
-}
-
-TEST(Parallel_Operations_MPI, Test_Diff_2) {
-    boost::mpi::communicator world;
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
-
-    if (world.rank() == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_diff = getParallelOperations(global_vec, count_size_vector, "-");
-
-    if (world.rank() == 0) {
-        int reference_diff = getSequentialOperations(global_vec, "-");
-        ASSERT_EQ(reference_diff, global_diff);
-    }
-}
-
-TEST(Parallel_Operations_MPI, Test_Max) {
-    boost::mpi::communicator world;
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
-
-    if (world.rank() == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_max;
-    global_max = getParallelOperations(global_vec, count_size_vector, "max");
-
-    if (world.rank() == 0) {
-        int reference_max = getSequentialOperations(global_vec, "max");
-        ASSERT_EQ(reference_max, global_max);
-    }
-}
-
-TEST(Parallel_Operations_MPI, Test_Max_2) {
-    boost::mpi::communicator world;
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
-
-    if (world.rank() == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_max;
-    global_max = getParallelOperations(global_vec, count_size_vector, "max");
-
-    if (world.rank() == 0) {
-        int reference_max = getSequentialOperations(global_vec, "max");
-        ASSERT_EQ(reference_max, global_max);
-    }
-}
-
 int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
+
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
-    if (world.rank() != 0) {
-        delete listeners.Release(listeners.default_result_printer());
-    }
-    return RUN_ALL_TESTS();
+    int testResult = RUN_ALL_TESTS();
+
+    return testResult;
 }
