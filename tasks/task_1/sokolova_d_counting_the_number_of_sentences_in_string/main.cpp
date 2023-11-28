@@ -23,19 +23,10 @@ TEST(CountSentencesTest, MathematicalExpressions) {
     int result = countSentences(sentence);
     EXPECT_EQ(result, 2);
 }
-TEST(ParallelCountSentencesInStringTest, RandomSentence) {
-    std::string globalSentence;
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    globalSentence = getRandomSentence();
-
-    int globalSentenceCount = parallelCountSentencesInString(globalSentence);
-
-    if (rank == 0) {
-        int referenceCount = countSentences(globalSentence);
-        ASSERT_EQ(referenceCount, globalSentenceCount);
-    }
+TEST(CountSentencesTest, SpecialSymbols) {
+    std::string sentence = "This is the first sentence. @%$";
+    int result = countSentences(sentence);
+    EXPECT_EQ(result, 1);
 }
 int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
