@@ -50,7 +50,7 @@ TEST(LettersCountingTests, RandomGeneratedString) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::string currentStr;
-    std::srand((int)time(0));
+    std::srand(static_cast<int>(time(0)));
     const int currentSize = std::rand() % 21 + 10;
     if (rank == 0) {
         currentStr = GenerateRandomString(currentSize);
@@ -66,7 +66,7 @@ TEST(LettersCountingTests, OnlyLettersString) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::string currentStr;
-    std::srand((int)time(0));
+    std::srand(static_cast<int>(time(0)));
     const int currentSize = std::rand() % 21 + 10;
     if (rank == 0) {
         currentStr = GenerateRandomOnlyLettersString(currentSize);
@@ -81,7 +81,8 @@ TEST(LettersCountingTests, OnlyLettersString) {
 int main(int argc, char** argv) {
     int result = 0;
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
+    ::testing::TestEventListeners& listeners =
+        ::testing::UnitTest::GetInstance()->listeners();
     MPI_Init(&argc, &argv);
     result = RUN_ALL_TESTS();
     MPI_Finalize();
