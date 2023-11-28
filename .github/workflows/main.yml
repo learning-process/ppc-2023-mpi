@@ -63,6 +63,8 @@ jobs:
         sudo python3 -m pip install --upgrade pip
         sudo python3 -m pip install setuptools cpplint
         sudo apt-get install valgrind
+        sudo apt-get remove libstdc++-13-dev
+        sudo apt-get remove libhwasan0
     - name: Update submodules
       run: git submodule update --init --recursive
     - name: ccache
