@@ -51,7 +51,7 @@ int par_num_of_alternations(const std::vector<int>& arr) {
     }
     std::vector<int> arr_copy(counts_vector[rank]);
     MPI_Scatterv(arr.data(), counts_vector.data(), move_vector.data(), MPI_INT,
-       arr_copy.data(), counts_vector[rank], MPI_INT, 0, MPI_COMM_WORLD);
+        arr_copy.data(), counts_vector[rank], MPI_INT, 0, MPI_COMM_WORLD);
     int local_alternations_count = seq_num_of_alternations(arr_copy);
     int global_alternations_count;
     MPI_Allreduce(&local_alternations_count, &global_alternations_count, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
