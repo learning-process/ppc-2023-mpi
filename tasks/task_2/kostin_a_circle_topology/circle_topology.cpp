@@ -19,6 +19,16 @@ int prev_rank(int r) {
     return (r - 1 + size) % size;
 }
 
+bool is_downtime(int rank, int from, int to) {
+    if (from > to)
+        if (rank < from && rank > to)
+            return true;
+    if (from < to)
+        if (rank < from || rank > to)
+            return true;
+    return false;
+}
+
 void send_data(int* data, int fromProc, int toProc) {
     int world_size;
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
@@ -28,7 +38,7 @@ void send_data(int* data, int fromProc, int toProc) {
         return;
     if (world_rank == fromProc) {
         MPI_Send(data, 1, MPI_INT, next_rank(world_rank), 0, MPI_COMM_WORLD);
-    } else if (world_rank != toProc) {
+    } else if (world_rank != toProc && !is_downtime(world_rank, fromProc, toProc)) {
         MPI_Recv(data, 1, MPI_INT, prev_rank(world_rank), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Send(data, 1, MPI_INT, next_rank(world_rank), 0, MPI_COMM_WORLD);
     } else if (world_rank == toProc) {

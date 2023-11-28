@@ -8,6 +8,7 @@
 
 int next_rank(int r);
 int prev_rank(int r);
+bool is_downtime(int rank, int from, int to);
 void send_data(int* data, int fromProc, int toProc);
 
 #endif  // TASKS_TASK_2_KOSTIN_A_CIRCLE_TOPOLOGY_CIRCLE_TOPOLOGY_H_

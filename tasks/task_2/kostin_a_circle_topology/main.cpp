@@ -11,7 +11,7 @@ TEST(Circle_Topology, Test_1) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     int from = 1, to = 3;
     int data = 0;
-    if (world_size > 1) {
+    if (world_size > 3) {
         if (world_rank == from)
             data = 20;
         send_data(&data, from, to);
