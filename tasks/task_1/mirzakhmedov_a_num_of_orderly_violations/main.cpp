@@ -1,6 +1,5 @@
 ﻿//  Copyright 2023 Mirzakhmedov Alexander
 
-
 #include <gtest/gtest.h>
 #include <gtest-mpi-listener.hpp>
 #include "task_1/mirzakhmedov_a_num_of_orderly_violations/num_violation_order_vector.h"
@@ -38,7 +37,7 @@ TEST(Num_Violation_Order_Vector, Test_Ordered_Vector) {
 TEST(Num_Violation_Order_Vector, Test_Const_Unordered_Vector) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int> vec = {9, 5, 2, 57, 2, 47, 1, 6, 3, 5, 2, 67, 2, 4, 73, 2, 5};
+    std::vector<int> vec = { 9, 5, 2, 57, 2, 47, 1, 6, 3, 5, 2, 67, 2, 4, 73, 2, 5 };
     int  parellel_num = getNumViolationOrderVectorParallel(vec, vec.size());
     if (rank == 0) {
         ASSERT_EQ(parellel_num, 8);
@@ -131,7 +130,7 @@ int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
     ::testing::AddGlobalTestEnvironment(new GTestMPIListener::MPIEnvironment);
     ::testing::TestEventListeners& listeners =
-    ::testing::UnitTest::GetInstance()->listeners();
+        ::testing::UnitTest::GetInstance()->listeners();
     listeners.Release(listeners.default_result_printer());
     listeners.Release(listeners.default_xml_generator());
     listeners.Append(new GTestMPIListener::MPIMinimalistPrinter);
