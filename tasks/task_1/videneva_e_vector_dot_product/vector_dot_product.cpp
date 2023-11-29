@@ -1,13 +1,4 @@
-// Copyright 2023 Videneva Ekaterina
 #include "task_1/videneva_e_vector_dot_product/vector_dot_product.h"
-
-std::vector<int> getRandomVector(int sz) {
-    std::random_device dev;
-    std::mt19937 gen(dev());
-    std::vector<int> vec(sz);
-    for (int  i = 0; i < sz; i++) { vec[i] = gen() % 100; }
-    return vec;
-}
 
 int scalar_product(const std::vector<int>& vec1, const std::vector<int>& vec2) {
     if (vec1.size() != vec2.size()) {
@@ -46,8 +37,5 @@ int Parall_product(const std::vector<int> &vec1, const std::vector<int> &vec2) {
     int result = 0;
     MPI_Reduce(&local_result, &result, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-    // if (rank == 0) {
-    //     std::cout << "Scalar product: " << result << std::endl;
-    // }
     return result;
 }
