@@ -1,6 +1,5 @@
 ﻿// Copyright 2023 Mirzakhmedov Alexander
 #include <gtest/gtest.h>
-#include <vector>
 #include <gtest-mpi-listener.hpp>
 #include "task_1/mirzakhmedov_a_num_of_orderly_violations/num_violation_order_vector.h"
 

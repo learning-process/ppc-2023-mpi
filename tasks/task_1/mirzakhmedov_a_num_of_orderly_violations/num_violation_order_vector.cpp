@@ -1,9 +1,4 @@
 // Copyright 2023 Mirzakhmedov Alexander
-#include <mpi.h>
-#include <vector>
-#include <random>
-#include <ctime>
-#include <algorithm>
 #include "task_1/mirzakhmedov_a_num_of_orderly_violations/num_violation_order_vector.h"
 
 std::vector<int> getRandomVector(const int& length) {

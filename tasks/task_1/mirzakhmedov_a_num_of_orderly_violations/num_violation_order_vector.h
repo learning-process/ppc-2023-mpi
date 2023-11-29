@@ -4,6 +4,9 @@
 
 #include <mpi.h>
 #include <vector>
+#include <random>
+#include <ctime>
+#include <algorithm>
 
 std::vector<int> getRandomVector(const int& length);
 int getNumViolationOrderVector(std::vector<int> vec);
