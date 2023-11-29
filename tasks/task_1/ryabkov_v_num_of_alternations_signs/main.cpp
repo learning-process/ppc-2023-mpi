@@ -1,6 +1,9 @@
 //  Copyright 2023 Ryabkov Vladislav
+
+
 #include <gtest/gtest.h>
 #include "task_1/ryabkov_v_num_of_alternations_signs/alter_sign.h"
+
 
 TEST(Parallel_Operations_MPI, correct_operation_of_ParallelSum12) {
     int rank = 0;
