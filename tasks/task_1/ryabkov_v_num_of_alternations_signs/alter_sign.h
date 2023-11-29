@@ -6,6 +6,8 @@
 
 #include <mpi.h>
 #include <vector>
+#include <random>
+
 
 void RandVec(int* V, int n);
 int SerialSum(const int* V, int n);
