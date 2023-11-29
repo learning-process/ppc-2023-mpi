@@ -18,7 +18,7 @@ TEST(DotProductTest, TestVectorDifferentSize) {
 
     int global_product = Parall_product(vec1, vec2);
     if (rank == 0) {
-        int reference_product = scalar_product(vec1, vec2);
+        int reference_product = scalar_product(vec1,vec2);
         ASSERT_EQ(reference_product, global_product);
     }
 }

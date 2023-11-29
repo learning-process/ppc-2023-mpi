@@ -1,12 +1,6 @@
 // Copyright 2023 Videneva Ekaterina
 #include "task_1/videneva_e_vector_dot_product/vector_dot_product.h"
 
-int generateRandomNumbers(int min, int max) {
-  int randomNumber = min + (std::rand() % (max - min + 1));
-
-  return randomNumber;
-}
-
 std::vector<int> getRandomVector(int sz) {
     std::random_device dev;
     std::mt19937 gen(dev());
