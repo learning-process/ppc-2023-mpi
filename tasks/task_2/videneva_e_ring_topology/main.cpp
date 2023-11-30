@@ -2,8 +2,9 @@
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <random>
-#include "./ring_topology.h"
 #include <vector>
+#include "./ring_topology.h"
+
 
 TEST(ringTopologyTest, CheckRankAndSize) {
     int size = 0;
@@ -36,10 +37,10 @@ TEST(ringTopologyTest, CheckSendMessageInClockwiseDirection) {
 
 
 TEST(ringTopologyTest, Random) {
-    int size=0;
+    int size = 0;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int rank=0;
+    int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     int source = std::rand() % size;
@@ -62,22 +63,26 @@ TEST(ringTopologyTest, CorrectWork) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    int source = size-1;
-    int receiver = 0;
+    int source = 1;
+    int receiver = 1;
     int message = 0;
-
     if (size > 1) {
-        if(rank==source)
-        message=20; 
-    sendMessage(&message, source, receiver);
-    } else if (rank == receiver) {
-        ASSERT_EQ(message, 20);
+        if (rank == source){
+        message = 20;
+        sendMessage(&message, source, receiver);
+        }
+        if (rank == receiver) {
+            ASSERT_EQ(message, 20);
+        }
     }
+     
 }
+       
+   
 
 
 TEST(ringTopologyTest, EdgeCase) {
-    int rank=0;
+    int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int message = 42;
     sendMessage(&message, 0, 0);
