@@ -17,11 +17,13 @@ int prevRank(int rank) {
 
 bool isDownTime(int rank, int source, int receiver) {
     if (source > receiver) {
-        if (rank < source&& rank > receiver)
-        return true;
+        if (rank < source&& rank > receiver) {
+            return true;
+        }
     } else if (source < receiver) {
-        if (rank < source || rank >receiver)
-        return true;
+        if (rank < source || rank >receiver) {
+            return true;
+        }
     } else {
         return false;
     }
