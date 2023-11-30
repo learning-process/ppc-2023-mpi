@@ -25,7 +25,6 @@ bool isDownTime(int rank, int source, int receiver) {
     } else {
         return false;
     }
-    
 }
 
 void sendMessage(int* message, int source, int receiver) {
