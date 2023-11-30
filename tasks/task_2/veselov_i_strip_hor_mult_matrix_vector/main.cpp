@@ -33,12 +33,15 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    if (size < 2) {
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
     const size_t rows = 3;
     const size_t cols = 3;
     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
     std::vector<int> vec, resPar;
-    int rowsPerProcess = rows / (size);
-    int extraRows = rows % (size);
+    int rowsPerProcess = rows / (size - 1);
+    int extraRows = rows % (size - 1);
     if (rank == 0) {
         matrix[0] = {1, 2, 3};
         matrix[1] = {4, 5, 6};
@@ -78,12 +81,15 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_random) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    if (size < 2) {
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
     const size_t rows = 100;
     const size_t cols = 100;
     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
     std::vector<int> vec, resPar;
-    int rowsPerProcess = rows / (size);
-    int extraRows = rows % (size);
+    int rowsPerProcess = rows / (size - 1);
+    int extraRows = rows % (size - 1);
     if (rank == 0) {
         matrix = randomMatrix(rows, cols);
         vec = randomVector(cols);
@@ -119,12 +125,15 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_random_positive) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    if (size < 2) {
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
     const size_t rows = 25;
     const size_t cols = 25;
     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
     std::vector<int> vec, resPar;
-    int rowsPerProcess = rows / (size);
-    int extraRows = rows % (size);
+    int rowsPerProcess = rows / (size - 1);
+    int extraRows = rows % (size - 1);
     if (rank == 0) {
         matrix = randomMatrix(rows, cols, 1);
         vec = randomVector(cols, 1);
@@ -160,12 +169,15 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_random_negative) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    if (size < 2) {
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
     const size_t rows = 46;
     const size_t cols = 64;
     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
     std::vector<int> vec, resPar;
-    int rowsPerProcess = rows / (size);
-    int extraRows = rows % (size);
+    int rowsPerProcess = rows / (size - 1);
+    int extraRows = rows % (size - 1);
     if (rank == 0) {
         matrix = randomMatrix(rows, cols, -1000, 0);
         vec = randomVector(cols, -1000, 0);
@@ -202,10 +214,13 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_null_matrix) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    if (size < 2) {
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols, 0));
     std::vector<int> vec, resPar;
-    int rowsPerProcess = rows / (size);
-    int extraRows = rows % (size);
+    int rowsPerProcess = rows / (size - 1);
+    int extraRows = rows % (size - 1);
     if (rank == 0) {
         vec = randomVector(cols);
     }
@@ -248,10 +263,13 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_matrix_diag) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    if (size < 2) {
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols, 0));
     std::vector<int> vec, resPar;
-    int rowsPerProcess = rows / (size);
-    int extraRows = rows % (size);
+    int rowsPerProcess = rows / (size - 1);
+    int extraRows = rows % (size - 1);
     if (rank == 0) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
