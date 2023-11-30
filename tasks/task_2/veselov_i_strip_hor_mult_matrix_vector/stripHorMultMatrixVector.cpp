@@ -7,7 +7,7 @@
 #include "task_2/veselov_i_strip_hor_mult_matrix_vector/stripHorMultMatrixVector.h"
 
 std::vector<int> matrix_vector_multiply_par(std::vector<int> A, std::vector<int> x, int rows, int cols) {
-    boost::mpi::communicator world;
+    /*boost::mpi::communicator world;
     std::vector<int> C(cols);
     int rank = world.rank(), p = world.size(), c_i;
     int prev = (p + rank - 1) % p, next = (rank + 1) % p, delta_rows = rows / p;
@@ -39,6 +39,39 @@ std::vector<int> matrix_vector_multiply_par(std::vector<int> A, std::vector<int>
         }
     }
     boost::mpi::gather(world, C_row.data(), delta_rows, A_rows.data(), 0);
+    return A_rows;*/
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    std::vector<int> C(cols);
+    int p = size, c_i;
+    int prev = (p + rank - 1) % p;
+    int next = (rank + 1) % p;
+    int delta_rows = rows / p;
+    std::vector<int> A_rows(delta_rows * cols), C_row(delta_rows);
+    MPI_Scatter(A.data(), cols * delta_rows, MPI_INT, A_rows.data(), cols * delta_rows, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(x.data(), cols, MPI_INT, C.data(), cols, MPI_INT, 0, MPI_COMM_WORLD);
+    if (rank == 0) {
+        A_rows = std::vector<int>(A.begin(), A.begin() + cols * delta_rows);
+    }
+    for (int dx = 0; dx < delta_rows; dx++) {
+        c_i = (p + rank - 0) % p;
+        c_i = c_i * delta_rows + dx;
+        C_row[dx] = 0;
+        for (int j = 0; j < cols; j++)
+            C_row[dx] += A_rows[j + dx * cols] * C[j];
+    }
+    for (int i = 1; i < p; i++) {
+        MPI_Sendrecv_replace(C.data(), cols, MPI_INT, next, rank + p * i, prev, prev + p * i, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        for (int dx = 0; dx < delta_rows; dx++) {
+            c_i = (p + rank - i) % p;
+            c_i = c_i * delta_rows + dx;
+            C_row[dx] = 0;
+            for (int j = 0; j < cols; j++)
+                C_row[dx] += A_rows[j + dx * cols] * C[j];
+        }
+    }
+    MPI_Gather(C_row.data(), delta_rows, MPI_INT, A_rows.data(), delta_rows, MPI_INT, 0, MPI_COMM_WORLD);
     return A_rows;
 }
 
