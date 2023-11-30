@@ -6,7 +6,9 @@
 #include <boost/serialization/vector.hpp>
 #include "task_2/veselov_i_strip_hor_mult_matrix_vector/stripHorMultMatrixVector.h"
 
-std::vector<int> matrix_vector_multiply_par(std::vector<int> A, std::vector<int> x, int rows, int cols) {
+// std::vector<int> matrix_vector_multiply_par(std::vector<int> A, std::vector<int> x, int rows, int cols) {
+std::vector<int> matrix_vector_multiply_par(std::vector<std::vector<int>> matrix, std::vector<int> vec,
+ int rows, int cols, int rank, int rowsPerProcess, int extraRows) {
     /*boost::mpi::communicator world;
     std::vector<int> C(cols);
     int rank = world.rank(), p = world.size(), c_i;
@@ -40,7 +42,7 @@ std::vector<int> matrix_vector_multiply_par(std::vector<int> A, std::vector<int>
     }
     boost::mpi::gather(world, C_row.data(), delta_rows, A_rows.data(), 0);
     return A_rows;*/
-    int rank, size;
+    /*int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     std::vector<int> C(cols);
@@ -72,10 +74,64 @@ std::vector<int> matrix_vector_multiply_par(std::vector<int> A, std::vector<int>
         }
     }
     MPI_Gather(C_row.data(), delta_rows, MPI_INT, A_rows.data(), delta_rows, MPI_INT, 0, MPI_COMM_WORLD);
-    return A_rows;
+    return A_rows;*/
+
+    std::vector<int> res(rows, 0);
+    // int rowsPerProcess = rows / (size - 1);
+    // int extraRows = rows % (size - 1);
+    // int vecSize = cols;
+    int size;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    if (rank == 0) {
+        for (int dest = 1; dest < size; ++dest) {
+            int startRow = (dest - 1) * rowsPerProcess + 1;
+            int numRows = rowsPerProcess;
+            if (dest <= extraRows)
+                numRows++;
+        MPI_Send(&matrix[startRow - 1][0], numRows * cols, MPI_INT, dest, 0, MPI_COMM_WORLD);
+        MPI_Send(&vec[0], cols, MPI_INT, dest, 0, MPI_COMM_WORLD);
+        }
+        for (int row = 1; row <= rowsPerProcess + extraRows; ++row) {
+            std::vector<int> partRes(cols, 0);
+            for (int col = 0; col < cols; ++col)
+                partRes[row - 1] += matrix[row -1][col] * vec[col];
+            res[row - 1] = partRes[row - 1];
+        }
+        for (int src = 1; src < size; ++src) {
+            std::vector<int> recvRes(rowsPerProcess);
+            MPI_Recv(&recvRes[0], rowsPerProcess, MPI_INT, src, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            for (int i = 0; i < rowsPerProcess; ++i)
+                res[(src - 1) * rowsPerProcess + i] = recvRes[i];
+        }
+    } else {
+        int startRow = (rank - 1) * rowsPerProcess + 1;
+        int numRows = rowsPerProcess;
+        if (rank <= extraRows)
+            numRows++;
+        std::vector<std::vector<int>> subMatrix(numRows, std::vector<int>(cols));
+        MPI_Recv(&subMatrix[0][0], numRows * cols, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&vec[0], cols, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        std::vector<int> partRes(numRows, 0);
+        for (int i = 0; i < numRows; ++i)
+            for (int j = 0; j < cols; ++j)
+                partRes[i] += subMatrix[i][j] * vec[j];
+        MPI_Send(&partRes[0], numRows, MPI_INT, 0, 0, MPI_COMM_WORLD);
+    }
+    return res;
 }
 
-std::vector<int> matrix_vector_multiply(std::vector<int> A, std::vector<int> x, int rows, int cols) {
+std::vector<int> matrix_vector_multiply(std::vector<std::vector<int>> matrix, std::vector<int> vec,
+ int rows, int cols) {
+    std::vector<int> res(rows);
+    for (int i = 0; i < rows; ++i) {
+        res[i] = 0;
+        for (int j = 0; j < cols; ++j)
+            res[i] += matrix[i][j] * vec[j];
+    }
+    return res;
+}
+
+/*std::vector<int> matrix_vector_multiply(std::vector<int> A, std::vector<int> x, int rows, int cols) {
     std::vector<int> res(rows);
     for (int i = 0; i < rows; i++) {
         res[i] = 0;
@@ -83,9 +139,20 @@ std::vector<int> matrix_vector_multiply(std::vector<int> A, std::vector<int> x, 
             res[i] += A[i * cols + j] * x[j];
     }
     return res;
+}*/
+
+std::vector<std::vector<int>> randomMatrix(int n, int m, int minElem, int maxElem) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(minElem, maxElem);
+    std::vector<std::vector<int>> matrix(n, std::vector<int>(m));
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            matrix[i][j] = dis(gen);
+    return matrix;
 }
 
-std::vector<int> randomMatrix(size_t n, size_t m, int minElem, int maxElem) {
+/*std::vector<int> randomMatrix(size_t n, size_t m, int minElem, int maxElem) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(minElem, maxElem);
@@ -95,7 +162,7 @@ std::vector<int> randomMatrix(size_t n, size_t m, int minElem, int maxElem) {
             matrix[i * m + j] = dis(gen);
     }
     return matrix;
-}
+}*/
 
 std::vector<int> randomVector(size_t n, int minElem, int maxElem) {
     std::random_device rd;

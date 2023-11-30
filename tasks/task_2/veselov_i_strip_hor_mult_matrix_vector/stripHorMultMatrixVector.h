@@ -4,9 +4,15 @@
 #ifndef TASKS_TASK_2_VESELOV_I_STRIP_HOR_MULT_MATRIX_VECTOR_STRIPHORMULTMATRIXVECTOR_H_
 #define TASKS_TASK_2_VESELOV_I_STRIP_HOR_MULT_MATRIX_VECTOR_STRIPHORMULTMATRIXVECTOR_H_
 
-std::vector<int> matrix_vector_multiply_par(std::vector<int> A, std::vector<int> B, int rows, int cols);
-std::vector<int> matrix_vector_multiply(std::vector<int> A, std::vector<int> x, int rows, int cols);
-std::vector<int> randomMatrix(size_t n, size_t m, int minElem = -100, int maxElem = 100);
+std::vector<int> matrix_vector_multiply_par(std::vector<std::vector<int>> matrix, std::vector<int> vec,
+ int rows, int cols, int rank, int rowsPerProcess, int extraRows);
+std::vector<int> matrix_vector_multiply(std::vector<std::vector<int>> matrix, std::vector<int> vec, int rows, int cols);
+std::vector<std::vector<int>> randomMatrix(int n, int m, int minElem = -100, int maxElem = 100);
+
+// std::vector<int> matrix_vector_multiply(std::vector<int> A, std::vector<int> x, int rows, int cols);
+// std::vector<int> randomMatrix(size_t n, size_t m, int minElem = -100, int maxElem = 100);
 std::vector<int> randomVector(size_t n, int minElem = -100, int maxElem = 100);
+
+// void matrix_vector_multiply_par(int* A, int* x, int* res, int rows, int cols, int rank, int size);
 
 #endif  // TASKS_TASK_2_VESELOV_I_STRIP_HOR_MULT_MATRIX_VECTOR_STRIPHORMULTMATRIXVECTOR_H_
