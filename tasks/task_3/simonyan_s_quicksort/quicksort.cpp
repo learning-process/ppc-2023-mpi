@@ -91,8 +91,9 @@ void Sort(double* arr, int n) {
                     ProcNum++;
                 ProcNum /= 2;
                 size = n / ProcNum;
+            } else {
+                break;
             }
-            else break;
         }
         delete[] buf;
     }
