@@ -67,7 +67,7 @@ TEST(ringTopologyTest, CorrectWork) {
     int receiver = 1;
     int message = 0;
     if (size > 1) {
-        if (rank == source){
+        if (rank == source) {
         message = 20;
         sendMessage(&message, source, receiver);
         }
@@ -75,10 +75,8 @@ TEST(ringTopologyTest, CorrectWork) {
             ASSERT_EQ(message, 20);
         }
     }
-     
 }
-       
-   
+
 
 
 TEST(ringTopologyTest, EdgeCase) {
