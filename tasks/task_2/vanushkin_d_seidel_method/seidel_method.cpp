@@ -1,8 +1,23 @@
 // Copyright 2023 Vanushkin Dmitry
 #include "task_2/vanushkin_d_seidel_method/seidel_method.h"
+#include <boost/mpi.hpp>
 
+void LocalParallelSeidelMethod(const DoubleMatrix& alpha, const DoubleVector& beta,
+                          size_t offset, size_t equations,
+                          double eps
+                          );
 
-DoubleVector SequentialSeidelMethod(const DoubleMatrix &alpha, const DoubleVector &beta, double eps) {
+double norm(const DoubleVector& v1, const DoubleVector& v2) {
+    double result = 0;
+
+    for (size_t i = 0; i < v1.size(); i++) {
+        result += pow(v2[i] - v1[i], 2);
+    }
+
+    return sqrt(result);
+}
+
+DoubleVector SequentialSeidelMethod(const DoubleMatrix& alpha, const DoubleVector& beta, double eps) {
     size_t solutionsCount = beta.size();
 
     DoubleVector stepAnswer(solutionsCount, 0);
@@ -30,16 +45,6 @@ DoubleVector SequentialSeidelMethod(const DoubleMatrix &alpha, const DoubleVecto
     return nextStepAnswer;
 }
 
-double norm(const DoubleVector &v1, const DoubleVector &v2) {
-    double result = 0;
-
-    for (size_t i = 0; i < v1.size(); i++) {
-        result += pow(v2[i] - v1[i], 2);
-    }
-
-    return sqrt(result);
-}
-
 DoubleVector ParallelSeidelMethod(const DoubleMatrix &alpha, const DoubleVector &beta, double eps) {
-    return DoubleVector();
+    return {};
 }
