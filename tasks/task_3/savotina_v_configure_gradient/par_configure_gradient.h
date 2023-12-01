@@ -4,6 +4,7 @@
 
 #include <mpi.h>
 
+#include <cmath>
 #include <numeric>
 #include <stdexcept>
 #include <vector>
