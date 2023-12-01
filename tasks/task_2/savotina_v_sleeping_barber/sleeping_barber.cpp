@@ -15,7 +15,6 @@ void client(int rank, int clients, int seats, MPI_Comm comm) {
   MPI_Status status;
 
   // std::this_thread::sleep_for(std::chrono::milliseconds(125 * rank));
-  std::this_thread::sleep_for(std::chrono::milliseconds(50 * rank));
 
   MPI_Send(&sendMes, 1, MPI_INT, R_ROOM, T_ENTER, comm);
   MPI_Recv(&recvMes, 1, MPI_INT, R_ANY, T_ANY, comm, &status);
@@ -43,7 +42,7 @@ void room(int rank, int clients, int seats, MPI_Comm comm) {
   std::queue<int> queueClients;
 
   do {
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     if (visits++ < clients) {
       MPI_Recv(&recvMes, 1, MPI_INT, R_ANY, T_ENTER, comm, &status);
@@ -89,7 +88,6 @@ void barber(int rank, int clients, int seats, MPI_Comm comm) {
       MPI_Ssend(&sendMes, 1, MPI_INT, R_ROOM, T_READY, comm);
 
       // std::this_thread::sleep_for(std::chrono::milliseconds(750));
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
       // std::cout << "Barber end working: " << recvMes << std::endl;
       MPI_Send(&sendMes, 1, MPI_INT, recvMes, T_EXIT, comm);
