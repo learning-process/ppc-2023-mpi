@@ -120,8 +120,8 @@ DoubleVector LocalParallelSeidelMethod(const DoubleMatrix &localA, const DoubleV
 
     std::vector<double> x(totalEquationsCount), xNew(totalEquationsCount);
 
-    double localMaxError = eps + 1.0;
-    while (localMaxError > eps) {
+    do {
+        x = xNew;
         for (size_t i = 0; i < localEquationsCount; ++i) {
             double sum = 0.0;
             for (size_t j = 0; j < totalEquationsCount; ++j) {
@@ -143,13 +143,7 @@ DoubleVector LocalParallelSeidelMethod(const DoubleMatrix &localA, const DoubleV
             broadcast(world, xNew.data() + currentOffset, currentCount, i);
         }
 
-        localMaxError = CalculateError(x, xNew);
-
-//        mpi::all_reduce(world, localMaxError, mpi::maximum<double>());
-
-
-        x = xNew;
-    }
+    } while (norm(x, xNew) > eps);
 
     return x;
 
