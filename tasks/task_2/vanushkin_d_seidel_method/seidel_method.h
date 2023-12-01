@@ -4,7 +4,7 @@
 
 #pragma once
 
-using DoubleMatrix = std::vector<std::vector<double>>;
+using DoubleMatrix = std::vector<double>;
 using DoubleVector = std::vector<double>;
 
 
@@ -19,5 +19,3 @@ DoubleVector ParallelSeidelMethod(
         const DoubleVector& b,
         double eps
 );
-
-double norm(const DoubleVector& v1, const DoubleVector& v2);
