@@ -1,7 +1,7 @@
 // Copyright 2023 Vanushkin Dmitry
-#include "task_2/vanushkin_d_seidel_method/seidel_method.h"
-#include <boost/mpi.hpp>
 #include <utility>
+#include <boost/mpi.hpp>
+#include "task_2/vanushkin_d_seidel_method/seidel_method.h"
 
 DoubleVector LocalParallelSeidelMethod(
         const DoubleMatrix& localA, const DoubleVector& localB,
