@@ -1,7 +1,7 @@
 // Copyright 2023 Savotina Valeria
 #include <gtest/gtest.h>
 
-#include "./configure_gradient.h"
+#include "./par_configure_gradient.h"
 
 TEST(TESTS, Test_1) { ASSERT_EQ(1, 1); }
 TEST(TESTS, Test_2) { ASSERT_EQ(1, 1); }
