@@ -1,7 +1,7 @@
 // Copyright 2023 Vanushkin Dmitry
-#include <vector>
-#include <random>
 #include <gtest/gtest.h>
+#include <random>
+#include <vector>
 #include <boost/mpi.hpp>
 #include "task_2/vanushkin_d_seidel_method/seidel_method.h"
 
