@@ -2,9 +2,6 @@
 #include "task_2/savotina_v_sleeping_barber/sleeping_barber.h"
 
 void client(int rank, int clients, int seats, MPI_Comm comm) {
-  using namespace std::this_thread;
-  using namespace std::chrono;
-
   if (rank < 2) {
     throw std::logic_error{"incorrect rank"};
   } else if (clients < 1) {
@@ -17,8 +14,8 @@ void client(int rank, int clients, int seats, MPI_Comm comm) {
   int recvMes = 0;
   MPI_Status status;
 
-  // sleep_for(milliseconds(125 * rank));
-  sleep_for(milliseconds(50 * rank));
+  // std::this_thread::sleep_for(std::chrono::milliseconds(125 * rank));
+  std::this_thread::sleep_for(std::chrono::milliseconds(50 * rank));
 
   MPI_Send(&sendMes, 1, MPI_INT, R_ROOM, T_ENTER, comm);
   MPI_Recv(&recvMes, 1, MPI_INT, R_ANY, T_ANY, comm, &status);
@@ -29,9 +26,6 @@ void client(int rank, int clients, int seats, MPI_Comm comm) {
 }
 
 void room(int rank, int clients, int seats, MPI_Comm comm) {
-  using namespace std::this_thread;
-  using namespace std::chrono;
-
   if (rank != R_ROOM) {
     throw std::logic_error{"incorrect rank"};
   } else if (clients < 1) {
@@ -49,7 +43,7 @@ void room(int rank, int clients, int seats, MPI_Comm comm) {
   std::queue<int> queueClients;
 
   do {
-    sleep_for(10ms);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     if (visits++ < clients) {
       MPI_Recv(&recvMes, 1, MPI_INT, R_ANY, T_ENTER, comm, &status);
@@ -75,9 +69,6 @@ void room(int rank, int clients, int seats, MPI_Comm comm) {
 }
 
 void barber(int rank, int clients, int seats, MPI_Comm comm) {
-  using namespace std::this_thread;
-  using namespace std::chrono;
-
   if (rank != R_BARBER) {
     throw std::logic_error{"incorrect rank"};
   } else if (clients < 1) {
@@ -97,8 +88,8 @@ void barber(int rank, int clients, int seats, MPI_Comm comm) {
       // std::cout << "Barber start working: " << recvMes << std::endl;
       MPI_Ssend(&sendMes, 1, MPI_INT, R_ROOM, T_READY, comm);
 
-      // sleep_for(750ms);
-      sleep_for(100ms);
+      // std::this_thread::sleep_for(std::chrono::milliseconds(750));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
       // std::cout << "Barber end working: " << recvMes << std::endl;
       MPI_Send(&sendMes, 1, MPI_INT, recvMes, T_EXIT, comm);
