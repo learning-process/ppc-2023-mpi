@@ -9,14 +9,14 @@ using DoubleVector = std::vector<double>;
 
 
 DoubleVector SequentialSeidelMethod(
-        const DoubleMatrix& alpha,
-        const DoubleVector& beta,
+        const DoubleMatrix& a,
+        const DoubleVector& b,
         double eps
 );
 
 DoubleVector ParallelSeidelMethod(
-        const DoubleMatrix& alpha,
-        const DoubleVector& beta,
+        const DoubleMatrix& a,
+        const DoubleVector& b,
         double eps
 );
 
