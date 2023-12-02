@@ -45,7 +45,7 @@ TEST(gauss_method_horizontal, Test_ten_elems_from_0_to_99) {
 
     if (rankProc == 0) {
         gaussianElimination(ans, n);
-        ASSERT_EQ(getResult(ans, n),getResult(matrix, n));
+        ASSERT_EQ(getResult(ans, n), getResult(matrix, n));
         delete[] matrix;
         delete[] ans;
     }
@@ -71,7 +71,7 @@ TEST(gauss_method_horizontal, Test_one_hundreds_from_0_to_9999) {
 
     if (rankProc == 0) {
         gaussianElimination(ans, n);
-        ASSERT_EQ(getResult(ans, n),getResult(matrix, n));
+        ASSERT_EQ(getResult(ans, n), getResult(matrix, n));
         delete[] matrix;
         delete[] ans;
     }
@@ -97,7 +97,7 @@ TEST(gauss_method_horizontal, Test_one_thousand_from_0_to_99) {
 
     if (rankProc == 0) {
         gaussianElimination(ans, n);
-        ASSERT_EQ(getResult(ans, n),getResult(matrix, n));
+        ASSERT_EQ(getResult(ans, n), getResult(matrix, n));
         delete[] matrix;
         delete[] ans;
     }
@@ -123,7 +123,7 @@ TEST(gauss_method_horizontal, Test_one_thousand_from_0_to_9999) {
 
     if (rankProc == 0) {
         gaussianElimination(ans, n);
-        ASSERT_EQ(getResult(ans, n),getResult(matrix, n));
+        ASSERT_EQ(getResult(ans, n), getResult(matrix, n));
         delete[] matrix;
         delete[] ans;
     }

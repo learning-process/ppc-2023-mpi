@@ -73,8 +73,7 @@ void gaussianEliminationPAR(double* A, int n, int size, int rank) {
 
         delete[] subarray;
     }
-    if (rank == 0)
-    {
+    if (rank == 0) {
         for (int i = n - 1; i >= 0; --i) {
             double sum = 0;
             for (int j = i + 1; j < n; ++j) {
@@ -86,7 +85,6 @@ void gaussianEliminationPAR(double* A, int n, int size, int rank) {
 }
 
 void generateGaussianMatrix(double* matrix, int n, int max) {
-
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n + 1; ++j) {
             matrix[i * (n + 1) + j] = std::rand() % max;
