@@ -5,7 +5,8 @@
 void MyScatter(const void* sendbuf, int sendcount, MPI_Datatype sendtype,
                void* recvbuf, int recvcount, MPI_Datatype recvtype,
                int root, MPI_Comm comm) {
-    int rank, size;
+    int rank;
+    int size;
     MPI_Comm_rank(comm, &rank);
     MPI_Comm_size(comm, &size);
 
