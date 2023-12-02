@@ -152,6 +152,7 @@ TEST(seidel_method, parallel_100x100) {
 int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
+
     ::testing::InitGoogleTest(&argc, argv);
     ::testing::TestEventListeners& listeners =
             ::testing::UnitTest::GetInstance()->listeners();
