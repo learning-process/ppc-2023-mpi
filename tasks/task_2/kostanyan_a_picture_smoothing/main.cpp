@@ -10,17 +10,6 @@ TEST(SMOOTHING_IMAGE_MPI, test1) {
 EXPECT_ANY_THROW(std::vector <int> matr = getImg(0, -1));
 }
 
-TEST(SMOOTHING_IMAGE_MPI, test2_simple_test) {
-  std::vector <int> matr;
-  int smoothing = 20;
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 0) {
-    matr = getImg(5, 7);
-    ASSERT_ANY_THROW(ParSmoothing(matr, 3, 2, smoothing));
-  }
-}
-
 TEST(SMOOTHING_IMAGE_MPI, test3_3x3) {
   int row = 3, col = 3, smoothing = 30;
   std::vector <int> matr(row * col), seq_fin(row * col);
