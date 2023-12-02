@@ -14,11 +14,11 @@ TEST(gauss_method_horizontal, Test_simple_matrix) {
             -3, -1, 2, -11,
             -2, 1, 2, -3
     };
-    gaussianEliminationPAR(A,n,numProc,rankProc);
+    gaussianEliminationPAR(A, n, numProc, rankProc);
     if (rankProc == 0) {
         std::vector<double> result = {2, 3, -1};
-        std::vector<double> answer = {A[3],A[7],A[11]};
-        ASSERT_EQ(result, getResult(A,n));
+        std::vector<double> answer = {A[3], A[7], A[11]};
+        ASSERT_EQ(result, getResult(A, n));
     }
     delete[] A;
 }
@@ -37,15 +37,15 @@ TEST(gauss_method_horizontal, Test_ten_elems_from_0_to_99) {
     double* ans;
     if (rankProc == 0) {
         matrix = new double[(n * (n + 1))];
-        generateGaussianMatrix(matrix,n,100);
+        generateGaussianMatrix(matrix, n, 100);
         ans = new double[(n * (n + 1))];
         std::copy(matrix, matrix + (n * (n + 1)), ans);
     }
-    gaussianEliminationPAR(matrix,n,numProc,rankProc);
+    gaussianEliminationPAR(matrix, n, numProc, rankProc);
 
     if (rankProc == 0) {
-        gaussianElimination(ans,n);
-        ASSERT_EQ(getResult(ans,n),getResult(matrix,n));
+        gaussianElimination(ans, n);
+        ASSERT_EQ(getResult(ans, n),getResult(matrix, n));
         delete[] matrix;
         delete[] ans;
     }
@@ -63,15 +63,15 @@ TEST(gauss_method_horizontal, Test_one_hundreds_from_0_to_9999) {
     double* ans;
     if (rankProc == 0) {
         matrix = new double[(n * (n + 1))];
-        generateGaussianMatrix(matrix,n,10000);
+        generateGaussianMatrix(matrix, n, 10000);
         ans = new double[(n * (n + 1))];
         std::copy(matrix, matrix + (n * (n + 1)), ans);
     }
-    gaussianEliminationPAR(matrix,n,numProc,rankProc);
+    gaussianEliminationPAR(matrix, n, numProc, rankProc);
 
     if (rankProc == 0) {
-        gaussianElimination(ans,n);
-        ASSERT_EQ(getResult(ans,n),getResult(matrix,n));
+        gaussianElimination(ans, n);
+        ASSERT_EQ(getResult(ans, n),getResult(matrix, n));
         delete[] matrix;
         delete[] ans;
     }
@@ -89,15 +89,15 @@ TEST(gauss_method_horizontal, Test_one_thousand_from_0_to_99) {
     double* ans;
     if (rankProc == 0) {
         matrix = new double[(n * (n + 1))];
-        generateGaussianMatrix(matrix,n,100);
+        generateGaussianMatrix(matrix, n, 100);
         ans = new double[(n * (n + 1))];
         std::copy(matrix, matrix + (n * (n + 1)), ans);
     }
-    gaussianEliminationPAR(matrix,n,numProc,rankProc);
+    gaussianEliminationPAR(matrix, n, numProc, rankProc);
 
     if (rankProc == 0) {
-        gaussianElimination(ans,n);
-        ASSERT_EQ(getResult(ans,n),getResult(matrix,n));
+        gaussianElimination(ans, n);
+        ASSERT_EQ(getResult(ans, n),getResult(matrix, n));
         delete[] matrix;
         delete[] ans;
     }
@@ -115,30 +115,30 @@ TEST(gauss_method_horizontal, Test_one_thousand_from_0_to_9999) {
     double* ans;
     if (rankProc == 0) {
         matrix = new double[(n * (n + 1))];
-        generateGaussianMatrix(matrix,n,10000);
+        generateGaussianMatrix(matrix, n, 10000);
         ans = new double[(n * (n + 1))];
         std::copy(matrix, matrix + (n * (n + 1)), ans);
     }
-    gaussianEliminationPAR(matrix,n,numProc,rankProc);
+    gaussianEliminationPAR(matrix, n, numProc, rankProc);
 
     if (rankProc == 0) {
-        gaussianElimination(ans,n);
-        ASSERT_EQ(getResult(ans,n),getResult(matrix,n));
+        gaussianElimination(ans, n);
+        ASSERT_EQ(getResult(ans, n),getResult(matrix, n));
         delete[] matrix;
         delete[] ans;
     }
 }
 
 int main(int argc, char **argv) {
-   int result_code = 0;
+    int result_code = 0;
 
-   ::testing::InitGoogleTest(&argc, argv);
-   ::testing::TestEventListeners &listeners = ::testing::UnitTest::GetInstance()->listeners();
+    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::TestEventListeners &listeners = ::testing::UnitTest::GetInstance()->listeners();
 
-   if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
-       MPI_Abort(MPI_COMM_WORLD, -1);
-   result_code = RUN_ALL_TESTS();
-   MPI_Finalize();
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
+        MPI_Abort(MPI_COMM_WORLD, -1);
+    result_code = RUN_ALL_TESTS();
+    MPI_Finalize();
 
-   return result_code;
+    return result_code;
 }

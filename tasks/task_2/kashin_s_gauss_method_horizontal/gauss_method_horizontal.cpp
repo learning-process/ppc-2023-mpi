@@ -34,8 +34,7 @@ void gaussianEliminationPAR(double* A, int n, int size, int rank) {
                 }
                 sendCounts[size - 1] += ost * (n + 1);
             }
-            line = std::vector<double>(A + i * (n + 1),A + i * (n + 1)+n+1);
-
+            line = std::vector<double>(A + i * (n + 1), A + i * (n + 1) + n + 1);
         }
         MPI_Bcast(line.data(), n+1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Bcast(sendCounts.data(), size, MPI_INT, 0, MPI_COMM_WORLD);
@@ -43,8 +42,16 @@ void gaussianEliminationPAR(double* A, int n, int size, int rank) {
         recvcount = sendCounts[rank];
         subarray = new double[recvcount];
 
-        MPI_Scatterv(A, sendCounts.data(), displs.data(), MPI_DOUBLE, subarray, recvcount, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
+        MPI_Scatterv(
+                A,
+                sendCounts.data(),
+                displs.data(),
+                MPI_DOUBLE,
+                subarray,
+                recvcount,
+                MPI_DOUBLE,
+                0,
+                MPI_COMM_WORLD);
 
         for (int l = 0; l < recvcount; l += n + 1) {
             double ratio = subarray[l + i] / line[i];
@@ -53,10 +60,19 @@ void gaussianEliminationPAR(double* A, int n, int size, int rank) {
             }
         }
 
-        MPI_Gatherv(subarray, recvcount, MPI_DOUBLE, A, sendCounts.data(), displs.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Gatherv(
+                subarray,
+                recvcount,
+                MPI_DOUBLE,
+                A,
+                sendCounts.data(),
+                displs.data(),
+                MPI_DOUBLE,
+                0,
+                MPI_COMM_WORLD);
+
         delete[] subarray;
     }
-
     if (rank == 0)
     {
         for (int i = n - 1; i >= 0; --i) {
@@ -95,5 +111,4 @@ void gaussianElimination(double* A, int n) {
         }
         A[i * (n + 1) + n] = (A[i * (n + 1) + n] - sum) / A[i * (n + 1) + i];
     }
-
 }
