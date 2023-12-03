@@ -23,18 +23,14 @@ int numberOfNonMatchingCharacters_Parallel(std::string* firstString,
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
 
-    if ((*firstString).length() > (*secondString).length()) {
-        for (int j = (*secondString).length(); j < (*firstString).length() - (*secondString).length(); ++j) {
-            (*secondString) += "$";
-        }
-        l = (*firstString).length();
-    } else if ((*firstString).length() < (*secondString).length()) {
-        for (int j = (*firstString).length(); j < (*secondString).length() - (*firstString).length(); ++j) {
-            (*firstString) += "$";
-        }
-        l = (*secondString).length();
-    } else {
-        l = (*firstString).length();
+    l = std::max((*firstString).length(), (*secondString).length());
+
+    while ((*firstString).length() < l) {
+        (*firstString) += "$";
+    }
+
+    while ((*secondString).length() < l) {
+        (*secondString) += "$";
     }
 
     int* n = new int[size];
