@@ -38,7 +38,7 @@ std::vector<int> columnwise_sum(const std::vector<int>& M, const std::vector<int
   return c;
 }
 
-std::vector<int> columnwise_sum_parallel(const std::vector<int>& M, std::vector<int>& b, int rows, int columns) {
+std::vector<int> columnwise_sum_parallel(const std::vector<int>& M, const std::vector<int>& b, int rows, int columns) {
   int procNum, procRank;
   MPI_Comm_size(MPI_COMM_WORLD, &procNum);
   MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
@@ -50,8 +50,7 @@ std::vector<int> columnwise_sum_parallel(const std::vector<int>& M, std::vector<
   int size = columns / procNum;
   std::vector<int> new_M(size * rows);
   std::vector<int> new_b(size);
-  if (procRank == 0)
-  {
+  if (procRank == 0) {
     displs[0] = 0;
     displs_b[0] = 0;
     for (int i = 0; i < procNum; i++) {
@@ -68,8 +67,10 @@ std::vector<int> columnwise_sum_parallel(const std::vector<int>& M, std::vector<
     new_b.resize(ost + size);
   }
   std::vector<int> tM = transpose_M(M, columns, rows);
-  MPI_Scatterv(tM.data(), sendcounts.data(), displs.data(), MPI_INT, new_M.data(), new_M.size(), MPI_INT, 0, MPI_COMM_WORLD);
-  MPI_Scatterv(b.data(), sendcounts_b.data(), displs_b.data(), MPI_INT, new_b.data(), new_b.size(), MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Scatterv(tM.data(), sendcounts.data(), displs.data(), MPI_INT, 
+    new_M.data(), new_M.size(), MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Scatterv(b.data(), sendcounts_b.data(), displs_b.data(), MPI_INT, 
+    new_b.data(), new_b.size(), MPI_INT, 0, MPI_COMM_WORLD);
   std::vector<int> c_res(rows);
   std::vector<int> z(rows);
   int columnNum = new_M.size() / rows;
