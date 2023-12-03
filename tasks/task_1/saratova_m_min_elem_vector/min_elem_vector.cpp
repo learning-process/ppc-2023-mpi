@@ -3,13 +3,13 @@
 
 std::vector<int> generate_random_vector(int size, int low, int high) {
     std::vector<int> randomVector;
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(low, high);
+    srand(static_cast<unsigned int>(time(nullptr)));
 
     for (int i = 0; i < size; ++i) {
-        randomVector.push_back(dis(gen));
+        int randomNum = rand() % (high - low + 1) + low;
+        randomVector.push_back(randomNum);
     }
+
     return randomVector;
 }
 
