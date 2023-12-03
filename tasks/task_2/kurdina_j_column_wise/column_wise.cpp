@@ -67,9 +67,9 @@ std::vector<int> columnwise_sum_parallel(const std::vector<int>& M, const std::v
     new_b.resize(ost + size);
   }
   std::vector<int> tM = transpose_M(M, columns, rows);
-  MPI_Scatterv(tM.data(), sendcounts.data(), displs.data(), MPI_INT, 
+  MPI_Scatterv(tM.data(), sendcounts.data(), displs.data(), MPI_INT,
     new_M.data(), new_M.size(), MPI_INT, 0, MPI_COMM_WORLD);
-  MPI_Scatterv(b.data(), sendcounts_b.data(), displs_b.data(), MPI_INT, 
+  MPI_Scatterv(b.data(), sendcounts_b.data(), displs_b.data(), MPI_INT,
     new_b.data(), new_b.size(), MPI_INT, 0, MPI_COMM_WORLD);
   std::vector<int> c_res(rows);
   std::vector<int> z(rows);
