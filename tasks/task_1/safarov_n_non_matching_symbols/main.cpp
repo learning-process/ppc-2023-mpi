@@ -1,4 +1,5 @@
 // Copyright 2023 Safarov Nurlan
+
 #include "gtest/gtest.h"
 #ifdef _WIN32
 #include <windows.h>

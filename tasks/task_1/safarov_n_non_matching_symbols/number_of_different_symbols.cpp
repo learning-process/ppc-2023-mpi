@@ -1,4 +1,5 @@
 // Copyright 2023 Safarov Nurlan
+
 #include "task_1/safarov_n_non_matching_symbols/number_of_different_symbols.h"
 
 int numberOfNonMatchingCharacters_Consistently(const std::string& firstString,
