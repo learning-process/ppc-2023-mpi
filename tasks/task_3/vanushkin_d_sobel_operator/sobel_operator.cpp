@@ -1,24 +1,36 @@
 // Copyright 2023 Vanushkin Dmitry
 
 #include "task_3/vanushkin_d_sobel_operator/sobel_operator.h"
+#include <utility>
 #include <boost/mpi.hpp>
 
 using ConvolutionKernel = std::vector<std::vector<int>>;
 
-
 // Internal parallel declarations
-void DistributeImage(const ImageMatrix& image, ImageMatrix& localImage, size_t width, size_t height);
-std::pair<size_t, size_t> LocalRowsOffsetAndCountForDistribution(size_t width, size_t height, size_t processesCount, size_t processRank);
+void DistributeImage(
+        const ImageMatrix& image, ImageMatrix& localImage, // NOLINT
+        size_t width, size_t height);
 
-void CollectImage(ImageMatrix& totalImage, const ImageMatrix& localImage, size_t width, size_t height);
-size_t LocalRowsCountForCollection(size_t width, size_t height, size_t processesCount, size_t processRank);
+std::pair<size_t, size_t> LocalRowsOffsetAndCountForDistribution(
+        size_t width, size_t height,
+        size_t processesCount, size_t processRank);
+
+
+void CollectImage(
+        ImageMatrix& totalImage, const ImageMatrix& localImage, // NOLINT
+        size_t width, size_t height);
+
+size_t LocalRowsCountForCollection(
+        size_t width, size_t height,
+        size_t processesCount, size_t processRank);
 
 namespace mpi = boost::mpi;
 
 
 // Definitions
-ImageMatrix SequentialSobelOperator(const ImageMatrix& image, size_t width, size_t height) {
-
+ImageMatrix SequentialSobelOperator(
+        const ImageMatrix& image, size_t width, size_t height
+) {
     ConvolutionKernel convolutionByX = {
             {-1, 0, +1},
             {-2, 0, +2},
@@ -35,8 +47,6 @@ ImageMatrix SequentialSobelOperator(const ImageMatrix& image, size_t width, size
 
     for (size_t y = 1; y < height - 1; ++y) {
         for (size_t x = 1; x < width - 1; ++x) {
-
-
             int dx = 0;
             int dy = 0;
 
@@ -49,29 +59,34 @@ ImageMatrix SequentialSobelOperator(const ImageMatrix& image, size_t width, size
                 }
             }
 
-            auto magnitude = std::min(static_cast<int>(sqrt(dx * dx + dy * dy)), 255);
+            auto magnitude = std::min(
+                    static_cast<int>(sqrt(dx * dx + dy * dy)),
+                    255);
+
             resultMatrix[(y - 1) * (width - 2) + (x - 1)] = magnitude;
         }
     }
 
     return std::move(resultMatrix);
-
 }
 
-ImageMatrix ParallelSobelOperator(const ImageMatrix& image, size_t width, size_t height) {
+ImageMatrix ParallelSobelOperator(
+        const ImageMatrix& image, size_t width, size_t height
+) {
     ImageMatrix localImage, totalParallelResult;
 
     DistributeImage(image, localImage, width, height);
 
-    auto localResult = SequentialSobelOperator(localImage, width, localImage.size() / width);
+    auto localResult = SequentialSobelOperator(
+            localImage, width, localImage.size() / width);
 
     CollectImage(totalParallelResult, localResult, width - 2, height - 2);
 
     return std::move(totalParallelResult);
 }
 
-void DistributeImage(const ImageMatrix& image, ImageMatrix& localImage, size_t width, size_t height) {
-
+void DistributeImage(const ImageMatrix& image, ImageMatrix& localImage, // NOLINT
+                     size_t width, size_t height) {
     mpi::communicator world;
 
     auto rank = world.rank();
@@ -87,9 +102,9 @@ void DistributeImage(const ImageMatrix& image, ImageMatrix& localImage, size_t w
             processesRowsOffset(world.size());
 
         for (int i = 0; i < world.size(); ++i) {
-
-            auto [iProcessRowOffset, iProcessLocalImageSize] = LocalRowsOffsetAndCountForDistribution(
-                    width, height, world.size(), i);
+            auto [iProcessRowOffset, iProcessLocalImageSize] =
+                    LocalRowsOffsetAndCountForDistribution(width, height,
+                                                           world.size(), i);
 
             processesRowsCount[i] = iProcessLocalImageSize;
             processesRowsOffset[i] = iProcessRowOffset;
@@ -98,17 +113,16 @@ void DistributeImage(const ImageMatrix& image, ImageMatrix& localImage, size_t w
         mpi::scatterv(
                 world, image.data(),
                 processesRowsCount, processesRowsOffset,
-                localImage.data(), processesRowsCount[0], 0
-        );
+                localImage.data(), processesRowsCount[0], 0);
     } else {
         mpi::scatterv(
             world, localImage.data(),
-            localImageSize, 0
-        );
+            localImageSize, 0);
     }
 }
 
-void CollectImage(ImageMatrix& totalImage, const ImageMatrix& localImage, size_t width, size_t height) {
+void CollectImage(ImageMatrix& totalImage, // NOLINT
+                  const ImageMatrix& localImage, size_t width, size_t height) {
     mpi::communicator world;
 
     auto rank = world.rank();
@@ -119,7 +133,6 @@ void CollectImage(ImageMatrix& totalImage, const ImageMatrix& localImage, size_t
         std::vector<int> processesImageSizes(world.size());
 
         for (int i = 0; i < world.size(); ++i) {
-
             auto iProcessLocalImageSize = LocalRowsCountForCollection(
                     width, height, world.size(), i);
 
@@ -128,14 +141,15 @@ void CollectImage(ImageMatrix& totalImage, const ImageMatrix& localImage, size_t
 
         mpi::gatherv(
                 world, localImage, totalImage.data(),
-                processesImageSizes, 0
-        );
+                processesImageSizes, 0);
     } else {
         mpi::gatherv(world, localImage, 0);
     }
 }
 
-size_t LocalRowsCountForCollection(size_t width, size_t height, size_t processesCount, size_t processRank) {
+size_t LocalRowsCountForCollection(size_t width, size_t height,
+                                   size_t processesCount, size_t processRank
+) {
     auto distributeRowsCount = height;
 
     auto rowsPerProcess = distributeRowsCount / processesCount;
@@ -152,7 +166,9 @@ size_t LocalRowsCountForCollection(size_t width, size_t height, size_t processes
     return localRowsCount * width;
 }
 
-std::pair<size_t, size_t> LocalRowsOffsetAndCountForDistribution(size_t width, size_t height, size_t processesCount, size_t processRank) {
+std::pair<size_t, size_t> LocalRowsOffsetAndCountForDistribution(
+        size_t width, size_t height, size_t processesCount, size_t processRank
+) {
     auto distributeRowsCount = height - 2;
 
     auto rowsPerProcess = distributeRowsCount / processesCount;
@@ -160,12 +176,15 @@ std::pair<size_t, size_t> LocalRowsOffsetAndCountForDistribution(size_t width, s
 
     auto rank = processRank;
 
-    auto localRowsCount = rowsPerProcess + (rank < remainder ? 1 : 0);
-    auto absoluteRowOffset = rank * rowsPerProcess + (rank < remainder ? rank : remainder);
+    auto localRowsCount = rowsPerProcess +
+            (rank < remainder ? 1 : 0);
+    auto absoluteRowOffset = rank * rowsPerProcess +
+            (rank < remainder ? rank : remainder);
 
     if (rank >= distributeRowsCount) {
         return std::make_pair(0, 0);
     }
 
-    return std::make_pair(absoluteRowOffset * width, (localRowsCount + 2) * width);
+    return std::make_pair(absoluteRowOffset * width,
+                          (localRowsCount + 2) * width);
 }

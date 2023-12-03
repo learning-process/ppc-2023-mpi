@@ -38,7 +38,6 @@ TEST(sequential_sobel, image_3x3) {
 }
 
 TEST(sequential_sobel, image_10x10) {
-
     ImageMatrix matrix = {
         41, 104,   6, 208, 106,  57, 207,  53, 236, 222,
         253,  49,  52,  21,  58,  94,  26, 222,  15, 186,
@@ -109,7 +108,7 @@ TEST(sequential_sobel, image_5x15) {
 }
 
 
-TEST(parallel_sobel, image_5x7){
+TEST(parallel_sobel, image_5x7) {
     boost::mpi::communicator world;
 
     size_t height = 5;
@@ -135,7 +134,7 @@ TEST(parallel_sobel, image_5x7){
     }
 }
 
-TEST(parallel_sobel, random_image_3x3){
+TEST(parallel_sobel, random_image_3x3) {
     boost::mpi::communicator world;
 
     size_t height = 3;
@@ -155,7 +154,7 @@ TEST(parallel_sobel, random_image_3x3){
     }
 }
 
-TEST(parallel_sobel, random_image_200x100){
+TEST(parallel_sobel, random_image_200x100) {
     boost::mpi::communicator world;
 
     size_t height = 200;
@@ -175,7 +174,7 @@ TEST(parallel_sobel, random_image_200x100){
     }
 }
 
-TEST(parallel_sobel, random_image_300x400){
+TEST(parallel_sobel, random_image_300x400) {
     boost::mpi::communicator world;
 
     size_t height = 300;
@@ -199,7 +198,8 @@ int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
+    ::testing::TestEventListeners& listeners =
+            ::testing::UnitTest::GetInstance()->listeners();
     if (world.rank() != 0) {
         delete listeners.Release(listeners.default_result_printer());
     }
