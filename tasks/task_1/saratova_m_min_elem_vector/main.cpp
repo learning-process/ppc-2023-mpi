@@ -1,6 +1,5 @@
 // Copyright 2023 Saratova Marina
 #include <gtest/gtest.h>
-
 #include "./min_elem_vector.h"
 
 TEST(MPI_TESTS, Test_given_vector) {

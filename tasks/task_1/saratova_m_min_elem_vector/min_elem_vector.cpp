@@ -6,7 +6,7 @@ std::vector<int> generate_random_vector(int size, int low, int high) {
     srand(static_cast<unsigned int>(time(nullptr)));
 
     for (int i = 0; i < size; ++i) {
-        int randomNum = rand() % (high - low + 1) + low;
+        int randomNum = std::rand() % (high - low + 1) + low;
         randomVector.push_back(randomNum);
     }
 
