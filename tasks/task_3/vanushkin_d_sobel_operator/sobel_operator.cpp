@@ -73,12 +73,14 @@ ImageMatrix SequentialSobelOperator(
 ImageMatrix ParallelSobelOperator(
         const ImageMatrix& image, size_t width, size_t height
 ) {
-    ImageMatrix localImage, totalParallelResult;
+    ImageMatrix localImage, localResult, totalParallelResult;
 
     DistributeImage(image, localImage, width, height);
 
-    auto localResult = SequentialSobelOperator(
-            localImage, width, localImage.size() / width);
+    if (!localImage.empty()) {
+        localResult = SequentialSobelOperator(
+                localImage, width, localImage.size() / width);
+    }
 
     CollectImage(totalParallelResult, localResult, width - 2, height - 2);
 
@@ -98,22 +100,22 @@ void DistributeImage(const ImageMatrix& image, ImageMatrix& localImage, // NOLIN
 
     if (rank == 0) {
         std::vector<int>
-            processesRowsCount(world.size()),
-            processesRowsOffset(world.size());
+            processesImagesSizes(world.size()),
+            processesImagesOffsets(world.size());
 
         for (int i = 0; i < world.size(); ++i) {
             auto [iProcessRowOffset, iProcessLocalImageSize] =
                     LocalRowsOffsetAndCountForDistribution(width, height,
                                                            world.size(), i);
 
-            processesRowsCount[i] = iProcessLocalImageSize;
-            processesRowsOffset[i] = iProcessRowOffset;
+            processesImagesSizes[i] = iProcessLocalImageSize;
+            processesImagesOffsets[i] = iProcessRowOffset;
         }
 
         mpi::scatterv(
                 world, image.data(),
-                processesRowsCount, processesRowsOffset,
-                localImage.data(), processesRowsCount[0], 0);
+                processesImagesSizes, processesImagesOffsets,
+                localImage.data(), processesImagesSizes[0], 0);
     } else {
         mpi::scatterv(
             world, localImage.data(),
