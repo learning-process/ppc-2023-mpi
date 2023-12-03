@@ -54,15 +54,6 @@ std::vector<int> matrixMultiplicationParallel(std::vector<int>* A,
   MPI_Bcast((*B).data(), maxSize * maxSize, MPI_INT, 0, MPI_COMM_WORLD);
 
   std::vector<int> localC(sendcount[rank]);
-  /* for (int i = 0; i < count[rank] && count[rank] != 0; i++) {
-       for (int j = 0; j < maxSize; j++) {
-           localC[i * maxSize + j] = 0;
-           for (int k = 0; k < maxSize; k++) {
-               localC[i * maxSize + j] += localA[i * maxSize + k] * B[k *
-   maxSize + j];
-           }
-       }
-   }*/
   localC = matrixMultiplicate(&localA, &(*B), &localC, maxSize, count[rank]);
 
   MPI_Gatherv(localC.data(), sendcount[rank], MPI_INT, (*C).data(),
