@@ -7,7 +7,7 @@ TEST(MPI_TESTS, Test_given_vector) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  std::vector<int> vec = {1, 2, 3, 4, 5, 30, -25, 10, 25, -2};
+  std::vector<int> vec{1, 2, 3, 4, 5, 30, -25, 10, 25, -2};
 
   int par_result = par_find_min_elem_vector(vec);
 
@@ -22,7 +22,7 @@ TEST(MPI_TESTS, Test_random_vector) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  std::vector<int> vec = generate_random_vector(100, 0, 100);;
+  std::vector<int> vec = generate_random_vector(100, -1000, 1000);;
 
   int par_result = par_find_min_elem_vector(vec);
 
@@ -37,7 +37,7 @@ TEST(MPI_TESTS, Test_big_random_vector) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  std::vector<int> vec = generate_random_vector(1000000, 0, 100);;
+  std::vector<int> vec = generate_random_vector(1000000, -1000, 1000);;
 
   int par_result = par_find_min_elem_vector(vec);
 
@@ -52,7 +52,7 @@ TEST(MPI_TESTS, Test_empty_vector) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  std::vector<int> vec = generate_random_vector(0, 0, 100);
+  std::vector<int> vec = generate_random_vector(0, -100, 100);
 
   int par_result = par_find_min_elem_vector(vec);
 

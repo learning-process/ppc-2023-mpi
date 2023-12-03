@@ -14,7 +14,7 @@ std::vector<int> generate_random_vector(int size, int low, int high) {
 }
 
 int seq_find_min_elem_vector(const std::vector<int>& vec) {
-  int min = INT_MAX;
+  int min = std::numeric_limits<int>::max();
   if (vec.size() == 0) {
     return 0;
   }
@@ -32,7 +32,7 @@ int par_find_min_elem_vector(const std::vector<int>& vec) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    if (rank == 0 && vec.size() == 0) {
+    if (vec.size() == 0) {
         return 0;
     }
 
@@ -56,19 +56,15 @@ int par_find_min_elem_vector(const std::vector<int>& vec) {
     MPI_Scatterv(vec.data(), counts.data(), displs.data(), MPI_INT,
      local_vec.data(), local_size, MPI_INT, 0, MPI_COMM_WORLD);
 
-    int local_min = INT_MAX;
+    int local_min = std::numeric_limits<int>::max();
     for (int i = 0; i < local_vec.size(); i++) {
         if (local_vec[i] < local_min) {
             local_min = local_vec[i];
         }
     }
 
-    int global_min = INT_MAX;
+    int global_min = std::numeric_limits<int>::max();
     MPI_Reduce(&local_min, &global_min, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
 
-    if (rank == 0) {
-        return global_min;
-    }
-
-    return 0;
+    return global_min;
 }
