@@ -14,7 +14,7 @@ std::vector<int> generate_random_vector(int size, int low, int high) {
 }
 
 int seq_find_min_elem_vector(const std::vector<int>& vec) {
-    if (vec.empty()) {
+    if (vec.size() == 0) {
         return 0;
     }
     int min = vec[0];
@@ -32,7 +32,7 @@ int par_find_min_elem_vector(const std::vector<int>& vec) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    if (vec.empty()) {
+    if (vec.size() == 0) {
         return 0;
     }
 
