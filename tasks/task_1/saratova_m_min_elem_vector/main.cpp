@@ -7,7 +7,7 @@ TEST(MPI_TESTS, Test_given_vector) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  std::vector<int> vec{1, 2, 3, 4, 5, 30, -25, 10, 25, -2};
+  std::vector<int> vec = {1, 2, 3, 4, 5, 30, -25, 10, 25, -2};
 
   int par_result = par_find_min_elem_vector(vec);
 
