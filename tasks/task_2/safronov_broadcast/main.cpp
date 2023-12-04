@@ -67,7 +67,6 @@ TEST(broadcast, test_sum_el_int) {
 }
 
 TEST(broadcast, test) {
-
 }
 int main(int argc, char** argv) {
     int resultCode = 0;
