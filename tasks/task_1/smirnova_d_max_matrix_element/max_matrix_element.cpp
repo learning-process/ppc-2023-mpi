@@ -8,7 +8,7 @@
 #include <limits>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
-#include "task1/smirnova_d_max_matrix_element/max_matrix_element.h"
+#include "tasks/task1/smirnova_d_max_matrix_element/max_matrix_element.h"
 
 std::vector <int> generate_random_Matrix(int rows, int cols) {
     if ((rows <= 0) || (cols <= 0)) {
