@@ -134,7 +134,6 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_random) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    printf("--%d--\n", size);
     const size_t rows = 4, cols = 4;
     std::vector<int> matrix(rows * cols), vec(cols), resPar(rows), res(rows);
     if (rank == 0) {

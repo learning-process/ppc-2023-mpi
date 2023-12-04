@@ -397,7 +397,7 @@ std::vector<int> matrix_vector_multiply_par(const std::vector<int>& A, const std
     int remainder = rows % s;
     int start = r * chunkSize;
     int end = (r + 1) * chunkSize;
-    if (r == size - 1)
+    if (r == s - 1)
         end += remainder;
     std::vector<int> localRes(chunkSize, 0);
     std::vector<int> localMatrix(chunkSize * cols);
