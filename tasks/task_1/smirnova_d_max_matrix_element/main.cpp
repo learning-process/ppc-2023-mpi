@@ -6,10 +6,9 @@
 #include "./max_matrix_element.h"
 
 TEST(Parallel_Max_Matrix_Element_MPI, Test_Equal_rows_and_cols) {
-    
-  boost::mpi::communicator world; 
+  boost::mpi::communicator world;
   std::vector<int> global_matrix;
-    
+
   const int rows = 4;
   const int cols = 4;
 
@@ -23,14 +22,13 @@ TEST(Parallel_Max_Matrix_Element_MPI, Test_Equal_rows_and_cols) {
   if (world.rank() == 0) {
     int local_max = findMaxOfMatrix(global_matrix);
     ASSERT_EQ(local_max, global_max);
-  } 
+  }
 }
 
 TEST(Parallel_Max_Matrix_Element_MPI, Test_Different_rows_and_cols) {
-
-  boost::mpi::communicator world; 
+  boost::mpi::communicator world;
   std::vector<int> global_matrix;
-    
+
   const int rows = 3;
   const int cols = 7;
 
@@ -44,11 +42,10 @@ TEST(Parallel_Max_Matrix_Element_MPI, Test_Different_rows_and_cols) {
   if (world.rank() == 0) {
     int local_max = findMaxOfMatrix(global_matrix);
     ASSERT_EQ(local_max, global_max);
-  } 
-} 
+  }
+}
 
 TEST(Parallel_Max_Matrix_Element_MPI, Test_Zero_rows) {
-  
   boost::mpi::communicator world;
   std::vector<int> global_matrix;
   const int rows = 0;
@@ -60,7 +57,6 @@ TEST(Parallel_Max_Matrix_Element_MPI, Test_Zero_rows) {
 }
 
 TEST(Parallel_Max_Matrix_Element_MPI, Test_Zero_cols) {
-  
   boost::mpi::communicator world;
   std::vector<int> global_matrix;
   const int rows = 5;
@@ -69,11 +65,10 @@ TEST(Parallel_Max_Matrix_Element_MPI, Test_Zero_cols) {
   if (world.rank() == 0) {
     ASSERT_ANY_THROW(generate_random_Matrix(rows, cols));
   }
-} 
+}
 
 TEST(Parallel_Max_Matrix_Element_MPI, Test1_negative_in_rows) {
-  
-  boost::mpi::communicator world; 
+  boost::mpi::communicator world;
   std::vector<int> global_matrix;
   const int rows = 3;
   const int cols = 7;
@@ -90,38 +85,7 @@ TEST(Parallel_Max_Matrix_Element_MPI, Test1_negative_in_rows) {
     int local_max = findMaxOfMatrix(global_matrix);
     ASSERT_EQ(local_max, global_max);
   }
-} 
-
-/*TEST(Parallel_Max_Matrix_Element_MPI, Test1_negative_in_rows) {
-    std::vector <int> vect(4);
-    vect = { 2, 1, 1, -100 };
-    EXPECT_ANY_THROW(find_max_Matrix(vect, -2, 2));
-}*/
-
-/*TEST(Parallel_Max_Matrix_Element_MPI, Test_rows_and_cols_one) {
-
-  boost::mpi::communicator world; 
-    std::vector<int> global_matrix;
-    const int rows = 1;
-    const int cols = 1;
-
-    if (world.rank() == 0) {
-        global_matrix = generate_random_Matrix(rows, cols);
-    }
-
-    int global_max;
-    global_max = findMaxOfMatrixParallel(global_matrix, rows, cols);
-
-    if (world.rank() == 0) {
-        int local_max = findMaxOfMatrix(global_matrix);
-        ASSERT_EQ(local_max, global_max);
-    }
-} */
-
-
-
-
-
+}
 
 int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
