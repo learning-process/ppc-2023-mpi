@@ -1,62 +1,70 @@
 // Copyright 2023 Ivanchenko Aleksei
-#include <vector>
-#include <string>
-#include <random>
 #include <algorithm>
-#include <functional>
+#include <random>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 #include "./max_across_columns.h"
 
-std::vector<int> getRandomMatrix(int rows, int columns) {
+std::vector<int> getRandomMatrix(size_t rows, size_t columns, int minElem, int maxElem) {
     std::random_device dev;
     std::mt19937 gen(dev());
-    std::vector<int> vec(rows*columns);
-    for (int  i = 0; i < vec.size(); i++) {
-         vec[i] = gen() % 100; 
+    std::uniform_int_distribution<int> distrib(minElem, maxElem);
+
+    size_t size = rows*columns;
+    std::vector<int> vec(size);
+    for (int  i = 0; i < size; i++) {
+        vec[i] = distrib(gen);
     }
     return vec;
 }
-
-int getSequentialOperations(std::vector<int> vec, int rows, int columns) {
-    // returns vector of max values across columns
-    // sequential algorithm
+std::vector<int> getMaxSequentional(std::vector<int>& matrix, size_t rows, size_t columns) {
     std::vector<int> result(columns, INT_MIN);
-
     for(int i = 0; i < rows; i++) {
-        for(int j = 0; j < columns) {
-            result[j] = std::max(result[j], vec[i*columns + j]);
+        for(int j = 0; j < columns; j++) {
+            result[j] = std::max(result[j], matrix[i*columns + j]);
         }
     }
     return result;
 }
-
-int getParallelOperations(std::vector<int> global_vec,
-                          int count_size_vector, const std::string& ops) {
-    boost::mpi::communicator world;
-    const int delta = count_size_vector / world.size();
-
-    if (world.rank() == 0) {
-        for (int proc = 1; proc < world.size(); proc++) {
-            world.send(proc, 0, global_vec.data() + proc * delta, delta);
+std::vector<int> getMaxParallel(std::vector<int>& matrix, size_t rows, size_t columns) {
+    boost::mpi::communicator comm;
+    std::vector<int> res(columns);
+    size_t t1 = (rows / comm.size()) * columns;
+    size_t t2 = (rows % comm.size()) * columns;
+    std::vector<int> localSizes(comm.size(), t1);
+    std::vector<int> localMatrix(t1);
+    localSizes[0] += t2;
+    if (t1 == 0) {
+        localMatrix = matrix;
+    } else {
+        if (comm.rank() == 0) {
+            localMatrix.resize(localSizes[0]);
+            boost::mpi::scatterv(comm, matrix, localSizes, localMatrix.data(), 0);
+        } else {
+            boost::mpi::scatterv(comm, localMatrix.data(), localSizes[comm.rank()], 0);
         }
     }
 
-    std::vector<int> local_vec(delta);
-    if (world.rank() == 0) {
-        local_vec = std::vector<int>(global_vec.begin(),
-                                     global_vec.begin() + delta);
+    std::vector<int> localMax(columns, INT_MIN);
+    if(comm.rank() == 0) {
+        for(int i = 0; i < localSizes[comm.rank()] / columns; i++) {
+            for(int j = 0; j < columns; j++) {
+                localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
+            }
+        }
     } else {
-        world.recv(0, 0, local_vec.data(), delta);
+        for(int i = 0; i < localSizes[comm.rank()] / columns; i++) {
+            for(int j = 0; j < columns; j++) {
+                localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
+            }
+        }
     }
-
-    int global_sum = 0;
-    int local_sum = getSequentialOperations(local_vec, ops);
-    if (ops == "+" || ops == "-") {
-        reduce(world, local_sum, global_sum, std::plus<int>(), 0);
+    if (t1 == 0) {
+        if (comm.rank() == 0) {
+            res = localMax;
+        }
+    } else {
+        boost::mpi::reduce(comm, &localMax.front(), (int)columns, &res.front(), boost::mpi::maximum<int>(), 0);
     }
-    if (ops == "max") {
-        reduce(world, local_sum, global_sum, boost::mpi::maximum<int>(), 0);
-    }
-    return global_sum;
+    return res;
 }

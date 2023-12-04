@@ -1,12 +1,11 @@
 // Copyright 2023 Ivanchenko Aleksei
-#ifndef TASKS_TASK_1_IVANCHENKO_MAX_ACROSS_COLUMNS_
-#define TASKS_TASK_1_IVANCHENKO_MAX_OF_MATRIX_
+#ifndef TASKS_TASK_1_IVANCHENKO_A_MAX_ACROSS_COLUMN_H_
+#define TASKS_TASK_1_IVANCHENKO_A_MAX_ACROSS_COLUMN_H_
 
 #include <vector>
-#include <string>
 
-std::vector<int> getRandomVector(int  sz);
-int getParallelOperations(std::vector<int> global_vec, int rows, int columns);
-int getSequentialOperations(std::vector<int> vec, int rows, int columns);
+std::vector<int> getRandomMatrix(size_t rows, size_t columns, int minElem = -100, int maxElem = 1000);
+std::vector<int> getMaxSequentional(std::vector<int>& matrix, size_t rows, size_t columns);
+std::vector<int> getMaxParallel(std::vector<int>& matrix, size_t rows, size_t columns);
 
-#endif  // TASKS_TASK_1_IVANCHENKO_MAX_ACROSS_COLUMNS_
+#endif  // TASKS_TASK_1_IVANCHENKO_A_MAX_ACROSS_COLUMN_H_
