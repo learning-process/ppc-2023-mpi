@@ -8,7 +8,7 @@
 #include <limits>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
-#include "./max_matrix_element.h"
+#include "task1/smirnova_d_max_matrix_element/max_matrix_element.h"
 
 std::vector <int> generate_random_Matrix(int rows, int cols) {
     if ((rows <= 0) || (cols <= 0)) {
@@ -38,7 +38,7 @@ int findMaxOfMatrixParallel(const std::vector<int>& global_matrix, int rows, int
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    
+
     const int elem_per_process = (rows * cols) / size;
     const int remainder = (rows * cols) % size;
 
