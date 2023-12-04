@@ -1,5 +1,5 @@
 // Copyright 2023 Safronov Mikhail
-#include "tasks/task_2/safronov_broadcast/broadcast.h"
+#include "./broadcast.h"
 
 void bcast(void* data, int count, MPI_Datatype datatype,
             int root, MPI_Comm communicator) {
