@@ -66,6 +66,9 @@ TEST(broadcast, test_sum_el_int) {
     ASSERT_EQ(global_sum, 15);
 }
 
+TEST(broadcast, test) {
+
+}
 int main(int argc, char** argv) {
     int resultCode = 0;
     ::testing::InitGoogleTest(&argc, argv);
