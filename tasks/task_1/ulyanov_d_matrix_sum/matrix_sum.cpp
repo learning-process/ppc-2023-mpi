@@ -18,6 +18,7 @@ int parallelSum(const std::vector<int> &v) {
   MPI_Comm_size(MPI_COMM_WORLD, &num);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+
   int block = v.size() / num, remain = v.size() % num;
   std::vector<int> counts(num), indexs(num);
 
