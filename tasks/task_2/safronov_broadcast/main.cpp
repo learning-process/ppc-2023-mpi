@@ -1,17 +1,18 @@
 // Copyright 2023 Safronov Mikhail
 #include <gtest/gtest.h>
-#include <iostream>
 #include <mpi.h>
-#include "./broadcast.h"
+#include <iostream>
 #include <vector>
 #include <numeric>
+#include "./broadcast.h"
+
 
 TEST(broadcast, Test_MPI_INT) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int root = 0, value = 0;
-    if(rank == root) {
+    if (rank == root) {
         value = 1;
     }
     bcast(&value, 1, MPI_INT, root, MPI_COMM_WORLD);
@@ -24,7 +25,7 @@ TEST(broadcast, Test_MPI_FLOAT) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int root = 0; float value = 0.0;
-    if(rank == root) {
+    if (rank == root) {
         value = 1.0;
     }
     bcast(&value, 1, MPI_FLOAT, root, MPI_COMM_WORLD);
@@ -37,7 +38,7 @@ TEST(broadcast, Test_MPI_DOUBLE) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int root = 0; double value = 0.0;
-    if(rank == root) {
+    if (rank == root) {
         value = 1.0;
     }
     bcast(&value, 1, MPI_DOUBLE, root, MPI_COMM_WORLD);
@@ -54,7 +55,7 @@ TEST(broadcast, test_sum_el_int) {
 
     if (rank == 0)
         v = {1, 2, 3, 4, 5};
-    
+
     MPI_Bcast(v.data(), v.size(), MPI_INT, 0, MPI_COMM_WORLD);
 
     int local_sum = std::accumulate(v.begin(), v.end(), 0);
