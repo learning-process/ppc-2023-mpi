@@ -1,9 +1,9 @@
 // Copyright 2023 Veselov Ilya
 #include <mpi.h>
 #include <random>
-#include <boost/mpi/collectives.hpp>
-#include <boost/mpi/communicator.hpp>
-#include <boost/serialization/vector.hpp>
+// #include <boost/mpi/collectives.hpp>
+// #include <boost/mpi/communicator.hpp>
+// #include <boost/serialization/vector.hpp>
 #include "task_2/veselov_i_strip_hor_mult_matrix_vector/stripHorMultMatrixVector.h"
 
 /*std::vector<int> matrix_vector_multiply_par(std::vector<std::vector<int>> matrix, std::vector<int> vec,
@@ -182,7 +182,7 @@ std::vector<int> randomMatrix(int rows, int cols, int minElem, int maxElem) {
 }*/
 
 
-std::vector<int> matrix_vector_multiply_par(const std::vector<int>& A, const std::vector<int>& X, int rows, int cols) {
+std::vector<int> matrix_vector_multiply_par(const std::vector<int>& A, std::vector<int> X, int rows, int cols) {
     // более-менее работает
     /*int rowsPerProc = rows / size;
     int rowsForLastProc = rows - rowsPerProc * (size - 1);

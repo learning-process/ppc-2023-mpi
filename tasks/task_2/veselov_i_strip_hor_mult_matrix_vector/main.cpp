@@ -2,9 +2,9 @@
 #include <mpi.h>
 #include <gtest/gtest.h>
 #include <vector>
-#include <boost/mpi/communicator.hpp>
-#include <boost/mpi/environment.hpp>
-#include <boost/serialization/vector.hpp>
+// #include <boost/mpi/communicator.hpp>
+// #include <boost/mpi/environment.hpp>
+// #include <boost/serialization/vector.hpp>
 #include "task_2/veselov_i_strip_hor_mult_matrix_vector/stripHorMultMatrixVector.h"
 
 // TEST(Strip_Hor_Mult_Matrix_Vector, Test_) {
