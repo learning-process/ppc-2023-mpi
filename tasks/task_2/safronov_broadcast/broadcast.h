@@ -3,7 +3,8 @@
 #define TASKS_TASK_2_SAFRONOV_BROADCAST_BROADCAST_H_
 
 #include <mpi.h>
-#include <iostream>
+#include <vector>
+#include <numeric>
 
 void bcast(void* data, int count, MPI_Datatype datatype,
     int root, MPI_Comm communicator);

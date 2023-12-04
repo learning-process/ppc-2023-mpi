@@ -1,9 +1,5 @@
 // Copyright 2023 Safronov Mikhail
 #include <gtest/gtest.h>
-#include <mpi.h>
-#include <iostream>
-#include <vector>
-#include <numeric>
 #include "./broadcast.h"
 
 
