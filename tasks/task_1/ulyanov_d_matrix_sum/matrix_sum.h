@@ -8,4 +8,4 @@
 int sequentialSum(const std::vector<int> &v);
 int parallelSum(const std::vector<int> &v);
 
-#endif // TASKS_TASK_1_ULYANOV_D_MATRIX_SUM_MATRIX_SUM_H_
+#endif  // TASKS_TASK_1_ULYANOV_D_MATRIX_SUM_MATRIX_SUM_H_

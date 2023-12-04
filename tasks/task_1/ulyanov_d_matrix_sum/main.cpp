@@ -4,94 +4,88 @@
 #include <iostream>
 #include "./matrix_sum.h"
 
-TEST(matrix_sum, test_1)
-{
+TEST(matrix_sum, test_1) {
   int rank, num;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  std::vector<int> vec{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  std::vector<int> matrix{ 1, 2, 3, 4, 5,
+                           6, 7, 8, 9, 10};
 
-  int resPar = parallelSum(vec);
+  int resPar = parallelSum(matrix);
 
-  if (rank == 0)
-  {
-    int resSeq = sequentialSum(vec);
+  if (rank == 0) {
+    int resSeq = sequentialSum(matrix);
     ASSERT_EQ(resPar, resSeq);
     ASSERT_EQ(resPar, (1 + 10) * 10 / 2);
   }
 }
 
-TEST(matrix_sum, test_2)
-{
+TEST(matrix_sum, test_2) {
   int rank, num;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  std::vector<int> vec{ };
+  std::vector<int> matrix{ };
 
-  int resPar = parallelSum(vec);
+  int resPar = parallelSum(matrix);
 
-  if (rank == 0)
-  {
-    int resSeq = sequentialSum(vec);
+  if (rank == 0) {
+    int resSeq = sequentialSum(matrix);
     ASSERT_EQ(resPar, resSeq);
     ASSERT_EQ(resPar, 0);
   }
 }
 
-TEST(matrix_sum, test_3)
-{
+TEST(matrix_sum, test_3) {
   int rank, num;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  std::vector<int> vec(1000);
+  std::vector<int> matrix(10 * 100);
 
-  for (int i = 0; i < vec.size(); i++)
-  {
-    vec[i] = 0 + (std::rand() % (100 - 0));
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 100; j++) {
+      matrix[i * 10 + j] = 0 + (std::rand() % (100 - 0));
+    }
   }
 
-  int resPar = parallelSum(vec);
+  int resPar = parallelSum(matrix);
 
-  if (rank == 0)
-  {
-    int resSeq = sequentialSum(vec);
+  if (rank == 0) {
+    int resSeq = sequentialSum(matrix);
     ASSERT_EQ(resPar, resSeq);
   }
 }
 
-TEST(matrix_sum, test_4)
-{
+TEST(matrix_sum, test_4) {
   int rank, num;
   double t1, t2;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  std::vector<int> vec(10000);
+  std::vector<int> matrix(100 * 100);
 
-  for (int i = 0; i < vec.size(); i++)
-  {
-    vec[i] = i + 1;
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 100; j++) {
+      matrix[i * 100 + j] = i * 100 + j + 1;
+    }
   }
 
-  int resPar = parallelSum(vec);
+  int resPar = parallelSum(matrix);
 
-  if (rank == 0)
-  {
-    int resSeq = sequentialSum(vec);
+  if (rank == 0) {
+    int resSeq = sequentialSum(matrix);
     ASSERT_EQ(resPar, resSeq);
     ASSERT_EQ(resPar, (1 + 10000) * 10000 / 2);
   }
 }
 
-TEST(matrix_sum, test_5)
-{
+TEST(matrix_sum, test_5) {
   int rank, num;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -101,15 +95,13 @@ TEST(matrix_sum, test_5)
 
   int resPar = parallelSum(vec);
 
-  if (rank == 0)
-  {
+  if (rank == 0) {
     int resSeq = sequentialSum(vec);
     ASSERT_EQ(resPar, resSeq);
   }
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   int result_code = 0;
 
   ::testing::InitGoogleTest(&argc, argv);
