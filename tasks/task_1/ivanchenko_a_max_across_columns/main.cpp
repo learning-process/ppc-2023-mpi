@@ -3,7 +3,7 @@
 #include <vector>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
-#include "./max_across_columns.h"
+#include "task_1/ivanchenko_a_max_across_columns/max_across_columns.h"
 
 
 TEST(MAX_ACROSS_COLUMN, parallel_small_matrix) {
@@ -37,7 +37,6 @@ TEST(MAX_ACROSS_COLUMN, sequentional) {
     if (world.rank() == 0) {
         EXPECT_EQ(expected, getMaxSequentional(matrix, 4, 3));
     }
-
 }
 TEST(MAX_ACROSS_COLUMN, parallel_matrix_11x11_positive) {
     boost::mpi::communicator world;

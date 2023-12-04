@@ -3,7 +3,7 @@
 #include <random>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
-#include "./max_across_columns.h"
+#include "task_1/ivanchenko_a_max_across_columns/max_across_columns.h"
 
 std::vector<int> getRandomMatrix(size_t rows, size_t columns, int minElem, int maxElem) {
     std::random_device dev;
@@ -17,16 +17,16 @@ std::vector<int> getRandomMatrix(size_t rows, size_t columns, int minElem, int m
     }
     return vec;
 }
-std::vector<int> getMaxSequentional(std::vector<int>& matrix, size_t rows, size_t columns) {
+std::vector<int> getMaxSequentional(const std::vector<int>& matrix, size_t rows, size_t columns) {
     std::vector<int> result(columns, INT_MIN);
-    for(int i = 0; i < rows; i++) {
-        for(int j = 0; j < columns; j++) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
             result[j] = std::max(result[j], matrix[i*columns + j]);
         }
     }
     return result;
 }
-std::vector<int> getMaxParallel(std::vector<int>& matrix, size_t rows, size_t columns) {
+std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, size_t columns) {
     boost::mpi::communicator comm;
     std::vector<int> res(columns);
     size_t t1 = (rows / comm.size()) * columns;
@@ -47,14 +47,14 @@ std::vector<int> getMaxParallel(std::vector<int>& matrix, size_t rows, size_t co
 
     std::vector<int> localMax(columns, INT_MIN);
     if(comm.rank() == 0) {
-        for(int i = 0; i < localSizes[comm.rank()] / columns; i++) {
-            for(int j = 0; j < columns; j++) {
+        for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
+            for (int j = 0; j < columns; j++) {
                 localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
             }
         }
     } else {
-        for(int i = 0; i < localSizes[comm.rank()] / columns; i++) {
-            for(int j = 0; j < columns; j++) {
+        for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
+            for (int j = 0; j < columns; j++) {
                 localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
             }
         }
@@ -64,7 +64,7 @@ std::vector<int> getMaxParallel(std::vector<int>& matrix, size_t rows, size_t co
             res = localMax;
         }
     } else {
-        boost::mpi::reduce(comm, &localMax.front(), (int)columns, &res.front(), boost::mpi::maximum<int>(), 0);
+        boost::mpi::reduce(comm, &localMax.front(), columns, &res.front(), boost::mpi::maximum<int>(), 0);
     }
     return res;
 }
