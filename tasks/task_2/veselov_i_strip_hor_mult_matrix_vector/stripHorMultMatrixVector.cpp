@@ -69,12 +69,14 @@
     }
 }*/
 
-void matrix_vector_multiply(std::vector<int>& A, std::vector<int>& X, std::vector<int>& res, int rows, int cols) {
+std::vector<int> matrix_vector_multiply(const std::vector<int>& A, const std::vector<int>& X, int rows, int cols) {
+    std::vector<int> res(rows);
     for (int i = 0; i < rows; i++) {
         res[i] = 0;
         for (int j = 0; j < cols; j++)
             res[i] += A[i * cols + j] * X[j];
     }
+    return res;
 }
 
 /*std::vector<std::vector<int>> randomMatrix(int n, int m, int minElem, int maxElem) {
@@ -98,14 +100,15 @@ void matrix_vector_multiply(std::vector<int>& A, std::vector<int>& X, std::vecto
             matrix[i * cols + j] = dis(gen);
 }*/
 
-std::vector<int> randomMatrix(std::vector<int>& matrix, int rows, int cols, int minElem, int maxElem) {
+std::vector<int> randomMatrix(int rows, int cols, int minElem, int maxElem) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(minElem, maxElem);
+    std::vector<int> matrix(rows * cols);
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
             matrix[i * cols + j] = dis(gen);
-    return matrix;        
+    return matrix;
 }
 
 /*int *buffA, *buffX, *buffRes;
@@ -179,8 +182,8 @@ std::vector<int> randomMatrix(std::vector<int>& matrix, int rows, int cols, int 
 }*/
 
 
-std::vector<int> matrix_vector_multiply_par(std::vector<int>& A, std::vector<int>& X, std::vector<int>& res, int rows, int cols, int rank, int size) {
-    //более-менее работает
+std::vector<int> matrix_vector_multiply_par(const std::vector<int>& A, const std::vector<int>& X, int rows, int cols) {
+    // более-менее работает
     /*int rowsPerProc = rows / size;
     int rowsForLastProc = rows - rowsPerProc * (size - 1);
     int partA = (rank == size - 1) ? rowsForLastProc * cols : rowsPerProc * cols;
@@ -418,10 +421,11 @@ std::vector<int> matrix_vector_multiply_par(std::vector<int>& A, std::vector<int
         vec[i] = dis(gen);
 }*/
 
-std::vector<int> randomVector(std::vector<int>& vec, int size, int minElem, int maxElem) {
+std::vector<int> randomVector(int size, int minElem, int maxElem) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(minElem, maxElem);
+    std::vector<int> vec(size);
     for (int i = 0; i < size; i++)
         vec[i] = dis(gen);
     return vec;

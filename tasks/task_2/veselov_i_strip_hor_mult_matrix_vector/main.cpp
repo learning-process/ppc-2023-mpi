@@ -1,13 +1,13 @@
 // Copyright 2023 Veselov Ilya
 #include <mpi.h>
-#include <vector>
 #include <gtest/gtest.h>
+#include <vector>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/environment.hpp>
 #include <boost/serialization/vector.hpp>
 #include "task_2/veselov_i_strip_hor_mult_matrix_vector/stripHorMultMatrixVector.h"
 
-//TEST(Strip_Hor_Mult_Matrix_Vector, Test_) {
+// TEST(Strip_Hor_Mult_Matrix_Vector, Test_) {
     /*int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -138,20 +138,20 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_random) {
     const size_t rows = 4, cols = 4;
     std::vector<int> matrix(rows * cols), vec(cols), resPar(rows), res(rows);
     if (rank == 0) {
-        //matrix.resize(rows * cols);
-        matrix = randomMatrix(matrix, rows, cols);
-        //vec.resize(cols);
-        vec = randomVector(vec, cols);
-        //resPar.resize(rows);
-        //res.resize(rows);
+        // matrix.resize(rows * cols);
+        matrix = randomMatrix(rows, cols);
+        // vec.resize(cols);
+        vec = randomVector(cols);
+        // resPar.resize(rows);
+        // res.resize(rows);
     }
-    //MPI_Bcast(matrix.data(), rows * cols, MPI_INT, 0, MPI_COMM_WORLD);
-    //MPI_Bcast(vec.data(), cols, MPI_INT, 0, MPI_COMM_WORLD);
-    res = matrix_vector_multiply_par(matrix, vec, resPar, rows, cols, rank, size);
-    //MPI_Gather(resPar.data(), rows, MPI_INT, res.data(), rows, MPI_INT, 0, MPI_COMM_WORLD);
+    // MPI_Bcast(matrix.data(), rows * cols, MPI_INT, 0, MPI_COMM_WORLD);
+    // MPI_Bcast(vec.data(), cols, MPI_INT, 0, MPI_COMM_WORLD);
+    res = matrix_vector_multiply_par(matrix, vec, rows, cols);
+    // MPI_Gather(resPar.data(), rows, MPI_INT, res.data(), rows, MPI_INT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         std::vector<int> res_(rows);
-        matrix_vector_multiply(matrix, vec, res_, rows, cols);
+        res_ = matrix_vector_multiply(matrix, vec, rows, cols);
         for (int i = 0; i < res_.size(); i++) {
             ASSERT_EQ(res_[i], res[i]);
         }
@@ -202,16 +202,16 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_random_positive) {
     const size_t rows = 8, cols = 8;
     std::vector<int> matrix(rows * cols), vec(cols), resPar(rows);
     if (rank == 0) {
-        //matrix.resize(rows * cols);
-        matrix = randomMatrix(matrix, rows, cols, 1);
-        //vec.resize(cols);
-        vec = randomVector(vec, cols, 1);
-        //resPar.resize(rows);
+        // matrix.resize(rows * cols);
+        matrix = randomMatrix(rows, cols, 1);
+        // vec.resize(cols);
+        vec = randomVector(cols, 1);
+        // resPar.resize(rows);
     }
-    resPar = matrix_vector_multiply_par(matrix, vec, resPar, rows, cols, rank, size);
+    resPar = matrix_vector_multiply_par(matrix, vec, rows, cols);
     if (rank == 0) {
         std::vector<int> res(rows);
-        matrix_vector_multiply(matrix, vec, res, rows, cols);
+        res = matrix_vector_multiply(matrix, vec, rows, cols);
         for (int i = 0; i < res.size(); i++) {
             ASSERT_EQ(res[i], resPar[i]);
         }
@@ -264,16 +264,16 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_random_negative) {
     const size_t rows = 8, cols = 8;
     std::vector<int> matrix(rows * cols), vec(cols), resPar(rows);
     if (rank == 0) {
-        //matrix.resize(rows * cols);
-        matrix = randomMatrix(matrix, rows, cols, -1000, 0);
-        //vec.resize(cols);
-        vec = randomVector(vec, cols, -1000, 0);
-        //resPar.resize(rows);
+        // matrix.resize(rows * cols);
+        matrix = randomMatrix(rows, cols, -1000, 0);
+        // vec.resize(cols);
+        vec = randomVector(cols, -1000, 0);
+        // resPar.resize(rows);
     }
-    resPar = matrix_vector_multiply_par(matrix, vec, resPar, rows, cols, rank, size);
+    resPar = matrix_vector_multiply_par(matrix, vec, rows, cols);
     if (rank == 0) {
         std::vector<int> res(rows);
-        matrix_vector_multiply(matrix, vec, res, rows, cols);
+        res = matrix_vector_multiply(matrix, vec, rows, cols);
         for (int i = 0; i < res.size(); i++) {
             ASSERT_EQ(res[i], resPar[i]);
         }
@@ -327,15 +327,15 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_null_matrix) {
     const size_t rows = 10, cols = 10;
     std::vector<int> matrix(rows * cols, 0), vec(cols), resPar(rows);
     if (rank == 0) {
-        //matrix.resize(rows * cols, 0);
-        //vec.resize(cols);
-        vec = randomVector(vec, cols);
-        //resPar.resize(rows);
+        // matrix.resize(rows * cols, 0);
+        // vec.resize(cols);
+        vec = randomVector(cols);
+        // resPar.resize(rows);
     }
-    resPar = matrix_vector_multiply_par(matrix, vec, resPar, rows, cols, rank, size);
+    resPar = matrix_vector_multiply_par(matrix, vec, rows, cols);
     if (rank == 0) {
         std::vector<int> res(rows);
-        matrix_vector_multiply(matrix, vec, res, rows, cols);
+        res = matrix_vector_multiply(matrix, vec, rows, cols);
         for (int i = 0; i < res.size(); i++) {
             ASSERT_EQ(res[i], resPar[i]);
         }
@@ -402,20 +402,20 @@ TEST(Strip_Hor_Mult_Matrix_Vector, Test_matrix_diag) {
     const size_t rows = 16, cols = 16;
     std::vector<int> matrix(rows * cols), vec(cols), resPar(rows);
     if (rank == 0) {
-        //matrix.resize(rows * cols, 0);
+        // matrix.resize(rows * cols, 0);
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < cols; j++) {
                 if (i == j)
                     matrix[i * rows + j] = 1;
             }
-        //vec.resize(cols);
-        vec = randomVector(vec, cols);
-        //resPar.resize(rows);
+        // vec.resize(cols);
+        vec = randomVector(cols);
+        // resPar.resize(rows);
     }
-    resPar = matrix_vector_multiply_par(matrix, vec, resPar, rows, cols, rank, size);
+    resPar = matrix_vector_multiply_par(matrix, vec, rows, cols);
     if (rank == 0) {
         std::vector<int> res(rows);
-        matrix_vector_multiply(matrix, vec, res, rows, cols);
+        res = matrix_vector_multiply(matrix, vec, rows, cols);
         for (int i = 0; i < res.size(); i++) {
             ASSERT_EQ(res[i], resPar[i]);
         }
