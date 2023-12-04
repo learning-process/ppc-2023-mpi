@@ -46,7 +46,7 @@ std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, siz
     }
 
     std::vector<int> localMax(columns, INT_MIN);
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
             for (int j = 0; j < columns; j++) {
                 localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
