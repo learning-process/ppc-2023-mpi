@@ -9,7 +9,7 @@ void bcast(void* data, int count, MPI_Datatype datatype,
 
     if (rank == root) {
         for (int i = 0; i < size; i++) {
-            if (i != root) {  // Exclude the root process
+            if (i != root) {
                 MPI_Send(data, count, datatype, i, 0, communicator);
             }
         }
@@ -18,6 +18,3 @@ void bcast(void* data, int count, MPI_Datatype datatype,
                 MPI_STATUS_IGNORE);
     }
 }
-
-
-
