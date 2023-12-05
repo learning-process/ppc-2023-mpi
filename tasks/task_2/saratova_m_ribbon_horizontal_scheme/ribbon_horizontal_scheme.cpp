@@ -2,7 +2,7 @@
 #include "task_2/saratova_m_ribbon_horizontal_scheme/ribbon_horizontal_scheme.h"
 
 std::vector<std::vector<int>> generate_random_matrix(int rows,
-                 int cols, int lower_limit, int upper_limit) {
+             int cols, int lower_limit, int upper_limit) {
     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
     std::random_device rd;
     std::mt19937 gen(rd());
