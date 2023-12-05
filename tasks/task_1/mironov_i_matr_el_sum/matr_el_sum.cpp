@@ -1,6 +1,7 @@
 // Copyright 2023 Mironov Ilya
 #include <random>
 #include <numeric>
+#include <functional>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 #include "task_1/mironov_i_matr_el_sum/matr_el_sum.h"
