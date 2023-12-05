@@ -4,6 +4,13 @@
 
 #include <vector>
 
+/*
+Пояснение:
+будем считать, что матрица храниться построчечно в виде непрерывного вектора
+тогда vector<int> m(rows*columns) - матрица с rows строками и columns столбцами
+m[i + j*columns] - элемент матрицы в i-том столбце j-ой строки
+*/
+
 std::vector<int> getRandomMatrix(size_t rows, size_t columns, int minElem = -100, int maxElem = 1000);
 std::vector<int> getMaxSequentional(const std::vector<int>& matrix, size_t rows, size_t columns);
 std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, size_t columns);

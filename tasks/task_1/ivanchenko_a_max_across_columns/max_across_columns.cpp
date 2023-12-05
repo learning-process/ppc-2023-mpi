@@ -31,6 +31,10 @@ std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, siz
     std::vector<int> res(columns);
     size_t t1 = (rows / comm.size()) * columns;
     size_t t2 = (rows % comm.size()) * columns;
+    /*
+    * каждый процесс получает t1 строк матрицы
+    * процесс rank() = 0 получает оставшиеся (t1 + t2) строк матрицы
+    */
     std::vector<int> localSizes(comm.size(), t1);
     std::vector<int> localMatrix(t1);
     localSizes[0] += t2;
@@ -44,19 +48,11 @@ std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, siz
             boost::mpi::scatterv(comm, localMatrix.data(), localSizes[comm.rank()], 0);
         }
     }
-
+    // searching for local maximum
     std::vector<int> localMax(columns, INT_MIN);
-    if (comm.rank() == 0) {
-        for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
-            for (int j = 0; j < columns; j++) {
-                localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
-            }
-        }
-    } else {
-        for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
-            for (int j = 0; j < columns; j++) {
-                localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
-            }
+    for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
+        for (int j = 0; j < columns; j++) {
+            localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
         }
     }
     if (t1 == 0) {
