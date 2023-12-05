@@ -1,9 +1,11 @@
 // Copyright 2023 Borovkov Sergey
 #include <gtest/gtest.h>
-#include <cmath>
-#include "./alg.h"
-#include <iostream>
 #include <mpi.h>
+#include <cmath>
+#include <iostream>
+#include "./alg.h"
+
+
 
 void test(double (*f)(double), double a, double b, int n) {
     int rank;
