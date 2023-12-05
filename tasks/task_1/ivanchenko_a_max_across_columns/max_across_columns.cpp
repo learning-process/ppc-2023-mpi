@@ -44,10 +44,19 @@ std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, siz
             boost::mpi::scatterv(comm, localMatrix.data(), localSizes[comm.rank()], 0);
         }
     }
+
     std::vector<int> localMax(columns, INT_MIN);
-    for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
-        for (int j = 0; j < columns; j++) {
-            localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
+    if (comm.rank() == 0) {
+        for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
+            for (int j = 0; j < columns; j++) {
+                localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
+            }
+        }
+    } else {
+        for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
+            for (int j = 0; j < columns; j++) {
+                localMax[j] = std::max(localMax[j], localMatrix[i*columns + j]);
+            }
         }
     }
     if (t1 == 0) {
