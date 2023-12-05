@@ -31,10 +31,6 @@ std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, siz
     std::vector<int> res(columns);
     size_t t1 = (rows / comm.size()) * columns;
     size_t t2 = (rows % comm.size()) * columns;
-    /*
-    * each process receives t1 rows of the matrix
-    * the process with rank() = 0 gets the remaining (t1 + t2) rows of the matrix
-    */
     std::vector<int> localSizes(comm.size(), t1);
     std::vector<int> localMatrix(t1);
     localSizes[0] += t2;
@@ -48,7 +44,6 @@ std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, siz
             boost::mpi::scatterv(comm, localMatrix.data(), localSizes[comm.rank()], 0);
         }
     }
-    // searching for local maximum
     std::vector<int> localMax(columns, INT_MIN);
     for (int i = 0; i < localSizes[comm.rank()] / columns; i++) {
         for (int j = 0; j < columns; j++) {
