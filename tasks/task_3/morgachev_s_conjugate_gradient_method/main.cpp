@@ -35,10 +35,13 @@ int main(int argc, char** argv) {
     MPI_Finalize();
 
     return result_code;*/
+    MPI_Init(&argc, &argv);
+
     size_t size = 3;
     std::vector<double> testMatrix = fillMatrixRandomNumbers(size, 1, 10);
     std::vector<double> testVector = fillVectorRandomNumbers(size, 1, 10);
-    std::vector<double> res = serialConjugateGradient(testMatrix, testVector, size);
+    //std::vector<double> res = serialConjugateGradient(testMatrix, testVector, size);
+    std::vector<double> res2 = parallelConjugateGradient(testMatrix, testVector, size);
 
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
@@ -53,9 +56,15 @@ int main(int argc, char** argv) {
 
     std::cout << std::endl;
 
-    for (double d : res) {
+    /*for (double d : res) {
+        std::cout << d << " ";
+    }*/
+
+    std::cout << std::endl;
+
+    for (double d : res2) {
         std::cout << d << " ";
     }
 
-    std::cout << std::endl;
+    MPI_Finalize();
 }
