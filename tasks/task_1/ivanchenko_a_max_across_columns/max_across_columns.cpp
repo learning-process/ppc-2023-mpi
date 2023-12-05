@@ -32,8 +32,8 @@ std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, siz
     size_t t1 = (rows / comm.size()) * columns;
     size_t t2 = (rows % comm.size()) * columns;
     /*
-    * каждый процесс получает t1 строк матрицы
-    * процесс rank() = 0 получает оставшиеся (t1 + t2) строк матрицы
+    * each process receives t1 rows of the matrix
+    * the process with rank() = 0 gets the remaining (t1 + t2) rows of the matrix
     */
     std::vector<int> localSizes(comm.size(), t1);
     std::vector<int> localMatrix(t1);

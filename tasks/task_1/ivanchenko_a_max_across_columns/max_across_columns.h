@@ -5,10 +5,11 @@
 #include <vector>
 
 /*
-Пояснение:
-будем считать, что матрица храниться построчечно в виде непрерывного вектора
-тогда vector<int> m(rows*columns) - матрица с rows строками и columns столбцами
-m[i + j*columns] - элемент матрицы в i-том столбце j-ой строки
+* let's assume that the matrix is stored line by line as a continuous vector
+* then 
+* vector<int> m(rows*columns)
+* is a matrix with size (rows, columns)
+* m[i + j*columns] is an element of the matrix in the ith column of the jth row
 */
 
 std::vector<int> getRandomMatrix(size_t rows, size_t columns, int minElem = -100, int maxElem = 1000);
