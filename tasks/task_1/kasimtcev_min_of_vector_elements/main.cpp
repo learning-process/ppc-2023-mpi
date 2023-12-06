@@ -6,6 +6,7 @@ TEST(Parallel_Operations_MPI, Square_Matrix_random) {
     std::vector<int> global_matrix;
     const int count_rows = 5000;
     const int count_cols = 5000;
+
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
 
