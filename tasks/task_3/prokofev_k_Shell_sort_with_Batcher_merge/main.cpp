@@ -8,13 +8,13 @@
 TEST(Sort_Realization, Test_Entered_Vector) {
   int rankProc;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  std::vector<int> testVect = {5, 11, 23, 2, 4, 1, 44, 3, 0, 10, 13, 7};
+  std::vector<int> testVect = {5, 11, 23, 2, 4, 1, 44, 3, 0, 10, 13, 7, 100};
   std::vector<int> refVect = testVect;
   double t1, t2;
   if (rankProc == 0) {
     t1 = MPI_Wtime();
   }
-  ShellSortParallel(testVect);
+  ShellSortParallel(&testVect);
   if (rankProc == 0) {
     t2 = MPI_Wtime();
     std::cout << "algorithm time : " << t2 - t1 << std::endl;
@@ -32,7 +32,7 @@ TEST(Sort_Realization, Test_Random_Vector_1000_Elem) {
   if (rankProc == 0) {
     t1 = MPI_Wtime();
   }
-  ShellSortParallel(testVect);
+  ShellSortParallel(&testVect);
   if (rankProc == 0) {
     t2 = MPI_Wtime();
     std::cout << "algorithm time : " << t2 - t1 << std::endl;
@@ -50,7 +50,7 @@ TEST(Sort_Realization, Test_Random_Vector_5000_Elem) {
   if (rankProc == 0) {
     t1 = MPI_Wtime();
   }
-  ShellSortParallel(testVect);
+  ShellSortParallel(&testVect);
   if (rankProc == 0) {
     t2 = MPI_Wtime();
     std::cout << "algorithm time : " << t2 - t1 << std::endl;
@@ -68,7 +68,7 @@ TEST(Sort_Realization, Test_Random_Vector_12223_Elem) {
   if (rankProc == 0) {
     t1 = MPI_Wtime();
   }
-  ShellSortParallel(testVect);
+  ShellSortParallel(&testVect);
   if (rankProc == 0) {
     t2 = MPI_Wtime();
     std::cout << "algorithm time : " << t2 - t1 << std::endl;
@@ -76,6 +76,7 @@ TEST(Sort_Realization, Test_Random_Vector_12223_Elem) {
     EXPECT_EQ(testVect, refVect);
   }
 }
+
 TEST(Sort_Realization, Test_Random_Vector_777_Elem) {
   int rankProc;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
@@ -85,7 +86,7 @@ TEST(Sort_Realization, Test_Random_Vector_777_Elem) {
   if (rankProc == 0) {
     t1 = MPI_Wtime();
   }
-  ShellSortParallel(testVect);
+  ShellSortParallel(&testVect);
   if (rankProc == 0) {
     t2 = MPI_Wtime();
     std::cout << "algorithm time : " << t2 - t1 << std::endl;
@@ -93,6 +94,7 @@ TEST(Sort_Realization, Test_Random_Vector_777_Elem) {
     EXPECT_EQ(testVect, refVect);
   }
 }
+
 TEST(Sort_Realization, Test_Random_Vector_50000_Elem) {
   int rankProc;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
@@ -102,7 +104,7 @@ TEST(Sort_Realization, Test_Random_Vector_50000_Elem) {
   if (rankProc == 0) {
     t1 = MPI_Wtime();
   }
-  ShellSortParallel(testVect);
+  ShellSortParallel(&testVect);
   if (rankProc == 0) {
     t2 = MPI_Wtime();
     std::cout << "algorithm time : " << t2 - t1 << std::endl;
