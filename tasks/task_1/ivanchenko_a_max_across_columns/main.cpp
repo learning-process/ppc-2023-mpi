@@ -35,7 +35,7 @@ TEST(MAX_ACROSS_COLUMN, sequentional_big_integers) {
                                -300000, -21302,    -200000000,
                                -120000,  81200000, -121332221};
 
-    std::vector<int> expected = {-100000, 81200001,-121332221};
+    std::vector<int> expected = {-100000, 81200001, -121332221};
     if (world.rank() == 0) {
         EXPECT_EQ(expected, getMaxSequentional(matrix, 5, 3));
     }
