@@ -64,7 +64,7 @@ int ProducerConsumer(int producers) {
         while (true) {
             world.send(BASE_PROC, READY_TAG, is_producer);
             status = world.recv(BASE_PROC, boost::mpi::any_tag, some_data);
-            
+
             if (status.tag() == READY_TAG) {
                 if (is_producer) {
                     some_data = std::pow(2, wr);
