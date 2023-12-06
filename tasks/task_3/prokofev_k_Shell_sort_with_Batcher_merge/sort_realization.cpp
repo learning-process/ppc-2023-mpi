@@ -1,5 +1,6 @@
 // Copyright 2023 Prokofev Kirill
 #include "task_3/prokofev_k_Shell_sort_with_Batcher_merge/sort_realization.h"
+#include <algorithm>
 
 void ShellSortSeq(std::vector<int>* vec) {
   int vecSize = vec->size();
@@ -69,8 +70,7 @@ void BatcherMerge(std::vector<int>* vec, int l, int m, int r) {
     if (L[i] <= R[j]) {
       (*vec)[k] = L[i];
       ++i;
-    }
-    else {
+    } else {
       (*vec)[k] = R[j];
       ++j;
     }
