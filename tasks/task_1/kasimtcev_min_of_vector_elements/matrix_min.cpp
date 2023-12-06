@@ -14,7 +14,7 @@ std::vector<int> CreateRandomMatrix(int rows, int cols) {
 }
 
 int FndMin(std::vector<int> global_matrix) {
-    int min = INT_MIN;
+    int min = INT_MAX;
     for (int i = 0; i < global_matrix.size(); ++i) {
        min = std::min(global_matrix[i], min);
     }
@@ -47,7 +47,7 @@ int FndMinParallel(std::vector<int> global_matrix) {
        MPI_INT, local_matrix.data(), send_counts[proc_rank], MPI_INT, 0,
        MPI_COMM_WORLD);
 
-    int global_min = INT_MIN;
+    int global_min = INT_MAX;
     int local_min = FndMin(local_matrix);
     MPI_Reduce(&local_min, &global_min, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
     return global_min;

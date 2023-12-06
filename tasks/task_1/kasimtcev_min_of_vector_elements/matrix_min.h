@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <climits>
 
-std::vector<int> createRandomMatrix(int rows, int columns);
-int findMax(std::vector<int> global_matrix);
-int findMaxParallel(std::vector<int> global_matrix);
+std::vector<int> CreateRandomMatrix(int rows, int columns);
+int FndMin(std::vector<int> global_matrix);
+int FndMinParallel(std::vector<int> global_matrix);
 
 #endif  // TASKS_TASK_1_KASIMTCEV_MIN_OF_VECTOR_ELEMENTS_MATRIX_MIN_H_
