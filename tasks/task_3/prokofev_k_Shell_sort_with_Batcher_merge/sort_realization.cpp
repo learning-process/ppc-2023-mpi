@@ -2,6 +2,8 @@
 #include "task_3/prokofev_k_Shell_sort_with_Batcher_merge/sort_realization.h"
 #include <algorithm>
 
+const int intMin = INT_MIN;
+
 void ShellSortSeq(std::vector<int>* vec) {
   int vecSize = vec->size();
   int gap = 1;
@@ -107,9 +109,9 @@ void BatcherSort(std::vector<int>* vec) {
   }
   if (powerOfTwo != n) {
     for (int i = 0; i < powerOfTwo - n; i++)
-      vec->push_back(INT_MIN);
+      vec->push_back(intMin);
     BatcherOddEvenMerge(vec, 0, powerOfTwo, powerOfTwo);
-    vec->erase(std::remove(vec->begin(), vec->end(), INT_MIN), vec->end());
+    vec->erase(std::remove(vec->begin(), vec->end(), intMin), vec->end());
     return;
   }
   BatcherOddEvenMerge(vec, 0, powerOfTwo, powerOfTwo);
