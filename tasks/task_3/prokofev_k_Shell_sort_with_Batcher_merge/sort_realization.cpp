@@ -1,6 +1,7 @@
 // Copyright 2023 Prokofev Kirill
 #include "task_3/prokofev_k_Shell_sort_with_Batcher_merge/sort_realization.h"
 #include <algorithm>
+#include <climits>
 #include <limits>
 
 const int intMin = INT_MIN;
