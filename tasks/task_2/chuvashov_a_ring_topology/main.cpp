@@ -14,7 +14,9 @@ TEST(RingTopologyTests, FullCicle) {
         data = 1234;
     }
 
-    SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    if (size >= 3) {
+        SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    }
 
     if (rank == reciver) {
         ASSERT_EQ(1234, data);
@@ -33,7 +35,9 @@ TEST(RingTopologyTests, FromOneToRandomAnother) {
         data = 1234;
     }
 
-    SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    if (size >= 3) {
+        SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    }
 
     if (rank == reciver) {
         ASSERT_EQ(1234, data);
@@ -51,7 +55,9 @@ TEST(RingTopologyTests, FromLastToFirst) {
         data = 1234;
     }
 
-    SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    if (size >= 3) {
+        SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    }
 
     if (rank == reciver) {
         ASSERT_EQ(1234, data);
@@ -69,7 +75,9 @@ TEST(RingTopologyTests, FromFirstToLast) {
         data = 1234;
     }
 
-    SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    if (size >= 3) {
+        SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    }
 
     if (rank == reciver) {
         ASSERT_EQ(1234, data);
@@ -90,7 +98,9 @@ TEST(RingTopologyTests, FromOneMiddleToAnotherMiddle) {
         data = 1234;
     }
 
-    SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    if (size >= 3) {
+        SendDataByRing(&data, 1, MPI_INT, sender, reciver, 0, MPI_COMM_WORLD);
+    }
 
     if (rank == reciver) {
         ASSERT_EQ(1234, data);
