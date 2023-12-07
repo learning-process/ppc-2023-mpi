@@ -92,35 +92,6 @@ TEST(Parallel_Max_Matrix_Element_MPI, Test1_negative_in_rows) {
   }
 } 
 
-/*TEST(Parallel_Max_Matrix_Element_MPI, Test1_negative_in_rows) {
-    std::vector <int> vect(4);
-    vect = { 2, 1, 1, -100 };
-    EXPECT_ANY_THROW(find_max_Matrix(vect, -2, 2));
-}*/
-
-/*TEST(Parallel_Max_Matrix_Element_MPI, Test_rows_and_cols_one) {
-
-  boost::mpi::communicator world; 
-    std::vector<int> global_matrix;
-    const int rows = 1;
-    const int cols = 1;
-
-    if (world.rank() == 0) {
-        global_matrix = generate_random_Matrix(rows, cols);
-    }
-
-    int global_max;
-    global_max = findMaxOfMatrixParallel(global_matrix, rows, cols);
-
-    if (world.rank() == 0) {
-        int local_max = findMaxOfMatrix(global_matrix);
-        ASSERT_EQ(local_max, global_max);
-    }
-} */
-
-
-
-
 
 
 int main(int argc, char** argv) {

@@ -34,7 +34,7 @@ int findMaxOfMatrix(const std::vector<int>& global_matrix) {
 }
 
 int findMaxOfMatrixParallel(const std::vector<int>& global_matrix, int rows, int cols) {
-    boost::mpi::communicator comm;
+    //boost::mpi::communicator comm;
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
