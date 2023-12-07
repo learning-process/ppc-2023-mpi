@@ -42,7 +42,7 @@ TEST(Parallel_Vector_Mean, Test_only_0) {
   }
 }
 
-TEST(Parallel_Vector_Mean, Test_random_elems) {
+TEST(Parallel_Vector_Mean, Test_random_elems_1) {
   int rankProc = 0;
   int numProc = 0;
   double epsilon = 0.001;
@@ -52,6 +52,25 @@ TEST(Parallel_Vector_Mean, Test_random_elems) {
 
   std::vector<int> vec(15);
   for (auto &elem : vec) elem = generateRandomNumber(-1000, 1000);
+
+  double result = meanPar(vec);
+
+  if (rankProc == 0) {
+    double resSeq = meanSeq(vec);
+    ASSERT_NEAR(result, resSeq, epsilon);
+  }
+}
+
+TEST(Parallel_Vector_Mean, Test_random_elems_2) {
+  int rankProc = 0;
+  int numProc = 0;
+  double epsilon = 0.001;
+
+  MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+  MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+
+  std::vector<int> vec(15);
+  for (auto &elem : vec) elem = generateRandomNumber(0, 10000);
 
   double result = meanPar(vec);
 
