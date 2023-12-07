@@ -3,12 +3,12 @@
 #include "task_1/derun_a_vector_mean/vector_mean.h"
 
 double meanSeq(const std::vector<int> &vec) {
-  int total = 0;
+  double total = 0.0;
   for (int i = 0; i < vec.size(); i++) {
     total += vec[i];
   }
 
-  return static_cast<double>(total) / vec.size();
+  return total / static_cast<double>(vec.size());
 }
 
 double meanPar(const std::vector<int> &vec) {
@@ -39,12 +39,12 @@ double meanPar(const std::vector<int> &vec) {
                recv_data.data(), recv_counts[rankProc], MPI_INT, 0,
                MPI_COMM_WORLD);
 
-  int localSum = meanSeq(recv_data);
-  int globalSum = 0;
+  double localSum = meanSeq(recv_data);
+  double globalSum = 0.0;
 
-  MPI_Reduce(&localSum, &globalSum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&localSum, &globalSum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
-  return static_cast<double>(globalSum) / numProc;
+  return globalSum / static_cast<double>(numProc);
 }
 
 int generateRandomNumber(int min, int max) {
