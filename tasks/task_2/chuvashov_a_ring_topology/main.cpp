@@ -9,7 +9,7 @@ TEST(RingTopologyTests, FullCicle) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     int sender = 0, reciver = 0;
-    int data;
+    int data = 0;
 
     if (rank == sender) {
         data = 1234;
@@ -28,8 +28,8 @@ TEST(RingTopologyTests, FromOneToRandomAnother) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     std::srand(static_cast<int>(time(0)));
-    int sender = 0, reciver = (size > 1 ? std::rand() % (size - 1) + 1 : 0);
-    int data;
+    int sender = 0, reciver = (size > 1 ? std::rand() % size + 1 : 0);
+    int data = 0;
 
     if (rank == sender) {
         data = 1234;
@@ -48,7 +48,7 @@ TEST(RingTopologyTests, FromLastToFirst) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     int sender = size - 1, reciver = 0;
-    int data;
+    int data = 0;
 
     if (rank == sender) {
         data = 1234;
@@ -67,7 +67,7 @@ TEST(RingTopologyTests, FromFirstToLast) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     int sender = 0, reciver = size - 1;
-    int data;
+    int data = 0;
 
     if (rank == sender) {
         data = 1234;
@@ -89,7 +89,7 @@ TEST(RingTopologyTests, FromOneMiddleToAnotherMiddle) {
 
     int sender = (size > 1 ? std::rand() % (size / 2) + size / 2 - 1 : 0),
         reciver = (size > 1 ? std::rand() % (size / 2) + size / 2 - 1 : 0);
-    int data;
+    int data = 0;
 
     if (rank == sender) {
         data = 1234;
