@@ -35,7 +35,6 @@ std::vector<double> simple_iterations(std::vector<double> delta_a, std::vector<d
     std::vector<double> temp(size);
     std::vector<int> sendcounts(size_proc);
     std::vector<int> displs(size_proc);
-    
     int core;
     double norm = 0, val;
 
@@ -62,10 +61,12 @@ std::vector<double> simple_iterations(std::vector<double> delta_a, std::vector<d
             for (int j = 1 + core + i; j < size; j++) {
                 sum += delta_a[i * (size + 1) + j] * x_old[j];
             }
-            x[i + core] = static_cast<double>(delta_a[i * (size + 1) + size] - sum) / static_cast<double>(delta_a[i * (size + 1) + i + core]);
+            x[i + core] = static_cast<double>(delta_a[i * (size + 1) + size] - sum) /
+                        static_cast<double>(delta_a[i * (size + 1) + i + core]);
         }
 
-        MPI_Allgatherv(&x[0] + core, row_count, MPI_DOUBLE, &temp[0], &sendcounts[0], &displs[0], MPI_DOUBLE, MPI_COMM_WORLD);
+        MPI_Allgatherv(&x[0] + core, row_count, MPI_DOUBLE, &temp[0],
+                &sendcounts[0], &displs[0], MPI_DOUBLE, MPI_COMM_WORLD);
 
         x = temp;
         norm = 0;
@@ -85,8 +86,8 @@ std::vector<double> simple_iterations(std::vector<double> delta_a, std::vector<d
 std::vector<double> get_result(std::vector<double> matrix, int size, double error) {
     if (size * (size + 1) != static_cast<int>(matrix.size())) {
         throw "Non-equal dimensions";
-    }   
-    
+    }
+
     std::vector<double> MATRIX(size);
     int size_proc, rank, m_size;
     MPI_Comm_size(MPI_COMM_WORLD, &size_proc);
