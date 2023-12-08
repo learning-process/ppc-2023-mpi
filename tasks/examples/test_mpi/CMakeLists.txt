@@ -1,5 +1,4 @@
 return()
-return()
 get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 enable_testing()
 
