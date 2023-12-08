@@ -1,3 +1,4 @@
+// Copyright 2023 Bodrov Daniil
 #include <gtest/gtest.h>
 #include "./philosopher.h"
 
