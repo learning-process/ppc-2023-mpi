@@ -1,42 +1,87 @@
-#include <iostream> 
-#include <stdlib.h>
-#include <time.h>
-#include <vector>
-#include <boost/mpi/communicator.hpp>
-#include <boost/mpi/collectives.hpp>
-#include "task_1/vetoshnikova_k_vector_dot_product/vector_dot_product.h"
-
+﻿#include "vector_dot_product.h"
 
 using namespace std;
 
-vector<int> vector_generation(int n) {
 
-	vector<int> res_vec(n);
 
-	srand(time(NULL));
+vector<int> vector_generation(int mn, int mx, int sz) {
 
-	for (int i = 0; i < n; i++) { res_vec[i] = rand() % 100; }
+	vector<int> res(sz);
 
-	return res_vec;
+	for (int i = 0; i < sz; i++) { res[i] = mn + (rand() % (mx - mn + 1)); }
+
+	return res;
 }
 
-int getParallelOperations(vector<int> global_vec_a, vector<int> global_vec_b, 
-						   int count_size_vector) {
 
-	boost::mpi::communicator world;
+void print_vector(vector<int> vec, int sz) {
 
-	int ProcNum  = world.size();
-	int ProcRank = world.rank();
+	for (int i = 0; i < sz; i++) {
+		cout << vec[i] << " ";
+	}
+	cout << endl;
+}
 
-	boost::mpi::broadcast(world, count_size_vector, 0);
+int getSequentialOperations(vector<int> a, vector<int> b,
+	int count_size_vector) {
 
-	int delta = count_size_vector / ProcNum;
+	int res = 0;
 
-	if (ProcRank != 0) {
-		vector<int> a(delta);
-		vector<int> b(delta);
+	for (int i = 0; i < count_size_vector; i++) {
+		res += a[i] * b[i];
 	}
 
-	boost::mpi::scatter(world, global_vec_a, a, 0);
+	return res;
+}
+
+
+int getParallelOperations(vector<int> global_vec_a, vector<int> global_vec_b,
+	int count_size_vector) {
+
+	int ProcNum, ProcRank;
+
+	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+	
+
+	vector<int> counts_element(ProcNum);
+	vector<int> dis(ProcNum);
+
+	int delta     = count_size_vector / ProcNum;
+	int remainder = count_size_vector % ProcNum;
+
+	for (int i = 0; i < ProcNum; i++) {
+		counts_element[i] = delta;
+
+		if (i < remainder) {
+			counts_element[i]++;
+		}
+
+		if (i > 0) dis[i] = dis[i - 1] + counts_element[i - 1];
+		else dis[i] = 0;
+
+	}
+
+	vector<int> a_local(counts_element[ProcRank]);
+	vector<int> b_local(counts_element[ProcRank]);
+
+
+
+	MPI_Scatterv(global_vec_a.data(), counts_element.data(), dis.data(), MPI_INT, a_local.data(), counts_element[ProcRank], MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(global_vec_b.data(), counts_element.data(), dis.data(), MPI_INT, b_local.data(), counts_element[ProcRank], MPI_INT, 0, MPI_COMM_WORLD);
+
+	int sum = 0;
+	int sum_all = 0;
+
+	sum = getSequentialOperations(a_local, b_local, counts_element[ProcRank]);
+
+	MPI_Reduce(&sum, &sum_all, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+
+	return sum_all;
 
 }
+
+
+
+

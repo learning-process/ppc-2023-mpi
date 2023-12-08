@@ -1,52 +1,128 @@
-#include <iostream> 
-#include <stdlib.h>
-#include <time.h>
-#include <vector>
-#include <boost/mpi/communicator.hpp>
-#include <boost/mpi/collectives.hpp>
+#include "vector_dot_product.h"
+#include <gtest/gtest.h>
 
 using namespace std;
 
-vector<int> vector_generation(int n) {
+TEST(Parallel_Vector_Dot_Product, Test_equals_0) {
 
-	vector<int> res_vec(n);
+	int ProcNum, ProcRank;
+	int count_size_vector = 4;
 
-	srand(time(NULL));
 
-	for (int i = 0; i < n; i++) { res_vec[i] = rand() % 100; }
+	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
 
-	return res_vec;
+	vector<int> a{ 1, 1, 1, 1 };
+	vector<int> b{ 1, -1, 1, -1 };
+
+
+	int res = getParallelOperations(a, b, count_size_vector);
+
+	if (ProcRank == 0) {
+		int refRes = getSequentialOperations(a, b, count_size_vector);
+		ASSERT_EQ(res, refRes);
+	}
 }
 
-int main(int argc, char** argv) {
+TEST(Parallel_Vector_Dot_Product, Test_random_vectors) {
 
-	boost::mpi::environment env(argc, argv);
-	boost::mpi::communicator world;
+	int ProcNum, ProcRank;
+	int count_size_vector = 22;
 
-	vector<int> global_vec_a;
 
-	const int count_size_vector = 9;
+	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
 
-	if (world.rank() == 0) {
-		global_vec_a = vector_generation(count_size_vector);
+	vector<int> a = vector_generation(5, 40, count_size_vector);
+	vector<int> b = vector_generation(2, 25, count_size_vector);
+
+
+	int res = getParallelOperations(a, b, count_size_vector);
+
+	if (ProcRank == 0) {
+		int refRes = getSequentialOperations(a, b, count_size_vector);
+		ASSERT_EQ(res, refRes);
 	}
+}
+
+TEST(Parallel_Vector_Dot_Product, Test_negative_elements) {
+
+	int ProcNum, ProcRank;
+	int count_size_vector = 15;
 
 
-	int ProcNum = world.size();
-	int ProcRank = world.rank();
+	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
 
-	boost::mpi::broadcast(world, count_size_vector, 0);
+	vector<int> a = vector_generation(-20, 0, count_size_vector);
+	vector<int> b = vector_generation(-5, 50, count_size_vector);
 
-	int delta = count_size_vector / ProcNum;
 
-	if (ProcRank != 0) {
-		vector<int> a(delta);
-		vector<int> b(delta);
+	int res = getParallelOperations(a, b, count_size_vector);
+
+	if (ProcRank == 0) {
+		int refRes = getSequentialOperations(a, b, count_size_vector);
+		ASSERT_EQ(res, refRes);
 	}
+}
 
-	boost::mpi::scatter(world, global_vec_a, a, 0);
+TEST(Parallel_Vector_Dot_Product, Test_0_vector) {
 
-	std::cout << world.rank() << ": " << a << '\n';
+	int ProcNum, ProcRank;
+	int count_size_vector = 7;
 
+
+	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+
+	vector<int> a{0, 0, 0, 0, 0, 0, 0};
+	vector<int> b = vector_generation(10, 100, count_size_vector);
+
+
+	int res = getParallelOperations(a, b, count_size_vector);
+
+	if (ProcRank == 0) {
+		int refRes = getSequentialOperations(a, b, count_size_vector);
+		ASSERT_EQ(res, refRes);
+	}
+}
+
+TEST(Parallel_Vector_Dot_Product, Test_random_vectors_2) {
+
+	int ProcNum, ProcRank;
+	int count_size_vector = 28;
+
+
+	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+
+	vector<int> a = vector_generation(-50, 0, count_size_vector);
+	vector<int> b = vector_generation(-100, 0, count_size_vector);
+
+
+	int res = getParallelOperations(a, b, count_size_vector);
+
+	if (ProcRank == 0) {
+		int refRes = getSequentialOperations(a, b, count_size_vector);
+		ASSERT_EQ(res, refRes);
+	}
+}
+
+int main(int argc, char** argv)
+{
+	int result_code = 0;
+
+	::testing::InitGoogleTest(&argc, argv);
+	::testing::TestEventListeners& listeners =
+		::testing::UnitTest::GetInstance()->listeners();
+
+	if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
+		MPI_Abort(MPI_COMM_WORLD, -1);
+
+	result_code = RUN_ALL_TESTS();
+
+	MPI_Finalize();
+
+	
 
 }
