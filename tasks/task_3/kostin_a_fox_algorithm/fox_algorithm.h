@@ -12,7 +12,7 @@
 
 double* SequentialMul(double* matrixa, double* matrixb, int n);
 
-void getRandMatrix(double*& matrix, int n);
+void getRandMatrix(double* matrix, int n);
 
 bool isMatrEqual(double* matrixa, double* matrixb, int n);
 

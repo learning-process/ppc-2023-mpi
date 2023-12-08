@@ -19,10 +19,12 @@ double* SequentialMul(double* matrixa, double* matrixb, int n) {
     return resmatrix;
 }
 
-void getRandMatrix(double*& matrix, int n) {
+void getRandMatrix(double* matrix, int n) {
+    std::random_device dev;
+    std::mt19937 gen(dev());
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            matrix[i * n + j] = (rand() % 200 - 100) / (double)10;
+            matrix[i * n + j] = static_cast<double>(static_cast<int>(gen()) % 200 - 100) / static_cast<double>(10);
 }
 
 bool isMatrEqual(double* matrixa, double* matrixb, int n) {
@@ -49,6 +51,7 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
     int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));
     double* pAblock;
     matrMalloc(pAblock, BSize);
+    //double* pAblock = reinterpret_cast<double*>(malloc(Bsize * Bsize * sizeof(double)));
     double* pBblock;
     matrMalloc(pBblock, BSize);
     double* tmpreceived;
