@@ -1,6 +1,6 @@
 // Copyright 2023 Kostin Artem
-#ifndef TASKS__TASK_3_KOSTIN_A_FOX_ALGORITHM_FOX_ALGORITHM_H_
-#define TASKS__TASK_3_KOSTIN_A_FOX_ALGORITHM_FOX_ALGORITHM_H_
+#ifndef TASKS_TASK_3_KOSTIN_A_FOX_ALGORITHM_FOX_ALGORITHM_H_
+#define TASKS_TASK_3_KOSTIN_A_FOX_ALGORITHM_FOX_ALGORITHM_H_
 
 #include <mpi.h>
 #include <stdlib.h>
@@ -9,8 +9,6 @@
 #include <conio.h>
 #include <vector>
 #include <string>
- 
-using namespace std;
 
 double* SequentialMul(double* matrixa, double* matrixb, int n);
 

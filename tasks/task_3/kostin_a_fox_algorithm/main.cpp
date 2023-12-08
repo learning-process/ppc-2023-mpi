@@ -35,7 +35,7 @@ TEST(Fox_Algorithm_MPI, Test1) {
     }
 }
 
-TEST(Fox_Algorithm_MPI, Size_of_matrix_is_1){
+TEST(Fox_Algorithm_MPI, Size_of_matrix_is_1) {
     int world_size;
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     int world_rank;
@@ -88,7 +88,7 @@ TEST(Fox_Algorithm_MPI, Only_zeroes) {
     }
 }
 
-TEST(Fox_Algorithm_MPI, Only_ones){
+TEST(Fox_Algorithm_MPI, Only_ones) {
     int world_size;
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     int world_rank;
@@ -140,8 +140,8 @@ TEST(Fox_Algorithm_MPI, All_elements_less_than_one) {
         getRandMatrix(*&pBMatrix, Size);
         for (int i = 0; i < Size; i++)
             for (int j = 0; j < Size; j++) {
-                pAMatrix[i * Size + j] /= (double)10;
-                pBMatrix[i * Size + j] /= (double)10;
+                pAMatrix[i * Size + j] /= static_cast < double>(10);
+                pBMatrix[i * Size + j] /= static_cast < double>(10);
             }
     }
 

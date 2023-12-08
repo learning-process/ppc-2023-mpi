@@ -8,8 +8,6 @@
 #include <algorithm>
 #include <functional>
 #include "task_3/kostin_a_fox_algorithm/fox_algorithm.h"
- 
-using namespace std;
 
 double* SequentialMul(double* matrixa, double* matrixb, int n) {
     double* resmatrix = 0;
@@ -36,19 +34,19 @@ bool isMatrEqual(double* matrixa, double* matrixb, int n) {
 }
 
 void matrMalloc(double*& matrix, int n) {
-    matrix = (double*)malloc(n * n * sizeof(double));
+    matrix = reinterpret_cast<double*>(malloc(n * n * sizeof(double)));
 }
 
 void matrCalloc(double*& matrix, int n) {
-    matrix = (double*)calloc(n * n, sizeof(double));
+    matrix = reinterpret_cast<double*>(calloc(n * n, sizeof(double)));
 }
 
 double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int n) {
-    int sqrtsize = int(sqrt((double)size));
+    int sqrtsize = static_cast<int>(sqrt(static_cast<double>(size)));
     if (sqrtsize * sqrtsize != size)
         return 0;
 
-    int BSize = int(ceil((double)n / sqrtsize));
+    int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));
     double* pAblock;
     matrMalloc(pAblock, BSize);
     double* pBblock;
@@ -62,8 +60,8 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
     if (rank == 0) {
         matrCalloc(tmpmatra, enlarged_size);
         matrCalloc(tmpmatrb, enlarged_size);
-        //tmpmatra = (double*)calloc(enlarged_size * enlarged_size, sizeof(double));
-        //tmpmatrb = (double*)calloc(enlarged_size * enlarged_size, sizeof(double));
+        // tmpmatra = (double*)calloc(enlarged_size * enlarged_size, sizeof(double));
+        // tmpmatrb = (double*)calloc(enlarged_size * enlarged_size, sizeof(double));
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++) {
                 tmpmatra[i * enlarged_size + j] = matrixa[i * n + j];
@@ -71,13 +69,13 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
             }
         matrMalloc(resmatrix, enlarged_size);
     }
-    int* pstd = (int*)malloc(size * sizeof(int));
-    int* ineq = (int*)malloc(size * sizeof(int));
+    int* pstd = reinterpret_cast<int*>(malloc(size * sizeof(int)));
+    int* ineq = reinterpret_cast<int*>(malloc(size * sizeof(int)));
     for (int i = 0; i < size; i++) {
         pstd[i] = 1;
         ineq[i] = BSize * (i % sqrtsize) + i / sqrtsize * BSize * enlarged_size;
     }
-    
+
     int lenofb[2], clmn[2];
     MPI_Aint disp[2];
     MPI_Datatype typeofblock, tosend;
@@ -157,7 +155,7 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
     free(pAblock);
     free(pBblock);
     free(tmpreceived);
-    if(rank == 0) {
+    if (rank == 0) {
         free(tmpmatra);
         free(tmpmatrb);
     }
