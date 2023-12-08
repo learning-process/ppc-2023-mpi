@@ -11,7 +11,7 @@
 
 double* SequentialMul(double* matrixa, double* matrixb, int n) {
     double* resmatrix = 0;
-    matrCalloc(resmatrix, n);
+    matrCalloc(&resmatrix, n);
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             for (int k = 0; k < n; k++)
@@ -35,12 +35,12 @@ bool isMatrEqual(double* matrixa, double* matrixb, int n) {
     return true;
 }
 
-void matrMalloc(double*& matrix, int n) {
-    matrix = reinterpret_cast<double*>(malloc(n * n * sizeof(double)));
+void matrMalloc(double** matrix, int n) {
+    *matrix = reinterpret_cast<double*>(malloc(n * n * sizeof(double)));
 }
 
-void matrCalloc(double*& matrix, int n) {
-    matrix = reinterpret_cast<double*>(calloc(n * n, sizeof(double)));
+void matrCalloc(double** matrix, int n) {
+    *matrix = reinterpret_cast<double*>(calloc(n * n, sizeof(double)));
 }
 
 double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int n) {
@@ -50,19 +50,19 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
 
     int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));
     double* pAblock;
-    matrMalloc(pAblock, BSize);
-    //double* pAblock = reinterpret_cast<double*>(malloc(Bsize * Bsize * sizeof(double)));
+    matrMalloc(&pAblock, BSize);
+    // double* pAblock = reinterpret_cast<double*>(malloc(Bsize * Bsize * sizeof(double)));
     double* pBblock;
-    matrMalloc(pBblock, BSize);
+    matrMalloc(&pBblock, BSize);
     double* tmpreceived;
-    matrMalloc(tmpreceived, BSize);
+    matrMalloc(&tmpreceived, BSize);
     double* resmatrix = 0;
     double* tmpmatra = 0;
     double* tmpmatrb = 0;
     int enlarged_size = BSize * sqrtsize;
     if (rank == 0) {
-        matrCalloc(tmpmatra, enlarged_size);
-        matrCalloc(tmpmatrb, enlarged_size);
+        matrCalloc(&tmpmatra, enlarged_size);
+        matrCalloc(&tmpmatrb, enlarged_size);
         // tmpmatra = (double*)calloc(enlarged_size * enlarged_size, sizeof(double));
         // tmpmatrb = (double*)calloc(enlarged_size * enlarged_size, sizeof(double));
         for (int i = 0; i < n; i++)
@@ -70,7 +70,7 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
                 tmpmatra[i * enlarged_size + j] = matrixa[i * n + j];
                 tmpmatrb[i * enlarged_size + j] = matrixb[i * n + j];
             }
-        matrMalloc(resmatrix, enlarged_size);
+        matrMalloc(&resmatrix, enlarged_size);
     }
     int* pstd = reinterpret_cast<int*>(malloc(size * sizeof(int)));
     int* ineq = reinterpret_cast<int*>(malloc(size * sizeof(int)));
@@ -99,7 +99,7 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
     MPI_Scatterv(tmpmatrb, pstd, ineq, tosend, pBblock, BSize * BSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     double* resblock;
-    matrCalloc(resblock, BSize);
+    matrCalloc(&resblock, BSize);
 
     MPI_Comm comm, strcom;
     int dimSize[2], periodic[2], subDims[2];
@@ -147,7 +147,7 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
 
     double* cmatrix = 0;
     if (rank == 0) {
-        matrMalloc(cmatrix, n);
+        matrMalloc(&cmatrix, n);
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 cmatrix[i * n + j] = resmatrix[i * enlarged_size + j];

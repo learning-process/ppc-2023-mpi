@@ -13,13 +13,13 @@ TEST(Fox_Algorithm_MPI, Test1) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     int Size = 3;
     double * Res;
-    matrCalloc(Res, Size);
+    matrCalloc(&Res, Size);
     double * ResSeq;
-    matrCalloc(ResSeq, Size);
+    matrCalloc(&ResSeq, Size);
     double * pAMatrix;
-    matrCalloc(pAMatrix, Size);
+    matrCalloc(&pAMatrix, Size);
     double * pBMatrix;
-    matrCalloc(pBMatrix, Size);
+    matrCalloc(&pBMatrix, Size);
 
     if (world_rank == 0) {
         getRandMatrix(pAMatrix, Size);
@@ -30,18 +30,6 @@ TEST(Fox_Algorithm_MPI, Test1) {
 
     if (world_rank == 0) {
         ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
-        for (int i = 0; i < Size; i++)
-        {
-            for (int j = 0; j < Size; j++)
-                printf("%f ", pAMatrix[i * Size + j]);
-            printf("\n");
-        }
-        for (int i = 0; i < Size; i++)
-        {
-            for (int j = 0; j < Size; j++)
-                printf("%f ", pBMatrix[i * Size + j]);
-            printf("\n");
-        }
         bool check = isMatrEqual(Res, ResSeq, Size);
         ASSERT_EQ(check, true);
     }
@@ -54,13 +42,13 @@ TEST(Fox_Algorithm_MPI, Size_of_matrix_is_1) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     int Size = 1;
     double* Res;
-    matrCalloc(Res, Size);
+    matrCalloc(&Res, Size);
     double* ResSeq;
-    matrCalloc(ResSeq, Size);
+    matrCalloc(&ResSeq, Size);
     double* pAMatrix;
-    matrCalloc(pAMatrix, Size);
+    matrCalloc(&pAMatrix, Size);
     double* pBMatrix;
-    matrCalloc(pBMatrix, Size);
+    matrCalloc(&pBMatrix, Size);
 
     if (world_rank == 0) {
         getRandMatrix(pAMatrix, Size);
@@ -83,13 +71,13 @@ TEST(Fox_Algorithm_MPI, Only_zeroes) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     int Size = 20;
     double* Res;
-    matrCalloc(Res, Size);
+    matrCalloc(&Res, Size);
     double* ResSeq;
-    matrCalloc(ResSeq, Size);
+    matrCalloc(&ResSeq, Size);
     double* pAMatrix;
-    matrCalloc(pAMatrix, Size);
+    matrCalloc(&pAMatrix, Size);
     double* pBMatrix;
-    matrCalloc(pBMatrix, Size);
+    matrCalloc(&pBMatrix, Size);
 
     Res = Fox_algorithm(world_rank, world_size, pAMatrix, pBMatrix, Size);
 
@@ -107,13 +95,13 @@ TEST(Fox_Algorithm_MPI, Only_ones) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     int Size = 20;
     double* Res;
-    matrCalloc(Res, Size);
+    matrCalloc(&Res, Size);
     double* ResSeq;
-    matrCalloc(ResSeq, Size);
+    matrCalloc(&ResSeq, Size);
     double* pAMatrix;
-    matrCalloc(pAMatrix, Size);
+    matrCalloc(&pAMatrix, Size);
     double* pBMatrix;
-    matrCalloc(pBMatrix, Size);
+    matrCalloc(&pBMatrix, Size);
 
     if (world_rank == 0) {
         for (int i = 0; i < Size; i++)
@@ -139,13 +127,13 @@ TEST(Fox_Algorithm_MPI, All_elements_less_than_one) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     int Size = 20;
     double* Res;
-    matrCalloc(Res, Size);
+    matrCalloc(&Res, Size);
     double* ResSeq;
-    matrCalloc(ResSeq, Size);
+    matrCalloc(&ResSeq, Size);
     double* pAMatrix;
-    matrCalloc(pAMatrix, Size);
+    matrCalloc(&pAMatrix, Size);
     double* pBMatrix;
-    matrCalloc(pBMatrix, Size);
+    matrCalloc(&pBMatrix, Size);
 
     if (world_rank == 0) {
         getRandMatrix(pAMatrix, Size);

@@ -16,9 +16,9 @@ void getRandMatrix(double* matrix, int n);
 
 bool isMatrEqual(double* matrixa, double* matrixb, int n);
 
-void matrMalloc(double*& matrix, int n);
+void matrMalloc(double** matrix, int n);
 
-void matrCalloc(double*& matrix, int n);
+void matrCalloc(double** matrix, int n);
 
 double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int n);
 
