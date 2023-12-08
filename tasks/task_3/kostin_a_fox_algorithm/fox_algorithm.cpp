@@ -1,7 +1,5 @@
 // Copyright 2023 Kostin Artem
 #include <mpi.h>
-#include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <random>
