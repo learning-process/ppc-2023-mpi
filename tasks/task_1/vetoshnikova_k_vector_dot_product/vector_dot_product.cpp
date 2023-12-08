@@ -1,5 +1,4 @@
-﻿// Copyright 2023 Vetoshnikova Ekaterina
-
+﻿  // Copyright 2023 Vetoshnikova Ekaterina
 
 #include "task_1/vetoshnikova_k_vector_dot_product/vector_dot_product.h"
 
@@ -29,10 +28,9 @@ int getParallelOperations(std::vector<int> global_vec_a,
 
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-	
     std::vector<int> counts_element(ProcNum);
     std::vector<int> dis(ProcNum);
-
+    
     int delta     = count_size_vector / ProcNum;
     int remainder = count_size_vector % ProcNum;
 
