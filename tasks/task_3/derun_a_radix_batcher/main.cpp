@@ -1,10 +1,11 @@
 // Copyright 2023 Derun Andrew
 #include <gtest/gtest.h>
+#include <mpi.h>
 
 #include <cmath>
 #include <vector>
 
-#include "./radix_batcher.h"
+#include "task_3/derun_a_radix_batcher/radix_batcher.h"
 
 TEST(RADIX_BATCHER, TEST_1) {
   int rank, size;
