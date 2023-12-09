@@ -39,7 +39,7 @@ float getParallelMean(std::vector<int> parall_vec, int size) {
     sum += local_vec[i];
   }
 
-  MPI_Reduce(&sum, &sum_all, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&sum, &sum_all, 1, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD);
 
   pMean = static_cast<float>(sum_all) / size;
   return pMean;
