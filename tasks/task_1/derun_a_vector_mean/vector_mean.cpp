@@ -3,28 +3,11 @@
 
 #include <mpi.h>
 
-#include <algorithm>
-#include <random>
 #include <vector>
 
-std::vector<int> getRandomVector(int size) {
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<> dist(1, 100);
-
-  if (size < 0) {
-    size = 0;
-  }
-  std::vector<int> vec(size);
-  for (int i = 0; i < size; i++) {
-    vec[i] = dist(gen);
-  }
-  return vec;
-}
-
-int getParallelMean(std::vector<int> parall_vec, int size) {
+float getParallelMean(std::vector<int> parall_vec, int size) {
   int ProcRank, ProcNum, sum_all;
-  float Paverage;
+  float pMean;
 
   if (size <= 0) {
     return 0;
@@ -58,13 +41,13 @@ int getParallelMean(std::vector<int> parall_vec, int size) {
 
   MPI_Reduce(&sum, &sum_all, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-  Paverage = static_cast<float>(sum_all) / size;
-  return Paverage;
+  pMean = static_cast<float>(sum_all) / size;
+  return pMean;
 }
 
-int getSequentialMean(std::vector<int> sequent_vec) {
+float getSequentialMean(std::vector<int> sequent_vec) {
   int size = sequent_vec.size(), sum_all = 0;
-  float Saverage = 0;
+  float sMean = 0;
 
   if (size <= 0) {
     return 0;
@@ -74,6 +57,6 @@ int getSequentialMean(std::vector<int> sequent_vec) {
     sum_all += sequent_vec[i];
   }
 
-  Saverage = static_cast<float>(sum_all) / size;
-  return Saverage;
+  sMean = static_cast<float>(sum_all) / size;
+  return sMean;
 }

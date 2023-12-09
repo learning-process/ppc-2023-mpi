@@ -13,13 +13,13 @@ TEST(MPI_Vector_Mean, Test_NEGATIVE_SIZE) {
   std::vector<int> global_vec;
   const int count_size_vector = -1;
 
-  if (rank == 0) global_vec = getRandomVector(count_size_vector);
+  if (rank == 0) global_vec = getRandomVector<int>(count_size_vector, 0, 100);
 
   float pMean = getParallelMean(global_vec, count_size_vector);
 
   if (rank == 0) {
     float sMean = getSequentialMean(global_vec);
-    ASSERT_EQ(pMean, sMean);
+    ASSERT_FLOAT_EQ(sMean, pMean);
   }
 }
 
@@ -29,13 +29,13 @@ TEST(MPI_Vector_Mean, Test_0_Elements) {
   std::vector<int> global_vec;
   const int count_size_vector = 0;
 
-  if (rank == 0) global_vec = getRandomVector(count_size_vector);
+  if (rank == 0) global_vec = getRandomVector<int>(count_size_vector, 0, 100);
 
   float pMean = getParallelMean(global_vec, count_size_vector);
 
   if (rank == 0) {
     float sMean = getSequentialMean(global_vec);
-    ASSERT_EQ(pMean, sMean);
+    ASSERT_FLOAT_EQ(sMean, pMean);
   }
 }
 
@@ -45,13 +45,13 @@ TEST(MPI_Vector_Mean, Test_10_Elements) {
   std::vector<int> global_vec;
   const int count_size_vector = 12;
 
-  if (rank == 0) global_vec = getRandomVector(count_size_vector);
+  if (rank == 0) global_vec = getRandomVector<int>(count_size_vector, 0, 100);
 
   float pMean = getParallelMean(global_vec, count_size_vector);
 
   if (rank == 0) {
     float sMean = getSequentialMean(global_vec);
-    ASSERT_EQ(pMean, sMean);
+    ASSERT_FLOAT_EQ(sMean, pMean);
   }
 }
 
@@ -61,13 +61,13 @@ TEST(MPI_Vector_Mean, Test_12_Elements) {
   std::vector<int> global_vec;
   const int count_size_vector = 12;
 
-  if (rank == 0) global_vec = getRandomVector(count_size_vector);
+  if (rank == 0) global_vec = getRandomVector<int>(count_size_vector, 0, 100);
 
   float pMean = getParallelMean(global_vec, count_size_vector);
 
   if (rank == 0) {
     float sMean = getSequentialMean(global_vec);
-    ASSERT_EQ(pMean, sMean);
+    ASSERT_FLOAT_EQ(sMean, pMean);
   }
 }
 
@@ -77,13 +77,13 @@ TEST(MPI_Vector_Mean, Test_120_Elements) {
   std::vector<int> global_vec;
   const int count_size_vector = 120;
 
-  if (rank == 0) global_vec = getRandomVector(count_size_vector);
+  if (rank == 0) global_vec = getRandomVector<int>(count_size_vector, 0, 100);
 
   float pMean = getParallelMean(global_vec, count_size_vector);
 
   if (rank == 0) {
     float sMean = getSequentialMean(global_vec);
-    ASSERT_EQ(pMean, sMean);
+    ASSERT_FLOAT_EQ(sMean, pMean);
   }
 }
 
