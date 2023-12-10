@@ -1,7 +1,7 @@
 ﻿
 // Copyright 2023 Derun Andrew
 #include <gtest/gtest.h>
-#include <mpi.h>  // 123
+#include <mpi.h>
 
 #include <iostream>
 
