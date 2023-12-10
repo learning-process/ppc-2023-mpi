@@ -214,19 +214,13 @@ double test_func(const std::vector<double>& val_vec,
   MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   std::vector<double> res_vec(ProcNum);
-  double times[4];
-  double time_custom = 0.0, time_default = 0.0;
 
   if (custom_sc) {
-    if (ProcRank == 0) { times[0] = MPI_Wtime(); }
     custom_scatter(val_vec.data(), batch_size, MPI_DOUBLE,
                    trsm_vec.data(), batch_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    if (ProcRank == 0) { times[1] = MPI_Wtime(); }
   } else {
-    if (ProcRank == 0) { times[2] = MPI_Wtime(); }
     MPI_Scatter(val_vec.data(), batch_size, MPI_DOUBLE, trsm_vec.data(),
                 batch_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    if (ProcRank == 0) { times[3] = MPI_Wtime(); }
   }
 
   std::vector<double> func_vec(1);
@@ -240,15 +234,6 @@ double test_func(const std::vector<double>& val_vec,
 
   for (int i = 0; i < ProcNum; i++) {
     sum += res_vec[i];
-  }
-
-  if (ProcRank == 0) {
-    time_custom = abs(times[1] - times[0]);
-    time_default = abs(times[3] - times[2]);
-    std::cout << "Custom scatter time: " << time_custom << std::endl;
-    std::cout << "Default scatter time: " << time_default << std::endl;
-    std::cout << "Custom to default scatter time ratio: " <<
-                 time_custom / time_default << std::endl;
   }
 
   return sum;
