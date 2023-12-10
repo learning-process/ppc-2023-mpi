@@ -62,6 +62,7 @@ void parallelQuickSort(int* array, size_t n) {
         int my_count = (n % ProcNum);
         int other_count = (n - my_count) / ProcNum;
         my_count += other_count;
+
         for (int i = 1; i < ProcNum; ++i) {
             MPI_Send(&array[my_count + other_count * (i - 1)], other_count, MPI_INT, i,
                 123, MPI_COMM_WORLD);
