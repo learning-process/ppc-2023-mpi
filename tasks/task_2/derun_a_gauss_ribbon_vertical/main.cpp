@@ -1,5 +1,5 @@
 // Copyright 2023 Derun Andrew
-#include <gtest/gtest.h>  // 123
+#include <gtest/gtest.h>
 #include <mpi.h>
 
 #include <iostream>
