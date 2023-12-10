@@ -1,11 +1,5 @@
 // Copyright 2023 Kosarev Egor
-#include "task_3/kosarev_e_quick_sort_Merge/quick_sort_Merge.h"
-
-#include <iostream>
-#include <utility>
-#include <mpi.h>
-#include <algorithm>
-#include <vector>
+#include "task_3/kosarev_e_quick_sort_merge/quick_sort_merge.h"
 
 
 std::pair<int, int> split(int* array, int n) {
@@ -42,8 +36,7 @@ void Merge(int* array1, int size1, int size2) {
             array[i] = array1[left];
             i++;
             left++;
-        }
-        else {
+        } else {
             array[i] = array2[right];
             i++;
             right++;
@@ -83,8 +76,7 @@ void parallelQuickSort(int* array, size_t n) {
         for (int i = 1; i < ProcNum; ++i) {
             Merge(array, my_count + other_count * (i - 1), other_count);
         }
-    }
-    else {
+    } else {
         MPI_Status status;
         int* array;
         int count;

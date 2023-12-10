@@ -6,6 +6,8 @@
 #include <vector>
 #include <utility>
 #include <mpi.h>
+#include <iostream>
+#include <algorithm>
 
 std::pair<int, int> split(int* array, int n);
 void recursive_quick_sort(int* array, int n);
