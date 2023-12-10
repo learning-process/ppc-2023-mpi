@@ -1,10 +1,10 @@
 // Copyright 2023 Kosarev Egor
 #include "task_3/kosarev_e_quick_sort_merge/quick_sort_merge.h"
-
+#include <mpi.h>
 
 std::pair<int, int> split(int* array, int n) {
     int val = array[n / 2];
-    int left= 0, right = n - 1;
+    int left = 0, right = n - 1;
     while (left<= right) {
         while (array[left] < val) ++left;
         while (array[right] > val) --right;

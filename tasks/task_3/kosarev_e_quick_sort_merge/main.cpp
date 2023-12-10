@@ -1,7 +1,7 @@
 // Copyright 2023 Kosarev Egor
 #include <gtest/gtest.h>
 #include "./quick_sort_merge.h"
-
+#include <mpi.h>
 
 TEST(quick_sort_merge, Test_1) {
     int rank;

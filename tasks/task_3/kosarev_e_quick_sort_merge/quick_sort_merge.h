@@ -5,7 +5,7 @@
 #include <random>
 #include <vector>
 #include <utility>
-#include <mpi.h>
+
 #include <iostream>
 #include <algorithm>
 
