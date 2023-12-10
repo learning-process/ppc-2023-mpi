@@ -84,6 +84,7 @@ void parallelQuickSort(int* array, size_t n) {
         MPI_Probe(0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         MPI_Get_count(&status, MPI_INT, &count);
         array = new int[count];
+
         MPI_Recv(array, count, MPI_INT, 0, 123, MPI_COMM_WORLD, &status);
 
         recursive_quick_sort(array, count);
