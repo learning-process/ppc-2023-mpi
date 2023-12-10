@@ -7,6 +7,7 @@
 #include <utility>
 #include <iostream>
 #include <algorithm>
+#include <header.h>
 #include <mpi.h>
 
 std::pair<int, int> split(int* array, int n);
