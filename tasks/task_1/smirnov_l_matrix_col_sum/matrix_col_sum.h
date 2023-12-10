@@ -1,7 +1,7 @@
 // Copyright 2023 Smirnov Leonid
 #pragma once
-#include <vector>
 #include <mpi.h>
+#include <vector>
 #include <iostream>
 #include <utility>
 
@@ -14,8 +14,8 @@ std::pair<int, int> countAndOffsetDistribution
 std::pair<std::vector<int>, std::vector<int>> distribution
 (bool flag, const size_t rows, const size_t cols);
 
-std::vector<double> MatrixColsSumSequential
+std::vector<double> matrixColsSumSequential
 (const std::vector<double>& matrix, const size_t rows, const size_t cols);
 
-std::vector<double> MatrixColsSumParallel
+std::vector<double> matrixColsSumParallel
 (const std::vector<double>& matrix, const size_t rows, const size_t cols);
