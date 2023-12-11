@@ -112,10 +112,10 @@ void mat_mult_cannon(int n, const std::vector<double>& mat_in_1,
       for (int col = 0; col < ProcNum_sqrt; col++) {
         for (int i = 0; i < n_ext / ProcNum_sqrt; i++) {
           for (int j = 0; j < n_ext / ProcNum_sqrt; j++) {
-            int old_ind = (row * ProcNum_sqrt + col) *
-                           n_loc * n_loc + (i * n_loc + j),
+            int new_col = col * n_loc + j,
                 new_row = row * n_loc + i,
-                new_col = col * n_loc + j;
+                old_ind = (row * ProcNum_sqrt + col) *
+                           n_loc * n_loc + (i * n_loc + j);
 
             if (new_row < n && new_col < n) {
               (*mat_out)[new_row*n+new_col] = res_glob[old_ind];
