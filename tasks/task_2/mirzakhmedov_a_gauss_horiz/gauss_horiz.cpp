@@ -1,6 +1,6 @@
 // Copyright 2023 Mirzakhmedov Alexander
 
-#include "./gauss_horiz.h"
+#include "task2/mirzakhmedov_a_gauss_horiz.h/gauss_horiz.h"
 #include <mpi.h>
 #include <vector>
 #include <string>
