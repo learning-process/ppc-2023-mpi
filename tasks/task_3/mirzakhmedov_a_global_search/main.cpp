@@ -1,5 +1,6 @@
   // Copyright 2023 Mirzakhmedov Alexander
 
+#include <mpi.h>
 #include <gtest/gtest.h>
 #include <iostream>
 #include <cmath>
