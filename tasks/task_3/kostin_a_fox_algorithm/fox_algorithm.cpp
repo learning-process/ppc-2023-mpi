@@ -82,14 +82,20 @@ double* Fox_algorithm(double* matrixa, double* matrixb, int n) {
         ineq[i] = BSize * (i % sqrtsize) + i / sqrtsize * BSize * enlarged_size;
     }
 
-    int lenofb[2], clmn[2];
+#ifdef __linux__
+    MPI_Datatype clmn[2];
+#else
+    int clmn[2];
+#endif
+    int lenofb[2];
     MPI_Aint disp[2];
     MPI_Datatype typeofblock, tosend;
     MPI_Aint sizeofdouble;
     MPI_Type_vector(BSize, BSize, enlarged_size, MPI_DOUBLE, &typeofblock);
     MPI_Type_commit(&typeofblock);
 #ifdef __linux__
-    MPI_Type_get_extent(MPI_DOUBLE, &sizeofdouble);
+    MPI_Aint lb;
+    MPI_Type_get_extent(MPI_DOUBLE, &lb, &sizeofdouble);
 #else
     MPI_Type_extent(MPI_DOUBLE, &sizeofdouble);
 #endif
@@ -98,8 +104,9 @@ double* Fox_algorithm(double* matrixa, double* matrixb, int n) {
     lenofb[0] = 1;
     lenofb[1] = 1;
 #ifdef __linux__
+    const 
     clmn[0] = (MPI_Datatype)sizeofdouble;
-    clmn[1] = MPI_Op;
+    clmn[1] = MPI_SUM;
 #else
     clmn[0] = typeofblock;
     clmn[1] = MPI_UB;
