@@ -1,9 +1,11 @@
   // Copyright 2022 Mirzakhmedov Alexander
+
+#include "tasks3/mirzakhmedov_a_global_search/global_search.h"
 #include <limits>
 #include <mpi.h>
 #include <vector>
 #include <algorithm>
-#include "tasks3/mirzakhmedov_a_global_search/global_search.h"
+
 
 const int maxIterationCount = 50000;
 
