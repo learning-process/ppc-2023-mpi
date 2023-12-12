@@ -98,7 +98,7 @@ double* Fox_algorithm(double* matrixa, double* matrixb, int n) {
     lenofb[0] = 1;
     lenofb[1] = 1;
 #ifdef __linux__
-    clmn[0]= MPI_Datatype{ aka ompi_datatype_t* };
+    clmn[0] = (MPI_Datatype)sizeofdouble;
     clmn[1] = MPI_Op;
 #else
     clmn[0] = typeofblock;
