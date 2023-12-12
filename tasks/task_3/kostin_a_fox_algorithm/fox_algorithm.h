@@ -19,6 +19,6 @@ void matrMalloc(double** matrix, int n);
 
 void matrCalloc(double** matrix, int n);
 
-double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int n);
+double* Fox_algorithm(double* matrixa, double* matrixb, int n);
 
 #endif  // TASKS_TASK_3_KOSTIN_A_FOX_ALGORITHM_FOX_ALGORITHM_H_

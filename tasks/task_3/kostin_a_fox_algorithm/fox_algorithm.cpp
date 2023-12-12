@@ -1,4 +1,5 @@
 // Copyright 2023 Kostin Artem
+#define MSMPI_NO_DEPRECATE_20
 #include <mpi.h>
 #include <stdlib.h>
 #include <math.h>
@@ -41,10 +42,14 @@ void matrCalloc(double** matrix, int n) {
     *matrix = reinterpret_cast<double*>(calloc(n * n, sizeof(double)));
 }
 
-double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int n) {
+double* Fox_algorithm(double* matrixa, double* matrixb, int n) {
+    int size;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int sqrtsize = static_cast<int>(sqrt(static_cast<double>(size)));
-    if (sqrtsize * sqrtsize != size)
-        return 0;
+    //if (sqrtsize * sqrtsize != size)
+    //    return 0;
 
     int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));
     double* pAblock;
@@ -90,7 +95,7 @@ double* Fox_algorithm(int rank, int size, double* matrixa, double* matrixb, int 
     lenofb[1] = 1;
     clmn[0]= typeofblock;
     clmn[1] = MPI_UB;
-    MPI_Type_struct(2, lenofb, disp, clmn, &tosend);
+    MPI_Type_create_struct(2, lenofb, disp, clmn, &tosend);
     MPI_Type_commit(&tosend);
 
     MPI_Scatterv(tmpmatra, pstd, ineq, tosend, pAblock, BSize * BSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);

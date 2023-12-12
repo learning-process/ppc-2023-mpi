@@ -11,27 +11,30 @@ TEST(Fox_Algorithm_MPI, Test1) {
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    int Size = 3;
-    double * Res;
-    matrCalloc(&Res, Size);
-    double * ResSeq;
-    matrCalloc(&ResSeq, Size);
-    double * pAMatrix;
-    matrCalloc(&pAMatrix, Size);
-    double * pBMatrix;
-    matrCalloc(&pBMatrix, Size);
+    int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
+    if (sqrtsize * sqrtsize == world_size) {
+        int Size = 3;
+        double* Res;
+        matrCalloc(&Res, Size);
+        double* ResSeq;
+        matrCalloc(&ResSeq, Size);
+        double* pAMatrix;
+        matrCalloc(&pAMatrix, Size);
+        double* pBMatrix;
+        matrCalloc(&pBMatrix, Size);
 
-    if (world_rank == 0) {
-        getRandMatrix(pAMatrix, Size);
-        getRandMatrix(pBMatrix, Size);
-    }
+        if (world_rank == 0) {
+            getRandMatrix(pAMatrix, Size);
+            getRandMatrix(pBMatrix, Size);
+        }
 
-    Res = Fox_algorithm(world_rank, world_size, pAMatrix, pBMatrix, Size);
+        Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
 
-    if (world_rank == 0) {
-        ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
-        bool check = isMatrEqual(Res, ResSeq, Size);
-        ASSERT_EQ(check, true);
+        if (world_rank == 0) {
+            ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
+            bool check = isMatrEqual(Res, ResSeq, Size);
+            ASSERT_EQ(check, true);
+        }
     }
 }
 
@@ -40,27 +43,30 @@ TEST(Fox_Algorithm_MPI, Size_of_matrix_is_1) {
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    int Size = 1;
-    double* Res;
-    matrCalloc(&Res, Size);
-    double* ResSeq;
-    matrCalloc(&ResSeq, Size);
-    double* pAMatrix;
-    matrCalloc(&pAMatrix, Size);
-    double* pBMatrix;
-    matrCalloc(&pBMatrix, Size);
+    int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
+    if (sqrtsize * sqrtsize == world_size) {
+        int Size = 1;
+        double* Res;
+        matrCalloc(&Res, Size);
+        double* ResSeq;
+        matrCalloc(&ResSeq, Size);
+        double* pAMatrix;
+        matrCalloc(&pAMatrix, Size);
+        double* pBMatrix;
+        matrCalloc(&pBMatrix, Size);
 
-    if (world_rank == 0) {
-        getRandMatrix(pAMatrix, Size);
-        getRandMatrix(pBMatrix, Size);
-    }
+        if (world_rank == 0) {
+            getRandMatrix(pAMatrix, Size);
+            getRandMatrix(pBMatrix, Size);
+        }
 
-    Res = Fox_algorithm(world_rank, world_size, pAMatrix, pBMatrix, Size);
+        Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
 
-    if (world_rank == 0) {
-        ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
-        bool check = isMatrEqual(Res, ResSeq, Size);
-        ASSERT_EQ(check, true);
+        if (world_rank == 0) {
+            ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
+            bool check = isMatrEqual(Res, ResSeq, Size);
+            ASSERT_EQ(check, true);
+        }
     }
 }
 
@@ -69,22 +75,25 @@ TEST(Fox_Algorithm_MPI, Only_zeroes) {
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    int Size = 20;
-    double* Res;
-    matrCalloc(&Res, Size);
-    double* ResSeq;
-    matrCalloc(&ResSeq, Size);
-    double* pAMatrix;
-    matrCalloc(&pAMatrix, Size);
-    double* pBMatrix;
-    matrCalloc(&pBMatrix, Size);
+    int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
+    if (sqrtsize * sqrtsize == world_size) {
+        int Size = 20;
+        double* Res;
+        matrCalloc(&Res, Size);
+        double* ResSeq;
+        matrCalloc(&ResSeq, Size);
+        double* pAMatrix;
+        matrCalloc(&pAMatrix, Size);
+        double* pBMatrix;
+        matrCalloc(&pBMatrix, Size);
 
-    Res = Fox_algorithm(world_rank, world_size, pAMatrix, pBMatrix, Size);
+        Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
 
-    if (world_rank == 0) {
-        ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
-        bool check = isMatrEqual(Res, ResSeq, Size);
-        ASSERT_EQ(check, true);
+        if (world_rank == 0) {
+            ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
+            bool check = isMatrEqual(Res, ResSeq, Size);
+            ASSERT_EQ(check, true);
+        }
     }
 }
 
@@ -93,30 +102,33 @@ TEST(Fox_Algorithm_MPI, Only_ones) {
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    int Size = 20;
-    double* Res;
-    matrCalloc(&Res, Size);
-    double* ResSeq;
-    matrCalloc(&ResSeq, Size);
-    double* pAMatrix;
-    matrCalloc(&pAMatrix, Size);
-    double* pBMatrix;
-    matrCalloc(&pBMatrix, Size);
+    int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
+    if (sqrtsize * sqrtsize == world_size) {
+        int Size = 20;
+        double* Res;
+        matrCalloc(&Res, Size);
+        double* ResSeq;
+        matrCalloc(&ResSeq, Size);
+        double* pAMatrix;
+        matrCalloc(&pAMatrix, Size);
+        double* pBMatrix;
+        matrCalloc(&pBMatrix, Size);
 
-    if (world_rank == 0) {
-        for (int i = 0; i < Size; i++)
-            for (int j = 0; j < Size; j++) {
-                pAMatrix[i * Size + j] = 1;
-                pBMatrix[i * Size + j] = 1;
-            }
-    }
+        if (world_rank == 0) {
+            for (int i = 0; i < Size; i++)
+                for (int j = 0; j < Size; j++) {
+                    pAMatrix[i * Size + j] = 1;
+                    pBMatrix[i * Size + j] = 1;
+                }
+        }
 
-    Res = Fox_algorithm(world_rank, world_size, pAMatrix, pBMatrix, Size);
+        Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
 
-    if (world_rank == 0) {
-        ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
-        bool check = isMatrEqual(Res, ResSeq, Size);
-        ASSERT_EQ(check, true);
+        if (world_rank == 0) {
+            ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
+            bool check = isMatrEqual(Res, ResSeq, Size);
+            ASSERT_EQ(check, true);
+        }
     }
 }
 
@@ -125,32 +137,35 @@ TEST(Fox_Algorithm_MPI, All_elements_less_than_one) {
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    int Size = 20;
-    double* Res;
-    matrCalloc(&Res, Size);
-    double* ResSeq;
-    matrCalloc(&ResSeq, Size);
-    double* pAMatrix;
-    matrCalloc(&pAMatrix, Size);
-    double* pBMatrix;
-    matrCalloc(&pBMatrix, Size);
+    int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
+    if (sqrtsize * sqrtsize == world_size) {
+        int Size = 20;
+        double* Res;
+        matrCalloc(&Res, Size);
+        double* ResSeq;
+        matrCalloc(&ResSeq, Size);
+        double* pAMatrix;
+        matrCalloc(&pAMatrix, Size);
+        double* pBMatrix;
+        matrCalloc(&pBMatrix, Size);
 
-    if (world_rank == 0) {
-        getRandMatrix(pAMatrix, Size);
-        getRandMatrix(pBMatrix, Size);
-        for (int i = 0; i < Size; i++)
-            for (int j = 0; j < Size; j++) {
-                pAMatrix[i * Size + j] /= static_cast < double>(10);
-                pBMatrix[i * Size + j] /= static_cast < double>(10);
-            }
-    }
+        if (world_rank == 0) {
+            getRandMatrix(pAMatrix, Size);
+            getRandMatrix(pBMatrix, Size);
+            for (int i = 0; i < Size; i++)
+                for (int j = 0; j < Size; j++) {
+                    pAMatrix[i * Size + j] /= static_cast <double>(10);
+                    pBMatrix[i * Size + j] /= static_cast <double>(10);
+                }
+        }
 
-    Res = Fox_algorithm(world_rank, world_size, pAMatrix, pBMatrix, Size);
+        Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
 
-    if (world_rank == 0) {
-        ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
-        bool check = isMatrEqual(Res, ResSeq, Size);
-        ASSERT_EQ(check, true);
+        if (world_rank == 0) {
+            ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
+            bool check = isMatrEqual(Res, ResSeq, Size);
+            ASSERT_EQ(check, true);
+        }
     }
 }
 
