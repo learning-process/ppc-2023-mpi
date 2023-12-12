@@ -85,17 +85,26 @@ double* Fox_algorithm(double* matrixa, double* matrixb, int n) {
     int lenofb[2], clmn[2];
     MPI_Aint disp[2];
     MPI_Datatype typeofblock, tosend;
-    MPI_Aint lb, sizeofdouble;
+    MPI_Aint sizeofdouble;
     MPI_Type_vector(BSize, BSize, enlarged_size, MPI_DOUBLE, &typeofblock);
     MPI_Type_commit(&typeofblock);
-    MPI_Type_get_extent_x(MPI_DOUBLE, &lb, &sizeofdouble);
+#ifdef __linux__
+    MPI_Type_get_extent(MPI_DOUBLE, &sizeofdouble);
+#else
+    MPI_Type_extent(MPI_DOUBLE, &sizeofdouble);
+#endif
     disp[0]  = 0;
     disp[1]  = sizeofdouble;
     lenofb[0] = 1;
     lenofb[1] = 1;
-    clmn[0]= *(&typeofblock);
-    clmn[1] = MPI_LB;
-    MPI_Type_create_resized(typeofblock, disp[0], sizeofdouble, &tosend);
+#ifdef __linux__
+    clmn[0]= MPI_Datatype{ aka ompi_datatype_t* };
+    clmn[1] = MPI_Op;
+#else
+    clmn[0] = typeofblock;
+    clmn[1] = MPI_UB;
+#endif
+    MPI_Type_create_struct(2, lenofb, disp, clmn, &tosend);
     MPI_Type_commit(&tosend);
 
     MPI_Scatterv(tmpmatra, pstd, ineq, tosend, pAblock, BSize * BSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
