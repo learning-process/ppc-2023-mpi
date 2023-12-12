@@ -1,9 +1,9 @@
   // Copyright 2022 Mirzakhmedov Alexander
 
-#include "tasks3/mirzakhmedov_a_global_search/global_search.h"
-#include <limits>
+#include "task_3/mirzakhmedov_a_global_search/global_search.h"
 #include <mpi.h>
 #include <vector>
+#include <limits>
 #include <algorithm>
 
 
