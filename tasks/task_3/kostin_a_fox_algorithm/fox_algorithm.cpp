@@ -48,8 +48,8 @@ double* Fox_algorithm(double* matrixa, double* matrixb, int n) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int sqrtsize = static_cast<int>(sqrt(static_cast<double>(size)));
-    //if (sqrtsize * sqrtsize != size)
-    //    return 0;
+    // if (sqrtsize * sqrtsize != size)
+    //     return 0;
 
     int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));
     double* pAblock;
