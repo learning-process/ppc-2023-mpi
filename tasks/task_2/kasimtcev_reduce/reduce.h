@@ -1,6 +1,6 @@
 // Copyright 2023 Kasimtcev Roman
-#ifndef TASKS_TASK_2_KULAGIN_A_MY_REDUCE_MY_REDUCE_H_
-#define TASKS_TASK_2_KULAGIN_A_MY_REDUCE_MY_REDUCE_H_
+#ifndef TASKS_TASK_2_KASIMTCEV_REDUCE_REDUCE_H_
+#define TASKS_TASK_2_KASIMTCEV_REDUCE_REDUCE_H_
 
 #include <mpi.h>
 
@@ -13,4 +13,4 @@ void Calculate(int Rank, int Num, proc_tree_props* props, int* path = NULL, int*
 
 int mpi_reduce(const void* sendbuf, void* recvbuf, int count, MPI_Datatype type, MPI_Op op, int root, MPI_Comm comm);
 
-#endif // TASKS_TASK_2_KASIMTCEV_REDUCE_REDUCE_H_
+#endif  // TASKS_TASK_2_KASIMTCEV_REDUCE_REDUCE_H_
