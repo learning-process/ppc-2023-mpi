@@ -1,8 +1,8 @@
 // Copyright 2023 Kasimtcev Roman
-#include "reduce.h"
+#include "task_2/kasimtcev_reduce/reduce.h"
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
-#include <algorithm>
 
 static const char* incorrect_op_msg = "Incorrect MPI_Op op\n";
 static const char* incorrect_type_msg = "Incorrect MPI_Datatype type\n";

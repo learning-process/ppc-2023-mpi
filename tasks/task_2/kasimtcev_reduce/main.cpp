@@ -1,8 +1,8 @@
 // Copyright 2023 Kasimtcev Roman
-#include "reduce.h"
-#include <mpi.h>
 #include <gtest/gtest.h>
+#include <mpi.h>
 #include <cstdlib>
+#include "./reduce.h"
 
 typedef int TypeOfVector;
 static const MPI_Datatype mpi_TypeOfVector = MPI_INT;
@@ -13,7 +13,7 @@ static const TypeOfVector MaxElement = 500;
 inline void TestVector() {
   double res_time[2];
   TypeOfVector *a, *b;
-  int i, n; 
+  int i, n;
   int Num, Rank;
   TypeOfVector sum, SumOfAll, RealSuml;
   MPI_Comm_size(MPI_COMM_WORLD, &Num);
@@ -35,7 +35,7 @@ inline void TestVector() {
     a = new TypeOfVector[n];
     b = new TypeOfVector[n];
   }
-  
+
   if (Rank == 0) {
     MPI_Scatter(a, n, mpi_TypeOfVector, MPI_IN_PLACE, n, mpi_TypeOfVector, 0, MPI_COMM_WORLD);
   } else {
@@ -61,7 +61,7 @@ inline void TestVector() {
     std::cout << "MPI_Reduce time = " << (res_time[1] - res_time[0]) << '\n';
     EXPECT_EQ(RealSuml, SumOfAll);
   }
-  
+
   SumOfAll = 0;
   if (Rank == 0) {
     res_time[0] = MPI_Wtime();
