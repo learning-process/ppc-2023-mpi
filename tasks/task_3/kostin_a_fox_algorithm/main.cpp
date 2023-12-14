@@ -14,22 +14,52 @@ TEST(Fox_Algorithm_MPI, Test1) {
     int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
     if (sqrtsize * sqrtsize == world_size) {
         int Size = 3;
-        double* Res;
-        matrCalloc(&Res, Size);
-        double* ResSeq;
-        matrCalloc(&ResSeq, Size);
-        double* pAMatrix;
-        matrCalloc(&pAMatrix, Size);
-        double* pBMatrix;
-        matrCalloc(&pBMatrix, Size);
+        int sz = Size;
+        int extra_els = Size % sqrtsize;
+        if (extra_els > 0) Size += sqrtsize - (Size % sqrtsize);
+
+        /*
+        ¬ случае, если Size % sqrtsize != 0, матрица дополн€ютс€ нулевыми значени€ми, которые не вли€ют на нужное значение
+        ѕример:
+
+        pAMatrix
+        -13.9  -28.9    3    0
+          9.6    9.8  -21.8  0
+         -2.5    7    -13.6  0
+          0      0      0    0
+
+        pBMatrix
+        -27.9   -4.7  -15.4  0
+        -10.9  -25.2   -8.4  0
+          5.2   -5.3  -10.1  0
+          0      0      0    0
+
+        Res
+         718.42   777.71  426.52  0
+        -488.02  -176.54   -9.98  0
+         -77.27   -92.57  117.06  0
+           0        0       0     0
+
+        ResSeq
+         718.42   777.71  426.52  0
+        -488.02  -176.54   -9.98  0
+         -77.27   -92.57  117.06  0
+           0        0       0     0
+        0 0 0 0
+        */
+
+        std::vector<double> Res(Size * Size, 0);
+        std::vector<double> ResSeq(Size * Size, 0);
+        std::vector<double> pAMatrix(Size * Size, 0);
+        std::vector<double> pBMatrix(Size * Size, 0);
 
         if (world_rank == 0) {
-            getRandMatrix(pAMatrix, Size);
-            getRandMatrix(pBMatrix, Size);
+            getRandMatrix(&pAMatrix, Size, sz);
+            getRandMatrix(&pBMatrix, Size, sz);
         }
 
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
-
+        
         if (world_rank == 0) {
             ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
             bool check = isMatrEqual(Res, ResSeq, Size);
@@ -46,22 +76,22 @@ TEST(Fox_Algorithm_MPI, Size_of_matrix_is_1) {
     int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
     if (sqrtsize * sqrtsize == world_size) {
         int Size = 1;
-        double* Res;
-        matrCalloc(&Res, Size);
-        double* ResSeq;
-        matrCalloc(&ResSeq, Size);
-        double* pAMatrix;
-        matrCalloc(&pAMatrix, Size);
-        double* pBMatrix;
-        matrCalloc(&pBMatrix, Size);
+        int sz = Size;
+        int extra_els = Size % sqrtsize;
+        if (extra_els > 0) Size += sqrtsize - (Size % sqrtsize);
 
+        std::vector<double> Res(Size * Size, 0);
+        std::vector<double> ResSeq(Size * Size, 0);
+        std::vector<double> pAMatrix(Size * Size, 0);
+        std::vector<double> pBMatrix(Size * Size, 0);
+    
         if (world_rank == 0) {
-            getRandMatrix(pAMatrix, Size);
-            getRandMatrix(pBMatrix, Size);
+            getRandMatrix(&pAMatrix, Size, sz);
+            getRandMatrix(&pBMatrix, Size, sz);
         }
-
+    
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
-
+    
         if (world_rank == 0) {
             ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
             bool check = isMatrEqual(Res, ResSeq, Size);
@@ -78,17 +108,17 @@ TEST(Fox_Algorithm_MPI, Only_zeroes) {
     int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
     if (sqrtsize * sqrtsize == world_size) {
         int Size = 20;
-        double* Res;
-        matrCalloc(&Res, Size);
-        double* ResSeq;
-        matrCalloc(&ResSeq, Size);
-        double* pAMatrix;
-        matrCalloc(&pAMatrix, Size);
-        double* pBMatrix;
-        matrCalloc(&pBMatrix, Size);
+        int sz = Size;
+        int extra_els = Size % sqrtsize;
+        if (extra_els > 0) Size += sqrtsize - (Size % sqrtsize);
 
+        std::vector<double> Res(Size * Size, 0);
+        std::vector<double> ResSeq(Size * Size, 0);
+        std::vector<double> pAMatrix(Size * Size, 0);
+        std::vector<double> pBMatrix(Size * Size, 0);
+    
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
-
+    
         if (world_rank == 0) {
             ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
             bool check = isMatrEqual(Res, ResSeq, Size);
@@ -105,23 +135,23 @@ TEST(Fox_Algorithm_MPI, Only_ones) {
     int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
     if (sqrtsize * sqrtsize == world_size) {
         int Size = 20;
-        double* Res;
-        matrCalloc(&Res, Size);
-        double* ResSeq;
-        matrCalloc(&ResSeq, Size);
-        double* pAMatrix;
-        matrCalloc(&pAMatrix, Size);
-        double* pBMatrix;
-        matrCalloc(&pBMatrix, Size);
+        int sz = Size;
+        int extra_els = Size % sqrtsize;
+        if (extra_els > 0) Size += sqrtsize - (Size % sqrtsize);
 
+        std::vector<double> Res(Size * Size, 0);
+        std::vector<double> ResSeq(Size * Size, 0);
+        std::vector<double> pAMatrix(Size * Size, 0);
+        std::vector<double> pBMatrix(Size * Size, 0);
+    
         if (world_rank == 0) {
-            for (int i = 0; i < Size; i++)
-                for (int j = 0; j < Size; j++) {
+            for (int i = 0; i < sz; i++)
+                for (int j = 0; j < sz; j++) {
                     pAMatrix[i * Size + j] = 1;
                     pBMatrix[i * Size + j] = 1;
                 }
         }
-
+    
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
 
         if (world_rank == 0) {
@@ -140,27 +170,27 @@ TEST(Fox_Algorithm_MPI, All_elements_less_than_one) {
     int sqrtsize = static_cast<int>(sqrt(static_cast<double>(world_size)));
     if (sqrtsize * sqrtsize == world_size) {
         int Size = 20;
-        double* Res;
-        matrCalloc(&Res, Size);
-        double* ResSeq;
-        matrCalloc(&ResSeq, Size);
-        double* pAMatrix;
-        matrCalloc(&pAMatrix, Size);
-        double* pBMatrix;
-        matrCalloc(&pBMatrix, Size);
+        int sz = Size;
+        int extra_els = Size % sqrtsize;
+        if (extra_els > 0) Size += sqrtsize - (Size % sqrtsize);
 
+        std::vector<double> Res(Size * Size, 0);
+        std::vector<double> ResSeq(Size * Size, 0);
+        std::vector<double> pAMatrix(Size * Size, 0);
+        std::vector<double> pBMatrix(Size * Size, 0);
+    
         if (world_rank == 0) {
-            getRandMatrix(pAMatrix, Size);
-            getRandMatrix(pBMatrix, Size);
+            getRandMatrix(&pAMatrix, Size, sz);
+            getRandMatrix(&pBMatrix, Size, sz);
             for (int i = 0; i < Size; i++)
                 for (int j = 0; j < Size; j++) {
-                    pAMatrix[i * Size + j] /= static_cast <double>(10);
-                    pBMatrix[i * Size + j] /= static_cast <double>(10);
+                    pAMatrix[i * sz + j] /= static_cast <double>(10);
+                    pBMatrix[i * sz + j] /= static_cast <double>(10);
                 }
         }
-
+    
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
-
+    
         if (world_rank == 0) {
             ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
             bool check = isMatrEqual(Res, ResSeq, Size);

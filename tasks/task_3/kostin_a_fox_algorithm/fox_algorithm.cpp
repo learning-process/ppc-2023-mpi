@@ -6,11 +6,11 @@
 #include <random>
 #include <algorithm>
 #include <functional>
+#include <iostream>
 #include "task_3/kostin_a_fox_algorithm/fox_algorithm.h"
 
-double* SequentialMul(double* matrixa, double* matrixb, int n) {
-    double* resmatrix = 0;
-    matrCalloc(&resmatrix, n);
+std::vector<double> SequentialMul(std::vector<double> matrixa, std::vector<double> matrixb, int n) {
+    std::vector<double> resmatrix (n * n);
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             for (int k = 0; k < n; k++)
@@ -18,15 +18,15 @@ double* SequentialMul(double* matrixa, double* matrixb, int n) {
     return resmatrix;
 }
 
-void getRandMatrix(double* matrix, int n) {
+void getRandMatrix(std::vector<double>* matrix, int N, int n) {
     std::random_device dev;
     std::mt19937 gen(dev());
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            matrix[i * n + j] = static_cast<double>(static_cast<int>(gen()) % 200 - 100) / static_cast<double>(10);
+            (*matrix)[i * N + j] = static_cast<double>(static_cast<int>(gen()) % 200 - 100) / static_cast<double>(10);
 }
 
-bool isMatrEqual(double* matrixa, double* matrixb, int n) {
+bool isMatrEqual(std::vector<double> matrixa, std::vector<double> matrixb, int n) {
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             if (abs(matrixa[i * n + j] - matrixb[i * n + j]) > 0.00001)
@@ -42,150 +42,99 @@ void matrCalloc(double** matrix, int n) {
     *matrix = reinterpret_cast<double*>(calloc(n * n, sizeof(double)));
 }
 
-double* Fox_algorithm(double* matrixa, double* matrixb, int n) {
+void print_matr(std::vector<double> matrix, int Size) {
+    for (int i = 0; i < Size; i++) {
+        for (int j = 0; j < Size; j++)
+            std::cout << matrix[i * Size + j] << " ";
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+std::vector<double> Fox_algorithm(std::vector<double> matrixa, std::vector<double> matrixb, int n) {
     int size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int sqrtsize = static_cast<int>(sqrt(static_cast<double>(size)));
-    // if (sqrtsize * sqrtsize != size)
-    //     return 0;
+    if (sqrtsize * sqrtsize != size)
+        throw 0;
 
-    int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));
-    double* pAblock;
-    matrMalloc(&pAblock, BSize);
-    // double* pAblock = reinterpret_cast<double*>(malloc(Bsize * Bsize * sizeof(double)));
-    double* pBblock;
-    matrMalloc(&pBblock, BSize);
-    double* tmpreceived;
-    matrMalloc(&tmpreceived, BSize);
-    double* resmatrix = 0;
-    double* tmpmatra = 0;
-    double* tmpmatrb = 0;
-    int enlarged_size = BSize * sqrtsize;
+    std::vector<double> cmatrix(n * n);
+    std::vector<int> coordinates_of_grid(2);
+    std::vector<int> dimSize(2, sqrtsize);
+    std::vector<int> periodic(2, 0);
+    std::vector<int> subDims(2);
+    subDims = { 0, 1 };
+    MPI_Comm cgrid;
+    MPI_Comm ccolumn;
+    MPI_Comm crow;
+
+    MPI_Cart_create(MPI_COMM_WORLD, 2, dimSize.data(), periodic.data(), 0, &cgrid);
+    MPI_Cart_coords(cgrid, rank, 2, coordinates_of_grid.data());
+    MPI_Cart_sub(cgrid, subDims.data(), &crow);
+    std::swap(subDims[0], subDims[1]);
+    MPI_Cart_sub(cgrid, subDims.data(), &ccolumn);
+
+    int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize)); // -
+    int BBSize = BSize * BSize;
+    std::vector<double> pAblock(BBSize, 0);
+    std::vector<double> pBblock(BBSize, 0);
+    std::vector<double> pCblock(BBSize, 0);
     if (rank == 0) {
-        matrCalloc(&tmpmatra, enlarged_size);
-        matrCalloc(&tmpmatrb, enlarged_size);
-        // tmpmatra = (double*)calloc(enlarged_size * enlarged_size, sizeof(double));
-        // tmpmatrb = (double*)calloc(enlarged_size * enlarged_size, sizeof(double));
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++) {
-                tmpmatra[i * enlarged_size + j] = matrixa[i * n + j];
-                tmpmatrb[i * enlarged_size + j] = matrixb[i * n + j];
+        for (int i = 0; i < BSize; i++)
+            for (int j = 0; j < BSize; j++) {
+                pAblock[i * BSize + j] = matrixa[i * n + j];
+                pBblock[i * BSize + j] = matrixb[i * n + j];
             }
-        matrMalloc(&resmatrix, enlarged_size);
     }
-    int* pstd = reinterpret_cast<int*>(malloc(size * sizeof(int)));
-    int* ineq = reinterpret_cast<int*>(malloc(size * sizeof(int)));
-    for (int i = 0; i < size; i++) {
-        pstd[i] = 1;
-        ineq[i] = BSize * (i % sqrtsize) + i / sqrtsize * BSize * enlarged_size;
-    }
-
-#ifdef __linux__
-    MPI_Datatype clmn[2];
-#else
-    int clmn[2];
-#endif
-    int lenofb[2];
-    MPI_Aint disp[2];
-    MPI_Datatype typeofblock, tosend;
-    MPI_Aint sizeofdouble;
+    int enlarged_size = BSize * sqrtsize;
+    MPI_Datatype typeofblock;
     MPI_Type_vector(BSize, BSize, enlarged_size, MPI_DOUBLE, &typeofblock);
     MPI_Type_commit(&typeofblock);
-#ifdef __linux__
-    MPI_Aint lb;
-    MPI_Type_get_extent(MPI_DOUBLE, &lb, &sizeofdouble);
-#else
-    MPI_Type_extent(MPI_DOUBLE, &sizeofdouble);
-#endif
-    disp[0]  = 0;
-    disp[1]  = sizeofdouble;
-    lenofb[0] = 1;
-    lenofb[1] = 1;
-#ifdef __linux__
-    clmn[0] = (MPI_Datatype)sizeofdouble;
-    clmn[1] = MPI_OP_NULL;
-#else
-    clmn[0] = typeofblock;
-    clmn[1] = MPI_UB;
-#endif
-    MPI_Type_create_struct(2, lenofb, disp, clmn, &tosend);
-    MPI_Type_commit(&tosend);
-
-    MPI_Scatterv(tmpmatra, pstd, ineq, tosend, pAblock, BSize * BSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Scatterv(tmpmatrb, pstd, ineq, tosend, pBblock, BSize * BSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-    double* resblock;
-    matrCalloc(&resblock, BSize);
-
-    MPI_Comm comm, strcom;
-    int dimSize[2], periodic[2], subDims[2];
-    dimSize[0] = sqrtsize;
-    dimSize[1] = sqrtsize;
-    subDims[0] = 0;
-    subDims[1] = 1;
-    periodic[0] = 1;
-    periodic[1] = 1;
-    MPI_Cart_create(MPI_COMM_WORLD, 2, dimSize, periodic, 1, &comm);
-    MPI_Cart_sub(comm, subDims, &strcom);
 
     MPI_Status Status;
-    int from, to, startofbcast;
-    bool flag = false;
-    for (int l = 0; l < sqrtsize; l++) {
-        startofbcast = (rank / sqrtsize + l) % sqrtsize;
-        flag = false;
-        if (startofbcast == rank % sqrtsize) flag = true;
-        if (flag == true)
-            MPI_Bcast(pAblock, BSize * BSize, MPI_DOUBLE, startofbcast, strcom);
-        else
-            MPI_Bcast(tmpreceived, BSize * BSize, MPI_DOUBLE, startofbcast, strcom);
+    if (rank == 0)
+        for (int l = 1; l < size; l++) {
+            MPI_Send(matrixa.data() + (l % sqrtsize) * BSize + (l / sqrtsize) * n * BSize, 1, typeofblock, l, 0, cgrid);
+            MPI_Send(matrixb.data() + (l % sqrtsize) * BSize + (l / sqrtsize) * n * BSize, 1, typeofblock, l, 1, cgrid);
+        }
+    else {
+        MPI_Recv(pAblock.data(), BBSize, MPI_DOUBLE, 0, 0, cgrid, &Status);
+        MPI_Recv(pBblock.data(), BBSize, MPI_DOUBLE, 0, 1, cgrid, &Status);
+    }
+
+
+    for (int i = 0; i < sqrtsize; i++) {
+        std::vector<double> tmpmatra(BBSize);
+        int bcast = (coordinates_of_grid[0] + i) % sqrtsize;
+        if (coordinates_of_grid[1] == bcast) tmpmatra = pAblock;
+        MPI_Bcast(tmpmatra.data(), BBSize, MPI_DOUBLE, bcast, crow);
+        for (int j = 0; j < BSize; j++)
+            for (int k = 0; k < BSize; k++) {
+                double temp = 0;
+                for (int l = 0; l < BSize; l++)
+                    temp += tmpmatra[j * BSize + l] * pBblock[l * BSize + k];
+                pCblock[j * BSize + k] += temp;
+            }
+        int nextp = coordinates_of_grid[0] + 1;
+        if (coordinates_of_grid[0] == sqrtsize - 1) nextp = 0;
+        int prevp = coordinates_of_grid[0] - 1;
+        if (coordinates_of_grid[0] == 0) prevp = sqrtsize - 1;
+        MPI_Sendrecv_replace(pBblock.data(), BBSize, MPI_DOUBLE, prevp, 0, nextp, 0, ccolumn, &Status);
+    }
+
+    if (rank == 0) 
         for (int i = 0; i < BSize; i++)
             for (int j = 0; j < BSize; j++)
-                for (int k = 0; k < BSize; k++) {
-                    if (flag == true)
-                        resblock[i * BSize + j] += pAblock[i * BSize + k] * pBblock[k * BSize + j];
-                    else
-                        resblock[i * BSize + j] += tmpreceived[i * BSize + k] * pBblock[k * BSize + j];
-                }
-        if (l != sqrtsize - 1) {
-            from = rank - sqrtsize;
-            if (from < 0)
-                from = sqrtsize * sqrtsize - sqrtsize + rank % sqrtsize;
-            to = rank + sqrtsize;
-            if (to >= size)
-                to = to % size;
-
-            MPI_Sendrecv_replace(pBblock, BSize * BSize, MPI_DOUBLE, from, 0, to, 0, MPI_COMM_WORLD, &Status);
-        }
-    }
-
-    MPI_Gatherv(resblock, BSize * BSize, MPI_DOUBLE, resmatrix, pstd, ineq, tosend, 0, MPI_COMM_WORLD);
-
-    double* cmatrix = 0;
-    if (rank == 0) {
-        matrMalloc(&cmatrix, n);
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                cmatrix[i * n + j] = resmatrix[i * enlarged_size + j];
-    }
-
-    free(pstd);
-    free(ineq);
-    free(pAblock);
-    free(pBblock);
-    free(tmpreceived);
-    if (rank == 0) {
-        free(tmpmatra);
-        free(tmpmatrb);
-    }
-    free(resblock);
-    free(resmatrix);
+                cmatrix[i * n + j] = pCblock[i * BSize + j];
+    if (rank != 0)
+        MPI_Send(pCblock.data(), BBSize, MPI_DOUBLE, 0, 3, MPI_COMM_WORLD);
+    if (rank == 0)
+        for (int i = 1; i < size; i++)
+            MPI_Recv(cmatrix.data() + (i % sqrtsize) * BSize + (i / sqrtsize) * n * BSize, BBSize, typeofblock, i, 3, MPI_COMM_WORLD, &Status);
+    
+    
     MPI_Type_free(&typeofblock);
-    MPI_Type_free(&tosend);
-    MPI_Comm_free(&comm);
-    MPI_Comm_free(&strcom);
-
     return cmatrix;
 }
