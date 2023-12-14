@@ -23,7 +23,7 @@ double Monte_Carlo_Multiple_Integration(double(*f)(std::vector<double>), const s
 
     std::vector<std::uniform_real_distribution<double>> r(multiplicity);
     std::vector<double> r1(multiplicity);
-    
+
     for (int i = 0; i < multiplicity; i++) {
         r[i] = std::uniform_real_distribution<double>(a[i], b[i]);
     }
@@ -34,7 +34,7 @@ double Monte_Carlo_Multiple_Integration(double(*f)(std::vector<double>), const s
         }
         res += f(r1);
     }
-    
+
     res *= S / n;
     return res;
 }
@@ -49,7 +49,7 @@ double Monte_Carlo_Multiple_Integration_Parallel(double(*f)(std::vector<double>)
     double local_res = 0.0, res = 0.0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    
+
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
     int multiplicity = a.size();
