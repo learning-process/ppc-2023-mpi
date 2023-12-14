@@ -1,5 +1,5 @@
 // Copyright 2023 Kostin Artem
-#define MSMPI_NO_DEPRECATE_20
+
 #include <mpi.h>
 #include <stdlib.h>
 #include <math.h>
