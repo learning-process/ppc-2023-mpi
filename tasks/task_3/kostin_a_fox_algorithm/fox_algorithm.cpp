@@ -138,7 +138,6 @@ std::vector<double> Fox_algorithm(std::vector<double> matrixa, std::vector<doubl
                 typeofblock, i, 3, MPI_COMM_WORLD, &Status);
     }
     
-    
     MPI_Type_free(&typeofblock);
     return cmatrix;
 }
