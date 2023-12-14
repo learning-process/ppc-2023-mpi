@@ -136,8 +136,7 @@ std::vector<double> Fox_algorithm(std::vector<double> matrixa, std::vector<doubl
         for (int i = 1; i < size; i++)
             MPI_Recv(cmatrix.data() + (i % sqrtsize) * BSize + (i / sqrtsize) * n * BSize, BBSize,
                 typeofblock, i, 3, MPI_COMM_WORLD, &Status);
-    }
-    
+    }    
     MPI_Type_free(&typeofblock);
     return cmatrix;
 }
