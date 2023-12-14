@@ -19,8 +19,8 @@ TEST(Fox_Algorithm_MPI, Test1) {
         if (extra_els > 0) Size += sqrtsize - (Size % sqrtsize);
 
         /*
-        ¬ случае, если Size % sqrtsize != 0, матрица дополн€ютс€ нулевыми значени€ми, которые не вли€ют на нужное значение
-        ѕример:
+        In case Size % sqrtsize != 0, the matrix is padded with zero values, which do not affect the desired value.
+        Example:
 
         pAMatrix
         -13.9  -28.9    3    0
