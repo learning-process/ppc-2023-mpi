@@ -39,7 +39,7 @@ int countParallel(const std::string &str) {
   // string(string & S, size_t start, size_t len)
 
   std::string recv_data(str, displs[rankProc], recv_counts[rankProc]);
-  MPI_Scatterv(str.data(), recv_counts.data(), displs.data(), MPI_INT,
+  MPI_Scatterv(str.data(), recv_counts.data(), displs.data(), MPI_CHAR,
                recv_data.data(), recv_counts[rankProc], MPI_INT, 0,
                MPI_COMM_WORLD);
 

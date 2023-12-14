@@ -29,13 +29,14 @@ TEST(Parallel_Sentences_Count, Test2) {
   MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
   std::string str(
-      "ABBBBBBBBB. HEpleeeeeeeeeee mee pleeeees. dadadadadadadadada?");
+      "ABBBBBBBBB HEpleeeeeeeeeee mee pleeeees dadadadad");
 
   int result = countParallel(str);
 
   if (rankProc == 0) {
     int resSeq = countSequence(str);
     ASSERT_EQ(result, resSeq);
+    ASSERT_EQ(0, resSeq);
   }
 }
 
@@ -47,7 +48,7 @@ TEST(Parallel_Sentences_Count, Test3) {
   MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
   std::string str(
-      "ABBBBBBBBB. HEpleeeeeeeeeee mee pleeeees. dadadadadadadadada?");
+      "..........????...!!!!!!!");
 
   int result = countParallel(str);
 
@@ -64,8 +65,11 @@ TEST(Parallel_Sentences_Count, Test4) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
   MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-  std::string str(
-      "ABBBBBBBBB. HEpleeeeeeeeeee mee pleeeees. dadadadadadadadada?");
+  std::string str(1000, ' ');
+
+  for (int i = 0; i < str.length(); i++) {
+    str[i] = static_cast<char>(63 + (std::rand() % (90 - 63)));
+  }
 
   int result = countParallel(str);
 
@@ -82,13 +86,11 @@ TEST(Parallel_Sentences_Count, Test5) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
   MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-  std::string str(
-      "ABBBBBBBBB. HEpleeeeeeeeeee mee pleeeees. dadadadadadadadada?");
+  std::string str("");
 
   int result = countParallel(str);
 
   if (rankProc == 0) {
-    std::cout << result;
     int resSeq = countSequence(str);
     ASSERT_EQ(result, resSeq);
   }
@@ -106,4 +108,4 @@ int main(int argc, char **argv) {
   MPI_Finalize();
 
   return result_code;
-} 
+}
