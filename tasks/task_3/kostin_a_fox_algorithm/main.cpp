@@ -59,7 +59,7 @@ TEST(Fox_Algorithm_MPI, Test1) {
         }
 
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
-        
+
         if (world_rank == 0) {
             ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
             bool check = isMatrEqual(Res, ResSeq, Size);
@@ -84,14 +84,14 @@ TEST(Fox_Algorithm_MPI, Size_of_matrix_is_1) {
         std::vector<double> ResSeq(Size * Size, 0);
         std::vector<double> pAMatrix(Size * Size, 0);
         std::vector<double> pBMatrix(Size * Size, 0);
-    
+
         if (world_rank == 0) {
             getRandMatrix(&pAMatrix, Size, sz);
             getRandMatrix(&pBMatrix, Size, sz);
         }
-    
+
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
-    
+
         if (world_rank == 0) {
             ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
             bool check = isMatrEqual(Res, ResSeq, Size);
@@ -116,9 +116,9 @@ TEST(Fox_Algorithm_MPI, Only_zeroes) {
         std::vector<double> ResSeq(Size * Size, 0);
         std::vector<double> pAMatrix(Size * Size, 0);
         std::vector<double> pBMatrix(Size * Size, 0);
-    
+
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
-    
+
         if (world_rank == 0) {
             ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
             bool check = isMatrEqual(Res, ResSeq, Size);
@@ -143,7 +143,7 @@ TEST(Fox_Algorithm_MPI, Only_ones) {
         std::vector<double> ResSeq(Size * Size, 0);
         std::vector<double> pAMatrix(Size * Size, 0);
         std::vector<double> pBMatrix(Size * Size, 0);
-    
+
         if (world_rank == 0) {
             for (int i = 0; i < sz; i++)
                 for (int j = 0; j < sz; j++) {
@@ -151,7 +151,7 @@ TEST(Fox_Algorithm_MPI, Only_ones) {
                     pBMatrix[i * Size + j] = 1;
                 }
         }
-    
+
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
 
         if (world_rank == 0) {
@@ -178,7 +178,7 @@ TEST(Fox_Algorithm_MPI, All_elements_less_than_one) {
         std::vector<double> ResSeq(Size * Size, 0);
         std::vector<double> pAMatrix(Size * Size, 0);
         std::vector<double> pBMatrix(Size * Size, 0);
-    
+
         if (world_rank == 0) {
             getRandMatrix(&pAMatrix, Size, sz);
             getRandMatrix(&pBMatrix, Size, sz);
@@ -188,9 +188,9 @@ TEST(Fox_Algorithm_MPI, All_elements_less_than_one) {
                     pBMatrix[i * sz + j] /= static_cast <double>(10);
                 }
         }
-    
+
         Res = Fox_algorithm(pAMatrix, pBMatrix, Size);
-    
+
         if (world_rank == 0) {
             ResSeq = SequentialMul(pAMatrix, pBMatrix, Size);
             bool check = isMatrEqual(Res, ResSeq, Size);

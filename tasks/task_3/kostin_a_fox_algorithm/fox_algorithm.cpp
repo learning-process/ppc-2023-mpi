@@ -7,10 +7,11 @@
 #include <algorithm>
 #include <functional>
 #include <iostream>
+#include <utility>
 #include "task_3/kostin_a_fox_algorithm/fox_algorithm.h"
 
 std::vector<double> SequentialMul(std::vector<double> matrixa, std::vector<double> matrixb, int n) {
-    std::vector<double> resmatrix (n * n);
+    std::vector<double> resmatrix(n * n);
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             for (int k = 0; k < n; k++)
@@ -76,7 +77,7 @@ std::vector<double> Fox_algorithm(std::vector<double> matrixa, std::vector<doubl
     std::swap(subDims[0], subDims[1]);
     MPI_Cart_sub(cgrid, subDims.data(), &ccolumn);
 
-    int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize)); // -
+    int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));  // -
     int BBSize = BSize * BSize;
     std::vector<double> pAblock(BBSize, 0);
     std::vector<double> pBblock(BBSize, 0);
@@ -94,12 +95,12 @@ std::vector<double> Fox_algorithm(std::vector<double> matrixa, std::vector<doubl
     MPI_Type_commit(&typeofblock);
 
     MPI_Status Status;
-    if (rank == 0)
+    if (rank == 0) {
         for (int l = 1; l < size; l++) {
             MPI_Send(matrixa.data() + (l % sqrtsize) * BSize + (l / sqrtsize) * n * BSize, 1, typeofblock, l, 0, cgrid);
             MPI_Send(matrixb.data() + (l % sqrtsize) * BSize + (l / sqrtsize) * n * BSize, 1, typeofblock, l, 1, cgrid);
         }
-    else {
+    } else {
         MPI_Recv(pAblock.data(), BBSize, MPI_DOUBLE, 0, 0, cgrid, &Status);
         MPI_Recv(pBblock.data(), BBSize, MPI_DOUBLE, 0, 1, cgrid, &Status);
     }
@@ -124,15 +125,18 @@ std::vector<double> Fox_algorithm(std::vector<double> matrixa, std::vector<doubl
         MPI_Sendrecv_replace(pBblock.data(), BBSize, MPI_DOUBLE, prevp, 0, nextp, 0, ccolumn, &Status);
     }
 
-    if (rank == 0) 
+    if (rank == 0) {
         for (int i = 0; i < BSize; i++)
             for (int j = 0; j < BSize; j++)
                 cmatrix[i * n + j] = pCblock[i * BSize + j];
+    }
     if (rank != 0)
         MPI_Send(pCblock.data(), BBSize, MPI_DOUBLE, 0, 3, MPI_COMM_WORLD);
-    if (rank == 0)
+    if (rank == 0) {
         for (int i = 1; i < size; i++)
-            MPI_Recv(cmatrix.data() + (i % sqrtsize) * BSize + (i / sqrtsize) * n * BSize, BBSize, typeofblock, i, 3, MPI_COMM_WORLD, &Status);
+            MPI_Recv(cmatrix.data() + (i % sqrtsize) * BSize + (i / sqrtsize) * n * BSize, BBSize,
+                typeofblock, i, 3, MPI_COMM_WORLD, &Status);
+    }
     
     
     MPI_Type_free(&typeofblock);
