@@ -13,13 +13,74 @@
 std::vector<double> getRandomVector(int n) {
     std::random_device dev;
     std::mt19937_64 gen(dev());
-    std::uniform_real_distribution<double> dist(-10, 10);
+    std::uniform_real_distribution<double> dist(-100, 100);
     std::vector<double> vec(n);
     for (auto& i : vec) {
         i = dist(gen);
     }
     return vec;
 }
+
+void iterativeRadixSort(std::vector<double>& v) {
+    std::vector<double> positive;
+    std::vector<double> negative;
+    constexpr int sz = sizeof(double);
+    using ull = unsigned long long;
+    ull mask_fb = 1ll << (sz * 8 - 1);
+    for (auto& j : v) {
+        ull temp = *reinterpret_cast<ull*>(&j);
+        if (temp & mask_fb) {
+            negative.push_back(j);
+        }
+        else {
+            positive.push_back(j);
+        }
+    }
+
+    std::vector<std::vector<double>> parts(256);
+    // sort negative
+    for (int t = 0; t < sz; t++) {
+        for (auto& j : negative) {
+            ull temp = *reinterpret_cast<ull*>(&j);
+            temp >>= t * 8;
+            temp &= 255;
+            parts[temp].push_back(j);
+        }
+        int i = 0;
+        for (int k = 255; k >= 0; k--) {
+            for (auto& j : parts[k]) {
+                negative[i++] = j;
+            }
+            parts[k].clear();
+        }
+    }
+    // sort positive
+    for (int t = 0; t < sz; t++) {
+        for (auto& j : positive) {
+            ull temp = *reinterpret_cast<ull*>(&j);
+            temp >>= t * 8;
+            temp &= 255;
+            parts[temp].push_back(j);
+        }
+        int i = 0;
+        for (int k = 0; k < 256; k++) {
+            for (auto& j : parts[k]) {
+                positive[i++] = j;
+            }
+            parts[k].clear();
+        }
+    }
+    
+    int i = 0;
+    for (auto& j : negative) {
+        v[i++] = j;
+    }
+    for (auto& j : positive) {
+        v[i++] = j;
+    }
+}
+
+// delete:
 
 std::vector<double> getRandomMatrix(int n) {
     // A[i][i] == 1.0, |A[i][i]| > sum{j!=i}|A[i][j]|

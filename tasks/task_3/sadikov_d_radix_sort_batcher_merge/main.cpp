@@ -5,6 +5,22 @@
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 
+TEST(Sequential_Radix_Sort_MPI, Test_Seq_1) {
+    boost::mpi::communicator world;
+    if (world.rank() == 0) {
+        std::vector<double> t = getRandomVector(10);
+        for (auto& i : t)
+            std::cout << i << " ";
+        std::cout << "\n";
+        iterativeRadixSort(t);
+        for (auto& i : t)
+            std::cout << i << " ";
+        std::cout << "\n";
+    }
+}
+
+// delete:
+
 TEST(Sequential_Iterative_Method_MPI, Test_Seq_1) {
     boost::mpi::communicator world;
     if (world.rank() == 0) {
