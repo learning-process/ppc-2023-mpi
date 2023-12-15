@@ -26,7 +26,7 @@ std::vector<int> getRandomVector(int size) {
   return vector;
 }
 
-double midValueOfVectorParallel(const std::vector<int>& vector) { 
+double midValueOfVectorParallel(const std::vector<int>& vector) {
   boost::mpi::communicator comm;
 
   int rank = comm.rank();
