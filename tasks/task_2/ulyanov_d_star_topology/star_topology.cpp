@@ -20,19 +20,16 @@ int send_int(const int& data, int sender, int recipient, int root) {
   if (rank == root) {
     if (root != sender) {
       MPI_Recv(&local_data, 1, MPI_INT, sender, 0, MPI_COMM_WORLD, &status);
-    }
-    else {
+    } else {
       local_data = data;
     }
     if (root != recipient) {
       MPI_Send(&local_data, 1, MPI_INT, recipient, 0, MPI_COMM_WORLD);
     }
-  }
-  else if (rank == sender) {
+  } else if (rank == sender) {
     MPI_Send(&data, 1, MPI_INT, root, 0, MPI_COMM_WORLD);
     local_data = data;
-  }
-  else if (rank == recipient) {
+  } else if (rank == recipient) {
     MPI_Recv(&local_data, 1, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
   }
 
