@@ -106,37 +106,24 @@ TEST(MPI_TESTS, TEST_MPI_DOUBLE) {
 
     ASSERT_EQ(MyScatter_localVec, MPI_Scatter_localVec);
 }
-struct UserStruct {
-    float x;
-    float y;
-    float z;
-};
-TEST(ScatterTest, Struct3DScatterTest) {
+TEST(MPI_TESTS, CORRECT_TEST) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    std::vector<UserStruct> sendbuf(size);
-    std::vector<UserStruct> recvbuf(1);
-
-    for (int i = 0; i < size; ++i) {
-        sendbuf[i].x = i * 1.5f;
-        sendbuf[i].y = i * 2.5f;
-        sendbuf[i].z = i * 3.5f;
+    std::vector<int> send_data;
+    if (rank == 0) {
+        send_data.resize(size * 3);
+        for (int i = 0; i < size * 3; ++i) {
+            send_data[i] = i;
+        }
     }
-
-    scatter(sendbuf.data(), 1, MPI_FLOAT,
-        recvbuf.data(),
-        1, MPI_FLOAT, 0, MPI_COMM_WORLD);
-
-    UserStruct expected_result;
-    expected_result.x = (rank == 0) ? 0.0f : 1.5f * rank;
-    expected_result.y = (rank == 0) ? 0.0f : 2.5f * rank;
-    expected_result.z = (rank == 0) ? 0.0f : 3.5f * rank;
-
-    ASSERT_FLOAT_EQ(recvbuf[0].x, expected_result.x);
-    ASSERT_FLOAT_EQ(recvbuf[0].y, expected_result.y);
-    ASSERT_FLOAT_EQ(recvbuf[0].z, expected_result.z);
+    std::vector<int> recv_data(3);
+    scatter(send_data.data(), 3, MPI_INT, recv_data.data(),
+        3, MPI_INT, 0, MPI_COMM_WORLD);
+    for (int i = 0; i < 3; ++i) {
+        ASSERT_EQ(recv_data[i], (rank * 3) + i);
+    }
 }
 int main(int argc, char** argv) {
     int resultCode = 0;
