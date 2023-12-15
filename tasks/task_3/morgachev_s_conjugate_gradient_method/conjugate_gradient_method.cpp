@@ -132,10 +132,10 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
     double residualNextScalar;
     int chunk = size / numprocs;
     int remainder = size % numprocs;
-    std::vector<double> directionPart(chunk);
-    std::vector<double> directionRes(chunk);
     std::vector<double> residualPrev(chunk);
     std::vector<double> residualNext(chunk);
+    std::vector<double> directionPart(chunk);
+    std::vector<double> directionRes(chunk);
 
     for (int i = 0; i < size; i++) {
         approximateSolution[i] = 0;
@@ -204,7 +204,7 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
             MPI_Status status;
             for (int proc = 1; proc < numprocs; proc++) {
                 MPI_Recv(&direction[0] + proc * chunk + remainder,
-                    chunk, MPI_DOUBLE, proc, 2, comm, &status);
+                    chunk, datatype, proc, 2, comm, &status);
             }
         }
     }
@@ -214,7 +214,7 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
         }
     }
 
-    MPI_Bcast(direction.data(), size, datatype, 0, comm);
+    MPI_Bcast(direction.data(), size, datatype, root, comm);
 
     if (rank == 0 && remainder != 0) {
         directionPart.resize(chunk + remainder);
