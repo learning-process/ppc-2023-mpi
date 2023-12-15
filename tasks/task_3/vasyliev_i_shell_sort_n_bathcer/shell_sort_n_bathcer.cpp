@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <random>
+#include <utility>
 #include <boost/mpi/collectives.hpp>
 #include <boost/mpi/communicator.hpp>
 #include "task_3/vasyliev_i_shell_sort_n_bathcer/shell_sort_n_bathcer.h"
@@ -15,15 +16,15 @@ std::vector<int> getRandomVector(int n, int lb, int ub) {
     return vec;
 }
 
-void shellSort(std::vector<int>& array) {
-    int n = array.size();
+void shellSort(std::vector<int>* array) {
+    int n = array->size();
     for (int interval = n / 2; interval > 0; interval /= 2) {
         for (int i = interval; i < n; i++) {
-            int j, temp = array[i];
-            for (j = i; j >= interval && array[j - interval] > temp; j -= interval) {
-                array[j] = array[j - interval];
+            int j, temp = (*array)[i];
+            for (j = i; j >= interval && (*array)[j - interval] > temp; j -= interval) {
+                (*array)[j] = (*array)[j - interval];
             }
-            array[j] = temp;
+            (*array)[j] = temp;
         }
     }
 }
@@ -33,7 +34,7 @@ std::vector<std::pair<int, int>> comparators;
 void Split(std::vector<int> procs_up, std::vector<int> procs_down) {
     int proc_count = procs_up.size() + procs_down.size();
     if (proc_count == 1) return;
-    else if (proc_count == 2) {
+    if (proc_count == 2) {
         comparators.push_back({procs_up[0], procs_down[0]});
         return;
     }
@@ -87,7 +88,7 @@ std::vector<int> ParallelSort(std::vector<int> vec, int vec_sz) {
     std::vector<int> part(part_sz);
     boost::mpi::scatter(world, vec, part.data(), part_sz, 0);
 
-    shellSort(part);
+    shellSort(&part);
     batcherCompSetup(world.size());
 
     std::vector<int> elems_internal = part;
@@ -95,7 +96,7 @@ std::vector<int> ParallelSort(std::vector<int> vec, int vec_sz) {
     std::vector<int> elems_temp = std::vector<int>(part_sz);
 
     for (int i = 0; i < comparators.size(); i++) {
-        auto comparator = comparators[i] ;
+        auto comparator = comparators[i];
         if (world.rank() == comparator.first) {
             world.send(comparator.second, i, elems_internal);
             world.recv(comparator.second, i, elems_external);
