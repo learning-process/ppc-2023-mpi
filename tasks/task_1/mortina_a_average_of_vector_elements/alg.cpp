@@ -1,4 +1,5 @@
-// Copyright 2023 Mortina Anastasiya
+// Copyright 2023 Mortina Anastasia
+
 #include "task_1/mortina_a_average_of_vector_elements/alg.h"
 
 int generateRandomNumbers(int min, int max) {
@@ -24,41 +25,6 @@ std::vector<int> getRandomVector(int size) {
   }
   return vector;
 }
-
-
-// double midValueOfVectorParallel(const std::vector<int>& vector) {
-//   int sizeProc, rankProc;
-
-//   MPI_Comm_size(MPI_COMM_WORLD, &sizeProc);
-//   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-
-
-//   std::vector<int> sendCounts(sizeProc);
-//   std::vector<int> offset(sizeProc);
-
-//   int chunk = static_cast<int>(vector.size() / sizeProc);
-//   int remand =  static_cast<int>(vector.size() % sizeProc);
-
-//   MPI_Allgather(&chunk, 1, MPI_INT, sendCounts.data(), 1, MPI_INT, MPI_COMM_WORLD);
-
-//   offset[0] = 0;
-//   for (int i = 1; i < sizeProc; i++) {
-//     offset[i] = offset[i - 1] + sendCounts[i - 1];
-//   }
-
-//   sendCounts[sizeProc - 1] += remand;
-
-//   std::vector<int> recv_data(sendCounts[rankProc]);
-//   MPI_Scatterv(vector.data(), sendCounts.data(), offset.data(), MPI_INT, recv_data.data(),
-//               sendCounts[rankProc], MPI_INT, 0, MPI_COMM_WORLD);
-
-//   double localSum = sumOfVectorSequential(recv_data);
-//   double globalSum = 0;
-
-//   MPI_Reduce(&localSum, &globalSum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-
-//   return globalSum / static_cast<double>(vector.size());
-// }
 
 double midValueOfVectorParallel(const std::vector<int>& vector) { 
   boost::mpi::communicator comm;

@@ -1,4 +1,4 @@
-// Copyright 2023 Mortina Anastasiya
+// Copyright 2023 Mortina Anastasia
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
