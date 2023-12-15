@@ -20,10 +20,8 @@ int parallel_lex_cmp_(const char* str1, const char* str2, int len) {
     local_str2[sizes[world.rank()]] = '\0';
 
     int loc_cmp = 0;
-    if (local_str1 && local_str2) {
-        loc_cmp = strcmp(local_str1, local_str2);
-    }
-
+    loc_cmp = strcmp(local_str1, local_str2);
+    
     delete[] local_str1;
     delete[] local_str2;
 
