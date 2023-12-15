@@ -30,7 +30,6 @@ TEST(Conjugate_Gradient_Method, Test_Multiply_Matrix_To_Vector) {
             ASSERT_EQ(result[i], multiply[i]);
         }
     }
-
 }
 
 TEST(Conjugate_Gradient_Method, Test_Serial_Conjugate_Method) {
@@ -42,7 +41,8 @@ TEST(Conjugate_Gradient_Method, Test_Serial_Conjugate_Method) {
     std::vector<double> answer = {2, 1};
 
     if (rank == 0) {
-        std::vector<double> conjugateMethod = serialConjugateGradient(matrix, vector, 2);
+        std::vector<double> conjugateMethod =
+            serialConjugateGradient(matrix, vector, 2);
         for (int i = 0; i < 2; i++) {
             ASSERT_NEAR(answer[i], conjugateMethod[i], 0.5);
         }
@@ -57,7 +57,8 @@ TEST(Conjugate_Gradient_Method, Test_Parallel_Conjugate_Method) {
     std::vector<double> matrix = { 1, 5, 3, -2 };
     std::vector<double> answer = { 2, 1 };
 
-    std::vector<double> parRes = parallelConjugateGradient(matrix, vector, size);
+    std::vector<double> parRes =
+        parallelConjugateGradient(matrix, vector, size);
     if (rank == 0) {
         for (size_t i = 0; i < parRes.size(); i++)
             ASSERT_NEAR(answer[i], parRes[i], 0.5);
@@ -73,9 +74,11 @@ TEST(Conjugate_Gradient_Method, Test_Serial_And_Parallel) {
     vector = fillVectorRandomNumbers(size, 1, 20);
     matrix = fillMatrixRandomNumbers(size, 1, 20);
 
-    std::vector<double> parRes = parallelConjugateGradient(matrix, vector, size);
+    std::vector<double> parRes =
+        parallelConjugateGradient(matrix, vector, size);
     if (rank == 0) {
-        std::vector<double> linRes = serialConjugateGradient(matrix, vector, size);
+        std::vector<double> linRes =
+            serialConjugateGradient(matrix, vector, size);
         for (size_t i = 0; i < linRes.size(); i++) {
             ASSERT_NEAR(linRes[i], parRes[i], 0.7);
         }

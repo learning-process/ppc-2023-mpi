@@ -24,7 +24,9 @@ std::vector<double> fillMatrixRandomNumbers(size_t size, int min, int max) {
 
     for (int i = 0; i < size; i++) {
         for (int j = i; j < size; j++) {
-            matrix[i * size + j] = matrix[j * size + i] = min + (std::rand() % (max - min + 1));
+            matrix[i * size + j] =
+                matrix[j * size + i] =
+                min + (std::rand() % (max - min + 1));
         }
     }
 
@@ -72,7 +74,8 @@ std::vector<double> serialConjugateGradient(const std::vector<double>& matrix,
         approximateSolution[i] = 0;
     }
 
-    std::vector<double> multiply = multiplyMatrixToVector(matrix, approximateSolution);
+    std::vector<double> multiply =
+        multiplyMatrixToVector(matrix, approximateSolution);
 
     for (int i = 0; i < size; i++) {
         residualPrev[i] = vector[i] - multiply[i];
@@ -80,16 +83,18 @@ std::vector<double> serialConjugateGradient(const std::vector<double>& matrix,
 
     std::vector<double> direction(residualPrev);
 
-    for(int i = 0; i < size; i++){
+    for (int i = 0; i < size; i++) {
         multiply = multiplyMatrixToVector(matrix, direction);
-        alpha = scalarMultiply(residualPrev, residualPrev) / scalarMultiply(direction, multiply);
+        alpha = scalarMultiply(residualPrev, residualPrev) /
+            scalarMultiply(direction, multiply);
 
         for (int j = 0; j < size; j++) {
             approximateSolution[j] += alpha * direction[j];
             residualNext[j] = residualPrev[j] - alpha * multiply[j];
         }
 
-        beta = scalarMultiply(residualNext, residualNext) / scalarMultiply(residualPrev, residualPrev);
+        beta = scalarMultiply(residualNext, residualNext) /
+            scalarMultiply(residualPrev, residualPrev);
         norm = sqrt(scalarMultiply(residualNext, residualNext));
 
         if (sqrt(norm) < epsilon) {
@@ -152,8 +157,7 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
             for (int i = 0; i < (chunk + remainder) * size; i++) {
                 partOfMatrix[i] = matrixPar[i];
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < size * chunk; i++) {
                 partOfMatrix[i] = matrixPar[i];
             }
@@ -164,15 +168,21 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
                     chunk * size, datatype, proc, 1, comm);
             }
         }
-    }
-    else {
+    } else {
         MPI_Status status;
         if (chunk != 0) {
-            MPI_Recv(&partOfMatrix[0], chunk * size, datatype, root, 1, comm, &status);
+            MPI_Recv(&partOfMatrix[0],
+                chunk * size,
+                datatype,
+                root,
+                1,
+                comm,
+                &status);
         }
     }
 
-    std::vector<double> multiply = multiplyMatrixToVector(partOfMatrix, approximateSolution);
+    std::vector<double> multiply =
+        multiplyMatrixToVector(partOfMatrix, approximateSolution);
 
     if (rank == root) {
         if (remainder != 0) {
@@ -182,10 +192,10 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
         for (int i = 0; i < chunk + remainder; i++) {
             residualPrev[i] = vectorPar[i] - multiply[i];
         }
-    }
-    else {
+    } else {
         for (int i = 0; i < chunk; i++) {
-            residualPrev[i] = vectorPar[rank * chunk + remainder + i] - multiply[i];
+            residualPrev[i] =
+                vectorPar[rank * chunk + remainder + i] - multiply[i];
         }
     }
 
@@ -194,8 +204,7 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
             for (int i = 0; i < chunk + remainder; i++) {
                 direction[i] = residualPrev[i];
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < chunk; i++) {
                 direction[i] = residualPrev[i];
             }
@@ -207,8 +216,7 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
                     chunk, datatype, proc, 2, comm, &status);
             }
         }
-    }
-    else {
+    } else {
         if (chunk != 0) {
             MPI_Send(&residualPrev[0], chunk, datatype, root, 2, comm);
         }
@@ -227,8 +235,7 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
             for (int i = 0; i < chunk + remainder; i++) {
                 directionPart[i] = direction[i];
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < chunk; i++) {
                 directionPart[i] = direction[rank * chunk + remainder + i];
             }
@@ -236,8 +243,18 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
 
         residualPrevScalarBuffer = scalarMultiply(residualPrev, residualPrev);
         residualNextScalarBuffer = scalarMultiply(directionPart, multiply);
-        MPI_Allreduce(&residualPrevScalarBuffer, &numerator, 1, datatype, op, comm);
-        MPI_Allreduce(&residualNextScalarBuffer, &denominator, 1, datatype, op, comm);
+        MPI_Allreduce(&residualPrevScalarBuffer,
+            &numerator,
+            1,
+            datatype,
+            op,
+            comm);
+        MPI_Allreduce(&residualNextScalarBuffer,
+            &denominator,
+            1,
+            datatype,
+            op,
+            comm);
 
         alpha = numerator / denominator;
 
@@ -249,15 +266,19 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
             for (int i = 0; i < chunk + remainder; i++) {
                 residualNext[i] = residualPrev[i] - alpha * multiply[i];
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < chunk; i++) {
                 residualNext[i] = residualPrev[i] - alpha * multiply[i];
             }
         }
 
         residualPrevScalarBuffer = scalarMultiply(residualNext, residualNext);
-        MPI_Allreduce(&residualPrevScalarBuffer, &residualNextScalar, 1, datatype, op, comm);
+        MPI_Allreduce(&residualPrevScalarBuffer,
+            &residualNextScalar,
+            1,
+            datatype,
+            op,
+            comm);
         beta = residualNextScalar / numerator;
         norm = sqrt(residualNextScalar);
 
@@ -276,10 +297,11 @@ std::vector<double> parallelConjugateGradient(const std::vector<double>& matrix,
                         chunk, datatype, proc, 3, comm, &status);
                 }
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < chunk; i++) {
-                directionRes[i] = residualNext[i] + beta * direction[rank * chunk + remainder + i];
+                directionRes[i] =
+                    residualNext[i] + beta *
+                    direction[rank * chunk + remainder + i];
             }
             if (chunk != 0) {
                 MPI_Send(&directionRes[0], chunk, datatype, root, 3, comm);
