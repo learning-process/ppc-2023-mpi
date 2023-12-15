@@ -12,7 +12,7 @@ TEST(Sequential_Radix_Sort_MPI, Test_Seq) {
         std::vector<double> t = getRandomVector(16);
         std::vector<double> res = t;
         sort(res.begin(), res.end());
-        iterativeRadixSort(t);
+        t = iterativeRadixSort(t);
         ASSERT_EQ(res, t);
     }
 }
@@ -26,7 +26,7 @@ TEST(Parallel_Radix_Sort_Batcher_Merge_MPI, Test_Par_manual) {
         v = { -6, 7, 5, -10, 6, 3, -7, -5 };
         true_ans = { -10, -7, -6, -5, 3, 5, 6, 7 };
     }
-    parallelBatcherMergeOfRadixSort(v, n);
+    v = parallelBatcherMergeOfRadixSort(v, n);
     if (world.rank() == 0) {
         ASSERT_EQ(v, true_ans);
     }
@@ -41,7 +41,7 @@ TEST(Parallel_Radix_Sort_Batcher_Merge_MPI, Test_Par_4) {
         v = getRandomVector(n);
         true_ans = v;
     }
-    parallelBatcherMergeOfRadixSort(v, n);
+    v = parallelBatcherMergeOfRadixSort(v, n);
     if (world.rank() == 0) {
         std::sort(true_ans.begin(), true_ans.end());
         ASSERT_EQ(v, true_ans);
@@ -57,7 +57,7 @@ TEST(Parallel_Radix_Sort_Batcher_Merge_MPI, Test_Par_32) {
         v = getRandomVector(n);
         true_ans = v;
     }
-    parallelBatcherMergeOfRadixSort(v, n);
+    v = parallelBatcherMergeOfRadixSort(v, n);
     if (world.rank() == 0) {
         std::sort(true_ans.begin(), true_ans.end());
         ASSERT_EQ(v, true_ans);
@@ -73,7 +73,7 @@ TEST(Parallel_Radix_Sort_Batcher_Merge_MPI, Test_Par_128) {
         v = getRandomVector(n);
         true_ans = v;
     }
-    parallelBatcherMergeOfRadixSort(v, n);
+    v = parallelBatcherMergeOfRadixSort(v, n);
     if (world.rank() == 0) {
         std::sort(true_ans.begin(), true_ans.end());
         ASSERT_EQ(v, true_ans);
@@ -89,7 +89,7 @@ TEST(Parallel_Radix_Sort_Batcher_Merge_MPI, Test_Par_1024) {
         v = getRandomVector(n);
         true_ans = v;
     }
-    parallelBatcherMergeOfRadixSort(v, n);
+    v = parallelBatcherMergeOfRadixSort(v, n);
     if (world.rank() == 0) {
         std::sort(true_ans.begin(), true_ans.end());
         ASSERT_EQ(v, true_ans);

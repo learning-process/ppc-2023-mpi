@@ -2,10 +2,7 @@
 #include <vector>
 #include <random>
 #include <algorithm>
-#include <numeric>
-#include <cmath>
-#include <functional>
-#include <utility>
+#include <cstdint>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 
@@ -22,11 +19,11 @@ std::vector<double> getRandomVector(int n) {
     return vec;
 }
 
-void iterativeRadixSort(std::vector<double>& v) {
+std::vector<double> iterativeRadixSort(std::vector<double> v) {
     std::vector<double> positive;
     std::vector<double> negative;
     constexpr int sz = sizeof(double);
-    using ull = unsigned long long;
+    using ull = uint64_t;
     ull mask_fb = 1ll << (sz * 8 - 1);
     for (auto& j : v) {
         ull temp = *reinterpret_cast<ull*>(&j);
@@ -78,45 +75,47 @@ void iterativeRadixSort(std::vector<double>& v) {
     for (auto& j : positive) {
         v[i++] = j;
     }
+
+    return v;
 }
 
 void compAndSwap(double& a, double& b) {
     if (a > b) std::swap(a, b);
 }
 
-void parallelBatcherMergeOfRadixSort(std::vector<double>& v, int n) {
+std::vector<double> parallelBatcherMergeOfRadixSort(std::vector<double> v, int n) {
     boost::mpi::communicator world;
     int world_size = world.size();
     int world_rank = world.rank();
 
-    // use only 2 processes
+    // use only 2 processes!
     if (world_size < 2) {
-        iterativeRadixSort(v);
-        return;
+        v = iterativeRadixSort(v);
+        return v;
     }
     if (world_rank >= 2) {
-        return;
+        return v;
     }
 
     // v.size() == 2 ^ k, k >= 2
     if (n < 4 || (n & (n - 1)) != 0) {
-        iterativeRadixSort(v);
-        return;
+        v = iterativeRadixSort(v);
+        return v;
     }
 
     std::vector<double> t;
     t.resize(n / 2);
 
-    // Сортировка половинок
+    // sort of halfs
     if (world_rank == 0) {
         world.send(1, 0, v.data() + n / 2, n / 2);
         std::copy(v.begin(), v.begin() + n / 2, t.begin());
-        iterativeRadixSort(t);
+        t = iterativeRadixSort(t);
         std::copy(t.begin(), t.end(), v.begin());
         world.recv(1, 0, v.data() + n / 2, n / 2);
     } else {
         world.recv(0, 0, t.data(), n / 2);
-        iterativeRadixSort(t);
+        t = iterativeRadixSort(t);
         world.send(0, 0, t.data(), n / 2);
     }
 
@@ -159,4 +158,5 @@ void parallelBatcherMergeOfRadixSort(std::vector<double>& v, int n) {
     } else {
         world.send(0, 0, t.data(), n / 2);
     }
+    return v;
 }
