@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <functional>
 #include <iostream>
+#include <utility>
 #include "task_3/kostin_a_fox_algorithm/fox_algorithm.h"
 
 std::vector<double> SequentialMul(std::vector<double> matrixa, std::vector<double> matrixb, int n) {
@@ -73,11 +74,10 @@ std::vector<double> Fox_algorithm(std::vector<double> matrixa, std::vector<doubl
     MPI_Cart_create(MPI_COMM_WORLD, 2, dimSize.data(), periodic.data(), 0, &cgrid);
     MPI_Cart_coords(cgrid, rank, 2, coordinates_of_grid.data());
     MPI_Cart_sub(cgrid, subDims.data(), &crow);
-    subDims[0] = 1;
-    subDims[1] = 0;
+    std::swap(subDims[0], subDims[1]);
     MPI_Cart_sub(cgrid, subDims.data(), &ccolumn);
 
-    int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));  // -
+    int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtsize));
     int BBSize = BSize * BSize;
     std::vector<double> pAblock(BBSize, 0);
     std::vector<double> pBblock(BBSize, 0);
