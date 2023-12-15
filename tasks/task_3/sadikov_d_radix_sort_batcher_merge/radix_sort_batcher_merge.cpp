@@ -1,6 +1,7 @@
 // Copyright 2023 Sadikov Damir
 #include <vector>
 #include <random>
+#include <algorithm>
 #include <numeric>
 #include <cmath>
 #include <functional>
@@ -80,115 +81,87 @@ void iterativeRadixSort(std::vector<double>& v) {
     }
 }
 
-// delete:
-
-std::vector<double> getRandomMatrix(int n) {
-    // A[i][i] == 1.0, |A[i][i]| > sum{j!=i}|A[i][j]|
-    std::vector<double> ret = getRandomVector(n * n);
-    for (int i = 0; i < n; i++) {
-        ret[i * n + i] = 1.0;
-        for (int j = 0; j < n; j++) {
-            if (j != i) {
-                ret[i * n + i] += std::abs(ret[i * n + j]);
-            }
-        }
-        for (int j = 0; j < n; j++) {
-            if (j != i) {
-                ret[i * n + j] /= ret[i * n + i];
-            }
-        }
-        ret[i * n + i] = 1.0;
-    }
-    return ret;
+void compAndSwap(double& a, double& b) {
+    if (a > b) std::swap(a, b);
 }
 
-double NormOfDifference(const std::vector<double>& a, const std::vector<double>& b) {
-    double ret = 0.0;
-    for (int i = 0; i < a.size(); i++) {
-        ret += std::abs(a[i] - b[i]);
-    }
-    return ret;
-}
-
-std::vector<double> SequentialIter(const std::vector<double>& A, const std::vector<double>& b, int n) {
-    constexpr double epsilon = 1e-5;
-    std::vector<double> x(n, 0.0);
-    std::vector<double> x_new(n, 0.0);
-    bool ok = true;
-    while (ok) {
-        x_new = b;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i != j) {
-                    x_new[i] -= A[i * n + j] * x[j];
-                }
-            }
-        }
-        ok = NormOfDifference(x, x_new) > epsilon;
-        std::swap(x, x_new);
-    }
-    return x;
-}
-
-std::vector<double> ParallelIter(const std::vector<double>& A, const std::vector<double>& b, int n) {
-    constexpr double epsilon = 1e-5;
+void parallelBatcherMergeOfRadixSort(std::vector<double>& v, int n) {
     boost::mpi::communicator world;
     int world_size = world.size();
     int world_rank = world.rank();
 
-    std::vector<int> x_local_sizes(world_size);
-    std::vector<int> x_local_displs(world_size);
-    for (int i = 0; i < world_size; i++) {
-        x_local_sizes[i] = n / world_size + (i < n % world_size ? 1 : 0);
-        if (i > 0) {
-            x_local_displs[i] = x_local_displs[i - 1] + x_local_sizes[i - 1];
-        }
+    // используетс€ только 2 потока!
+    if (world_size < 2) {
+        iterativeRadixSort(v);
+        return;
+    }
+    if (world_rank >= 2) {
+        return;
     }
 
-    std::vector<int> A_local_sizes;
-    std::vector<int> A_local_displs;
-    A_local_sizes.resize(world_size);
-    A_local_displs.resize(world_size);
-    for (int i = 0; i < world_size; i++) {
-        A_local_sizes[i] = n * x_local_sizes[i];
-        if (i > 0) {
-            A_local_displs[i] = A_local_displs[i - 1] + A_local_sizes[i - 1];
-        }
+    // v.size() == 2 ^ k, k >= 2
+    if (n < 4 || (n & (n - 1)) != 0) {
+        iterativeRadixSort(v);
+        return;
     }
 
-    std::vector<double> A_local(A_local_sizes[world_rank]);
-    boost::mpi::scatterv(world, A, A_local_sizes, A_local_displs, A_local.data(), A_local_sizes[world_rank], 0);
-    std::vector<double> b_local(A_local_sizes[world_rank]);
-    boost::mpi::scatterv(world, b, x_local_sizes, x_local_displs, b_local.data(), x_local_sizes[world_rank], 0);
+    std::vector<double> t;
+    t.resize(n / 2);
 
-    std::vector<double> x(n, 0.0);
-    std::vector<double> x_new(n, 0.0);
-    bool ok = true;
-    while (ok) {
-        std::vector<double> x_local = b_local;
-        for (int i = 0; i < x_local.size(); i++) {
-            for (int j = 0; j < n; j++) {
-                if (x_local_displs[world_rank] + i != j) {
-                    x_local[i] -= A_local[i * n + j] * x[j];
-                }
+    // —ортировка половинок
+    if (world_rank == 0) {
+        world.send(1, 0, v.data() + n / 2, n / 2);
+        std::copy(v.begin(), v.begin() + n / 2, t.begin());
+        iterativeRadixSort(t);
+        std::copy(t.begin(), t.end(), v.begin());
+        world.recv(1, 0, v.data() + n / 2, n / 2);
+    }
+    else {
+        world.recv(0, 0, t.data(), n / 2);
+        iterativeRadixSort(t);
+        world.send(0, 0, t.data(), n / 2);
+    }
+    
+    // Batcher Merge
+
+    if (world_rank == 0) {
+        world.send(1, 0, v.data() + n / 4, n / 2);
+        for (int i = 0; i < n / 4; i++) {
+            compAndSwap(v[i], v[n - 1 - i]);
+        }
+        world.recv(1, 0, v.data() + n / 4, n / 2);
+    }
+    else {
+        world.recv(0, 0, t.data(), n / 2);
+        for (int i = 0; i < n / 4; i++) {
+            compAndSwap(t[i], t[n / 2 - 1 - i]);
+        }
+        world.send(0, 0, t.data(), n / 2);
+    }
+
+    std::vector<double>* T_ptr;
+    if (world_rank == 0) {
+        world.send(1, 0, v.data() + n / 2, n / 2);
+        T_ptr = &v;
+    }
+    else {
+        world.recv(0, 0, t.data(), n / 2);
+        T_ptr = &t;
+    }
+    std::vector<double>& T = *T_ptr;
+
+    for (int k = n / 2; k >= 2; k /= 2) {
+        for (int l = 0; l < n / 2 / k; l++) {
+            for (int m = 0; m < k / 2; m++) {
+                compAndSwap(T[k * l + m], T[k * l + m + k / 2]);
             }
         }
-
-        boost::mpi::all_gatherv(world, x_local, x_new, x_local_sizes, x_local_displs);
-
-        double dif_local = 0.0;
-        for (int i = x_local_displs[world_rank]; i < x_local_displs[world_rank] + x_local_sizes[world_rank]; i++) {
-            dif_local += std::abs(x[i] - x_new[i]);
-        }
-        double dif;
-        boost::mpi::reduce(world, dif_local, dif, std::plus<double>(), 0);
-
-        if (world_rank == 0) {
-            ok = dif > epsilon;
-        }
-
-        boost::mpi::broadcast(world, ok, 0);
-        swap(x, x_new);
     }
-    return x;
+
+    if (world_rank == 0) {
+        world.recv(1, 0, v.data() + n / 2, n / 2);
+    }
+    else {
+        world.send(0, 0, t.data(), n / 2);
+    }
 }
