@@ -1,6 +1,6 @@
 // Copyright 2023 Vasyliev Ivan
-#include <string>
 #include <gtest/gtest.h>
+#include <string>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 #include "./topology_rule.h"

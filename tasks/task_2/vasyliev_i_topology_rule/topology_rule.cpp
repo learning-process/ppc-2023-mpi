@@ -4,19 +4,19 @@
 #include "task_2/vasyliev_i_topology_rule/topology_rule.h"
 
 
-void RULE_SEND(boost::mpi::communicator& world, int val, int dst, int tag) {
+void RULE_SEND(const boost::mpi::communicator& world, int val, int dst, int tag) {
     int rank = world.rank();
     if (rank > dst) world.send(rank - 1, tag, val);
     else            world.send(rank + 1, tag, val);
 }
 
-void RULE_RECV(boost::mpi::communicator& world, int &val, int src, int tag) {
+void RULE_RECV(const boost::mpi::communicator& world, int &val, int src, int tag) {
     int rank = world.rank();
     if (rank > src) world.recv(rank - 1, tag, val);
     else            world.recv(rank + 1, tag, val);
 }
 
-void RULE_HELP(boost::mpi::communicator& world, int src, int dst, int tag) {
+void RULE_HELP(const boost::mpi::communicator& world, int src, int dst, int tag) {
     int rank = world.rank(), val, transport_tag = 8080, recv_tag, send_tag;
     recv_tag = send_tag = transport_tag;
     bool to_right = dst > src;
