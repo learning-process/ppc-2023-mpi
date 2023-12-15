@@ -1,6 +1,6 @@
 // Copyright 2023 Korablev Nikita
-#ifndef TASKS_TASK_1_KORABLEV_INT_MONT_INTEGRAL_H
-#define TASKS_TASK_1_KORABLEV_INT_MONT_INTEGRAL_H
+#ifndef TASKS_TASK_1_KORABLEV_INT_MONT_INTEGRAL_H_
+#define TASKS_TASK_1_KORABLEV_INT_MONT_INTEGRAL_H_
 
 typedef double (*func)(double);
 

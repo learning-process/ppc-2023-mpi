@@ -1,6 +1,6 @@
 // Copyright 2023 Korablev Nikita
 #include <cmath>
-// #include <functional>
+#include <functional>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 #include "task_1/korablev_int_mont/integral.h"
@@ -19,11 +19,10 @@ double integral(double a, double b, int N, func f) {
     }
 
     return h*sum;
-};
+}
 
 double parallel_integral(double a, double b, int N, func f) {
     boost::mpi::communicator world;
-    
     double chunk = (b - a) / world.size();
 
     double a_chunk = a + chunk * world.rank();
@@ -38,7 +37,7 @@ double parallel_integral(double a, double b, int N, func f) {
 
     reduce(world, local_sum, global_sum, std::plus<double>(), 0);
     return global_sum;
-};
+}
 
 
 
