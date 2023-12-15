@@ -3,7 +3,6 @@
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 #include <boost/mpi/environment.hpp>
-#include <iostream>
 #include "task_1/korablev_int_mont/integral.h"
 #define ESTIMATE 0.0001
 
@@ -73,8 +72,6 @@ TEST(PARALLEL_Integral, sin_cos) {
 }
 
 int main(int argc, char** argv) {
-
-
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
     ::testing::InitGoogleTest(&argc, argv);

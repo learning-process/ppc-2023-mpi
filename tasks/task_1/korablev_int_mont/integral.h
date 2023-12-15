@@ -11,4 +11,4 @@ double f_two_sin_cos(double x);
 double integral(double a, double b, int N, func f);
 double parallel_integral(double a, double b, int N, func f);
 
-#endif  // TASKS_TASK_1_KORABLEV_INT_MONT_INTEGRAL_H
+#endif  // TASKS_TASK_1_KORABLEV_INT_MONT_INTEGRAL_H_
