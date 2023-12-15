@@ -21,7 +21,7 @@ int parallel_lex_cmp_(const char* str1, const char* str2, int len) {
 
     int loc_cmp = 0;
     loc_cmp = strcmp(local_str1, local_str2);
-    
+
     delete[] local_str1;
     delete[] local_str2;
 
