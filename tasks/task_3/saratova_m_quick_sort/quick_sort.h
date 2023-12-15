@@ -11,7 +11,7 @@
 #include <vector>
 
 bool compare_vectors(const std::vector<int>& vec1,
-                         const std::vector<int>& vec2);
+                        const std::vector<int>& vec2);
 std::vector<int> seq_sorting(const std::vector<int>& vec);
 void generate_random_values(std::vector<int> *vec,
                             int min_value, int max_value);
