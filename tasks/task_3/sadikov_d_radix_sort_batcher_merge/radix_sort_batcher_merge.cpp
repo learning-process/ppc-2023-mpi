@@ -32,8 +32,7 @@ void iterativeRadixSort(std::vector<double>& v) {
         ull temp = *reinterpret_cast<ull*>(&j);
         if (temp & mask_fb) {
             negative.push_back(j);
-        }
-        else {
+        } else {
             positive.push_back(j);
         }
     }
@@ -71,7 +70,7 @@ void iterativeRadixSort(std::vector<double>& v) {
             parts[k].clear();
         }
     }
-    
+
     int i = 0;
     for (auto& j : negative) {
         v[i++] = j;
@@ -90,7 +89,7 @@ void parallelBatcherMergeOfRadixSort(std::vector<double>& v, int n) {
     int world_size = world.size();
     int world_rank = world.rank();
 
-    // используется только 2 потока!
+    // use only 2 processes
     if (world_size < 2) {
         iterativeRadixSort(v);
         return;
@@ -115,13 +114,12 @@ void parallelBatcherMergeOfRadixSort(std::vector<double>& v, int n) {
         iterativeRadixSort(t);
         std::copy(t.begin(), t.end(), v.begin());
         world.recv(1, 0, v.data() + n / 2, n / 2);
-    }
-    else {
+    } else {
         world.recv(0, 0, t.data(), n / 2);
         iterativeRadixSort(t);
         world.send(0, 0, t.data(), n / 2);
     }
-    
+
     // Batcher Merge
 
     if (world_rank == 0) {
@@ -130,8 +128,7 @@ void parallelBatcherMergeOfRadixSort(std::vector<double>& v, int n) {
             compAndSwap(v[i], v[n - 1 - i]);
         }
         world.recv(1, 0, v.data() + n / 4, n / 2);
-    }
-    else {
+    } else {
         world.recv(0, 0, t.data(), n / 2);
         for (int i = 0; i < n / 4; i++) {
             compAndSwap(t[i], t[n / 2 - 1 - i]);
@@ -143,8 +140,7 @@ void parallelBatcherMergeOfRadixSort(std::vector<double>& v, int n) {
     if (world_rank == 0) {
         world.send(1, 0, v.data() + n / 2, n / 2);
         T_ptr = &v;
-    }
-    else {
+    } else {
         world.recv(0, 0, t.data(), n / 2);
         T_ptr = &t;
     }
@@ -160,8 +156,7 @@ void parallelBatcherMergeOfRadixSort(std::vector<double>& v, int n) {
 
     if (world_rank == 0) {
         world.recv(1, 0, v.data() + n / 2, n / 2);
-    }
-    else {
+    } else {
         world.send(0, 0, t.data(), n / 2);
     }
 }
