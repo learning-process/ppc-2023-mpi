@@ -11,10 +11,14 @@ double parallelSimpson(double a, double b, double c, double d, int n) {
   int rank;
   MPI_Comm_rank(comm, &rank);
 
-  if (n % 2 != 0) n++;
+  if (n % 2 != 0) {
+    n++;
+  }
   int local_n = n / num_procs;
   int remain = n % num_procs;
-  if (rank == 0 && remain != 0) local_n += remain;
+  if (rank == 0 && remain != 0) {
+    local_n += remain;
+  }
   double h1 = (b - a) / (n);
   double h2 = (d - c) / (n);
   double local_sum = 0.0;
@@ -29,22 +33,24 @@ double parallelSimpson(double a, double b, double c, double d, int n) {
     for (int j = 0; j <= n; j++) {
       double y = c + j * h2;
 
-      if (i == 0 || i == n)
+      if (i == 0 || i == n) {
         coef1 = 1.0;
-      else {
-        if (i % 2 == 0)
+      } else {
+        if (i % 2 == 0) {
           coef1 = 2.0;
-        else
+        } else {
           coef1 = 4.0;
+        }
       }
 
-      if (j == 0 || j == n)
+      if (j == 0 || j == n) {
         coef2 = 1.0;
-      else {
-        if (j % 2 == 0)
+      } else {
+        if (j % 2 == 0) {
           coef2 = 2.0;
-        else
+        } else {
           coef2 = 4.0;
+        }
       }
 
       coef1 = coef1 * coef2;
@@ -73,21 +79,23 @@ double simpson(double a, double b, double c, double d, int n) {
     double x = a + i * h1;
     for (int j = 0; j <= n; j++) {
       double y = c + j * h2;
-      if (i == 0 || i == n)
+      if (i == 0 || i == n) {
         coef1 = 1.0;
-      else {
-        if (i % 2 == 0)
+      } else {
+        if (i % 2 == 0) {
           coef1 = 2.0;
-        else
+        } else {
           coef1 = 4.0;
+        }
       }
-      if (j == 0 || j == n)
+      if (j == 0 || j == n) {
         coef2 = 1.0;
-      else {
-        if (j % 2 == 0)
+      } else {
+        if (j % 2 == 0) {
           coef2 = 2.0;
-        else
+        } else {
           coef2 = 4.0;
+        }
       }
       coef1 = coef1 * coef2;
       sum += coef1 * f(x, y);
