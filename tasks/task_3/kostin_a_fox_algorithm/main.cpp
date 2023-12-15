@@ -19,7 +19,6 @@ TEST(Fox_Algorithm_MPI, Test1) {
         if (extra_els > 0) Size += sqrtsize - (Size % sqrtsize);
 
         /*
-
         In case Size % sqrtsize != 0, the matrix is padded with zero values, which do not affect the desired value.
         Example:
 
@@ -47,7 +46,6 @@ TEST(Fox_Algorithm_MPI, Test1) {
          -77.27   -92.57  117.06  0
            0        0       0     0
         0 0 0 0
-
         */
 
         std::vector<double> Res(Size * Size, 0);
