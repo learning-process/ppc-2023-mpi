@@ -10,10 +10,10 @@ void RULE_SEND(const boost::mpi::communicator& world, int val, int dst, int tag)
     else            world.send(rank + 1, tag, val);
 }
 
-void RULE_RECV(const boost::mpi::communicator& world, const int &val, int src, int tag) {
+void RULE_RECV(const boost::mpi::communicator& world, int* val, int src, int tag) {
     int rank = world.rank();
-    if (rank > src) world.recv(rank - 1, tag, val);
-    else            world.recv(rank + 1, tag, val);
+    if (rank > src) world.recv(rank - 1, tag, *val);
+    else            world.recv(rank + 1, tag, *val);
 }
 
 void RULE_HELP(const boost::mpi::communicator& world, int src, int dst, int tag) {

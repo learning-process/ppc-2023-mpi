@@ -14,7 +14,7 @@ TEST(TopologyRuleTest, Test1) {
         data = 42;
         RULE_SEND(world, data, dst, tag);
     } else if (world.rank() == dst) {
-        RULE_RECV(world, data, src, tag);
+        RULE_RECV(world, &data, src, tag);
         ASSERT_EQ(data, 42);
     } else {
         RULE_HELP(world, src,  dst, tag);
@@ -31,7 +31,7 @@ TEST(TopologyRuleTest, Test2) {
         data = 42;
         RULE_SEND(world, data, dst, tag);
     } else if (world.rank() == dst) {
-        RULE_RECV(world, data, src, tag);
+        RULE_RECV(world, &data, src, tag);
         ASSERT_EQ(data, 42);
     } else {
         RULE_HELP(world, src,  dst, tag);
@@ -48,7 +48,7 @@ TEST(TopologyRuleTest, Test3) {
         data = 42;
         RULE_SEND(world, data, dst, tag);
     } else if (world.rank() == dst) {
-        RULE_RECV(world, data, src, tag);
+        RULE_RECV(world, &data, src, tag);
         ASSERT_EQ(data, 42);
     } else {
         RULE_HELP(world, src, dst, tag);
@@ -65,7 +65,7 @@ TEST(TopologyRuleTest, Test4) {
         data = 42;
         RULE_SEND(world, data, dst, tag);
     } else if (world.rank() == dst) {
-        RULE_RECV(world, data, src, tag);
+        RULE_RECV(world, &data, src, tag);
         ASSERT_EQ(data, 42);
     } else {
         RULE_HELP(world, src, dst, tag);
@@ -82,7 +82,7 @@ TEST(TopologyRuleTest, Test5) {
         data = 42;
         RULE_SEND(world, data, dst, tag);
     } else if (world.rank() == dst) {
-        RULE_RECV(world, data, src, tag);
+        RULE_RECV(world, &data, src, tag);
         ASSERT_EQ(data, 42);
     } else {
         RULE_HELP(world, src, dst, tag);
