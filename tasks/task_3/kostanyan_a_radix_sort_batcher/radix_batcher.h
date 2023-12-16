@@ -1,7 +1,7 @@
 // Copyright 2023 Kostanyan Arsen
 
-#ifndef TASK_3_KOSTANYAN_A_RADIX_SORT_BATCHER_RADIX_BATCHER_H_
-#define TASK_3_KOSTANYAN_A_RADIX_SORT_BATCHER_RADIX_BATCHER_H_
+#ifndef TASKS_TASK_3_KOSTANYAN_A_RADIX_SORT_BATCHER_RADIX_BATCHER_H_
+#define TASKS_TASK_3_KOSTANYAN_A_RADIX_SORT_BATCHER_RADIX_BATCHER_H_
 
 #include <mpi.h>
 #include <vector>
@@ -17,4 +17,4 @@ std::vector<double> parallel_radix_batcher_sort(std::vector<double> to_sort_vec)
 
 void radix_sort(double * arr, int size);
 
-#endif  // TASK_3_KOSTANYAN_A_RADIX_SORT_BATCHER_RADIX_BATCHER_H_
+#endif  // TASKS_TASK_3_KOSTANYAN_A_RADIX_SORT_BATCHER_RADIX_BATCHER_H_
