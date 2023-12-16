@@ -1,5 +1,5 @@
 // Copyright 2023 Kruglov Alexey
-#include "tasks/task_1/kruglov_a_number_of_orderly_violations/number_of_orderly_violations.h"
+#include "task_1/kruglov_a_number_of_orderly_violations/number_of_orderly_violations.h"
 
 
 int numberOfOrderValids_Sync(const std::vector<int>& Vector) {

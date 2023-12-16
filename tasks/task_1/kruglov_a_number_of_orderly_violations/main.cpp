@@ -1,6 +1,6 @@
 // Copyright 2023 Kruglov Alexey
 #include <gtest/gtest.h>
-#include "tasks/task_1/kruglov_a_number_of_orderly_violations/number_of_orderly_violations.h"
+#include "task_1/kruglov_a_number_of_orderly_violations/number_of_orderly_violations.h"
 
 
 TEST(Num_Violation_Order_Vector, Test_Num) {
