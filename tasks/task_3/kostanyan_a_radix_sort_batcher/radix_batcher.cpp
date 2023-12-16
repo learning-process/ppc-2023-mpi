@@ -1,6 +1,6 @@
 // Copyright 2023 Kostanyan Arsen
 
-#include "/home/arkosta/ppc-2023-mpi/tasks/task_3/kostanyan_a_radix_sort_batcher/radix_batcher.h"
+#include "task_3/kostanyan_a_radix_sort_batcher/radix_batcher.h"
 
 std::vector<double> generateRandomVector(int size) {
     std::random_device dev;

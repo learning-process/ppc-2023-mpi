@@ -3,8 +3,8 @@
 #include <string>
 #include <random>
 #include <iostream>
-#include "/home/arkosta/ppc-2023-mpi/tasks/task_3/kostanyan_a_radix_sort_batcher/batcher_merge.h"
-#include "/home/arkosta/ppc-2023-mpi/tasks/task_3/kostanyan_a_radix_sort_batcher/radix_batcher.h"
+#include "task_3/kostanyan_a_radix_sort_batcher/batcher_merge.h"
+#include "task_3/kostanyan_a_radix_sort_batcher/radix_batcher.h"
 
 TEST(TEST_MPI, Test_Radix_Sort) {
     int rank;

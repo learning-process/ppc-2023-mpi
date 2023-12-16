@@ -1,6 +1,6 @@
 // Copyright 2023 Kostanyan Arsen
 
-#include "/home/arkosta/ppc-2023-mpi/tasks/task_3/kostanyan_a_radix_sort_batcher/batcher_merge.h"
+#include "task_3/kostanyan_a_radix_sort_batcher/batcher_merge.h"
 
 void cmp_and_swap(double & first, double & second) {
     if (first > second) {
