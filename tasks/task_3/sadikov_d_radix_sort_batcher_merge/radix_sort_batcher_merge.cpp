@@ -27,7 +27,7 @@ std::vector<double> iterativeRadixSort(std::vector<double> v) {
     using ull = uint64_t;
     ull mask_fb = 1ull << (sz * 8 - 1);
     for (auto& j : v) {
-        ull temp = *(ull*)(&j);
+        ull temp = *reinterpret_cast<ull*>(reinterpret_cast<void*>(&j));
         if (temp & mask_fb) {
             negative.push_back(j);
         } else {
@@ -39,7 +39,7 @@ std::vector<double> iterativeRadixSort(std::vector<double> v) {
     // sort negative
     for (int t = 0; t < sz; t++) {
         for (auto& j : negative) {
-            ull temp = *reinterpret_cast<ull*>(&j);
+            ull temp = *reinterpret_cast<ull*>(reinterpret_cast<void*>(&j));
             temp >>= t * 8;
             temp &= 255;
             parts[temp].push_back(j);
@@ -55,7 +55,7 @@ std::vector<double> iterativeRadixSort(std::vector<double> v) {
     // sort positive
     for (int t = 0; t < sz; t++) {
         for (auto& j : positive) {
-            ull temp = *reinterpret_cast<ull*>(&j);
+            ull temp = *reinterpret_cast<ull*>(reinterpret_cast<void*>(&j));
             temp >>= t * 8;
             temp &= 255;
             parts[temp].push_back(j);
