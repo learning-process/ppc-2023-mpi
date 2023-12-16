@@ -4,7 +4,6 @@
 #include "../tasks/task_3/kazantsev_e_trapezoid_indegral/trapezoid_integral.h"
 
 std::vector<double> Func::GetLowerBound() { return lower_bound; }
-
 std::vector<double> Func::GetUpperBound() { return upper_bound; }
 
 PiIntegral::PiIntegral() {
