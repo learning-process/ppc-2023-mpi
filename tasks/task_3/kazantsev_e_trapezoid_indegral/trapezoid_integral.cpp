@@ -119,6 +119,7 @@ double TrapezoidIntegralParallel(Func* func,
       func, lower_bound, upper_bound, segments_count, f_point, l_point);
 
   double res = 0.0;
+
   MPI_Reduce(&local_integral, &res, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
   return res;
