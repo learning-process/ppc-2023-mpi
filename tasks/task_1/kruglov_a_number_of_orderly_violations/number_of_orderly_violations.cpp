@@ -6,8 +6,9 @@ int numberOfOrderValids_Sync(const std::vector<int>& Vector) {
 	int numOfValids = 0;
     int length = Vector.size();
 	for (int i = 0; i < length - 1; ++i)
-		if (Vector[i] > Vector[i + 1])
-			numOfValids++;
+        if (Vector[i] > Vector[i + 1]) {
+            numOfValids++;
+        }
 	return numOfValids;
 }
 
@@ -23,7 +24,8 @@ int numberOfOrderValids_ASync(const std::vector<int>& Vector) {
     }
     if (rank == 0) {
         for (int proc = 1; proc < size; proc++) {
-            MPI_Send(&Vector[0] + (proc - 1) * delta, delta + 1, MPI_INT, proc, 0, MPI_COMM_WORLD);
+            MPI_Send(&delta, 1, MPI_INT, proc, 0, MPI_COMM_WORLD);
+            MPI_Send(&Vector[0] + (proc - 1) * delta, delta + 1, MPI_INT, proc, 1, MPI_COMM_WORLD);
         }
     }
     std::vector<int> local_vec;
@@ -32,11 +34,11 @@ int numberOfOrderValids_ASync(const std::vector<int>& Vector) {
         local_vec = std::vector<int>(Vector.begin() + (size - 1) * delta, Vector.end());
     }
     else {
-        local_vec.resize(size_local_vector);
-        //int* local_buf = new int[size_local_vector];
         MPI_Status status;
-        MPI_Recv(&local_vec[0], size_local_vector, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
-        //local_vec.data() = local_buf;
+        MPI_Recv(&size_local_vector, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        size_local_vector++;
+        local_vec.resize(size_local_vector);
+        MPI_Recv(&local_vec[0], size_local_vector, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
     }
     int local_num = numberOfOrderValids_Sync(local_vec);
     MPI_Reduce(&local_num, &numOfValids, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -44,9 +46,6 @@ int numberOfOrderValids_ASync(const std::vector<int>& Vector) {
 }
 
 std::vector<int> generateRandomVector(const int& length) {
-    //if (length < 1) {
-    //    throw "WRONG_LEN";
-    //}
     std::vector<int> vec(length);
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));

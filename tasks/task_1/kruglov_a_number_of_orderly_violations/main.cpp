@@ -1,14 +1,13 @@
 // Copyright 2023 Kruglov Alexey
 #include <gtest/gtest.h>
 #include "./number_of_orderly_violations.h"
-#include <ctime>
-#include <iostream>
+
 
 TEST(Num_Violation_Order_Vector, Test_Num) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> global_vec;
-    const int size_vector = 100;
+    const int size_vector = 128;
     if (rank == 0) {
         global_vec = generateRandomVector(size_vector);
     }
@@ -133,12 +132,11 @@ int main(int argc, char** argv) {
     ::testing::TestEventListeners& listeners =
         ::testing::UnitTest::GetInstance()->listeners();
     int r = 24;
-    if (MPI_Init(/*&argc*/&r, &argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, -1);
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, -1);
 
-    int rank;
+    int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    std::cout << "rank " << rank << '\n';
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     if (rank != 0) {
         delete listeners.Release(listeners.default_result_printer());

@@ -10,13 +10,6 @@
 #include <ctime>
 #include <iostream>
 
-//template<typename T>
-//int numberOfOrderValids_Sync(const std::vector<T>& Vector);
-//template<typename T>
-//int numberOfOrderValids_ASync(const std::vector<T>& Vector);
-//template<typename T>
-//std::vector<T> generateRandomVector(const int& length);
-
 int numberOfOrderValids_Sync(const std::vector<int>& Vector);
 
 int numberOfOrderValids_ASync(const std::vector<int>& Vector);
