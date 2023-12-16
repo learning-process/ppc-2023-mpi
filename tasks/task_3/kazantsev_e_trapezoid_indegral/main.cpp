@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <iostream>
+#include <boost/mpi/environment.hpp>
+#include <boost/mpi/communicator.hpp>
 #include "../tasks/task_3/kazantsev_e_trapezoid_indegral/trapezoid_integral.h"
 
 TEST(Integral_Sequential, can_solve_integral_sequential) {
