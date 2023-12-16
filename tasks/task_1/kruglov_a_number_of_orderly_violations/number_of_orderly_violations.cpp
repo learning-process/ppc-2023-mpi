@@ -1,19 +1,19 @@
 // Copyright 2023 Kruglov Alexey
-#include "./number_of_orderly_violations.h"
+#include "tasks/task_1/kruglov_a_number_of_orderly_violations/number_of_orderly_violations.h"
 
 
 int numberOfOrderValids_Sync(const std::vector<int>& Vector) {
-	int numOfValids = 0;
+    int numOfValids = 0;
     int length = Vector.size();
-	for (int i = 0; i < length - 1; ++i)
+    for (int i = 0; i < length - 1; ++i)
         if (Vector[i] > Vector[i + 1]) {
             numOfValids++;
         }
-	return numOfValids;
+    return numOfValids;
 }
 
 int numberOfOrderValids_ASync(const std::vector<int>& Vector) {
-	int numOfValids = 0;
+    int numOfValids = 0;
     int length = Vector.size();
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -32,8 +32,7 @@ int numberOfOrderValids_ASync(const std::vector<int>& Vector) {
     int size_local_vector = delta + 1;
     if (rank == 0) {
         local_vec = std::vector<int>(Vector.begin() + (size - 1) * delta, Vector.end());
-    }
-    else {
+    } else {
         MPI_Status status;
         MPI_Recv(&size_local_vector, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
         size_local_vector++;
@@ -42,7 +41,7 @@ int numberOfOrderValids_ASync(const std::vector<int>& Vector) {
     }
     int local_num = numberOfOrderValids_Sync(local_vec);
     MPI_Reduce(&local_num, &numOfValids, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-	return numOfValids;
+    return numOfValids;
 }
 
 std::vector<int> generateRandomVector(const int& length) {
