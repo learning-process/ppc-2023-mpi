@@ -58,15 +58,15 @@ TEST(Num_Violation_Order_Vector, Test_Const_Unordered_Vector) {
     }
 }
 
-//TEST(Num_Violation_Order_Vector, Test_Vector_Identical_Elements) {
-//    int rank;
-//    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-//    std::vector<int> vec(20, 5);
-//    int  parellel_num = numberOfOrderValids_ASync(vec);
-//    if (rank == 0) {
-//        ASSERT_EQ(parellel_num, 0);
-//    }
-//}
+TEST(Num_Violation_Order_Vector, Test_Vector_Identical_Elements) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<int> vec(20, 5);
+    int  parellel_num = numberOfOrderValids_ASync(vec);
+    if (rank == 0) {
+        ASSERT_EQ(parellel_num, 0);
+    }
+}
 
 TEST(Num_Violation_Order_Vector, Test_Sorted_In_Descending_Order_Vector) {
     int rank;
