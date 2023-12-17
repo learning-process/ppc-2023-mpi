@@ -115,14 +115,11 @@ TEST(Gauss_Jordan_Method_MPI, big_random_system) {
     int matrixSize = 1000;
     std::vector<double> s(matrixSize * matrixSize);
     std::vector<double> c(matrixSize);
-    if(world.rank() == 0)
-    {
-        for(int l : s)
-        {
+    if (world.rank() == 0) {
+        for (int l : s) {
             l = r(rd);
         }
-        for(int l : c)
-        {
+        for (int l : c) {
             l = r(rd);
         }
         boost::mpi::timer timer;
@@ -131,8 +128,7 @@ TEST(Gauss_Jordan_Method_MPI, big_random_system) {
     }
     boost::mpi::timer timer;
     gaussJordanMethodParallel(s, c);
-    if(world.rank() == 0)
-    {
+    if (world.rank() == 0) {
         std::cout << "par method time: " << timer.elapsed() << "\n";
     }
 
@@ -140,7 +136,7 @@ TEST(Gauss_Jordan_Method_MPI, big_random_system) {
     while ((status = world.iprobe()).has_value()) {
         world.recv(status.value().source(), status.value().tag());
     }
- }
+}
 
 TEST(Gauss_Jordan_Method_MPI, no_solutions) {
     boost::mpi::communicator world;

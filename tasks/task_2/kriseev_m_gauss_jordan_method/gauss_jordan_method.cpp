@@ -186,8 +186,7 @@ std::vector<double> gaussJordanMethodParallel(
     } else {
         int f = 0;
         boost::mpi::broadcast(world, f, 0);
-        if(f == 1)
-        {
+        if (f == 1) {
             throw std::invalid_argument("unknownsMatrix");
         }
     }
