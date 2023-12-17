@@ -7,8 +7,6 @@
 std::vector<double> gaussJordanMethodSequential(
         const std::vector<double>& unknownsMatrix,
         const std::vector<double>& constants);
-void printMatrix(int matrixSize, const std::vector<double>& systemMatrix,
-                 const std::vector<double>& solutionVector);
 std::vector<double> gaussJordanMethodParallel(
     const std::vector<double>& unknownsMatrix,
     const std::vector<double>& constants);

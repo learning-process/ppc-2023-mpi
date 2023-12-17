@@ -3,6 +3,7 @@
 #include "task_2/kriseev_m_gauss_jordan_method/gauss_jordan_method.h"
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 #include <boost/mpi/collectives.hpp>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/status.hpp>
@@ -42,18 +43,21 @@ std::vector<double> gaussJordanMethodSequential(
                 systemMatrix[i * matrixSize + j] -=
                     systemMatrix[pivotRow * matrixSize + j] * oldFirst;
             }
+
             solutionVector[i] -= solutionVector[pivotRow] * oldFirst;
+            bool zeroRow = true;
+            for (int l = 0; l < matrixSize; ++l) {
+                if (systemMatrix[i * matrixSize + l] != 0) {
+                    zeroRow = false;
+                    break;
+                }
+            }
+            if (zeroRow && solutionVector[i] != 0) {
+                throw std::invalid_argument("unknownsMatrix");
+            }
         }
     }
     return solutionVector;
-}
-
-void printMatrix(int matrixSize, const std::vector<double> &systemMatrix,
-                 const std::vector<double> &solutionVector) {
-    for (int i = 0; i < matrixSize; ++i) {
-        for (int j = 0; j < matrixSize; ++j) {
-        }
-    }
 }
 
 std::vector<double> gaussJordanMethodParallel(
@@ -61,6 +65,9 @@ std::vector<double> gaussJordanMethodParallel(
     const std::vector<double> &constants) {
     //
     boost::mpi::communicator world;
+    if (world.size() == 1) {
+        return gaussJordanMethodSequential(unknownsMatrix, constants);
+    }
     int matrixSize = constants.size();
     auto systemMatrix = std::vector<double>(unknownsMatrix);
     auto solutionVector = std::vector<double>(constants);
@@ -135,7 +142,6 @@ std::vector<double> gaussJordanMethodParallel(
             }
         } else {
             boost::mpi::broadcast(world, pivotRowVector.data(), matrixSize, 0);
-            int count = 0;
             while (1) {
                 status = world.iprobe(0);
                 if (!status.has_value()) {
@@ -156,6 +162,33 @@ std::vector<double> gaussJordanMethodParallel(
                 world.send(0, 1, tempRowVector.data(), matrixSize);
             }
             world.send(0, 3);
+        }
+    }
+    if (world.rank() == 0) {
+        for (int i = 0; i < matrixSize; ++i) {
+            bool flag = true;
+            if (solutionVector[i] == 0) {
+                flag = false;
+            }
+            for (int j = 0; flag && j < matrixSize; j++) {
+                if (systemMatrix[matrixSize * i + j] != 0) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                int f = 1;
+                boost::mpi::broadcast(world, f, 0);
+                throw std::invalid_argument("unknownsMatrix");
+            }
+        }
+        int f = 0;
+        boost::mpi::broadcast(world, f, 0);
+    } else {
+        int f = 0;
+        boost::mpi::broadcast(world, f, 0);
+        if(f == 1)
+        {
+            throw std::invalid_argument("unknownsMatrix");
         }
     }
     return solutionVector;
