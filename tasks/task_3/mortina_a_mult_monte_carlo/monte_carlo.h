@@ -61,5 +61,41 @@ double multiple_integral_monte_carlo_parallel(
     return total_sum;
 }
 
+template <size_t dim>
+double multiple_integral_monte_carlo_sequential(
+        const std::function<double(std::array<double, dim>)> &f,
+        const std::function<bool(std::array<double, dim>)> &in_region,
+        const std::array<double[2], dim> &rect,
+        int64_t n) {
+    double total_sum = 0.0;
+    double multiplier = 1/static_cast<double>(n);
+    double current_value;
+    double corrected_value;
+    double error_sum = 0.0;
+    double corrected_sum;
+
+    std::array<double, dim> random_point;
+    std::mt19937_64 generator{std::random_device {}()};
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+
+    for (size_t i = 0; i < dim; ++i)
+        multiplier *= (rect[i][1] - rect[i][0]);
+
+    for (int64_t it = 0; it < n; ++it) {
+        for (size_t i = 0; i < dim; ++i)
+            random_point[i] = rect[i][0] +
+            (rect[i][1] - rect[i][0]) * distribution(generator);
+        if (in_region(random_point)) {
+            current_value = multiplier * f(random_point);
+            corrected_value = current_value - error_sum;
+            corrected_sum = total_sum + corrected_value;
+            error_sum = (corrected_sum - total_sum) - corrected_value;
+            total_sum = corrected_sum;
+        }
+    }
+
+    return total_sum;
+}
+
 
 #endif  // TASKS_TASK_3_MORTINA_A_MULT_MONTE_CARLO_MONTE_CARLO_H_

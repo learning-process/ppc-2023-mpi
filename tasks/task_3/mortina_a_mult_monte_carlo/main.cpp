@@ -1,7 +1,4 @@
 // Copyright 2023 Mortina Anastasia
-
-#define _USE_MATH_DEFINES
-
 #include <math.h>
 #include <gtest/gtest.h>
 #include <vector>
@@ -24,10 +21,11 @@ TEST(Monte_Carlo_Multiple_Integral_MPI, Test_for_1) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    double obtained_answer = multiple_integral_monte_carlo_parallel<1>(
+    double res_parall = multiple_integral_monte_carlo_parallel<1>(
                                 f, region, rect, 30000000);
     if (rank == 0) {
-        ASSERT_NEAR(obtained_answer, 0.5, 5e-4);
+        double res = multiple_integral_monte_carlo_sequential<1>(f, region, rect, 30000000);
+        ASSERT_NEAR(res_parall, res, 5e-4);
     }
 }
 
@@ -44,10 +42,11 @@ TEST(Monte_Carlo_Multiple_Integral_MPI, Test_for_2) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    double obtained_answer = multiple_integral_monte_carlo_parallel<1>(
+    double res_parall = multiple_integral_monte_carlo_parallel<1>(
                                 f, region, rect, 30000000);
     if (rank == 0) {
-        ASSERT_NEAR(obtained_answer, M_PI_4, 4e-4);
+        double res = multiple_integral_monte_carlo_sequential<1>(f, region, rect, 30000000);
+        ASSERT_NEAR(res_parall, res, 4e-4);
     }
 }
 
@@ -65,10 +64,11 @@ TEST(Monte_Carlo_Multiple_Integral_MPI, Test_for_3) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    double obtained_answer = multiple_integral_monte_carlo_parallel<2>(
+    double res_parall = multiple_integral_monte_carlo_parallel<2>(
                                 f, region, rect, 3000000);
     if (rank == 0) {
-        ASSERT_NEAR(obtained_answer, M_PI_2, 4e-3);
+        double res = multiple_integral_monte_carlo_sequential<2>(f, region, rect, 3000000);
+        ASSERT_NEAR(res_parall, res, 4e-3);
     }
 }
 
@@ -86,10 +86,11 @@ TEST(Monte_Carlo_Multiple_Integral_MPI, Test_for_exp) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    double obtained_answer = multiple_integral_monte_carlo_parallel<2>(
+    double res_parall = multiple_integral_monte_carlo_parallel<2>(
                                 f, region, rect, 30000000);
     if (rank == 0) {
-        ASSERT_NEAR(obtained_answer, 0.557746, 3e-4);
+        double res = multiple_integral_monte_carlo_sequential<2>(f, region, rect, 30000000);
+        ASSERT_NEAR(res_parall, res, 3e-4);
     }
 }
 
@@ -107,10 +108,11 @@ TEST(Monte_Carlo_Multiple_Integral_MPI, Test_for_5) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    double obtained_answer = multiple_integral_monte_carlo_parallel<2>(
+    double res_parall = multiple_integral_monte_carlo_parallel<2>(
                                 f, region, rect, 3000000);
     if (rank == 0) {
-        ASSERT_NEAR(obtained_answer, M_PI_2, 4e-3);
+        double res = multiple_integral_monte_carlo_sequential<2>(f, region, rect, 3000000);
+        ASSERT_NEAR(res_parall, res, 4e-3);
     }
 }
 
