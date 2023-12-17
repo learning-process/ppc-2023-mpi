@@ -12,8 +12,8 @@
 
 int numberOfOrderValids_Sync(const std::vector<int>& Vector);
 
-int numberOfOrderValids_ASync(const std::vector<int>& Vector);
+int numberOfOrderValids_ASync(const std::vector<int>& Vector, int Vector_len);
 
-std::vector<int> generateRandomVector(const int& length);
+std::vector<int> generateRandomVector(const int& Vector_len);
 
 #endif  // TASKS_TASK_1_KRUGLOV_A_NUMBER_OF_ORDERLY_VIOLATIONS_NUMBER_OF_ORDERLY_VIOLATIONS_H_
