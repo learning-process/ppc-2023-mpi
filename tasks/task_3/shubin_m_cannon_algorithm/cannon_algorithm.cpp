@@ -96,9 +96,9 @@ void mat_mult_cannon(int n, const std::vector<double>& mat_in_1,
                  0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         MPI_Send(loc_mat_2.data(), mat_size[ProcRank], MPI_DOUBLE, send_trgt_2,
-                 0, MPI_COMM_WORLD);
+                 1, MPI_COMM_WORLD);
         MPI_Recv(loc_mat_2.data(), mat_size[ProcRank], MPI_DOUBLE, recv_src_2,
-                 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
       }
     }
   }
