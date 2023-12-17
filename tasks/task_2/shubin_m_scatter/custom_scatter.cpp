@@ -49,7 +49,7 @@ int custom_scatter(const void *sendbuf, int sendcount,
         }
       }
     }
-    memcpy(recvbuf, sendbuf, send_tot_size);
+    memcpy(recvbuf, sendbuf + (send_tot_size * root), send_tot_size);
   } else {
     err = MPI_Recv(recvbuf, recvcount, recvtype,
                    root, 0, comm, MPI_STATUS_IGNORE);
