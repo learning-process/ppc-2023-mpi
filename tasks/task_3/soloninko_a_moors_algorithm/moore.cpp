@@ -68,7 +68,7 @@ void bellman_moore_parallel(int n, std::vector<int>* mat,
                 }
             }
         }
-        MPI_Allreduce(MPI_IN_PLACE, &loc_has_change, 1, MPI_CXX_BOOL, MPI_LOR,
+        MPI_Allreduce(MPI_IN_PLACE, &loc_has_change, 1, MPI_C_BOOL, MPI_LOR,
                       MPI_COMM_WORLD);
         if (!loc_has_change) break;
         MPI_Allreduce(MPI_IN_PLACE, loc_dist.data(), loc_n, MPI_INT, MPI_MIN,

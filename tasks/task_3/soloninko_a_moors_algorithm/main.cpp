@@ -25,12 +25,13 @@ TEST(Moore_alg, Test_1) {
     if (rankProc == 0) {
         has_negative_cycle = false;
         bellman_moore(size, &matrix, &ser_dist, has_negative_cycle);
+        /*
         for (int i = 0; i < size; i++) {
             std::cout << par_dist[i] << "\n";
         }
         for (int i = 0; i < size; i++) {
             std::cout << ser_dist[i] << "\n";
-        }
+        }*/
         for (int i = 0; i < size; i++) {
             ASSERT_EQ(par_dist[i], ser_dist[i]);
         }
