@@ -8,5 +8,3 @@ scripts/variants.csv
 scripts/variants.xlsx
 venv*
 sln/
-/first_samples/mpi/CMakeFiles
-/.vs
