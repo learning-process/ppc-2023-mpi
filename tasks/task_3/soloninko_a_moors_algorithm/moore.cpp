@@ -89,7 +89,7 @@ void bellman_moore_parallel(int n, std::vector<int>* mat,
                 }
             }
         }
-        MPI_Allreduce(&loc_has_change, &has_negative_cycle, 1, MPI_CXX_BOOL,
+        MPI_Allreduce(&loc_has_change, &has_negative_cycle, 1, MPI_C_BOOL,
                       MPI_LOR, MPI_COMM_WORLD);
     }
 
