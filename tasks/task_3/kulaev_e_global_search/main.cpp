@@ -6,12 +6,11 @@
 
 double lin(double* x) { return *x; }
 double qw(double* x) { return *x * *x; }
-double e(double* x) { return exp(*x); }
-double c(double* x) { return cos(*x); }
-double s(double* x) { return sin(*x); }
+double fexp(double* x) { return exp(*x); }
+double fcos(double* x) { return cos(*x); }
 
 
-TEST(Global_Optimization, Test1) {
+TEST(Global_Optim_Search, Test1) {
     double a = 0.98;
     double b = 4;
     double eps = 0.0001;
@@ -27,7 +26,7 @@ TEST(Global_Optimization, Test1) {
     }
 }
 
-TEST(Global_Optimization, Test2) {
+TEST(Global_Optim_Search, Test2) {
     double a = 1.5;
     double b = 400;
     double eps = 0.0001;
@@ -43,7 +42,7 @@ TEST(Global_Optimization, Test2) {
     }
 }
 
-TEST(Global_Optimization, Test3) {
+TEST(Global_Optim_Search, Test3) {
     double a = 0.1;
     double b = 6;
     double eps = 0.01;
@@ -52,14 +51,14 @@ TEST(Global_Optimization, Test3) {
     int ProcRank;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    double GlobalOptPar = GetGlobalOptParallel(a, b, e, part, eps);
+    double GlobalOptPar = GetGlobalOptParallel(a, b, fexp, part, eps);
     if (ProcRank == 0) {
-        double GlobalOptLin = GetGlobalOpt(a, b, e, part, eps);
+        double GlobalOptLin = GetGlobalOpt(a, b, fexp, part, eps);
         ASSERT_NEAR(GlobalOptPar, GlobalOptLin, eps);
     }
 }
 
-TEST(Global_Optimization, Test4) {
+TEST(Global_Optim_Search, Test4) {
     double a = 0.1;
     double b = 0.2;
     double eps = 0.0005;
@@ -68,15 +67,15 @@ TEST(Global_Optimization, Test4) {
     int ProcRank;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    double GlobalOptPar = GetGlobalOptParallel(a, b, c, part, eps);
+    double GlobalOptPar = GetGlobalOptParallel(a, b, fcos, part, eps);
     if (ProcRank == 0) {
-        double GlobalOptLin = GetGlobalOpt(a, b, c, part, eps);
+        double GlobalOptLin = GetGlobalOpt(a, b, fcos, part, eps);
         ASSERT_NEAR(GlobalOptPar, GlobalOptLin, eps);
     }
 }
 
 
-TEST(Global_Optimization, Test5) {
+TEST(Global_Optim_Search, Test5) {
     double a = 1.1;
     double b = 6;
     double eps = 0.01;
@@ -85,9 +84,9 @@ TEST(Global_Optimization, Test5) {
     int ProcRank;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    double GlobalOptPar = GetGlobalOptParallel(a, b, e, part, eps);
+    double GlobalOptPar = GetGlobalOptParallel(a, b, fexp, part, eps);
     if (ProcRank == 0) {
-        double GlobalOptLin = GetGlobalOpt(a, b, e, part, eps);
+        double GlobalOptLin = GetGlobalOpt(a, b, fexp, part, eps);
         ASSERT_NEAR(GlobalOptPar, GlobalOptLin, eps);
     }
 }

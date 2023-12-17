@@ -53,24 +53,24 @@ double GetGlobalOpt(const double a, const double b,
 double GetGlobalOptParallel(const double a, const double b, std::function<double(double*)> func,
     const int part, const double e) {
     int ProcCount;
-    int ProcId;
+    int ProcRank;
 
     MPI_Comm_size(MPI_COMM_WORLD, &ProcCount);
-    MPI_Comm_rank(MPI_COMM_WORLD, &ProcId);
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
     if (ProcCount == 1) {
         return GetGlobalOpt(a, b, func, part, e);
     }
 
     std::vector<double> answ(ProcCount);
-    double f = a + ((b - a) / ProcCount) * ProcId;
+    double f = a + ((b - a) / ProcCount) * ProcRank;
     double s = f + (b - a) / ProcCount;
 
     double LocalOpt = GetGlobalOpt(f, s, func, part, e);
     MPI_Gather(&LocalOpt, 1, MPI_DOUBLE, &answ.at(0), 1, MPI_DOUBLE, 0,
         MPI_COMM_WORLD);
 
-    if (ProcId == 0) {
+    if (ProcRank == 0) {
         double beg = func(&answ.at(0));
         for (int i = 1; i < ProcCount; ++i) {
             if (func(&answ.at(0) + i) < beg) {
