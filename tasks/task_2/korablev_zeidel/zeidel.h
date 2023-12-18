@@ -8,7 +8,7 @@
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 
-double* getMatrix(int n);
 double* zeidel(double* matrix, int n, double epsilon);
+double* parallel_zeidel(double* matrix, int n, double epsilon);
 
 #endif  // TASKS_TASK_2_KORABLEV_ZEIDEL_ZEIDEL_H_
