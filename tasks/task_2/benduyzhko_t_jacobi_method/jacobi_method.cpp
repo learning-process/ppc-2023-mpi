@@ -3,7 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <algorithm>
-#include "tasks/task_3/benduyzhko_t_jacobi_method/jacobi_method.h"
+#include "tasks/task_2/benduyzhko_t_jacobi_method/jacobi_method.h"
 
 double getDiffVectorNorm(const Vector& x, const Vector& tempX) {
     double norm = std::abs(x[0] - tempX[0]);
