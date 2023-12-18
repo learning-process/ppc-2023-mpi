@@ -165,7 +165,7 @@ TEST(MPI_TESTS, parallel_zeidel_3) {
   matrix[9] = 3;
   matrix[10] = 2;
   matrix[11] = 5;
-  //------------
+  //-------------
   double* res = zeidel(matrix, mat_len, eps);
   if (world.rank() == 0) {
     for (int i = 0; i < mat_len; i++) {
