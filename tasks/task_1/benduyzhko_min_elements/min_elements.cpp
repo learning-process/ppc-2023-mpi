@@ -1,4 +1,4 @@
-// Copyright 2023 Nesterov Alexander
+// Copyright 2023 Benduyzhko Tatiana
 #include <vector>
 #include <string>
 #include <random>
@@ -6,7 +6,7 @@
 #include <functional>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
-#include "examples/test_mpi/ops_mpi.h"
+#include "task_1/benduyzhko_min_elements/min_elements.h"
 
 std::vector<int> getRandomVector(int sz) {
     std::random_device dev;

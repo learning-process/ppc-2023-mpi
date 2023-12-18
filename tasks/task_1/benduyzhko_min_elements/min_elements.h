@@ -1,4 +1,4 @@
-// Copyright 2023 Nesterov Alexander
+// Copyright 2023 Benduyzhko Tatiana
 #ifndef TASKS_EXAMPLES_TEST_MPI_OPS_MPI_H_
 #define TASKS_EXAMPLES_TEST_MPI_OPS_MPI_H_
 

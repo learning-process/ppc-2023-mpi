@@ -1,7 +1,7 @@
-// Copyright 2023 Nesterov Alexander
+// Copyright 2023 Benduyzhko Tatiana
 #include <gtest/gtest.h>
 #include <vector>
-#include "./ops_mpi.h"
+#include "./min_elements.h"
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 
