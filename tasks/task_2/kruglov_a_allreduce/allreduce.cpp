@@ -68,7 +68,8 @@ static inline void calculate(void* a, const void* b, int count, MPI_Datatype typ
     } else if (type == MPI_DOUBLE) {
         doMPIOperations<double>(reinterpret_cast<double*>(a), reinterpret_cast<const double*>(b), count, op);
     } else if (type == MPI_LONG_DOUBLE) {
-        doMPIOperations<long double>(reinterpret_cast<long double*>(a), reinterpret_cast<const long double*>(b), count, op);
+        doMPIOperations<long double>(reinterpret_cast<long double*>(a),
+            reinterpret_cast<const long double*>(b), count, op);
     }
 }
 
