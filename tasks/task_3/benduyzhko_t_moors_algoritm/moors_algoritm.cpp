@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <limits>
-#include "tasks/task_3/benduyzhko_t_moors_algoritm/moors_algoritm.h"
+#include "task_3/benduyzhko_t_moors_algoritm/moors_algoritm.h"
 
 static int offset = 0;
 const int INF = 2000000000;
