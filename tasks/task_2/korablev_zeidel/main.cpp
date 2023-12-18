@@ -1,11 +1,8 @@
 // Copyright 2023 Korablev Nikita
 #include <gtest/gtest.h>
+#include "task_2/korablev_zeidel/zeidel.h"
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/environment.hpp>
-
-#include <iostream>
-
-#include "task_2/korablev_zeidel/zeidel.h"
 
 TEST(MPI_TESTS, zeidel_1) {
   boost::mpi::communicator world;

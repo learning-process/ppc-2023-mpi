@@ -4,12 +4,12 @@
 double* zeidel(double* matrix, int n, double epsilon) {
   boost::mpi::communicator world;
   int i, j;
-  double* tmp_x = new double[n](); 
+  double* tmp_x = new double[n]();
   double* local_x = new double[n]();
   double* coefs = new double[n];
 
   int k = 0;
-  while(true) {
+  while (true) {
     ++k;
     for (i = 0; i < n; ++i) {
       local_x[i] = (1/matrix[i*(n + 1)]);
@@ -19,7 +19,10 @@ double* zeidel(double* matrix, int n, double epsilon) {
         if (i == j) continue;
         if (j < i) s -= matrix[i*n + j]*local_x[j];
         else if (j > i) s -= matrix[i*n + j]*tmp_x[j];
-        else { std::cout << "Error: new catch" << std::endl; throw -1; }
+        else {
+          // std::cout << "Error: new catch" << std::endl; 
+          throw -1; 
+        }
       }
       local_x[i] *= s;
     }
@@ -33,9 +36,9 @@ double* zeidel(double* matrix, int n, double epsilon) {
     if (max_coef < epsilon) break;
     else {
       if (k > 100 && world.rank() == 0) {
-        std::cout << "Error: k = " << k << std::endl;
+        // std::cout << "Error: k = " << k << std::endl;
         for (i = 0; i < n; ++i) std ::cout << tmp_x[i] << " ";
-        std::cout << std::endl;
+        // std::cout << std::endl;
         throw -1;
       }
       for (i = 0; i < n; ++i) tmp_x[i] = local_x[i];
@@ -43,9 +46,8 @@ double* zeidel(double* matrix, int n, double epsilon) {
   }
   delete[] tmp_x;
   delete[] coefs;
-  
   return local_x;
-};
+}
 
 double* parallel_zeidel(double* matrix, int n, double epsilon) {
   boost::mpi::communicator world;
@@ -58,12 +60,12 @@ double* parallel_zeidel(double* matrix, int n, double epsilon) {
   // double *rows = new double[ProcSizes[world.rank()] * (n + 1)]();
 
   int i, j;
-  double* tmp_x = new double[n](); 
+  double* tmp_x = new double[n]();
   double* local_x = new double[n]();
   double* coefs = new double[n]();
 
   int k = 0;
-  while(true) {
+  while (true) {
     ++k;
 
     int proc_num = world.rank();
@@ -82,7 +84,8 @@ double* parallel_zeidel(double* matrix, int n, double epsilon) {
       for (j = 0; j < n; ++j) {
         if (i == j) continue;
         if (j < i) s -= matrix[i*n + j]*local_x[j];
-        else if (j > i)s -= matrix[i*n + j]*tmp_x[j];
+        else 
+        if (j > i) s -= matrix[i*n + j]*tmp_x[j];
         else throw -1;
       }
       local_x[i] *= s;
@@ -109,7 +112,6 @@ double* parallel_zeidel(double* matrix, int n, double epsilon) {
   }
   delete[] tmp_x;
   delete[] coefs;
-  
   return local_x;
 }
 
