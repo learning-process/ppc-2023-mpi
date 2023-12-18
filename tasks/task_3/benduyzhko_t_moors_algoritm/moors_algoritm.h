@@ -2,6 +2,7 @@
 #ifndef TASKS_TASK_3_BENDUYZHKO_T_MOORS_ALGORITM_MOORS_ALGORITM_H_
 #define TASKS_TASK_3_BENDUYZHKO_T_MOORS_ALGORITM_MOORS_ALGORITM_H_
 
+#include <mpi.h>
 #include <vector>
 
 std::vector<int> getRandomGraph(int size);
