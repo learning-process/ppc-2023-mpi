@@ -2,6 +2,7 @@
 #ifndef TASKS_TASK_2_BENDUYZHKO_T_JACOBI_METHOD_JACOBI_METHOD_H_
 #define TASKS_TASK_2_BENDUYZHKO_T_JACOBI_METHOD_JACOBI_METHOD_H_
 
+#include <mpi.h>
 #include <vector>
 
 using Vector = std::vector<double>;
