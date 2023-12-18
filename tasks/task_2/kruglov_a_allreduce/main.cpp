@@ -2,7 +2,8 @@
 #include <gtest/gtest.h>
 #include "task_2/kruglov_a_allreduce/allreduce.h"
 
-int myOverAllreduce(int rank, const void* send_buf, void* recv_buf, int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm) {
+int myOverAllreduce(int rank, const void* send_buf, void* recv_buf,
+    int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm) {
     double start, end;
     if (rank == 0) { start = MPI_Wtime(); }
     int res = myAllreduce(send_buf, recv_buf, count, datatype, op, comm);
@@ -194,12 +195,13 @@ TEST(Parallel_Operations_MPI, Test_Length_One_Vector) {
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_Math_Problem_Normalize) {  // normalize vectors in random matrix sizeof: (MPI_size * vector_len), where metric(X) == sum(x[i])
+TEST(Parallel_Operations_MPI, Test_Math_Problem_Normalize) {
+    // normalize vectors in random matrix sizeof: (MPI_size * vector_len), where metric(X) == sum(x[i])
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int vector_len = 10;  //Num of matrix columns, num of matrix rows == size
+    int vector_len = 10; //Num of matrix columns, num of matrix rows == size
     std::vector<float> Vector = getRandomFloatVector(vector_len);
     std::vector<float> sumVector(vector_len);
     std::vector<float> myRVector(vector_len);

@@ -27,31 +27,26 @@ std::vector<double> getRandomDoubleVector(int sz) {
 
 template <typename T>
 static inline void doMPIOperations(T* store_buf, const T* temp_buf, int count, MPI_Op op) {
-    switch(op)
-    {
-    case(MPI_MIN):
-    {
+    switch (op) {
+    case(MPI_MIN): {
         for (int i = 0; i < count; ++i) {
             store_buf[i] = std::min(store_buf[i], temp_buf[i]);
         }
         break;
     }
-    case(MPI_MAX):
-    {
+    case(MPI_MAX): {
         for (int i = 0; i < count; ++i) {
             store_buf[i] = std::max(store_buf[i], temp_buf[i]);
         }
         break;
     }
-    case(MPI_SUM):
-    {
+    case(MPI_SUM): {
         for (int i = 0; i < count; ++i) {
             store_buf[i] = store_buf[i] + temp_buf[i];
         }
         break;
     }
-    case(MPI_PROD):
-    {
+    case(MPI_PROD): {
         for (int i = 0; i < count; ++i) {
             store_buf[i] = store_buf[i] * temp_buf[i];
         }
@@ -61,42 +56,55 @@ static inline void doMPIOperations(T* store_buf, const T* temp_buf, int count, M
 }
 
 static inline void calculate(void* a, const void* b, int count, MPI_Datatype type, MPI_Op op) {
-    if (type == MPI_CHAR) {
-        doMPIOperations<char>(reinterpret_cast<char*>(a), reinterpret_cast<const char*>(b), count, op);
-    }
-    else if (type == MPI_SHORT) {
-        doMPIOperations<int16_t>(reinterpret_cast<int16_t*>(a), reinterpret_cast<const int16_t*>(b), count, op);
-    }
-    else if (type == MPI_LONG) {
-        doMPIOperations<int32_t>(reinterpret_cast<int32_t*>(a), reinterpret_cast<const int32_t*>(b), count, op);
-    }
-    else if (type == MPI_INT) {
-        doMPIOperations<int>(reinterpret_cast<int*>(a), reinterpret_cast<const int*>(b), count, op);
-    }
-    else if (type == MPI_UNSIGNED_CHAR) {
-        doMPIOperations<uint8_t>(reinterpret_cast<uint8_t*>(a), reinterpret_cast<const uint8_t*>(b), count, op);
-    }
-    else if (type == MPI_UNSIGNED_SHORT) {
-        doMPIOperations<uint16_t>(reinterpret_cast<uint16_t*>(a), reinterpret_cast<const uint16_t*>(b), count, op);
-    }
-    else if (type == MPI_UNSIGNED) {
-        doMPIOperations<unsigned>(reinterpret_cast<unsigned*>(a), reinterpret_cast<const unsigned*>(b), count, op);
-    }
-    else if (type == MPI_UNSIGNED_LONG) {
-        doMPIOperations<uint32_t>(reinterpret_cast<uint32_t*>(a), reinterpret_cast<const uint32_t*>(b), count, op);
-    }
-    else if (type == MPI_FLOAT) {
-        doMPIOperations<float>(reinterpret_cast<float*>(a), reinterpret_cast<const float*>(b), count, op);
-    }
-    else if (type == MPI_DOUBLE) {
-        doMPIOperations<double>(reinterpret_cast<double*>(a), reinterpret_cast<const double*>(b), count, op);
-    }
-    else if (type == MPI_LONG_DOUBLE) {
-        doMPIOperations<long double>(reinterpret_cast<long double*>(a), reinterpret_cast<const long double*>(b), count, op);
+    switch (type) {
+    case (MPI_CHAR): {
+            doMPIOperations<char>(static_cast<char*>(a), static_cast<const char*>(b), count, op);
+            break;
+        }
+    case (MPI_SHORT): {
+            doMPIOperations<int16_t>(static_cast<int16_t*>(a), static_cast<const int16_t*>(b), count, op);
+            break;
+        }
+    case (MPI_LONG): {
+            doMPIOperations<int32_t>(static_cast<int32_t*>(a), static_cast<const int32_t*>(b), count, op);
+            break;
+        }
+    case (MPI_INT): {
+            doMPIOperations<int>(static_cast<int*>(a), static_cast<const int*>(b), count, op);
+            break;
+        }
+    case (MPI_UNSIGNED_CHAR): {
+            doMPIOperations<uint8_t>(static_cast<uint8_t*>(a), static_cast<const uint8_t*>(b), count, op);
+            break;
+        }
+    case (MPI_UNSIGNED_SHORT): {
+            doMPIOperations<uint16_t>(static_cast<uint16_t*>(a), static_cast<const uint16_t*>(b), count, op);
+            break;
+        }
+    case (MPI_UNSIGNED): {
+            doMPIOperations<unsigned>(static_cast<unsigned*>(a), static_cast<const unsigned*>(b), count, op);
+            break;
+        }
+    case (MPI_UNSIGNED_LONG): {
+            doMPIOperations<uint32_t>(static_cast<uint32_t*>(a), static_cast<const uint32_t*>(b), count, op);
+            break;
+        }
+    case (MPI_FLOAT): {
+            doMPIOperations<float>(static_cast<float*>(a), static_cast<const float*>(b), count, op);
+            break;
+        }
+    case (MPI_DOUBLE): {
+            doMPIOperations<double>(static_cast<double*>(a), static_cast<const double*>(b), count, op);
+            break;
+        }
+    case (MPI_LONG_DOUBLE): {
+            doMPIOperations<long double>(static_cast<long double*>(a), static_cast<const long double*>(b), count, op);
+            break;
+        }
     }
 }
 
-int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm){
+int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm) {
     int ret = MPI_SUCCESS;
     if (count <= 0) {
         ret = MPI_ERR_BUFFER;
@@ -132,7 +140,7 @@ int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype da
         ++iterpid;
 
     for (int pid = 0; pid < size; ++pid) {
-        if (!(pid == rank)){
+        if (!(pid == rank)) {
             MPI_Send(send_buf, count, datatype, pid, 0, comm);
         }
     }

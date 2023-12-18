@@ -2,11 +2,11 @@
 #ifndef TASKS_TASK_2_KRUGLOV_A_ALLREDUCE_ALLREDUCE_H_
 #define TASKS_TASK_2_KRUGLOV_A_ALLREDUCE_ALLREDUCE_H_
 
+#include <mpi.h>
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <iostream>
-#include <mpi.h>
 #include <random>
 #include <functional>
 
