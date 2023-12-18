@@ -10,7 +10,7 @@ TEST(star_topology, test_1) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  int data, send = 1, recv = 2, root = 0;
+  int data = -1, send = 1, recv = 2, root = 0;
 
   if (num > 2) {
     if (rank == send) {
@@ -31,7 +31,7 @@ TEST(star_topology, test_2) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  int data, send = 1, recv = 1, root = 0;
+  int data = -1, send = 1, recv = 1, root = 0;
 
   if (num > 1) {
     if (rank == send) {
@@ -52,7 +52,7 @@ TEST(star_topology, test_3) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  int data, send = 0, recv = 1, root = 0;
+  int data = -1, send = 0, recv = 1, root = 0;
 
   if (num > 1) {
     if (rank == send) {
@@ -73,7 +73,7 @@ TEST(star_topology, test_4) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  int data, send = 1, recv = 0, root = 0;
+  int data = -1, send = 1, recv = 0, root = 0;
 
   if (num > 1) {
     if (rank == send) {
@@ -94,7 +94,7 @@ TEST(star_topology, test_5) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num);
 
-  int data, send = 0, recv = 0, root = 0;
+  int data = -1, send = 0, recv = 0, root = 0;
 
   if (rank == send) {
     data = 8348;
