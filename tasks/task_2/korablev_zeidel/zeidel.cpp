@@ -17,10 +17,11 @@ double* zeidel(double* matrix, int n, double epsilon) {
       double s = matrix[n*n + i];
       for (j = 0; j < n; ++j) {
         if (i == j) continue;
-        if (j < i) s -= matrix[i*n + j]*local_x[j];
-        else if (j > i) s -= matrix[i*n + j]*tmp_x[j];
-        else {
-          // std::cout << "Error: new catch" << std::endl; 
+        if (j < i) {
+          s -= matrix[i*n + j]*local_x[j];
+        } else if (j > i) {
+          s -= matrix[i*n + j]*tmp_x[j];
+        } else {
           throw -1; 
         }
       }
@@ -33,11 +34,12 @@ double* zeidel(double* matrix, int n, double epsilon) {
     for (i = 1; i < n; ++i) max_coef = coefs[i] > max_coef ? coefs[i] : max_coef;
     // for (i = 0; i < n; ++i) std ::cout << tmp_x[i] << " ";
     // std::cout << std::endl;
-    if (max_coef < epsilon) break;
-    else {
+    if (max_coef < epsilon) {
+      break;
+    } else {
       if (k > 100 && world.rank() == 0) {
         // std::cout << "Error: k = " << k << std::endl;
-        for (i = 0; i < n; ++i) std ::cout << tmp_x[i] << " ";
+        for (i = 0; i < n; ++i) std::cout << tmp_x[i] << " ";
         // std::cout << std::endl;
         throw -1;
       }
@@ -83,10 +85,13 @@ double* parallel_zeidel(double* matrix, int n, double epsilon) {
       double s = matrix[n*n + i];
       for (j = 0; j < n; ++j) {
         if (i == j) continue;
-        if (j < i) s -= matrix[i*n + j]*local_x[j];
-        else 
-        if (j > i) s -= matrix[i*n + j]*tmp_x[j];
-        else throw -1;
+        if (j < i) {
+          s -= matrix[i*n + j]*local_x[j];
+        } else if (j > i) {
+          s -= matrix[i*n + j]*tmp_x[j];
+        } else {
+          throw -1;
+        }
       }
       local_x[i] *= s;
     }
@@ -97,15 +102,18 @@ double* parallel_zeidel(double* matrix, int n, double epsilon) {
       }
     }
 
-    if (world.rank() == world.size() - 1) broadcast(world, local_x, n, world.rank());
-    else broadcast(world, local_x, n, world.rank());
-
+    if (world.rank() == world.size() - 1) {
+      broadcast(world, local_x, n, world.rank());
+    } else {
+      broadcast(world, local_x, n, world.rank());
+    }
     for (i = 0; i < n; ++i) coefs[i] = fabs(local_x[i] - tmp_x[i]);
 
     double max_coef = coefs[0];
     for (i = 1; i < n; ++i) max_coef = coefs[i] > max_coef ? coefs[i] : max_coef;
-    if (max_coef < epsilon) break;
-    else {
+    if (max_coef < epsilon) {
+      break;
+    } else {
       for (i = 0; i < n; ++i) tmp_x[i] = local_x[i];
       if (k > 100) throw -1;
     }

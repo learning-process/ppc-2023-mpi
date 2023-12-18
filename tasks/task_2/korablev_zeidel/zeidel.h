@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <random>
-#include <iostream>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 
