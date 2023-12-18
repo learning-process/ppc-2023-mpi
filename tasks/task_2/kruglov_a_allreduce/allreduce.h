@@ -4,10 +4,10 @@
 
 #include <mpi.h>
 #include <vector>
-#include <string>
 #include <algorithm>
 #include <iostream>
 #include <random>
+#include <climits>
 #include <functional>
 
 std::vector<int> getRandomVector(int sz);
