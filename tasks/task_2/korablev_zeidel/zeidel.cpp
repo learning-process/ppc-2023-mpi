@@ -22,7 +22,7 @@ double* zeidel(double* matrix, int n, double epsilon) {
         } else if (j > i) {
           s -= matrix[i*n + j]*tmp_x[j];
         } else {
-          throw -1; 
+          throw -1;
         }
       }
       local_x[i] *= s;
