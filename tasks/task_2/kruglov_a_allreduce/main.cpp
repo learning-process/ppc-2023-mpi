@@ -201,7 +201,7 @@ TEST(Parallel_Operations_MPI, Test_Math_Problem_Normalize) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int vector_len = 10; //Num of matrix columns, num of matrix rows == size
+    int vector_len = 10;  // Num of matrix columns, num of matrix rows == size
     std::vector<float> Vector = getRandomFloatVector(vector_len);
     std::vector<float> sumVector(vector_len);
     std::vector<float> myRVector(vector_len);

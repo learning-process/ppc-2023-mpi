@@ -13,7 +13,7 @@ std::vector<float> getRandomFloatVector(int sz) {
     std::random_device dev;
     std::mt19937 gen(dev());
     std::vector<float> vec(sz);
-    for (int i = 0; i < sz; i++) { vec[i] = float(gen()) / INT_MAX; }
+    for (int i = 0; i < sz; i++) { vec[i] = static_cast<float>(gen()) / INT_MAX; }
     return vec;
 }
 
@@ -21,7 +21,7 @@ std::vector<double> getRandomDoubleVector(int sz) {
     std::random_device dev;
     std::mt19937 gen(dev());
     std::vector<double> vec(sz);
-    for (int i = 0; i < sz; i++) { vec[i] = double(gen()) / INT_MAX; }
+    for (int i = 0; i < sz; i++) { vec[i] = static_cast<double>(gen()) / INT_MAX; }
     return vec;
 }
 
