@@ -146,6 +146,39 @@ TEST(MPI_TESTS, parallel_zeidel_2) {
   delete[] matrix;
 }
 
+TEST(MPI_TESTS, parallel_zeidel_3) {
+  boost::mpi::communicator world;
+  int mat_len = 3;
+  double eps = 0.00001;
+  double* matrix = new double[mat_len*(mat_len + 1)]();
+  // A
+  matrix[0] = 4;
+  matrix[1] = -1;
+  matrix[2] = 1;
+  matrix[3] = 0;
+  matrix[4] = 5;
+  matrix[5] = -1;
+  matrix[6] = 2;
+  matrix[7] = -1;
+  matrix[8] = -3;
+  // b
+  matrix[9] = 3;
+  matrix[10] = 2;
+  matrix[11] = 5;
+  //------------
+  double* res = zeidel(matrix, mat_len, eps);
+  if (world.rank() == 0) {
+    for (int i = 0; i < mat_len; i++) {
+      for (int j = 0; j < mat_len; j++) {
+        matrix[i * (mat_len + 1) + mat_len] -= matrix[i * (mat_len + 1) + j] * res[j];
+      }
+      ASSERT_GT(fabs(matrix[i * (mat_len + 1) + mat_len]), eps);
+    }
+  }
+
+  delete[] res;
+  delete[] matrix;
+}
 
 int main(int argc, char** argv) {
   boost::mpi::environment env(argc, argv);
