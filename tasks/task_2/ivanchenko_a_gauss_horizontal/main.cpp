@@ -1,10 +1,9 @@
 // Copyright 2023 Ivanchenko Aleksei
 #include <gtest/gtest.h>
 #include <vector>
-#include <boost/mpi/environment.hpp>
-#include <boost/mpi/communicator.hpp>
 #include <algorithm>
 #include <random>
+#include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 #include "task_2/ivanchenko_a_gauss_horizontal/gauss_horizontal.h"
