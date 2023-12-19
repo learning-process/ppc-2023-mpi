@@ -6,8 +6,6 @@
 
 TEST(MPI_TESTS, zeidel_1) {
   boost::mpi::communicator world;
-  std::string var;
-  world.send(0, 0, var);
   int mat_len = 3;
   double eps = 0.0001;
   double* matrix = new double[mat_len*(mat_len + 1)];
@@ -77,8 +75,6 @@ TEST(MPI_TESTS, zeidel_2) {
 
 TEST(MPI_TESTS, parallel_zeidel_1) {
   boost::mpi::communicator world;
-  std::string var;
-  world.send(0, 0, var);
   int mat_len = 3;
   double eps = 0.0001;
   double* matrix = new double[mat_len*(mat_len + 1)];
