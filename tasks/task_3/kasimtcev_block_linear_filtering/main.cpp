@@ -38,11 +38,11 @@ TEST(Parallel_Operations_MPI, Image_10x100) {
   }
 }
 
-TEST(Parallel_Operations_MPI, Image_100x100) {
+TEST(Parallel_Operations_MPI, Image_20x100) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int row = 1;
-  int col = 1;
+  int col = 8;
   std::vector<double> Image;
   if (rank == 0) {
     Image = randomImage(row, col);
