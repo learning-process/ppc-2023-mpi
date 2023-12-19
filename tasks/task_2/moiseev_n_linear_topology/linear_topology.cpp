@@ -28,8 +28,7 @@ void sendDataLinear(void* data, int count, MPI_Datatype datatype,
         (rank <= sourceRank && rank >= destRank))) return;
     if (rank == sourceRank) {
         MPI_Send(data, count, datatype, (isForward ? rank + 1 : rank - 1), tag, comm);
-    }
-    else {
+    } else {
         int prevRank = (isForward ? rank - 1 : rank + 1);
         int nextRank = (isForward ? rank + 1 : rank - 1);
         MPI_Recv(data, count, datatype, prevRank, tag, comm, MPI_STATUS_IGNORE);
