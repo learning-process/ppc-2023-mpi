@@ -103,21 +103,36 @@ int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype da
     MPI_Type_size(datatype, &elem_size);
 
     MPI_Status status;
+    //if (rank == 0) {
+    //    MPI_Send(send_buf, count, datatype, rank + 1, 0, comm);
+    //} else {
+    //    MPI_Recv(recv_buf, count, datatype, rank - 1, 0, comm, &status);
+    //    calculate(recv_buf, send_buf, count, datatype, op);
+    //    if (rank != size - 1) { MPI_Send(recv_buf, count, datatype, rank + 1, 0, comm); }
+    //}
+
+    //if (rank == size - 1) {
+    //    for (int i = 0; i < size - 1; ++i) {
+    //        MPI_Send(recv_buf, count, datatype, i, 1, comm);
+    //    }
+    //} else {
+    //    MPI_Recv(recv_buf, count, datatype, size - 1, 1, comm, &status);
+    //}
 
     if (rank == 0) {
-        MPI_Send(send_buf, count, datatype, rank + 1, 0, comm);
-    } else {
-        MPI_Recv(recv_buf, count, datatype, rank - 1, 0, comm, &status);
-        calculate(recv_buf, send_buf, count, datatype, op);
-        if (rank != size - 1) { MPI_Send(recv_buf, count, datatype, rank + 1, 0, comm); }
-    }
-
-    if (rank == size - 1) {
-        for (int i = 0; i < size - 1; ++i) {
-            MPI_Send(recv_buf, count, datatype, i, 1, comm);
+        void* temp_buf = std::malloc(count * elem_size);
+        std::memcpy(recv_buf, send_buf, count * elem_size);
+        for (int i = 1; i < size; ++i) {
+            MPI_Recv(temp_buf, count, datatype, i, 0, comm, &status);
+            calculate(recv_buf, temp_buf, count, datatype, op);
+        }
+        free(temp_buf);
+        for (int i = 1; i < size; ++i) {
+            MPI_Send(recv_buf, count, datatype, i, 0, comm);
         }
     } else {
-        MPI_Recv(recv_buf, count, datatype, size - 1, 1, comm, &status);
+        MPI_Send(send_buf, count, datatype, 0, 0, comm);
+        MPI_Recv(recv_buf, count, datatype, 0, 0, comm, &status);
     }
 
     return ret;
