@@ -163,5 +163,6 @@ int main(int argc, char** argv) {
     }
     result = RUN_ALL_TESTS();
     MPI_Finalize();
+
     return result;
 }
