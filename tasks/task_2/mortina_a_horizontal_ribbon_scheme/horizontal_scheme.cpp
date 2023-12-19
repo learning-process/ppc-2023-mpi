@@ -1,5 +1,4 @@
 // Copyright 2023 Mortina Anastasia
-
 #include "task_2/mortina_a_horizontal_ribbon_scheme/horizontal_scheme.h"
 
 int generateRandomNumbers(int min, int max) {
