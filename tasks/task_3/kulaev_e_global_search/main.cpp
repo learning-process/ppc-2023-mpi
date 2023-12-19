@@ -1,4 +1,5 @@
 // Copyright 2023 Kulaev Eugene
+
 #include <gtest/gtest.h>
 #include <iostream>
 
