@@ -1,5 +1,5 @@
 // Copyright 2023 Volodin Evgeniy
-#include "./chbi.h"
+#include "tasks/task_3/volodin_e_convex_hull_binary_image/chbi.h"
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 
@@ -42,7 +42,7 @@ std::vector<int> findComponents(const std::vector<std::vector<int>>& image, int 
     }
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
-            if(image_with_components[i * width + j] != 0) {
+            if (image_with_components[i * width + j] != 0) {
                 image_with_components[i * width + j]--;
             }
         }
@@ -224,7 +224,6 @@ std::vector<int> getConvexHullPar(const std::vector<std::vector<int>> &image, in
 
     boost::mpi::communicator world;
     std::vector<int> local_image(width * height);
-    
     int count_components;
 
     if (world.rank() == 0) {

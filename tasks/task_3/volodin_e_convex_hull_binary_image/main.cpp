@@ -1,6 +1,6 @@
 // Copyright 2023 Volodin Evgeniy
-#include "./chbi.h"
 #include <gtest/gtest.h>
+#include "tasks/task_3/volodin_e_convex_hull_binary_image/chbi.h"
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 
@@ -19,7 +19,7 @@ TEST(Parallel_Operations_MPI, Rectangular_Image) {
 
     if (world.rank() == 0) {
         std::vector<int> convex_hull_seq = getConvexHullSeq(image, width, height);
-        
+
         for (int i = 0; i < convex_hull_par.size(); ++i) {
             ASSERT_EQ(convex_hull_par[i], convex_hull_seq[i]);
         }
@@ -46,7 +46,7 @@ TEST(Parallel_Operations_MPI, Square_Image) {
 
     if (world.rank() == 0) {
         std::vector<int> convex_hull_seq = getConvexHullSeq(image, width, height);
-        
+
         for (int i = 0; i < convex_hull_par.size(); ++i) {
             ASSERT_EQ(convex_hull_par[i], convex_hull_seq[i]);
         }
@@ -66,7 +66,7 @@ TEST(Parallel_Operations_MPI, Random_Square_Image) {
 
     if (world.rank() == 0) {
         std::vector<int> convex_hull_seq = getConvexHullSeq(image, width, height);
-        
+
         for (int i = 0; i < convex_hull_par.size(); ++i) {
             ASSERT_EQ(convex_hull_par[i], convex_hull_seq[i]);
         }
@@ -86,7 +86,7 @@ TEST(Parallel_Operations_MPI, Random_Rectangular_Image_Small) {
 
     if (world.rank() == 0) {
         std::vector<int> convex_hull_seq = getConvexHullSeq(image, width, height);
-        
+
         for (int i = 0; i < convex_hull_par.size(); ++i) {
             ASSERT_EQ(convex_hull_par[i], convex_hull_seq[i]);
         }
@@ -106,7 +106,7 @@ TEST(Parallel_Operations_MPI, Random_Rectangular_Image_Big) {
 
     if (world.rank() == 0) {
         std::vector<int> convex_hull_seq = getConvexHullSeq(image, width, height);
-        
+
         for (int i = 0; i < convex_hull_par.size(); ++i) {
             ASSERT_EQ(convex_hull_par[i], convex_hull_seq[i]);
         }
