@@ -102,21 +102,23 @@ int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype da
     int elem_size;
     MPI_Type_size(datatype, &elem_size);
 
-    void* temp_buf = std::malloc(count * elem_size);
     MPI_Status status;
 
-    memcpy(recv_buf, send_buf, count * elem_size);
+    if (rank == 0) {
+        MPI_Send(send_buf, count, datatype, rank + 1, 0, comm);
+    } else {
+        MPI_Recv(recv_buf, count, datatype, rank - 1, 0, comm, &status);
+        calculate(recv_buf, send_buf, count, datatype, op);
+        if (rank != size - 1) { MPI_Send(recv_buf, count, datatype, rank + 1, 0, comm); }
+    }
 
-    for (int i = 0; i < size; ++i)
-        if (rank != i) {
-            if (ret = MPI_Send(send_buf, count, datatype, i, 0, comm) != MPI_SUCCESS) { return ret; }
+    if (rank == size - 1) {
+        for (int i = 0; i < size - 1; ++i) {
+            MPI_Send(recv_buf, count, datatype, i, 1, comm);
         }
-
-    for (int i = 0; i < size; ++i)
-        if (rank != i) {
-            if (ret = MPI_Recv(temp_buf, count, datatype, i, 0, comm, &status) != MPI_SUCCESS) { return ret; }
-            calculate(recv_buf, temp_buf, count, datatype, op);
-        }
+    } else {
+        MPI_Recv(recv_buf, count, datatype, size - 1, 1, comm, &status);
+    }
 
     return ret;
 }

@@ -26,7 +26,7 @@ static inline int myOverAllreduce(int rank, const void* send_buf, void* recv_buf
     return res;
 }
 
-TEST(Parallel_Operations_MPI, Test_Operations) {
+TEST(Parallel_Operations_MPI, Test_Operations_Correct) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -40,7 +40,7 @@ TEST(Parallel_Operations_MPI, Test_Operations) {
     std::vector<int> myRVector(size);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], size, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], size, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], size, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_EQ((size + 1) * size / 2, myRVector[0]);
@@ -60,7 +60,7 @@ TEST(Parallel_Operations_MPI, Test_Int) {
     std::vector<int> myRVector(vector_len);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], vector_len, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_EQ(ARVector[0], myRVector[0]);
@@ -80,7 +80,7 @@ TEST(Parallel_Operations_MPI, Test_Float) {
     std::vector<float> myRVector(vector_len);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], vector_len, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_LE(abs(ARVector[0] - myRVector[0]), 1e-5);
@@ -100,7 +100,7 @@ TEST(Parallel_Operations_MPI, Test_Double) {
     std::vector<double> myRVector(vector_len);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], vector_len, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_LE(abs(ARVector[0] - myRVector[0]), 1e-9);
@@ -120,7 +120,7 @@ TEST(Parallel_Operations_MPI, Test_MPI_Max) {
     std::vector<int> myRVector(vector_len);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], vector_len, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_EQ(ARVector[0], myRVector[0]);
@@ -140,7 +140,7 @@ TEST(Parallel_Operations_MPI, Test_MPI_Min) {
     std::vector<double> myRVector(vector_len);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], vector_len, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_EQ(ARVector[0], myRVector[0]);
@@ -160,7 +160,7 @@ TEST(Parallel_Operations_MPI, Test_MPI_Prod) {
     std::vector<int> myRVector(vector_len);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], vector_len, MPI_INT, MPI_PROD, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_PROD, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_PROD, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_EQ(ARVector[0], myRVector[0]);
@@ -180,7 +180,7 @@ TEST(Parallel_Operations_MPI, Test_Big_Vector) {
     std::vector<int> myRVector(vector_len);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], vector_len, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_EQ(ARVector[0], myRVector[0]);
@@ -200,7 +200,7 @@ TEST(Parallel_Operations_MPI, Test_Length_One_Vector) {
     std::vector<int> myRVector(vector_len);
 
     MPI_Allreduce(&Vector[0], &ARVector[0], vector_len, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 
     if (rank == 0) {
         ASSERT_EQ(ARVector[0], myRVector[0]);
@@ -218,7 +218,7 @@ TEST(Parallel_Operations_MPI, Test_Math_Problem_Normalize) {
     std::vector<float> sumVector(vector_len);
     std::vector<float> myRVector(vector_len);
 
-    myOverAllreduce(rank, &Vector[0], &myRVector[0], vector_len, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+    myAllreduce(&Vector[0], &myRVector[0], vector_len, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 
     for (int i = 0; i < vector_len; ++i) {
         Vector[i] /= myRVector[i];
