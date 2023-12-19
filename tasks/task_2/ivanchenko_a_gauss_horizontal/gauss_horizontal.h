@@ -3,8 +3,6 @@
 #define TASKS_TASK_2_IVANCHENKO_A_GAUSS_HORIZONTAL_GAUSS_HORIZONTAL_H_
 
 #include <vector>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 /*
