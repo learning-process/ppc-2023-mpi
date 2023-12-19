@@ -19,20 +19,20 @@ std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, siz
     return res;
 }
 
-vector<double> getRandomVector(size_t size, int minElem, int maxElem) {
+boost::numeric::ublas::vector<double>getRandomVector(size_t size, int minElem, int maxElem) {
     std::random_device rd;
     std::uniform_int_distribution<int> unif(minElem, maxElem);
 
-    vector<double> vec(size);
+    boost::numeric::ublas::vector<double>vec(size);
     for (int  i = 0; i < size; i++) {
         vec(i) = unif(rd);
     }
     return vec;
 }
-matrix<double> getRandomMatrix(size_t rows, size_t columns, int minElem, int maxElem) {
+boost::numeric::ublas::matrix<double>getRandomMatrix(size_t rows, size_t columns, int minElem, int maxElem) {
     std::random_device rd;
     std::uniform_int_distribution<int> unif(minElem, maxElem);
-    matrix<double> m(rows, columns);
+    boost::numeric::ublas::matrix<double>m(rows, columns);
     int i, j;
     for (i = 0; i < rows; i++)
         for (j = 0; j < columns; j++)
@@ -40,14 +40,14 @@ matrix<double> getRandomMatrix(size_t rows, size_t columns, int minElem, int max
 
     return m;
 }
-vector<double> gaussSequentional(matrix<double> A, vector<double> b) {
+boost::numeric::ublas::vector<double>gaussSequentional(boost::numeric::ublas::matrix<double>A, boost::numeric::ublas::vector<double>b) {
     // Solve the system of equations
-    permutation_matrix<std::size_t> pm(A.size1());
+    boost::numeric::ublas::permutation_matrix<std::size_t> pm(A.size1());
     lu_factorize(A, pm);
     lu_substitute(A, pm, b);
     return b;
 }
-vector<double> gaussParallel(matrix<double> A, vector<double> b) {
+boost::numeric::ublas::vector<double>gaussParallel(boost::numeric::ublas::matrix<double>A, boost::numeric::ublas::vector<double>b) {
     boost::mpi::communicator comm;
 
 
@@ -55,27 +55,27 @@ vector<double> gaussParallel(matrix<double> A, vector<double> b) {
     // assert rows == columns
     const size_t N = rows;
 
-    if(N < comm.size()) return gaussSequentional(A, b);
-    vector<double> res(N);
+    if (N < comm.size()) return gaussSequentional(A, b);
+    boost::numeric::ublas::vector<double>res(N);
     boost::mpi::broadcast(comm, A, 0);
     boost::mpi::broadcast(comm, b, 0);
 
     size_t m[N];
-    for(int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++) {
         m[i] = i % comm.size();
     }
-    vector<double> c(N);
-    for(int k = 0; k < N; k++) {
-        boost::mpi::broadcast(comm, &A(k,k), N - k, m[k]);
+    boost::numeric::ublas::vector<double>c(N);
+    for (int k = 0; k < N; k++) {
+        boost::mpi::broadcast(comm, &A(k, k), N - k, m[k]);
         boost::mpi::broadcast(comm, &b[k], 1, m[k]);
-        for(int i = k + 1; i < N; i++) {
-            if(m[i] == comm.rank()) {
+        for (int i = k + 1; i < N; i++) {
+            if (m[i] == comm.rank()) {
                 c(i) = A(i, k) / A(k, k);
             }
         }
-        for(int i = k + 1; i < N; i++) {
-            if(m[i] == comm.rank()) {
-                for(int j = 0; j < N; j++) {
+        for (int i = k + 1; i < N; i++) {
+            if (m[i] == comm.rank()) {
+                for (int j = 0; j < N; j++) {
                     A(i, j) = A(i, j) - c(i) * A(k, j);
                 }
                 b(i) = b(i) - c(i) * b(k);
@@ -83,11 +83,11 @@ vector<double> gaussParallel(matrix<double> A, vector<double> b) {
         }
     }
     // back
-    if (comm.rank() == 0) { 
+    if (comm.rank() == 0) {
         res(N-1) = b(N-1) / A(N-1, N-1);
-        for(int i = N - 2; i >= 0; i--) {
+        for (int i = N - 2; i >= 0; i--) {
             double sum=0;
-            for(int j = i + 1; j < N; j++) {
+            for (int j = i + 1; j < N; j++) {
                 sum = sum + A(i, j) * res(j);
             }
             res(i) = (b(i)-sum) / A(i, i);
