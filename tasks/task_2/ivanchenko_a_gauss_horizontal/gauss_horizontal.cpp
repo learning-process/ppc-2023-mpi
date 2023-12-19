@@ -6,19 +6,6 @@
 #include <boost/mpi/collectives.hpp>
 #include "task_2/ivanchenko_a_gauss_horizontal/gauss_horizontal.h"
 
-std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, size_t columns) {
-    boost::mpi::communicator comm;
-    std::vector<int> res(columns);
-    size_t t1 = 0;
-    std::vector<int> localSizes(comm.size(), t1);
-    std::vector<int> localMatrix(t1);
-    if (t1 == 0) {
-    } else {
-        boost::mpi::scatterv(comm, localMatrix.data(), localSizes[comm.rank()], 0);
-    }
-    return res;
-}
-
 boost::numeric::ublas::vector<double>getRandomVector(size_t size, int minElem, int maxElem) {
     std::random_device rd;
     std::uniform_int_distribution<int> unif(minElem, maxElem);

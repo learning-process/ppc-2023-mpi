@@ -17,9 +17,6 @@
 * or the (i + j x m)-th element of the container for column major orientation.
 */
 
-std::vector<int> getMaxParallel(const std::vector<int>& matrix, size_t rows, size_t columns);
-
-
 boost::numeric::ublas::vector<double>getRandomVector(size_t size, int minElem = 1, int maxElem = 1e8);
 boost::numeric::ublas::matrix<double>getRandomMatrix(size_t rows, size_t columns, int minElem = 1, int maxElem = 1e8);
 boost::numeric::ublas::vector<double>gaussSequentional(boost::numeric::ublas::matrix<double>A,
