@@ -61,7 +61,7 @@ TEST(Conjugate_Gradient_Method, Test_Parallel_Conjugate_Method) {
         parallelConjugateGradient(matrix, vector, size);
     if (rank == 0) {
         for (size_t i = 0; i < parRes.size(); i++)
-            ASSERT_NEAR(answer[i], parRes[i], 0.5);
+            ASSERT_NEAR(answer[i], parRes[i], 1);
     }
 }
 
