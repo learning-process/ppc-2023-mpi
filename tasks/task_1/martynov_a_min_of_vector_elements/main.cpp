@@ -7,11 +7,12 @@
 
 TEST(MPI_TESTS, Test_vector_with_only_positive) {
   int rank = 0;
+
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> vec;
   const size_t vec_size = 97;
-  int min = 1e+10;
-  get_random_vector(vec, vec_size, 0, 100);
+  int min = 21474836;
+  get_random_vector(&vec, vec_size, 0, 100);
 
   int par_result = get_minimal_elem(vec, vec_size);
   if (rank == 0) {
@@ -28,8 +29,8 @@ TEST(MPI_TESTS, Test_vector_with_positive_negative) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> vec;
   const size_t vec_size = 97;
-  int min = 1e+10;
-  get_random_vector(vec, vec_size, -100, 100);
+  int min = 21474836;
+  get_random_vector(&vec, vec_size, -100, 100);
 
   int par_result = get_minimal_elem(vec, vec_size);
   if (rank == 0) {
@@ -46,8 +47,8 @@ TEST(MPI_TESTS, Test_vector_with_only_negative) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> vec;
   const size_t vec_size = 97;
-  int min = 1e+10;
-  get_random_vector(vec, vec_size, -100, 0);
+  int min = 21474836;
+  get_random_vector(&vec, vec_size, -100, 0);
 
   int par_result = get_minimal_elem(vec, vec_size);
   if (rank == 0) {
@@ -63,7 +64,7 @@ TEST(Min_Vector_Elements, Test_several_min) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> vec;
   const size_t vec_size = 10;
-  vec = {1, 10, 0, 37, 45, 0, 1, 2, 0, 23};
+  vec = { 1, 10, 0, 37, 45, 0, 1, 2, 0, 23 };
   int parallel_res = get_minimal_elem(vec, vec_size);
   if (rank == 0) {
     int seq_res = *std::min_element(vec.begin(), vec.end());
