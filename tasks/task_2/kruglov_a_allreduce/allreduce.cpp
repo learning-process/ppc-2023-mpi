@@ -105,8 +105,8 @@ int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype da
     MPI_Status status;
 
     if (rank == 0) {
-        void* temp_buf = std::malloc(count * elem_size);
-        std::memcpy(recv_buf, send_buf, count * elem_size);
+        void* temp_buf = malloc(count * elem_size);
+        memcpy(recv_buf, send_buf, count * elem_size);
         for (int i = 1; i < size; ++i) {
             MPI_Recv(temp_buf, count, datatype, i, 0, comm, &status);
             calculate(recv_buf, temp_buf, count, datatype, op);
