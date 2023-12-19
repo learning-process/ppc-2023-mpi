@@ -5,6 +5,7 @@
 #include <vector>
 
 int get_minimal_elem(const std::vector<int>& init_vec, size_t vec_size);
+
 void get_random_vector(std::vector<int>* vector, size_t size,
   int bot_elem = -100, int top_elem = 100);
 

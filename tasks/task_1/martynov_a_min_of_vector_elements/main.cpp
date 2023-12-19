@@ -7,7 +7,6 @@
 
 TEST(MPI_TESTS, Test_vector_with_only_positive) {
   int rank = 0;
-
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> vec;
   const size_t vec_size = 97;
