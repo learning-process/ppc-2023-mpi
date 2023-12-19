@@ -1,0 +1,355 @@
+The system is: Windows - 10.0.22621 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+MSBuild version 17.3.1+2badb37d1 for .NET Framework
+Сборка начата 19.12.2023 19:07:42.
+Проект "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdC\CompilerIdC.vcxproj" в узле 1 (целевые объекты по умолчанию).
+PrepareForBuild:
+  Создание каталога "Debug\".
+  Создание каталога "Debug\CompilerIdC.tlog\".
+InitializeBuildStatus:
+  Создание "Debug\CompilerIdC.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
+  CMakeCCompilerId.c
+Link:
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdC.lib" /MACHINE:X64 Debug\CMakeCCompilerId.obj
+  CompilerIdC.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdC\CompilerIdC.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_C_COMPILER=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\Hostx64\x64\cl.exe
+FinalizeBuildStatus:
+  Файл "Debug\CompilerIdC.tlog\unsuccessfulbuild" удаляется.
+  Обращение к "Debug\CompilerIdC.tlog\CompilerIdC.lastbuildstate".
+Сборка проекта "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdC\CompilerIdC.vcxproj" завершена (целевые объекты по умолчанию).
+
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+
+Прошло времени 00:00:00.66
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+
+The C compiler identification is MSVC, found in "C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/3.25.0-rc1/CompilerIdC/CompilerIdC.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+MSBuild version 17.3.1+2badb37d1 for .NET Framework
+Сборка начата 19.12.2023 19:07:43.
+Проект "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdCXX\CompilerIdCXX.vcxproj" в узле 1 (целевые объекты по умолчанию).
+PrepareForBuild:
+  Создание каталога "Debug\".
+  Создание каталога "Debug\CompilerIdCXX.tlog\".
+InitializeBuildStatus:
+  Создание "Debug\CompilerIdCXX.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+  CMakeCXXCompilerId.cpp
+Link:
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdCXX\CompilerIdCXX.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_CXX_COMPILER=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\Hostx64\x64\cl.exe
+FinalizeBuildStatus:
+  Файл "Debug\CompilerIdCXX.tlog\unsuccessfulbuild" удаляется.
+  Обращение к "Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate".
+Сборка проекта "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdCXX\CompilerIdCXX.vcxproj" завершена (целевые объекты по умолчанию).
+
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+
+Прошло времени 00:00:00.52
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+
+The CXX compiler identification is MSVC, found in "C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/3.25.0-rc1/CompilerIdCXX/CompilerIdCXX.exe"
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/CMakeScratch/TryCompile-1cd416
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_f96dd.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.3.1+2badb37d1 for .NET Framework
+  Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.33.31630 для x64
+  CMakeCCompilerABI.c
+  (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f96dd.dir\Debug\\" /Fd"cmTC_f96dd.dir\Debug\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\Program Files\CMake\share\cmake-3.25\Modules\CMakeCCompilerABI.c"
+  cmTC_f96dd.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-1cd416\Debug\cmTC_f96dd.exe
+
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/CMakeScratch/TryCompile-5670vi
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_edb12.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.3.1+2badb37d1 for .NET Framework
+  Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.33.31630 для x64
+  CMakeCXXCompilerABI.cpp
+  (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_edb12.dir\Debug\\" /Fd"cmTC_edb12.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\Program Files\CMake\share\cmake-3.25\Modules\CMakeCXXCompilerABI.cpp"
+  cmTC_edb12.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-5670vi\Debug\cmTC_edb12.exe
+
+
+
+Checking whether the ASM_MASM compiler is MSVC using "-?" matched "Microsoft":
+Microsoft (R) Macro Assembler (x64) Version 14.33.31630.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+        ML64 [ /options ] filelist [ /link linkoptions ]
+
+/Bl<linker> Use alternate linker          /Sf Generate first pass listing
+/c Assemble without linking               /Sl<width> Set line width
+/Cp Preserve case of user identifiers     /Sn Suppress symbol-table listing
+/Cx Preserve case in publics, externs     /Sp<length> Set page length
+/D<name>[=text] Define text macro         /Ss<string> Set subtitle
+/EP Output preprocessed listing to stdout /St<string> Set title
+/F <hex> Set stack size (bytes)           /Sx List false conditionals
+/Fe<file> Name executable                 /Ta<file> Assemble non-.ASM file
+/Fl[file] Generate listing                /w Same as /W0 /WX
+/Fm[file] Generate map                    /WX Treat warnings as errors
+/Fo<file> Name object file                /W<number> Set warning level
+/Fr[file] Generate limited browser info   /X Ignore INCLUDE environment path
+/FR[file] Generate full browser info      /Zd Add line number debug info
+/I<name> Add include path                 /Zf Make all symbols public
+/link <linker options and libraries>      /Zi Add symbolic debug info
+/nologo Suppress copyright message        /Zp[n] Set structure alignment
+/Sa Maximize source listing               /Zs Perform syntax check only
+/ZH:MD5 Use MD5 for checksum in debug info
+/ZH:SHA_256 Use SHA256 for checksum in debug info (default)
+/Gy[-] separate functions for linker
+/errorReport:<option> Deprecated. Report internal assembler errors to Microsoft
+    none - do not send report
+    prompt - prompt to immediately send report
+    queue - at next admin logon, prompt to send report
+    send - send report automatically
+The system is: Windows - 10.0.22621 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+MSBuild version 17.3.1+2badb37d1 for .NET Framework
+Сборка начата 19.12.2023 19:09:11.
+Проект "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdC\CompilerIdC.vcxproj" в узле 1 (целевые объекты по умолчанию).
+PrepareForBuild:
+  Создание каталога "Debug\".
+  Создание каталога "Debug\CompilerIdC.tlog\".
+InitializeBuildStatus:
+  Создание "Debug\CompilerIdC.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
+  CMakeCCompilerId.c
+Link:
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdC.lib" /MACHINE:X64 Debug\CMakeCCompilerId.obj
+  CompilerIdC.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdC\CompilerIdC.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_C_COMPILER=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\Hostx64\x64\cl.exe
+FinalizeBuildStatus:
+  Файл "Debug\CompilerIdC.tlog\unsuccessfulbuild" удаляется.
+  Обращение к "Debug\CompilerIdC.tlog\CompilerIdC.lastbuildstate".
+Сборка проекта "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdC\CompilerIdC.vcxproj" завершена (целевые объекты по умолчанию).
+
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+
+Прошло времени 00:00:00.70
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+
+The C compiler identification is MSVC, found in "C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/3.25.0-rc1/CompilerIdC/CompilerIdC.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+MSBuild version 17.3.1+2badb37d1 for .NET Framework
+Сборка начата 19.12.2023 19:09:12.
+Проект "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdCXX\CompilerIdCXX.vcxproj" в узле 1 (целевые объекты по умолчанию).
+PrepareForBuild:
+  Создание каталога "Debug\".
+  Создание каталога "Debug\CompilerIdCXX.tlog\".
+InitializeBuildStatus:
+  Создание "Debug\CompilerIdCXX.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+  CMakeCXXCompilerId.cpp
+Link:
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdCXX\CompilerIdCXX.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_CXX_COMPILER=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\Hostx64\x64\cl.exe
+FinalizeBuildStatus:
+  Файл "Debug\CompilerIdCXX.tlog\unsuccessfulbuild" удаляется.
+  Обращение к "Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate".
+Сборка проекта "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\3.25.0-rc1\CompilerIdCXX\CompilerIdCXX.vcxproj" завершена (целевые объекты по умолчанию).
+
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+
+Прошло времени 00:00:00.52
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+
+The CXX compiler identification is MSVC, found in "C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/3.25.0-rc1/CompilerIdCXX/CompilerIdCXX.exe"
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/CMakeScratch/TryCompile-jxm31y
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_bf63a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.3.1+2badb37d1 for .NET Framework
+  Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.33.31630 для x64
+  CMakeCCompilerABI.c
+  (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_bf63a.dir\Debug\\" /Fd"cmTC_bf63a.dir\Debug\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\Program Files\CMake\share\cmake-3.25\Modules\CMakeCCompilerABI.c"
+  cmTC_bf63a.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-jxm31y\Debug\cmTC_bf63a.exe
+
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/CMakeScratch/TryCompile-v1uuzf
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_32572.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.3.1+2badb37d1 for .NET Framework
+  Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.33.31630 для x64
+  CMakeCXXCompilerABI.cpp
+  (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_32572.dir\Debug\\" /Fd"cmTC_32572.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\Program Files\CMake\share\cmake-3.25\Modules\CMakeCXXCompilerABI.cpp"
+  cmTC_32572.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-v1uuzf\Debug\cmTC_32572.exe
+
+
+
+Checking whether the ASM_MASM compiler is MSVC using "-?" matched "Microsoft":
+Microsoft (R) Macro Assembler (x64) Version 14.33.31630.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+        ML64 [ /options ] filelist [ /link linkoptions ]
+
+/Bl<linker> Use alternate linker          /Sf Generate first pass listing
+/c Assemble without linking               /Sl<width> Set line width
+/Cp Preserve case of user identifiers     /Sn Suppress symbol-table listing
+/Cx Preserve case in publics, externs     /Sp<length> Set page length
+/D<name>[=text] Define text macro         /Ss<string> Set subtitle
+/EP Output preprocessed listing to stdout /St<string> Set title
+/F <hex> Set stack size (bytes)           /Sx List false conditionals
+/Fe<file> Name executable                 /Ta<file> Assemble non-.ASM file
+/Fl[file] Generate listing                /w Same as /W0 /WX
+/Fm[file] Generate map                    /WX Treat warnings as errors
+/Fo<file> Name object file                /W<number> Set warning level
+/Fr[file] Generate limited browser info   /X Ignore INCLUDE environment path
+/FR[file] Generate full browser info      /Zd Add line number debug info
+/I<name> Add include path                 /Zf Make all symbols public
+/link <linker options and libraries>      /Zi Add symbolic debug info
+/nologo Suppress copyright message        /Zp[n] Set structure alignment
+/Sa Maximize source listing               /Zs Perform syntax check only
+/ZH:MD5 Use MD5 for checksum in debug info
+/ZH:SHA_256 Use SHA256 for checksum in debug info (default)
+/Gy[-] separate functions for linker
+/errorReport:<option> Deprecated. Report internal assembler errors to Microsoft
+    none - do not send report
+    prompt - prompt to immediately send report
+    queue - at next admin logon, prompt to send report
+    send - send report automatically
+Performing C++ SOURCE FILE Test BOOST_NOWIDE_HAS_LFS succeeded with the following output:
+Change Dir: C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/CMakeScratch/TryCompile-v1qtkp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_35c39.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.3.1+2badb37d1 for .NET Framework
+  Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.33.31630 для x64
+  src.cxx
+  (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D BOOST_NOWIDE_HAS_LFS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /std:c++20 /Fo"cmTC_35c39.dir\Debug\\" /Fd"cmTC_35c39.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-v1qtkp\src.cxx"
+  cmTC_35c39.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-v1qtkp\Debug\cmTC_35c39.exe
+
+
+Source file was:
+//
+// Copyright (c) 2020 Alexander Grund
+//
+// Distributed under the Boost Software License, Version 1.0.
+// https://www.boost.org/LICENSE_1_0.txt
+
+#define _LARGEFILE_SOURCE
+#ifndef _FILE_OFFSET_BITS
+#define _FILE_OFFSET_BITS 64
+#endif
+
+#include <stdio.h>
+
+void check(FILE* f)
+{
+#if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__MINGW32__)
+    (void)_fseeki64(f, 0, SEEK_CUR);
+    (void)_ftelli64(f);
+#else
+    // Check that those functions and off_t are available
+    (void)fseeko(f, off_t(0), SEEK_CUR);
+    (void)ftello(f);
+#endif
+}
+
+int main()
+{
+    check(nullptr);
+}
+
+
+Performing C++ SOURCE FILE Test BOOST_STACKTRACE_HAS_WINDBG succeeded with the following output:
+Change Dir: C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/CMakeScratch/TryCompile-cscugg
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_98994.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.3.1+2badb37d1 for .NET Framework
+  Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.33.31630 для x64
+  src.cxx
+  (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
+  cl /c /I"C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\3rdparty\boost\libs\stacktrace\build" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D BOOST_STACKTRACE_HAS_WINDBG /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /std:c++20 /Fo"cmTC_98994.dir\Debug\\" /Fd"cmTC_98994.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-cscugg\src.cxx"
+  cmTC_98994.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-cscugg\Debug\cmTC_98994.exe
+
+
+Source file was:
+#include "has_windbg.cpp"
+
+Performing C++ SOURCE FILE Test BOOST_STACKTRACE_HAS_WINDBG_CACHED succeeded with the following output:
+Change Dir: C:/Users/sasch/OneDrive/Рабочий стол/Programs/Learning/ppc-2023-mpi/CMakeFiles/CMakeScratch/TryCompile-9m398h
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_05acb.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.3.1+2badb37d1 for .NET Framework
+  Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.33.31630 для x64
+  src.cxx
+  (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
+  cl /c /I"C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\3rdparty\boost\libs\stacktrace\..\config\include" /I"C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\3rdparty\boost\libs\stacktrace\build" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D BOOST_STACKTRACE_HAS_WINDBG_CACHED /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /std:c++20 /Fo"cmTC_05acb.dir\Debug\\" /Fd"cmTC_05acb.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-9m398h\src.cxx"
+  cmTC_05acb.vcxproj -> C:\Users\sasch\OneDrive\Рабочий стол\Programs\Learning\ppc-2023-mpi\CMakeFiles\CMakeScratch\TryCompile-9m398h\Debug\cmTC_05acb.exe
+
+
+Source file was:
+#include "has_windbg_cached.cpp"
+
