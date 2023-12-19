@@ -33,7 +33,7 @@ TEST(GAUSS_HORIZONTAL, test_sequential) {
 
     boost::numeric::ublas::vector<double>actual = gaussSequentional(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -43,7 +43,7 @@ TEST(GAUSS_HORIZONTAL, test_sequential_2) {
     // Define the coefficient matrix A
     boost::numeric::ublas::matrix<double>A(16, 16);
     A(0, 0) = 1.0; A(0, 1) = 0;
-    for(int i = 1; i < 15; i++) {
+    for (int i = 1; i < 15; i++) {
         A(i, i) = -907.0;
         A(i, i-1) = 450.0;
         A(i, i+1) = 450.0;
@@ -89,7 +89,7 @@ TEST(GAUSS_HORIZONTAL, test_sequential_2) {
     // Solve the system of equations
     boost::numeric::ublas::vector<double>actual = gaussSequentional(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -118,7 +118,7 @@ TEST(GAUSS_HORIZONTAL, test_sequential_3) {
 
     boost::numeric::ublas::vector<double>actual = gaussSequentional(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -138,7 +138,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_small) {
     boost::numeric::ublas::vector<double>expected = gaussSequentional(A, b);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -160,7 +160,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_small_1) {
     boost::numeric::ublas::vector<double>expected = gaussSequentional(A, b);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -182,7 +182,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_small_11) {
     boost::numeric::ublas::vector<double>expected = gaussSequentional(A, b);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -199,7 +199,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_small_2) {
     boost::numeric::ublas::vector<double>expected = gaussSequentional(A, b);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -209,7 +209,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_big) {
     // Define the coefficient matrix A
     boost::numeric::ublas::matrix<double>A(16, 16);
     A(0, 0) = 1.0; A(0, 1) = 0;
-    for(int i = 1; i < 15; i++) {
+    for (int i = 1; i < 15; i++) {
         A(i, i) = -907.0;
         A(i, i-1) = 450.0;
         A(i, i+1) = 450.0;
@@ -237,7 +237,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_big) {
     boost::numeric::ublas::vector<double>expected = gaussSequentional(A, b);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -246,16 +246,16 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_0) {
     size_t size = 4;
     boost::numeric::ublas::matrix<double>A(size, size);
     boost::numeric::ublas::vector<double>expected(size), b(size);
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         A = getRandomMatrix(size, size);
         b = getRandomVector(size);
     }
     boost::mpi::broadcast(comm, A, 0);
     boost::mpi::broadcast(comm, b, 0);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         expected = gaussSequentional(A, b);
-        for(int i = 0; i < expected.size(); i++) {
+        for (int i = 0; i < expected.size(); i++) {
             EXPECT_FLOAT_EQ(expected(i), actual(i));
         }
     }
@@ -267,7 +267,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill) {
     boost::numeric::ublas::vector<double>expected = gaussSequentional(A, b);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -276,7 +276,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_1) {
     boost::numeric::ublas::vector<double>b = getRandomVector(19);
     boost::numeric::ublas::vector<double>expected = gaussSequentional(A, b);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
@@ -287,7 +287,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_2) {
     boost::numeric::ublas::vector<double>expected = gaussSequentional(A, b);
     boost::numeric::ublas::vector<double>actual = gaussParallel(A, b);
 
-    for(int i = 0; i < expected.size(); i++) {
+    for (int i = 0; i < expected.size(); i++) {
         EXPECT_FLOAT_EQ(expected(i), actual(i));
     }
 }
