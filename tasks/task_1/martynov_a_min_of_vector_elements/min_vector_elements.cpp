@@ -9,7 +9,7 @@ int get_minimal_elem(const std::vector<int>& init_vec, size_t vec_size) {
   if (vec_size == 0)
     return 0;
 
-  int min_element_in_thread = 1e+10;
+  int min_element_in_thread = 21474836;
   int global_min_elem;
   int myrank;
   int count_of_proc;
