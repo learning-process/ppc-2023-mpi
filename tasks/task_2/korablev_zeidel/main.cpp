@@ -58,7 +58,7 @@ TEST(MPI_TESTS, zeidel_2) {
   matrix[9] = 12;
   matrix[10] = 24;
   matrix[11] = 9;
-  //------------
+  //-------------
   double* res = zeidel(matrix, mat_len, eps);
   if (world.rank() == 0) {
     for (int i = 0; i < mat_len; i++) {
