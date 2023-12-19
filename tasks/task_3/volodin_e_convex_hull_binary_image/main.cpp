@@ -1,6 +1,6 @@
 // Copyright 2023 Volodin Evgeniy
 #include <gtest/gtest.h>
-#include "tasks/task_3/volodin_e_convex_hull_binary_image/chbi.h"
+#include "task_3/volodin_e_convex_hull_binary_image/chbi.h"
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 
