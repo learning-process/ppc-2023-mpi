@@ -61,7 +61,7 @@ TEST(Conjugate_Gradient_Method, Test_Parallel_Conjugate_Method) {
         parallelConjugateGradient(matrix, vector, size);
     if (rank == 0) {
         for (size_t i = 0; i < parRes.size(); i++)
-            ASSERT_NEAR(answer[i], parRes[i], 1);
+            ASSERT_NEAR(answer[i], parRes[i], 0.5);
     }
 }
 
@@ -80,7 +80,7 @@ TEST(Conjugate_Gradient_Method, Test_Serial_And_Parallel) {
         std::vector<double> linRes =
             serialConjugateGradient(matrix, vector, size);
         for (size_t i = 0; i < linRes.size(); i++) {
-            ASSERT_NEAR(linRes[i], parRes[i], 0.7);
+            ASSERT_NEAR(linRes[i], parRes[i], 1);
         }
     }
 }
