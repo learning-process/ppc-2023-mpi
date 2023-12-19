@@ -1,6 +1,6 @@
 // Copyright 2023 Kasimtcev Roman
-#ifndef TASKS_TASK_3_KASIMTCEV_BLOCK_LINEAR_FILTERING_H_
-#define TASKS_TASK_3_KASIMTCEV_BLOCK_LINEAR_FILTERING_H_
+#ifndef TASKS_TASK_3_KASIMTCEV_BLOCK_LINEAR_FILTERING_BLOCK_PARTIT_H_
+#define TASKS_TASK_3_KASIMTCEV_BLOCK_LINEAR_FILTERING_BLOCK_PARTIT_H_
 
 #include <mpi.h>
 
@@ -22,4 +22,4 @@ std::vector<double> consistentOparation(std::vector<double> image, int row,
 std::vector<double> parllOp(std::vector<double> global_image,
                                           int row, int col);
 
-#endif  // TASKS_TASK_3_KASIMTCEV_BLOCK_LINEAR_FILTERING_H_
+#endif  // TASKS_TASK_3_KASIMTCEV_BLOCK_LINEAR_FILTERING_BLOCK_PARTIT_H_
