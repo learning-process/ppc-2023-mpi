@@ -1,5 +1,5 @@
 // Copyright 2023 Khramov Ivan
-#ifndef TASKS_TASK_1_SKOTIN_MIN_OF_VECTOR_ELEMENTS_H_
+#ifndef TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_H_
 #define TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_H_
 
 #include <vector>
@@ -19,4 +19,4 @@ private:
     int worldRank;
 };
 
-#endif  // TASKS_TASK_1_SKOTIN_MIN_OF_VECTOR_ELEMENTS_H_
+#endif  // TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_H_
