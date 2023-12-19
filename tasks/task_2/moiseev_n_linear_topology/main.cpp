@@ -38,6 +38,7 @@ TEST(linear_MPI, Test2) {
     if (processRank == senderRank) {
         message = 123;
     }
+
     sendDataLinear(&message, 1, MPI_INT, senderRank, receiverRank, 0, MPI_COMM_WORLD);
 
     if (processRank == receiverRank) {
