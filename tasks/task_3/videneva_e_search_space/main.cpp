@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-#include "search_space.h"
+#include "./search_space.h"
 
 double lin(double* x) { return *x; }
 double qw(double* x) { return *x * *x; }
