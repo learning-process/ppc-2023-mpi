@@ -3,13 +3,11 @@
 #include <vector>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
-#include "task_2/ivanchenko_a_gauss_horizontal/gauss_horizontal.h"
 #include <algorithm>
 #include <random>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 #include "task_2/ivanchenko_a_gauss_horizontal/gauss_horizontal.h"
-
 
 TEST(GAUSS_HORIZONTAL, test_sequential) {
     boost::mpi::communicator world;

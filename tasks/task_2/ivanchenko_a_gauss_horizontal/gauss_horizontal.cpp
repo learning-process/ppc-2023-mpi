@@ -40,14 +40,16 @@ boost::numeric::ublas::matrix<double>getRandomMatrix(size_t rows, size_t columns
 
     return m;
 }
-boost::numeric::ublas::vector<double>gaussSequentional(boost::numeric::ublas::matrix<double>A, boost::numeric::ublas::vector<double>b) {
+boost::numeric::ublas::vector<double>gaussSequentional(boost::numeric::ublas::matrix<double>A,
+ boost::numeric::ublas::vector<double>b) {
     // Solve the system of equations
     boost::numeric::ublas::permutation_matrix<std::size_t> pm(A.size1());
     lu_factorize(A, pm);
     lu_substitute(A, pm, b);
     return b;
 }
-boost::numeric::ublas::vector<double>gaussParallel(boost::numeric::ublas::matrix<double>A, boost::numeric::ublas::vector<double>b) {
+boost::numeric::ublas::vector<double>gaussParallel(boost::numeric::ublas::matrix<double>A,
+ boost::numeric::ublas::vector<double>b) {
     boost::mpi::communicator comm;
 
 
@@ -86,7 +88,7 @@ boost::numeric::ublas::vector<double>gaussParallel(boost::numeric::ublas::matrix
     if (comm.rank() == 0) {
         res(N-1) = b(N-1) / A(N-1, N-1);
         for (int i = N - 2; i >= 0; i--) {
-            double sum=0;
+            double sum = 0;
             for (int j = i + 1; j < N; j++) {
                 sum = sum + A(i, j) * res(j);
             }
