@@ -2,14 +2,26 @@
 #include <gtest/gtest.h>
 #include "task_2/kruglov_a_allreduce/allreduce.h"
 
-int myOverAllreduce(int rank, const void* send_buf, void* recv_buf,
+static inline int MPIOverAllreduce(int rank, const void* send_buf, void* recv_buf,
+    int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm) {
+    double start, end;
+    if (rank == 0) { start = MPI_Wtime(); }
+    int res = MPI_Allreduce(send_buf, recv_buf, count, datatype, op, comm);
+    if (rank == 0) {
+        end = MPI_Wtime();
+        std::cout << "MPIAllreduce time = " << end - start << std::endl;
+    }
+    return res;
+}
+
+static inline int myOverAllreduce(int rank, const void* send_buf, void* recv_buf,
     int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm) {
     double start, end;
     if (rank == 0) { start = MPI_Wtime(); }
     int res = myAllreduce(send_buf, recv_buf, count, datatype, op, comm);
     if (rank == 0) {
         end = MPI_Wtime();
-        std::cout << "myReduce time = " << end - start << std::endl;
+        std::cout << "myAllreduce time = " << end - start << std::endl;
     }
     return res;
 }
@@ -182,7 +194,7 @@ TEST(Parallel_Operations_MPI, Test_Length_One_Vector) {
 
     int vector_len = 1;
 
-    std::vector<int> Vector(vector_len, rank);
+    std::vector<int> Vector{ rank };
 
     std::vector<int> ARVector(vector_len);
     std::vector<int> myRVector(vector_len);

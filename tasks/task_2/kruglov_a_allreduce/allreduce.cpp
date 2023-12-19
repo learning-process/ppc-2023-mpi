@@ -26,7 +26,8 @@ std::vector<double> getRandomDoubleVector(int sz) {
 }
 
 template <typename T>
-static inline void doMPIOperations(T* store_buf, const T* temp_buf, int count, MPI_Op op) {
+static inline int doMPIOperations(T* store_buf, const T* temp_buf, int count, MPI_Op op) {
+    int ret = MPI_SUCCESS;
     if (op == MPI_MIN) {
         for (int i = 0; i < count; ++i) {
             store_buf[i] = std::min(store_buf[i], temp_buf[i]);
@@ -43,10 +44,14 @@ static inline void doMPIOperations(T* store_buf, const T* temp_buf, int count, M
         for (int i = 0; i < count; ++i) {
             store_buf[i] = store_buf[i] * temp_buf[i];
         }
+    } else {
+        ret = MPI_ERR_OP;
     }
+    return ret;
 }
 
-static inline void calculate(void* a, const void* b, int count, MPI_Datatype type, MPI_Op op) {
+static inline int calculate(void* a, const void* b, int count, MPI_Datatype type, MPI_Op op) {
+    int ret = MPI_SUCCESS;
     if (type == MPI_CHAR) {
         doMPIOperations<char>(reinterpret_cast<char*>(a), reinterpret_cast<const char*>(b), count, op);
     } else if (type == MPI_SHORT) {
@@ -70,13 +75,16 @@ static inline void calculate(void* a, const void* b, int count, MPI_Datatype typ
     } else if (type == MPI_LONG_DOUBLE) {
         doMPIOperations<long double>(reinterpret_cast<long double*>(a),
             reinterpret_cast<const long double*>(b), count, op);
+    } else {
+        ret = MPI_ERR_TYPE;
     }
+    return ret;
 }
 
 int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm) {
     int ret = MPI_SUCCESS;
     if (count <= 0) {
-        ret = MPI_ERR_BUFFER;
+        ret = MPI_ERR_COUNT;
         MPI_Abort(comm, ret);
         return ret;
     }
@@ -99,25 +107,36 @@ int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype da
 
     memcpy(recv_buf, send_buf, count * elem_size);
 
-    int iterpid = 0;
+    //int iterpid = 0;
 
-    for (; iterpid != rank; ++iterpid) {
-        MPI_Recv(temp_buf, count, datatype, iterpid, 0, comm, &status);
-        calculate(recv_buf, temp_buf, count, datatype, op);
-    }
+    //for (; iterpid != rank; ++iterpid) {
+    //    MPI_Recv(temp_buf, count, datatype, iterpid, 0, comm, &status);
+    //    calculate(recv_buf, temp_buf, count, datatype, op);
+    //}
 
-        ++iterpid;
+    //    ++iterpid;
 
-    for (int pid = 0; pid < size; ++pid) {
-        if (!(pid == rank)) {
-            MPI_Send(send_buf, count, datatype, pid, 0, comm);
+    //for (int pid = 0; pid < size; ++pid) {
+    //    if (!(pid == rank)) {
+    //        MPI_Send(send_buf, count, datatype, pid, 0, comm);
+    //    }
+    //}
+
+    //for (; iterpid < size; ++iterpid) {
+    //    MPI_Recv(temp_buf, count, datatype, iterpid, 0, comm, &status);
+    //    calculate(recv_buf, temp_buf, count, datatype, op);
+    //}
+
+    for (int i = 0; i < size; ++i)
+        if (rank != i) { 
+            if (ret = MPI_Send(send_buf, count, datatype, i, 0, comm) != MPI_SUCCESS) { return ret; }
         }
-    }
 
-    for (; iterpid < size; ++iterpid) {
-        MPI_Recv(temp_buf, count, datatype, iterpid, 0, comm, &status);
-        calculate(recv_buf, temp_buf, count, datatype, op);
-    }
+    for (int i = 0; i < size; ++i)
+        if (rank != i) { 
+            if (ret = MPI_Recv(temp_buf, count, datatype, i, 0, comm, &status) != MPI_SUCCESS) { return ret; }
+            calculate(recv_buf, temp_buf, count, datatype, op);
+        }
 
     return ret;
 }
