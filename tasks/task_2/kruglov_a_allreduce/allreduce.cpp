@@ -107,33 +107,13 @@ int myAllreduce(const void* send_buf, void* recv_buf, int count, MPI_Datatype da
 
     memcpy(recv_buf, send_buf, count * elem_size);
 
-    //int iterpid = 0;
-
-    //for (; iterpid != rank; ++iterpid) {
-    //    MPI_Recv(temp_buf, count, datatype, iterpid, 0, comm, &status);
-    //    calculate(recv_buf, temp_buf, count, datatype, op);
-    //}
-
-    //    ++iterpid;
-
-    //for (int pid = 0; pid < size; ++pid) {
-    //    if (!(pid == rank)) {
-    //        MPI_Send(send_buf, count, datatype, pid, 0, comm);
-    //    }
-    //}
-
-    //for (; iterpid < size; ++iterpid) {
-    //    MPI_Recv(temp_buf, count, datatype, iterpid, 0, comm, &status);
-    //    calculate(recv_buf, temp_buf, count, datatype, op);
-    //}
-
     for (int i = 0; i < size; ++i)
-        if (rank != i) { 
+        if (rank != i) {
             if (ret = MPI_Send(send_buf, count, datatype, i, 0, comm) != MPI_SUCCESS) { return ret; }
         }
 
     for (int i = 0; i < size; ++i)
-        if (rank != i) { 
+        if (rank != i) {
             if (ret = MPI_Recv(temp_buf, count, datatype, i, 0, comm, &status) != MPI_SUCCESS) { return ret; }
             calculate(recv_buf, temp_buf, count, datatype, op);
         }
