@@ -60,7 +60,6 @@ bool Image::operator==(const Image& other) const {
 }
 
 std::vector<Point> GetPoints() {
-
     std::vector<Point> Points;
     Points.push_back(Point(-1, 1));
     Points.push_back(Point(0, 1));
@@ -93,7 +92,6 @@ Image GetCustomImage() {
 }
 
 Image SmoothingSequential(const Image& source) {
-
     Image result(source.GetWidth(), source.GetHeight());
     auto Points = GetPoints();
 
@@ -114,7 +112,6 @@ Image SmoothingSequential(const Image& source) {
 }
 
 Image SmoothingParallel(const Image& source) {
-
     int rank, pCount;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &pCount);

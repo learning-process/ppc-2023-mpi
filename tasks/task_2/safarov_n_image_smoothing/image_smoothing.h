@@ -1,6 +1,6 @@
 // Copyright 2023 Safarov Nurlan
 #ifndef TASKS_TASK_2_SAFAROV_N_IMAGE_SMOOTHING_IMAGE_SMOOTHING_H_
-#ifndef TASKS_TASK_2_SAFAROV_N_IMAGE_SMOOTHING_IMAGE_SMOOTHING_H_
+#define TASKS_TASK_2_SAFAROV_N_IMAGE_SMOOTHING_IMAGE_SMOOTHING_H_
 
 #include <mpi.h>
 #include <stdio.h>
@@ -21,11 +21,13 @@ struct Point {
 
 class Image {
 private:
+
     std::vector<unsigned char> pixels;
     int width;
     int height;
 
 public:
+
     Image(int _width, int _height);
 
     int GetWidth() const;
