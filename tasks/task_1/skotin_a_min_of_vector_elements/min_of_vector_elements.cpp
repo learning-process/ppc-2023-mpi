@@ -1,5 +1,5 @@
 // Copyright 2023 Skotin Alexander
-#include "VectorMinFinder.h"
+#include "min_of_vector_elements.h"
 #include <mpi.h>
 #include <limits>
 #include <algorithm>
