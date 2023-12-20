@@ -20,10 +20,11 @@ std::vector<int> merge(const std::vector<int>& vecLeft, const std::vector<int>& 
     int i = 0, j = 0, k = 0;
 
     while ((i < vecLeft.size()) && (j < vecRight.size())) {
-        if (vecLeft[i] < vecRight[j])
+        if (vecLeft[i] < vecRight[j]) {
             result[k] = vecLeft[i++];
-        else
+        } else {
             result[k] = vecRight[j++];
+        }
         k++;
     }
 
