@@ -6,8 +6,6 @@
 #include <iostream>
 #include <vector>
 
-void test();
-
 struct TreeNode {
     int rank;
     TreeNode* parent;
