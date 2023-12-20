@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 
-
 TEST(broadcast, testInt) {
     int rank, size, root = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -163,5 +162,6 @@ int main(int argc, char** argv) {
     }
     result = RUN_ALL_TESTS();
     MPI_Finalize();
+
     return result;
 }
