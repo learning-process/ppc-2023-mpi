@@ -1,10 +1,7 @@
 // Copyright 2023 Ryabkov Vladislav
 
 #include "task_2/ryabkov_v_vertical_strip/strip_vertical_scheme.h"
-#include <mpi.h>
-#include <algorithm>
-#include <random>
-#include <vector>
+
 
 int* init_empty_matrix(int rows) {
     int* matrix = new int[rows];
