@@ -1,9 +1,9 @@
 // Copyright 2023 Skotin Alexander
 #include "task_1/skotin_a_min_of_vector_elements/min_of_vector_elements.h"
+#include <mpi.h>
 #include <random>
 #include <limits>
 #include <algorithm>
-#include <mpi.h>
 
 int VectorMinFinder::parallelMin(const std::vector<int>& data) {
     int localMin = std::numeric_limits<int>::max();
