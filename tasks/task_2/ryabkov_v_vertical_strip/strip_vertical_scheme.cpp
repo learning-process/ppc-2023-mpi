@@ -1,8 +1,8 @@
 // Copyright 2023 Ryabkov Vladislav
 
 #include "task_2/ryabkov_v_vertical_strip/strip_vertical_scheme.h"
-#include <algorithm>
 #include <mpi.h>
+#include <algorithm>
 #include <random>
 #include <vector>
 
@@ -52,8 +52,7 @@ void parallel_matrix_multiplication(const int* A, const int A_rows,
     int new_width = strip_width + remainder;
     if (rank == 0) {
         strip = new int[A_rows * new_width];
-    }
-    else {
+    } else {
         strip = new int[A_rows * strip_width];
     }
     local_vector = init_empty_matrix(A_rows);
@@ -66,8 +65,7 @@ void parallel_matrix_multiplication(const int* A, const int A_rows,
                 strip[j + i * new_width] = A[j + i * A_columns];
             }
         }
-    }
-    else {
+    } else {
         for (int i = 0; i < A_rows; i++) {
             MPI_Scatter(A + remainder + i * A_columns, strip_width, MPI_INT,
                 strip + i * strip_width, strip_width, MPI_INT, 0,
@@ -77,8 +75,7 @@ void parallel_matrix_multiplication(const int* A, const int A_rows,
     if (rank == 0) {
         sequential_matrix_multiplication(strip, A_rows, new_width, B, new_width,
             local_vector);
-    }
-    else {
+    } else {
         int* new_B = new int[strip_width];
         std::copy(B + strip_width * rank + remainder,
             B + strip_width * rank + remainder + strip_width, new_B);
