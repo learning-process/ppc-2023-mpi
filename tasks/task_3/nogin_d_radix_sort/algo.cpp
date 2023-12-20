@@ -90,14 +90,12 @@ std::vector<int> radixStep(const std::vector<int>& vec, int rad) {
 }
 
 std::vector<int> radixSort(const std::vector<int>& vec) {
-    std::vector<int> result;
     if (vec.size() < 2)
-        return result;
-
-    result = vec;
+        return vec;
 
     int radixNegative = 0;
     int maxRadixNegative = right(vec[0]);
+    std::vector<int> result(vec);
 
     for (int i = 1; i < vec.size(); ++i) {
         radixNegative = right(vec[i]);
@@ -128,9 +126,8 @@ std::vector<int> parallelRadixSort(const std::vector<int>& vec) {
     MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
     MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
 
-    std::vector<int> result;
     if (vec.size() < 2)
-        return result;
+        return vec;
 
     int size = vec.size();
     int count;
@@ -145,6 +142,7 @@ std::vector<int> parallelRadixSort(const std::vector<int>& vec) {
         count = (size / worldSize) + 1;
     }
 
+    std::vector<int> result;
     std::vector<int> recvbuf(count);
 
     if (recvbuf.size() == 0) {
