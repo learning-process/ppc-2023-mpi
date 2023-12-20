@@ -1,115 +1,67 @@
 // Copyright 2023 Skotin Alexander
 #include <gtest/gtest.h>
-#include <mpi.h>
-#include <vector>
-#include <cstdlib>
-#include <ctime>
 #include "task_1/skotin_a_min_of_vector_elements/min_of_vector_elements.h"
+#include <mpi.h>
 
-TEST(VectorMinFinderTest, TestWithFixedValues) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+TEST(VectorMinFinder, RandomVectorTest) {
+    VectorMinFinder finder;
+    auto vec = VectorMinFinder::generateRandomVector(1000);
 
-    VectorMinFinder minFinder;
-    std::vector<int> vector = {15, 6, -3, 12, 9, -5, 10, 7};
-    int parallelResult = minFinder.findMinParallel(vector);
-
-    if (rank == 0) {
-        int sequentialResult = VectorMinFinder::findMinSequential(vector);
-        ASSERT_EQ(parallelResult, sequentialResult);
-    }
+    int parallelResult = finder.parallelMin(vec);
+    int sequentialResult = VectorMinFinder::sequentialMin(vec);
+    ASSERT_EQ(sequentialResult, parallelResult);
 }
 
-TEST(VectorMinFinderTest, TestWithOnlyPositiveValues) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+TEST(VectorMinFinder, FixedVectorTest) {
+    VectorMinFinder finder;
+    std::vector<int> vec = { 15, 6, -3, 12, 9, -5, 10, 7 };
 
-    VectorMinFinder minFinder;
-    std::vector<int> vector = {10, 20, 30, 40, 50};
-    int parallelResult = minFinder.findMinParallel(vector);
-
-    if (rank == 0) {
-        int sequentialResult = VectorMinFinder::findMinSequential(vector);
-        ASSERT_EQ(parallelResult, sequentialResult);
-    }
+    int parallelResult = finder.parallelMin(vec);
+    int sequentialResult = VectorMinFinder::sequentialMin(vec);
+    ASSERT_EQ(sequentialResult, parallelResult);
 }
 
-TEST(VectorMinFinderTest, TestWithOnlyNegativeValues) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+TEST(VectorMinFinder, EmptyVectorTest) {
+    VectorMinFinder finder;
+    std::vector<int> vec;
 
-    VectorMinFinder minFinder;
-    std::vector<int> vector = {-1, -2, -3, -4, -5};
-    int parallelResult = minFinder.findMinParallel(vector);
-
-    if (rank == 0) {
-        int sequentialResult = VectorMinFinder::findMinSequential(vector);
-        ASSERT_EQ(parallelResult, sequentialResult);
-    }
+    int parallelResult = finder.parallelMin(vec);
+    ASSERT_EQ(std::numeric_limits<int>::max(), parallelResult);
 }
 
-TEST(VectorMinFinderTest, TestWithSingleElement) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+TEST(VectorMinFinder, SingleElementVectorTest) {
+    VectorMinFinder finder;
+    std::vector<int> vec = { 42 };
 
-    VectorMinFinder minFinder;
-    std::vector<int> vector = {42};
-    int parallelResult = minFinder.findMinParallel(vector);
-
-    if (rank == 0) {
-        int sequentialResult = VectorMinFinder::findMinSequential(vector);
-        ASSERT_EQ(parallelResult, sequentialResult);
-    }
+    int parallelResult = finder.parallelMin(vec);
+    int sequentialResult = VectorMinFinder::sequentialMin(vec);
+    ASSERT_EQ(sequentialResult, parallelResult);
 }
 
-TEST(VectorMinFinderTest, TestWithEmptyVector) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+TEST(VectorMinFinder, LargeVectorTest) {
+    VectorMinFinder finder;
+    auto vec = VectorMinFinder::generateRandomVector(1000000);
 
-    VectorMinFinder minFinder;
-    std::vector<int> vector;
-    int parallelResult = minFinder.findMinParallel(vector);
-
-    if (rank == 0) {
-        int sequentialResult = VectorMinFinder::findMinSequential(vector);
-        ASSERT_EQ(parallelResult, sequentialResult);
-    }
+    int parallelResult = finder.parallelMin(vec);
+    int sequentialResult = VectorMinFinder::sequentialMin(vec);
+    ASSERT_EQ(sequentialResult, parallelResult);
 }
 
-TEST(VectorMinFinderTest, TestWithRandomValues) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+TEST(VectorMinFinder, NegativeValuesVectorTest) {
+    VectorMinFinder finder;
+    auto vec = VectorMinFinder::generateRandomVector(500, -1000, -1);
 
-    VectorMinFinder minFinder;
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    size_t size = 1000;
-    std::vector<int> vector(size);
-    std::generate(vector.begin(), vector.end(), []() { return std::rand() % 1000 - 500; });
-
-    int parallelResult = minFinder.findMinParallel(vector);
-
-    if (rank == 0) {
-        int sequentialResult = VectorMinFinder::findMinSequential(vector);
-        ASSERT_EQ(parallelResult, sequentialResult);
-    }
+    int parallelResult = finder.parallelMin(vec);
+    int sequentialResult = VectorMinFinder::sequentialMin(vec);
+    ASSERT_EQ(sequentialResult, parallelResult);
 }
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     MPI_Init(&argc, &argv);
 
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
-
-    if (rank != 0) {
-        delete listeners.Release(listeners.default_result_printer());
-    }
-
     int result = RUN_ALL_TESTS();
-    MPI_Finalize();
 
+    MPI_Finalize();
     return result;
 }
-
-
