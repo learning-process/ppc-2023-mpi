@@ -1,6 +1,6 @@
 // Copyright 2023 Ryabkov Vladislav
 
-#include "tasks/task_3/ryabkov_v_batcher_sort/q_batcher_sort.h"
+#include "tasks/task_3/ryabkov_v_q_batcher_sort/q_batcher_sort.h"
 
 
 vector<int> GenRndArr(int size) {
