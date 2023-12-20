@@ -1,7 +1,7 @@
 // Copyright 2023 Dostavalov Semen
 #include <gtest/gtest.h>
 #include <cmath>
-#include "task_1/dostavalov_s_monte_carlo_method/gtest-mpi-listener.hpp"
+#include <mpi.h>
 #include "task_1/dostavalov_s_monte_carlo_method/monte_carlo.h"
 
 double f1(double x) { return (pow(x, 2)); }
