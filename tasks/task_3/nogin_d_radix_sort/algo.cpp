@@ -38,52 +38,36 @@ std::vector<int> merge(const std::vector<int>& vecLeft, const std::vector<int>& 
     return result;
 }
 
-int getNumber(int num, int rad) {
-    if (rad > 0) {
-        int mask = pow(10, rad);
-        int tmp = num / mask;
-
-        return tmp % 10;
+int getMax(const std::vector<int>& vec) {
+    int max = vec[0];
+    for (int i = 1; i < vec.size(); ++i) {
+        if (vec[i] > max) {
+            max = vec[i];
+        }
     }
-
-    return  static_cast<int>(num * pow(10, (-rad))) % 10;
+    return max;
 }
 
-int right(int num) {
-    std::ostringstream strs;
-    strs << num;
-    std::string str = strs.str();
-
-    if (str.find('.')) {
-        return -((str.find('.')) - (str.size())) - 1;
-    } else {
-        return 0;
-    }
+int getDigit(int num, int place) {
+    return num / static_cast<int>(std::pow(10, place)) % 10;
 }
 
-int left(int num) {
-    int numRadix = 0;
-
-    while (num > 1) {
-        num /= 10;
-        numRadix++;
-    }
-
-    return numRadix;
-}
-
-std::vector<int> radixStep(const std::vector<int>& vec, int rad) {
-    std::vector<int> result;
-    std::vector <std::vector<int>> radix(10);
+std::vector<int> countingSort(const std::vector<int>& vec, int place) {
+    int base = 10;
+    std::vector<int> result(vec.size());
+    std::vector<int> count(base, 0);
 
     for (int i = 0; i < vec.size(); ++i) {
-        radix[getNumber(vec[i], rad)].push_back(vec[i]);
+        count[getDigit(vec[i], place)]++;
     }
 
-    for (int i = 0; i < radix.size(); ++i) {
-        for (int j = 0; j < radix[i].size(); ++j) {
-            result.push_back(radix[i][j]);
-        }
+    for (int i = 1; i < base; ++i) {
+        count[i] += count[i - 1];
+    }
+
+    for (int i = vec.size() - 1; i >= 0; --i) {
+        result[count[getDigit(vec[i], place)] - 1] = vec[i];
+        count[getDigit(vec[i], place)]--;
     }
 
     return result;
@@ -93,28 +77,13 @@ std::vector<int> radixSort(const std::vector<int>& vec) {
     if (vec.size() < 2)
         return vec;
 
-    int radixNegative = 0;
-    int maxRadixNegative = right(vec[0]);
+    int max = getMax(vec);
+    int maxDigits = static_cast<int>(std::log10(max)) + 1;
+
     std::vector<int> result(vec);
 
-    for (int i = 1; i < vec.size(); ++i) {
-        radixNegative = right(vec[i]);
-        if (maxRadixNegative < radixNegative) {
-            maxRadixNegative = radixNegative;
-        }
-    }
-
-    int max = vec[0];
-    for (int i = 1; i < vec.size(); ++i) {
-        if (vec[i] > max) {
-            max = vec[i];
-        }
-    }
-
-    int maxRadixPositive = left(max);
-
-    for (int i = -maxRadixNegative; i <= maxRadixPositive; ++i) {
-        result = radixStep(result, i);
+    for (int i = 0; i < maxDigits; ++i) {
+        result = countingSort(result, i);
     }
 
     return result;

@@ -11,13 +11,12 @@
 #include <sstream>
 #include <vector>
 
-int left(int num);
-int right(int num);
-int getNumber(int num, int rad);
-std::vector<int> randomVector(int sizeVec, int minValue, int maxValue);
-std::vector<int> radixStep(const std::vector<int>& vec, int rad);
+int getDigit(int num, int place);
+int getMax(const std::vector<int>& vec);
+std::vector<int> countingSort(const std::vector<int>& vec, int place);
 std::vector<int> radixSort(const std::vector<int>& vec);
 std::vector<int> parallelRadixSort(const std::vector<int>& vec);
 std::vector<int> merge(const std::vector<int>& left, const std::vector<int>& right);
+std::vector<int> randomVector(int sizeVec, int minValue, int maxValue);
 
 #endif  // TASKS_TASK_3_NOGIN_D_RADIX_SORT_ALGO_H_
