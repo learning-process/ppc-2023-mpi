@@ -70,7 +70,11 @@ TEST(MPI_TESTS, Test_First_To_Last) {
     
     std::vector<int> expected = {1, 0, 1};
 
-    if (calculateGridSize(size, rows, cols)) {
+    std::pair<int, int> sizeGrid = calculateGridSize(size);
+    rows = sizeGrid.first;
+    cols = sizeGrid.second;
+
+    if (rows != -1) {
         std::vector<int> data = {0, 0, 0};
         if (rank == 0) {
             data = {1, 0, 1};
@@ -89,10 +93,14 @@ TEST(MPI_TESTS, Test_Last_To_First) {
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    
+
     std::vector<int> expected = {2, 0, 2};
 
-    if (calculateGridSize(size, rows, cols)) {
+    std::pair<int, int> sizeGrid = calculateGridSize(size);
+    rows = sizeGrid.first;
+    cols = sizeGrid.second;
+
+    if (rows != -1) {
         std::vector<int> data = {0, 0, 0};
         if (rank == size - 1) {
             data = {2, 0, 2};
@@ -111,10 +119,14 @@ TEST(MPI_TESTS, Test_First_To_Neighbour) {
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    
+
     std::vector<int> expected = {3, 0, 3};
 
-    if (calculateGridSize(size, rows, cols)) {
+    std::pair<int, int> sizeGrid = calculateGridSize(size);
+    rows = sizeGrid.first;
+    cols = sizeGrid.second;
+
+    if (rows != -1) {
         std::vector<int> data = {0, 0, 0};
         if (rank == 0) {
             data = {3, 0, 3};
@@ -133,10 +145,14 @@ TEST(MPI_TESTS, Test_Neighbour_To_First) {
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    
+
     std::vector<int> expected = {4, 0, 4};
 
-    if (calculateGridSize(size, rows, cols)) {
+    std::pair<int, int> sizeGrid = calculateGridSize(size);
+    rows = sizeGrid.first;
+    cols = sizeGrid.second;
+
+    if (rows != -1) {
         std::vector<int> data = {0, 0, 0};
         if (rank == 1) {
             data = {4, 0, 4};

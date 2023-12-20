@@ -10,7 +10,6 @@ int getNext(int rows, int cols, int rank, int rankDestination) {
 
     int horizontalDistance = rankDestination % rows - rank % rows;
     int verticalDistance = rankDestination / rows - rank / rows;
-    
     if (horizontalDistance != 0) {
         int sign = (horizontalDistance > 0) ? 1 : ((horizontalDistance < 0) ? -1 : 0);
         if (horizontalDistance < sign * cols - horizontalDistance) {
@@ -34,31 +33,30 @@ int getNext(int rows, int cols, int rank, int rankDestination) {
     }
 }
 
-bool calculateGridSize(int numProcesses, int& rows, int& cols) {
+std::pair<int, int> calculateGridSize(int numProcesses) {
+    int rows, cols;
     int gridSize = static_cast<int>(std::sqrt(numProcesses));
     while (gridSize > 1) {
         if (numProcesses % gridSize == 0) {
             rows = gridSize;
             cols = numProcesses / gridSize;
-            return true;
+            return std::make_pair(rows, cols);
         }
         gridSize--;
     }
-    return false;
+    return std::make_pair(-1, -1);
 }
 
 std::pair<std::vector<int>, std::vector<int>> getPath(int rows, int cols, int senderRank, int receiverRank) {
     std::vector<int> path; 
     std::vector<int> transitions(rows * cols, -1);
     std::vector<int> expectations(rows * cols, -1);
-    
     path.push_back(senderRank);
     int nextRank = senderRank;
     while (nextRank != receiverRank) {
         nextRank = getNext(rows, cols, nextRank, receiverRank);
         path.push_back(nextRank);
     }
-    
     for (int i = 0; i < path.size(); i++) {
         if (i != path.size() - 1) {
             expectations[path[i]] = path[i + 1];
@@ -70,7 +68,8 @@ std::pair<std::vector<int>, std::vector<int>> getPath(int rows, int cols, int se
     return std::make_pair(transitions, expectations);
 }
 
-void sendDataUsingGridTorus(void* data, int count, MPI_Datatype datatype, int senderRank, int receiverRank, int rows, int cols, int tag, MPI_Comm comm) {
+void sendDataUsingGridTorus(void* data, int count, MPI_Datatype datatype, int senderRank, int receiverRank, 
+                            int rows, int cols, int tag, MPI_Comm comm) {
     int process_num;
     MPI_Comm_size(comm, &process_num);
 
@@ -80,7 +79,6 @@ void sendDataUsingGridTorus(void* data, int count, MPI_Datatype datatype, int se
     std::pair<std::vector<int>, std::vector<int>> shortPath = getPath(rows, cols, senderRank, receiverRank);
     std::vector<int> senders = shortPath.first;
     std::vector<int> requesters = shortPath.second;
-    
     if (rank == senderRank) {
         MPI_Send(data, count, datatype, requesters[rank], tag, comm);
     } else if (rank == receiverRank) {
@@ -94,4 +92,3 @@ void sendDataUsingGridTorus(void* data, int count, MPI_Datatype datatype, int se
         }
     }
 }
-
