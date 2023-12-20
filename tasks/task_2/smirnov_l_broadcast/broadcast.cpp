@@ -44,11 +44,11 @@ Tree::~Tree() {
 
 void broadcast(void* data, int count,
     MPI_Datatype datatype, int root, MPI_Comm comm) {
-    int rank;
-    MPI_Comm_rank(comm, &rank);
-
     int size;
     MPI_Comm_size(comm, &size);
+
+    int rank;
+    MPI_Comm_rank(comm, &rank);
 
     if (rank == root) {
         for (size_t i = 0; i < size; i++) {
