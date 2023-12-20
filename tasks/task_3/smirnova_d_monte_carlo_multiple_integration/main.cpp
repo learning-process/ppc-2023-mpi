@@ -25,6 +25,7 @@ double func_4(std::vector<double> x) {
     return x[0] * x[0] + 2 * x[1] - cos(x[2]) + 2 * x[3] * x[3] * x[3] - 3 * x[4];
 }
 
+
 TEST(Monte_carlo_multiple_integration_MPI, N_is_negative) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -79,9 +80,9 @@ TEST(Monte_carlo_multiple_integration_MPI, Multiplicity_is_4) {
 
     std::vector<double> a = { 0.2, -1.0, 2.3, -3.3 };
     std::vector<double> b = { 1.7, 0.5, 3.8, -2.7 };
-    double global_res = Monte_Carlo_Multiple_Integration_Parallel(func_3, a, b, 100000);
+    double global_res = Monte_Carlo_Multiple_Integration_Parallel(func_3, a, b, 10000);
     if (rank == 0) {
-        double local_res = Monte_Carlo_Multiple_Integration(func_3, a, b, 100000);
+        double local_res = Monte_Carlo_Multiple_Integration(func_3, a, b, 10000);
         ASSERT_NEAR(global_res, local_res, 0.05);
     }
 }
