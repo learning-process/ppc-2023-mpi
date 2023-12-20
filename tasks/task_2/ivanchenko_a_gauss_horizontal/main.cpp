@@ -1,8 +1,5 @@
 // Copyright 2023 Ivanchenko Aleksei
 #include <gtest/gtest.h>
-#include <vector>
-#include <algorithm>
-#include <random>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
@@ -147,7 +144,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_small_1) {
     A[0*size + 0] = 1.0; A[0*size + 1] = 2.0; A[0*size + 2] = 0; A[0*size + 3] = 0;
     A[1*size + 0] = 1.0; A[1*size + 1] = 3.0; A[1*size + 2] = 1.0; A[1*size + 3] = 0.0;
     A[2*size + 0] = 0; A[2*size + 1] = 0; A[2*size + 2] = 2.0; A[2*size + 3] = 3.0;
-    A[3*size + 0] = 1.0; A[3*size + 1] = 1.0; A[3*size + 2] = 1.0; A[3, 3] = 1.0;
+    A[3*size + 0] = 1.0; A[3*size + 1] = 1.0; A[3*size + 2] = 1.0; A[3*size + 3] = 1.0;
 
     // Define the right-hand side vector b
     std::vector<double>b(size);

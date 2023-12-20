@@ -69,7 +69,7 @@ std::vector<double>gaussParallel(std::vector<double>A,
     boost::mpi::broadcast(comm, &A[0], size*size, 0);
     boost::mpi::broadcast(comm, &b[0], size, 0);
 
-    size_t m[size];
+    std::vector<size_t> m(size);
     for (int i = 0; i < size; i++) {
         m[i] = i % comm.size();
     }
