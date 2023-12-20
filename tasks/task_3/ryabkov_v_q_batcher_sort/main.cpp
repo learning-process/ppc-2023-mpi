@@ -1,5 +1,6 @@
 // Copyright 2023 Ryabkov Vladislav
 #include <gtest/gtest.h>
+#include <vector>
 #include "./q_batcher_sort.h"
 
 using std::vector;
