@@ -14,7 +14,8 @@ std::vector<uint8_t> generateImg(size_t width, size_t height, uint8_t min_, uint
   return img;
 }
 
-void incContrastImg(std::vector<uint8_t>* img, uint8_t oldMin, uint8_t oldMax, uint8_t newMin, uint8_t newMax) {
+void incContrastImg(std::vector<uint8_t>* img, uint8_t oldMin,
+                     uint8_t oldMax, uint8_t newMin, uint8_t newMax) {
   if (oldMin == oldMax || img->empty())
     return;
   for (auto& pixel : *img) {
@@ -27,7 +28,8 @@ void incContrastImg(std::vector<uint8_t>* img, uint8_t oldMin, uint8_t oldMax, u
   }
 }
 
-void parIncContrastImg(std::vector<uint8_t>* img, size_t width, size_t height, uint8_t newMin, uint8_t newMax, MPI_Comm comm) {
+void parIncContrastImg(std::vector<uint8_t>* img, size_t width, size_t height,
+                       uint8_t newMin, uint8_t newMax, MPI_Comm comm) {
   int rank;
   int size;
   size_t pixelNumber = img->size();
@@ -44,12 +46,11 @@ void parIncContrastImg(std::vector<uint8_t>* img, size_t width, size_t height, u
       ++elemsCounts[i];
     displs[i] = i == 0 ? 0 : displs[i - 1] + elemsCounts[i - 1];
   }
-  uint8_t globalMin = 255;
-  uint8_t globalMax = 0;
+  uint8_t globalMin = 255, globalMax = 0;
+  uint8_t locMin = 255, locMax = 0;
   std::vector<uint8_t> locImg(elemsCounts[rank]);
-  MPI_Scatterv(img->data(), elemsCounts.data(), displs.data(), MPI_UINT8_T, locImg.data(), elemsCounts[rank], MPI_UINT8_T, 0, comm);
-  uint8_t locMin = 255;
-  uint8_t locMax = 0;
+  MPI_Scatterv(img->data(), elemsCounts.data(), displs.data(), MPI_UINT8_T,
+               locImg.data(), elemsCounts[rank], MPI_UINT8_T, 0, comm);
   if (!locImg.empty()) {
     locMin = *std::min_element(locImg.begin(), locImg.end());
     locMax = *std::max_element(locImg.begin(), locImg.end());
@@ -57,5 +58,6 @@ void parIncContrastImg(std::vector<uint8_t>* img, size_t width, size_t height, u
   MPI_Allreduce(&locMin, &globalMin, 1, MPI_UINT8_T, MPI_MIN, comm);
   MPI_Allreduce(&locMax, &globalMax, 1, MPI_UINT8_T, MPI_MAX, comm);
   incContrastImg(&locImg, globalMin, globalMax, newMin, newMax);
-  MPI_Gatherv(locImg.data(), elemsCounts[rank], MPI_UINT8_T, img->data(), elemsCounts.data(), displs.data(), MPI_UINT8_T, 0, comm);
+  MPI_Gatherv(locImg.data(), elemsCounts[rank], MPI_UINT8_T, img->data(),
+               elemsCounts.data(), displs.data(), MPI_UINT8_T, 0, comm);
 }
