@@ -4,6 +4,7 @@
 #include <random>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
+#include "matrix_column_max.h"
 
 std::pair<int, int> getColIndexAndCount(size_t columns, int rank);
 std::vector<int> getRandomMatrix(int rows, int columns) {
@@ -17,7 +18,7 @@ std::vector<int> getRandomMatrix(int rows, int columns) {
     return matrix;
 }
 
-std::vector<int> getSequentialMaxInColumns(std::vector<int>&matrix, size_t rows, size_t columns) {
+std::vector<int> getSequentialMaxInColumns(std::vector<int>matrix, size_t rows, size_t columns) {
     std::vector<int> maxValues(columns, std::numeric_limits<int>::min());
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
@@ -27,7 +28,7 @@ std::vector<int> getSequentialMaxInColumns(std::vector<int>&matrix, size_t rows,
     return maxValues;
 }
 
-std::vector<int> getParallelMaxInColumns(std::vector<int>&matrix, size_t rows, size_t columns) {
+std::vector<int> getParallelMaxInColumns(std::vector<int>matrix, size_t rows, size_t columns) {
     boost::mpi::communicator world;
     if (world.rank() != 0) {
         matrix.resize(rows*columns);
