@@ -3,7 +3,7 @@
 #include <random>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
-#include "tasks/task_1/martynov_a_min_of_vector_elements/min_vector_elements.h"
+#include "../tasks/task_1/martynov_a_min_of_vector_elements/min_vector_elements.h"
 
 int get_minimal_elem(const std::vector<int>& init_vec, size_t vec_size) {
   if (vec_size == 0)
