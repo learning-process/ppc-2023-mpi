@@ -1,7 +1,7 @@
 // Copyright 2023 Ulyanov Daniil
 #include <gtest/gtest.h>
 #include <mpi.h>
-#include "find_min.h"
+#include "task_3/ulyanov_d_find_min/find_min.h"
 
 TEST(find_min, test1) {
   int rank, count;

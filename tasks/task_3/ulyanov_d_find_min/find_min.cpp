@@ -1,5 +1,5 @@
 // Copyright 2023 Ulyanov Daniil
-#include "task_3/Ulyanov_d_find_min/find_min.h"
+#include "task_3/ulyanov_d_find_min/find_min.h"
 
 double getMParam(
   const std::vector<double>& x_cords,
@@ -70,7 +70,7 @@ double findMinSeq(double a, double b,
       return func(next_point_x);
 
     sorted_x_cords.insert(std::upper_bound(
-      sorted_x_cords.begin(),sorted_x_cords.end(),
+      sorted_x_cords.begin(), sorted_x_cords.end(),
       next_point_x), next_point_x);
   }
   return 9999999999999999999;
@@ -129,8 +129,7 @@ double findMinPar(double a, double b,
 
       if (rank != 0) {
         MPI_Send(&next_point_x, 1, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD);
-      }
-      else {
+      } else {
         for (int i = 1; i < count_work_proc; i++) {
           double recv_next_point_x;
           MPI_Status status;
