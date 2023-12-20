@@ -31,7 +31,6 @@ TEST(linear_MPI, Test2) {
 
     MPI_Comm_rank(MPI_COMM_WORLD, &processRank);
     MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
-
     const int senderRank = worldSize - 1;
     const int receiverRank = 0;
 
