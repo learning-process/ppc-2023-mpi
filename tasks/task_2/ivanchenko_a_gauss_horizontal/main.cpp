@@ -7,7 +7,7 @@
 
 TEST(GAUSS_HORIZONTAL, test_sequential) {
     boost::mpi::communicator comm;
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         size_t size = 3;
         // Define the coefficient matrix A
         std::vector<double>A(size * size);
@@ -35,7 +35,7 @@ TEST(GAUSS_HORIZONTAL, test_sequential) {
 }
 TEST(GAUSS_HORIZONTAL, test_sequential_2) {
     boost::mpi::communicator comm;
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         size_t size = 16;
         // Define the coefficient matrix A
         std::vector<double>A(size * size);
@@ -93,7 +93,7 @@ TEST(GAUSS_HORIZONTAL, test_sequential_2) {
 }
 TEST(GAUSS_HORIZONTAL, test_sequential_3) {
     boost::mpi::communicator comm;
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         size_t size = 4;
         // Define the coefficient matrix A
         std::vector<double>A(size * size);
@@ -125,8 +125,8 @@ TEST(GAUSS_HORIZONTAL, test_sequential_3) {
 TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_3) {
     boost::mpi::communicator comm;
     size_t size = 3;
-    std::vector<double> A (size * size);
-    std::vector<double> b (size), expected(size);
+    std::vector<double> A(size * size);
+    std::vector<double> b(size), expected(size);
     if (comm.rank() == 0) {
         A = getRandomMatrix(size, size);
         b = getRandomVector(size);
@@ -134,7 +134,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_3) {
 
     std::vector<double>actual = gaussParallel(A, b);
 
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         expected = gaussSequentional(A, b);
         for (int i = 0; i < expected.size(); i++) {
             EXPECT_FLOAT_EQ(expected[i], actual[i]);
@@ -144,8 +144,8 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_3) {
 TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_19) {
     boost::mpi::communicator comm;
     size_t size = 19;
-    std::vector<double> A (size * size);
-    std::vector<double> b (size), expected(size);
+    std::vector<double> A(size * size);
+    std::vector<double> b(size), expected(size);
     if (comm.rank() == 0) {
         A = getRandomMatrix(size, size);
         b = getRandomVector(size);
@@ -153,7 +153,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_19) {
 
     std::vector<double>actual = gaussParallel(A, b);
 
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         expected = gaussSequentional(A, b);
         for (int i = 0; i < expected.size(); i++) {
             EXPECT_FLOAT_EQ(expected[i], actual[i]);
@@ -163,8 +163,8 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_19) {
 TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_24) {
     boost::mpi::communicator comm;
     size_t size = 24;
-    std::vector<double> A (size * size);
-    std::vector<double> b (size), expected(size);
+    std::vector<double> A(size * size);
+    std::vector<double> b(size), expected(size);
     if (comm.rank() == 0) {
         A = getRandomMatrix(size, size);
         b = getRandomVector(size);
@@ -172,7 +172,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_24) {
 
     std::vector<double>actual = gaussParallel(A, b);
 
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         expected = gaussSequentional(A, b);
         for (int i = 0; i < expected.size(); i++) {
             EXPECT_FLOAT_EQ(expected[i], actual[i]);
@@ -182,8 +182,8 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_24) {
 TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_29) {
     boost::mpi::communicator comm;
     size_t size = 29;
-    std::vector<double> A (size * size);
-    std::vector<double> b (size), expected(size);
+    std::vector<double> A(size * size);
+    std::vector<double> b(size), expected(size);
     if (comm.rank() == 0) {
         A = getRandomMatrix(size, size);
         b = getRandomVector(size);
@@ -191,7 +191,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_29) {
 
     std::vector<double>actual = gaussParallel(A, b);
 
-    if(comm.rank() == 0) {
+    if (comm.rank() == 0) {
         expected = gaussSequentional(A, b);
         for (int i = 0; i < expected.size(); i++) {
             EXPECT_FLOAT_EQ(expected[i], actual[i]);
