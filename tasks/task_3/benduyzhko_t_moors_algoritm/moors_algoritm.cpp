@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <limits>
+#include <climits>
 #include "task_3/benduyzhko_t_moors_algoritm/moors_algoritm.h"
 
 static int offset = 0;
