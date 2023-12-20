@@ -47,6 +47,7 @@ void broadcast(void* data, int count,
     int rank;
     MPI_Comm_rank(comm, &rank);
     int size;
+    // ***
     MPI_Comm_size(comm, &size);
     if (rank == root) {
         for (size_t i = 0; i < size; i++) {
