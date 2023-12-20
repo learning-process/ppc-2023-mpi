@@ -18,7 +18,7 @@ std::vector<int> getRandomMatrix(int rows, int columns) {
     return matrix;
 }
 
-std::vector<int> getSequentialMaxInColumns(std::vector<int>matrix, size_t rows, size_t columns) {
+std::vector<int> getSequentialMaxInColumns(const std::vector<int>&matrix, size_t rows, size_t columns) {
     std::vector<int> maxValues(columns, std::numeric_limits<int>::min());
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
@@ -28,8 +28,9 @@ std::vector<int> getSequentialMaxInColumns(std::vector<int>matrix, size_t rows, 
     return maxValues;
 }
 
-std::vector<int> getParallelMaxInColumns(std::vector<int>matrix, size_t rows, size_t columns) {
+std::vector<int> getParallelMaxInColumns(const std::vector<int>&matrixc, size_t rows, size_t columns) {
     boost::mpi::communicator world;
+    std::vector<int>matrix(matrixc);
     if (world.rank() != 0) {
         matrix.resize(rows*columns);
     }
