@@ -48,7 +48,7 @@ std::pair<int, int> calculateGridSize(int numProcesses) {
 }
 
 std::pair<std::vector<int>, std::vector<int>> getPath(int rows, int cols, int senderRank, int receiverRank) {
-    std::vector<int> path; 
+    std::vector<int> path;
     std::vector<int> transitions(rows * cols, -1);
     std::vector<int> expectations(rows * cols, -1);
     path.push_back(senderRank);
@@ -68,7 +68,7 @@ std::pair<std::vector<int>, std::vector<int>> getPath(int rows, int cols, int se
     return std::make_pair(transitions, expectations);
 }
 
-void sendDataUsingGridTorus(void* data, int count, MPI_Datatype datatype, int senderRank, int receiverRank, 
+void sendDataUsingGridTorus(void* data, int count, MPI_Datatype datatype, int senderRank, int receiverRank,
                             int rows, int cols, int tag, MPI_Comm comm) {
     int process_num;
     MPI_Comm_size(comm, &process_num);

@@ -11,7 +11,7 @@
 int getNext(int rows, int cols, int rank, int rankDestination);
 std::pair<int, int> calculateGridSize(int numProcesses);
 std::pair<std::vector<int>, std::vector<int>> getPath(int rows, int cols, int senderRank, int receiverRank);
-void sendDataUsingGridTorus(void* data, int count, MPI_Datatype datatype, int senderRank, int receiverRank, 
+void sendDataUsingGridTorus(void* data, int count, MPI_Datatype datatype, int senderRank, int receiverRank,
                             int rows, int cols, int tag, MPI_Comm comm);
 
 
