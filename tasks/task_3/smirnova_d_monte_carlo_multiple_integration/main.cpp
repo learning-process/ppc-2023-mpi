@@ -25,7 +25,6 @@ double func_4(std::vector<double> x) {
     return x[0] * x[0] + 2 * x[1] - cos(x[2]) + 2 * x[3] * x[3] * x[3] - 3 * x[4];
 }
 
-
 TEST(Monte_carlo_multiple_integration_MPI, N_is_negative) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -86,7 +85,7 @@ TEST(Monte_carlo_multiple_integration_MPI, Multiplicity_is_4) {
     ASSERT_NEAR(global_res, local_res, 0.05);
   }
 }
-
+/***/
 int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
