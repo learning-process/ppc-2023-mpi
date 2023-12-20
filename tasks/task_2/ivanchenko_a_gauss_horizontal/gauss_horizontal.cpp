@@ -6,80 +6,101 @@
 #include <boost/mpi/collectives.hpp>
 #include "task_2/ivanchenko_a_gauss_horizontal/gauss_horizontal.h"
 
-boost::numeric::ublas::vector<double>getRandomVector(size_t size, int minElem, int maxElem) {
+std::vector<double>getRandomVector(size_t size, int minElem, int maxElem) {
     std::random_device rd;
     std::uniform_int_distribution<int> unif(minElem, maxElem);
 
-    boost::numeric::ublas::vector<double>vec(size);
+    std::vector<double>vec(size);
     for (int  i = 0; i < size; i++) {
-        vec(i) = unif(rd);
+        vec[i] = unif(rd);
     }
     return vec;
 }
-boost::numeric::ublas::matrix<double>getRandomMatrix(size_t rows, size_t columns, int minElem, int maxElem) {
+std::vector<double>getRandomMatrix(size_t rows, size_t columns, int minElem, int maxElem) {
     std::random_device rd;
     std::uniform_int_distribution<int> unif(minElem, maxElem);
-    boost::numeric::ublas::matrix<double>m(rows, columns);
+    std::vector<double>m(rows * columns);
     int i, j;
     for (i = 0; i < rows; i++)
         for (j = 0; j < columns; j++)
-            m(i, j) = unif(rd);
+            m[i*columns + j] = unif(rd);
 
     return m;
 }
-boost::numeric::ublas::vector<double>gaussSequentional(boost::numeric::ublas::matrix<double>A,
- boost::numeric::ublas::vector<double>b) {
-    // Solve the system of equations
-    boost::numeric::ublas::permutation_matrix<std::size_t> pm(A.size1());
-    lu_factorize(A, pm);
-    lu_substitute(A, pm, b);
-    return b;
+std::vector<double>gaussSequentional(std::vector<double> A,
+ std::vector<double> b) {
+    const size_t size = b.size();
+
+    std::vector<double>res(size);
+    std::vector<double>c(size, 0);
+    // forward
+    for (int k = 0; k < size; k++) {
+        for (int i = k + 1; i < size; i++) {
+            c[i] = A[i*size + k] / A[k * size + k];
+        }
+        for (int i = k + 1; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                A[i*size + j] = A[i*size + j] - c[i] * A[k*size + j];
+            }
+            b[i] = b[i] - c[i] * b[k];
+        }
+    }
+    // back
+    res[size - 1] = b[size - 1] / A[(size - 1) * size + size - 1];
+    for (int i = size - 2; i >= 0; i--) {
+        double sum = 0;
+        for (int j = i + 1; j < size; j++) {
+            sum = sum + A[i*size + j] * res[j];
+        }
+        res[i] = (b[i]-sum) / A[i*size + i];
+    }
+
+    return res;
 }
-boost::numeric::ublas::vector<double>gaussParallel(boost::numeric::ublas::matrix<double>A,
- boost::numeric::ublas::vector<double>b) {
+std::vector<double>gaussParallel(std::vector<double>A,
+ std::vector<double>b) {
     boost::mpi::communicator comm;
 
 
-    size_t rows = A.size1(), columns = A.size2();
-    // assert rows == columns
-    const size_t N = rows;
+    const size_t size = b.size();
 
-    if (N < comm.size()) return gaussSequentional(A, b);
-    boost::numeric::ublas::vector<double>res(N);
-    boost::mpi::broadcast(comm, A, 0);
-    boost::mpi::broadcast(comm, b, 0);
+    if (size < comm.size()) return gaussSequentional(A, b);
+    std::vector<double>res(size);
+    boost::mpi::broadcast(comm, &A[0], size*size, 0);
+    boost::mpi::broadcast(comm, &b[0], size, 0);
 
-    size_t m[N];
-    for (int i = 0; i < N; i++) {
+    size_t m[size];
+    for (int i = 0; i < size; i++) {
         m[i] = i % comm.size();
     }
-    boost::numeric::ublas::vector<double>c(N);
-    for (int k = 0; k < N; k++) {
-        boost::mpi::broadcast(comm, &A(k, k), N - k, m[k]);
+    // forward
+    std::vector<double>c(size);
+    for (int k = 0; k < size; k++) {
+        boost::mpi::broadcast(comm, &A[k*size + k], size - k, m[k]);
         boost::mpi::broadcast(comm, &b[k], 1, m[k]);
-        for (int i = k + 1; i < N; i++) {
+        for (int i = k + 1; i < size; i++) {
             if (m[i] == comm.rank()) {
-                c(i) = A(i, k) / A(k, k);
+                c[i] = A[i*size + k] / A[k * size + k];
             }
         }
-        for (int i = k + 1; i < N; i++) {
+        for (int i = k + 1; i < size; i++) {
             if (m[i] == comm.rank()) {
-                for (int j = 0; j < N; j++) {
-                    A(i, j) = A(i, j) - c(i) * A(k, j);
+                for (int j = 0; j < size; j++) {
+                    A[i*size + j] = A[i*size + j] - c[i] * A[k*size + j];
                 }
-                b(i) = b(i) - c(i) * b(k);
+                b[i] = b[i] - c[i] * b[k];
             }
         }
     }
     // back
     if (comm.rank() == 0) {
-        res(N-1) = b(N-1) / A(N-1, N-1);
-        for (int i = N - 2; i >= 0; i--) {
+        res[size-1] = b[size-1] / A[(size-1) * size + size-1];
+        for (int i = size - 2; i >= 0; i--) {
             double sum = 0;
-            for (int j = i + 1; j < N; j++) {
-                sum = sum + A(i, j) * res(j);
+            for (int j = i + 1; j < size; j++) {
+                sum = sum + A[i*size + j] * res[j];
             }
-            res(i) = (b(i)-sum) / A(i, i);
+            res[i] = (b[i]-sum) / A[i*size + i];
         }
     }
 
