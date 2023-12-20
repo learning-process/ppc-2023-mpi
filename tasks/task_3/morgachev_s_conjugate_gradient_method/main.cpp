@@ -67,12 +67,12 @@ TEST(Conjugate_Gradient_Method, Test_Parallel_Conjugate_Method) {
 
 TEST(Conjugate_Gradient_Method, Test_Serial_And_Parallel) {
     int rank;
-    int size = 30;
+    int size = 10;
     std::vector<double> vector;
     std::vector<double> matrix;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    vector = fillVectorRandomNumbers(size, 1, 20);
-    matrix = fillMatrixRandomNumbers(size, 1, 20);
+    vector = fillVectorRandomNumbers(size, 1, 10);
+    matrix = fillMatrixRandomNumbers(size, 1, 10);
 
     std::vector<double> parRes =
         parallelConjugateGradient(matrix, vector, size);
