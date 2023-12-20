@@ -16,9 +16,11 @@ TEST(Matrix_Column_Max, Test_Max1) {
                     21, 0, 3, 9,
                     7, 17, 1, 31};
     }
-    std::vector<int> resParallel = getParallelMaxInColumns(matrix, rows, columns);
+    std::vector<int> resParallel =
+            getParallelMaxInColumns(matrix, rows, columns);
     if (world.rank() == 0) {
-        std::vector<int> resSequential = getSequentialMaxInColumns(matrix, rows, columns);
+        std::vector<int> resSequential =
+                getSequentialMaxInColumns(matrix, rows, columns);
         ASSERT_EQ(resParallel, resSequential);
     }
 }
@@ -31,9 +33,11 @@ TEST(Matrix_Column_Max, Test_Max2) {
     if (world.rank() == 0) {
         matrix = getRandomMatrix(rows, columns);
     }
-    std::vector<int> resParallel = getParallelMaxInColumns(matrix, rows, columns);
+    std::vector<int> resParallel =
+            getParallelMaxInColumns(matrix, rows, columns);
     if (world.rank() == 0) {
-        std::vector<int> resSequential = getSequentialMaxInColumns(matrix, rows, columns);
+        std::vector<int> resSequential =
+                getSequentialMaxInColumns(matrix, rows, columns);
         ASSERT_EQ(resParallel, resSequential);
     }
 }
@@ -46,9 +50,11 @@ TEST(Matrix_Column_Max, Test_Max3) {
     if (world.rank() == 0) {
         matrix = getRandomMatrix(rows, columns);
     }
-    std::vector<int> resParallel = getParallelMaxInColumns(matrix, rows, columns);
+    std::vector<int> resParallel =
+            getParallelMaxInColumns(matrix, rows, columns);
     if (world.rank() == 0) {
-        std::vector<int> resSequential = getSequentialMaxInColumns(matrix, rows, columns);
+        std::vector<int> resSequential =
+                getSequentialMaxInColumns(matrix, rows, columns);
         ASSERT_EQ(resParallel, resSequential);
     }
 }
@@ -62,9 +68,11 @@ TEST(Matrix_Column_Max, Test_Max4) {
     if (world.rank() == 0) {
         matrix = getRandomMatrix(rows, columns);
     }
-    std::vector<int> resParallel = getParallelMaxInColumns(matrix, rows, columns);
+    std::vector<int> resParallel =
+            getParallelMaxInColumns(matrix, rows, columns);
     if (world.rank() == 0) {
-        std::vector<int> resSequential = getSequentialMaxInColumns(matrix, rows, columns);
+        std::vector<int> resSequential =
+                getSequentialMaxInColumns(matrix, rows, columns);
         ASSERT_EQ(resParallel, resSequential);
     }
 }
@@ -77,9 +85,11 @@ TEST(Matrix_Column_Max, Test_Max5) {
     if (world.rank() == 0) {
         matrix = getRandomMatrix(rows, columns);
     }
-    std::vector<int> resParallel = getParallelMaxInColumns(matrix, rows, columns);
+    std::vector<int> resParallel =
+            getParallelMaxInColumns(matrix, rows, columns);
     if (world.rank() == 0) {
-        std::vector<int> resSequential = getSequentialMaxInColumns(matrix, rows, columns);
+        std::vector<int> resSequential =
+                getSequentialMaxInColumns(matrix, rows, columns);
         ASSERT_EQ(resParallel, resSequential);
     }
 }
@@ -88,7 +98,8 @@ int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
+    ::testing::TestEventListeners& listeners =
+            ::testing::UnitTest::GetInstance()->listeners();
     if (world.rank() != 0) {
         delete listeners.Release(listeners.default_result_printer());
     }

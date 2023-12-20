@@ -2,9 +2,11 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <limits>
+#include <utility>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
-#include "matrix_column_max.h"
+#include "task_1/kirillov_m_max_by_columns_matrix/matrix_column_max.h"
 
 std::pair<int, int> getColIndexAndCount(size_t columns, int rank);
 std::vector<int> getRandomMatrix(int rows, int columns) {
@@ -18,7 +20,8 @@ std::vector<int> getRandomMatrix(int rows, int columns) {
     return matrix;
 }
 
-std::vector<int> getSequentialMaxInColumns(const std::vector<int>&matrix, size_t rows, size_t columns) {
+std::vector<int> getSequentialMaxInColumns(const std::vector<int>&matrix,
+                                           size_t rows, size_t columns) {
     std::vector<int> maxValues(columns, std::numeric_limits<int>::min());
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
@@ -28,7 +31,8 @@ std::vector<int> getSequentialMaxInColumns(const std::vector<int>&matrix, size_t
     return maxValues;
 }
 
-std::vector<int> getParallelMaxInColumns(const std::vector<int>&matrixc, size_t rows, size_t columns) {
+std::vector<int> getParallelMaxInColumns(const std::vector<int>&matrixc,
+                                         size_t rows, size_t columns) {
     boost::mpi::communicator world;
     std::vector<int>matrix(matrixc);
     if (world.rank() != 0) {
@@ -40,7 +44,8 @@ std::vector<int> getParallelMaxInColumns(const std::vector<int>&matrixc, size_t 
     std::vector<int> localMaxValues(colsCount);
     for (int i = colIndex; i < colsCount + colIndex; i++) {
         for (int j = 0; j < rows; j++) {
-            localMaxValues[i - colIndex] = std::max(localMaxValues[i - colIndex], matrix[j * columns + i]);
+            localMaxValues[i - colIndex] =
+                std::max(localMaxValues[i - colIndex], matrix[j * columns + i]);
         }
     }
     if (world.rank() != 0) {
@@ -53,7 +58,8 @@ std::vector<int> getParallelMaxInColumns(const std::vector<int>&matrixc, size_t 
             counts[i] = count;
             offsets[i] = offset;
         }
-        boost::mpi::gatherv(world, localMaxValues, globalMaxValues.data(), counts, offsets, 0);
+        boost::mpi::gatherv(world, localMaxValues,
+                            globalMaxValues.data(), counts, offsets, 0);
         return globalMaxValues;
     }
     return {};
