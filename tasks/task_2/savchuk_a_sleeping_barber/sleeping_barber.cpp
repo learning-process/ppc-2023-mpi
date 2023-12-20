@@ -1,5 +1,5 @@
 // Copyright 2023 Savchuk Anton
-#include "tasks/task_2/savchuk_a_sleeping_barber/sleeping_barber.h"
+#include "task_2/savchuk_a_sleeping_barber/sleeping_barber.h"
 
 enum MessageType{REQUEST, RESPONSE, SIGNAL, END_SIGNAL};
 void Cutting_Hair(int client) {
