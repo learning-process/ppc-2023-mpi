@@ -20,7 +20,7 @@ std::vector<int> getRandomMatrix(int rows, int columns) {
 std::vector<int> getSequentialMaxInColumns(std::vector<int>&matrix, size_t rows, size_t columns) {
     std::vector<int> maxValues(columns, std::numeric_limits<int>::min());
     for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++ ) {
+        for (int j = 0; j < columns; j++) {
             maxValues[j] =  std::max(maxValues[j], matrix[i * columns + j]);
         }
     }
@@ -29,25 +29,24 @@ std::vector<int> getSequentialMaxInColumns(std::vector<int>&matrix, size_t rows,
 
 std::vector<int> getParallelMaxInColumns(std::vector<int>&matrix, size_t rows, size_t columns) {
     boost::mpi::communicator world;
-    if (world.rank() != 0){
+    if (world.rank() != 0) {
         matrix.resize(rows*columns);
     }
 
     boost::mpi::broadcast(world, matrix.data(), rows * columns, 0);
     auto [colsCount, colIndex] = getColIndexAndCount(columns, world.rank());
     std::vector<int> localMaxValues(colsCount);
-    for (int i = colIndex; i < colsCount + colIndex; i++){
+    for (int i = colIndex; i < colsCount + colIndex; i++) {
         for (int j = 0; j < rows; j++) {
             localMaxValues[i - colIndex] = std::max(localMaxValues[i - colIndex], matrix[j * columns + i]);
         }
     }
-    if (world.rank() != 0){
+    if (world.rank() != 0) {
         boost::mpi::gatherv(world, localMaxValues, 0);
-    }
-    else {
+    } else {
         std::vector<int> globalMaxValues(columns);
         std::vector<int> counts(world.size()), offsets(world.size());
-        for(int i = 0; i < world.size(); i++){
+        for (int i = 0; i < world.size(); i++) {
             auto [count, offset] = getColIndexAndCount(columns, i);
             counts[i] = count;
             offsets[i] = offset;
