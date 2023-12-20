@@ -13,7 +13,6 @@ class VectorMinFinder {
     void finalize();
     int findMinParallel(const std::vector<int>& vector);
     static int findMinSequential(const std::vector<int>& vector);
-    
  private:
     int worldSize;
     int worldRank;
