@@ -75,16 +75,16 @@ TEST(Monte_carlo_multiple_integration_MPI, Multiplicity_is_3) {
 }
 
 TEST(Monte_carlo_multiple_integration_MPI, Multiplicity_is_4) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    std::vector<double> a = { 0.2, -1.0, 2.3, -3.3 };
-    std::vector<double> b = { 1.7, 0.5, 3.8, -2.7 };
-    double global_res = Monte_Carlo_Multiple_Integration_Parallel(func_3, a, b, 10000);
-    if (rank == 0) {
-        double local_res = Monte_Carlo_Multiple_Integration(func_3, a, b, 10000);
-        ASSERT_NEAR(global_res, local_res, 0.05);
-    }
+  std::vector<double> a = { 0.0, -2.5, 1.5, -5.0 };
+  std::vector<double> b = { 1.0, -1.0, 2.5, -3.0 };
+  double global_res = Monte_Carlo_Multiple_Integration_Parallel(func_3, a, b, 1000000);
+  if (rank == 0) {
+    double local_res = Monte_Carlo_Multiple_Integration(func_3, a, b, 1000000);
+    ASSERT_NEAR(global_res, local_res, 0.05);
+  }
 }
 
 int main(int argc, char** argv) {
