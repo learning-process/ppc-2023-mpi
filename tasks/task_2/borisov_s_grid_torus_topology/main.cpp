@@ -9,7 +9,7 @@
 TEST(MPI_TESTS, Test_Get_Next_Left) {
     int rows = 3;
     int cols = 3;
-    
+
     int next_1 = getNext(rows, cols, 0, 2);
     EXPECT_EQ(next_1, 2);
 
@@ -26,10 +26,10 @@ TEST(MPI_TESTS, Test_Get_Next_Left) {
 TEST(MPI_TESTS, Test_Get_Next_Right) {
     int rows = 3;
     int cols = 3;
-    
+
     int next_1 = getNext(rows, cols, 3, 4);
     EXPECT_EQ(next_1, 4);
-    
+
     int next_2 = getNext(rows, cols, 5, 3);
     EXPECT_EQ(next_2, 3);
 
@@ -43,10 +43,10 @@ TEST(MPI_TESTS, Test_Get_Next_Right) {
 TEST(MPI_TESTS, Test_Get_Next_Up) {
     int rows = 3;
     int cols = 3;
-    
+
     int next_1 = getNext(rows, cols, 0, 6);
     EXPECT_EQ(next_1, 6);
-    
+
     int next_2 = getNext(rows, cols, 6, 3);
     EXPECT_EQ(next_2, 3);
 }
@@ -54,10 +54,10 @@ TEST(MPI_TESTS, Test_Get_Next_Up) {
 TEST(MPI_TESTS, Test_Get_Next_Down) {
     int rows = 3;
     int cols = 3;
-    
+
     int next_1 = getNext(rows, cols, 6, 0);
     EXPECT_EQ(next_1, 0);
-    
+
     int next_2 = getNext(rows, cols, 0, 3);
     EXPECT_EQ(next_2, 3);
 }
@@ -67,7 +67,7 @@ TEST(MPI_TESTS, Test_First_To_Last) {
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    
+
     std::vector<int> expected = {1, 0, 1};
 
     std::pair<int, int> sizeGrid = calculateGridSize(size);
