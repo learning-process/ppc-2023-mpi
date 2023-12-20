@@ -1,6 +1,5 @@
 // Copyright 2023 Veselov Ilya
 #include <gtest/gtest.h>
-#include <iostream>
 #include "./increasing_contrast_img.h"
 
 TEST(Increasing_Contrast_Img, Test_) {
