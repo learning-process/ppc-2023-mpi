@@ -51,7 +51,7 @@ void sortVecR(std::vector<std::pair<int, double>>* chrct_R) {
     });
 }
 
-double getGlobalSearchSequantial(double a, double b,
+double findMinSeq(double a, double b,
   std::function<double(double)> func, double E) {
   std::vector<double> sorted_x_cords = { a, b };
 
@@ -76,7 +76,7 @@ double getGlobalSearchSequantial(double a, double b,
   return 9999999999999999999;
 }
 
-double getGlobalSearchParallel(double a, double b,
+double findMinPar(double a, double b,
   std::function<double(double)> func, double E) {
   int rank, num;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);

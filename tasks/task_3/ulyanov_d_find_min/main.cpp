@@ -9,8 +9,8 @@ TEST(find_min, test1) {
   MPI_Comm_size(MPI_COMM_WORLD, &count);
 
   auto func = [](double x) { return std::sin(x); };
-  double resPar = getGlobalSearchParallel(-3.14 / 2, 3.14 / 2, func, 0.001);
-  double resSeq = getGlobalSearchSequantial(-3.14 / 2, 3.14 / 2, func, 0.001);
+  double resPar = findMinPar(-3.14 / 2, 3.14 / 2, func, 0.001);
+  double resSeq = findMinSeq(-3.14 / 2, 3.14 / 2, func, 0.001);
 
   if (rank == 0) {
     ASSERT_NEAR(-1, resPar, 0.001);
@@ -24,8 +24,8 @@ TEST(find_min, test2) {
   MPI_Comm_size(MPI_COMM_WORLD, &count);
 
   auto func = [](double x) { return std::cos(x); };
-  double resPar = getGlobalSearchParallel(-3.14, 3.14, func, 0.001);
-  double resSeq = getGlobalSearchSequantial(-3.14, 3.14, func, 0.001);
+  double resPar = findMinPar(-3.14, 3.14, func, 0.001);
+  double resSeq = findMinSeq(-3.14, 3.14, func, 0.001);
 
   if (rank == 0) {
     ASSERT_NEAR(-1, resPar, 0.001);
@@ -39,8 +39,8 @@ TEST(find_min, test3) {
   MPI_Comm_size(MPI_COMM_WORLD, &count);
 
   auto func = [](double x) { return x; };
-  double resPar = getGlobalSearchParallel(-3, 3, func, 0.0001);
-  double resSeq = getGlobalSearchSequantial(-3, 3, func, 0.0001);
+  double resPar = findMinPar(-3, 3, func, 0.0001);
+  double resSeq = findMinSeq(-3, 3, func, 0.0001);
 
   if (rank == 0) {
     ASSERT_NEAR(-3, resPar, 0.01);
@@ -54,8 +54,8 @@ TEST(find_min, test4) {
   MPI_Comm_size(MPI_COMM_WORLD, &count);
 
   auto func = [](double x) { return sqrt(x); };
-  double resPar = getGlobalSearchParallel(0, 4, func, 0.00001);
-  double resSeq = getGlobalSearchSequantial(0, 4, func, 0.00001);
+  double resPar = findMinPar(0, 4, func, 0.00001);
+  double resSeq = findMinSeq(0, 4, func, 0.00001);
 
   if (rank == 0) {
     ASSERT_NEAR(0, resPar, 0.01);
@@ -69,8 +69,8 @@ TEST(find_min, test5) {
   MPI_Comm_size(MPI_COMM_WORLD, &count);
 
   auto func = [](double x) { return pow(2, x); };
-  double resPar = getGlobalSearchParallel(2, 4, func, 0.00001);
-  double resSeq = getGlobalSearchSequantial(2, 4, func, 0.00001);
+  double resPar = findMinPar(2, 4, func, 0.00001);
+  double resSeq = findMinSeq(2, 4, func, 0.00001);
 
   if (rank == 0) {
     ASSERT_NEAR(4, resPar, 0.001);

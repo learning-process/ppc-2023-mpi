@@ -25,9 +25,9 @@ std::vector<std::pair<int, double>> getIntervalCharactR(
 double getNextPointX(double pointX0, double pointX1,
     std::function<double(double)> target_func, double param_m);
 void sortVecR(std::vector<std::pair<int, double>>* charactR);
-double getGlobalSearchSequantial(double a, double b,
+double findMinSeq(double a, double b,
     std::function<double(double)> target_func, double E);
-double getGlobalSearchParallel(double a, double b,
+double findMinPar(double a, double b,
     std::function<double(double)> target_func, double E);
 
 #endif  // TASKS_TASK_3_ULYANOV_D_FIND_MIN_FIND_MIN_H_
