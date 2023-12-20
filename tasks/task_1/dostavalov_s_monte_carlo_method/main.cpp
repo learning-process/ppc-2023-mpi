@@ -1,8 +1,8 @@
 // Copyright 2023 Dostavalov Semen
 #include <gtest/gtest.h>
 #include <cmath>
-#include <gtest-mpi-listener.hpp>
-#include "monte_carlo_method.h"
+#include "gtest-mpi-listener.hpp"
+#include "monte_carlo.h"
 
 double f1(double x) { return (pow(x, 2)); }
 double f2(double x) { return (1 / log(x)); }
@@ -11,7 +11,7 @@ double f4(double x) { return (log(x) + (5 * x)); }
 double f5(double x) { return (exp(x) * pow(x, 2)); }
 
 
-TEST(Parallel_Operations_MPI, Test_xx) {
+TEST(MPI_TESTS, Test_xx) {
     double err = 0.1;
     bool flag = false;
     int rank;
@@ -27,7 +27,7 @@ TEST(Parallel_Operations_MPI, Test_xx) {
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_hard_log) {
+TEST(MPI_TESTS, Test_hard_log) {
     double err = 0.1;
     bool flag = false;
     int rank;
@@ -43,7 +43,7 @@ TEST(Parallel_Operations_MPI, Test_hard_log) {
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_hard_exp) {
+TEST(MPI_TESTS, Test_hard_exp) {
     double err = 0.1;
     bool flag = false;
     int rank;
@@ -58,7 +58,7 @@ TEST(Parallel_Operations_MPI, Test_hard_exp) {
         ASSERT_EQ(flag, true);
     }
 }
-TEST(Parallel_Operations_MPI, Test_log) {
+TEST(MPI_TESTS, Test_log) {
     double err = 0.1;
     bool flag = false;
     int rank;
@@ -74,7 +74,7 @@ TEST(Parallel_Operations_MPI, Test_log) {
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_exp) {
+TEST(MPI_TESTS, Test_expda) {
     double err = 0.1;
     bool flag = false;
     int rank;
@@ -91,16 +91,12 @@ TEST(Parallel_Operations_MPI, Test_exp) {
 }
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    int res = 0;
     MPI_Init(&argc, &argv);
-
-    ::testing::AddGlobalTestEnvironment(new GTestMPIListener::MPIEnvironment);
+    ::testing::InitGoogleTest(&argc, argv);
     ::testing::TestEventListeners& listeners =
-    ::testing::UnitTest::GetInstance()->listeners();
-
-    listeners.Release(listeners.default_result_printer());
-    listeners.Release(listeners.default_xml_generator());
-
-    listeners.Append(new GTestMPIListener::MPIMinimalistPrinter);
-    return RUN_ALL_TESTS();
+        ::testing::UnitTest::GetInstance()->listeners();
+    res = RUN_ALL_TESTS();
+    MPI_Finalize();
+    return res;
 }
