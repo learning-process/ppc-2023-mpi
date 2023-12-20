@@ -23,7 +23,7 @@ int VectorMinFinder::sequentialMin(const std::vector<int>& data) {
     return *std::min_element(data.begin(), data.end());
 }
 
-std::vector<int> VectorMinFinder::generateRandomVector(size_t size, int min, int max) {
+std::vector<int> VectorMinFinder::generateRandomVector(int size, int min, int max) {
     std::vector<int> vec(size);
     std::random_device rd;
     std::mt19937 gen(rd());
