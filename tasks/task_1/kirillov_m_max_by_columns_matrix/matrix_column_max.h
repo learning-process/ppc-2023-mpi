@@ -11,5 +11,3 @@ std::vector<int> getSequentialMaxInColumns(const std::vector<int>&matrix,
 
 std::vector<int> getParallelMaxInColumns(const std::vector<int>&matrixc,
                                          size_t rows, size_t columns);
-
-
