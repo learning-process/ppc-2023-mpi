@@ -1,7 +1,7 @@
 // Copyright 2023 Skotin Alexander
-#include "task_1/skotin_a_min_of_vector_elements/min_of_vector_elements.h"
 #include <gtest/gtest.h>
 #include <mpi.h>
+#include "task_1/skotin_a_min_of_vector_elements/min_of_vector_elements.h"
 
 TEST(VectorMinFinder, RandomVectorTest) {
     VectorMinFinder finder;
