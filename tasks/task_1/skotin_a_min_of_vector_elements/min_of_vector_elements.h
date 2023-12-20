@@ -1,11 +1,11 @@
-// Copyright 2023 Khramov Ivan
-#ifndef TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_H_
-#define TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_H_
+// Copyright 2023 Skotin Alexander
+#ifndef TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_MIN_OF_VECTOR_ELEMENTS_H_
+#define TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_MIN_OF_VECTOR_ELEMENTS_H_
 
 #include <vector>
 
 class VectorMinFinder {
-public:
+ public:
     VectorMinFinder();
     ~VectorMinFinder();
 
@@ -13,10 +13,10 @@ public:
     void finalize();
     int findMinParallel(const std::vector<int>& vector);
     static int findMinSequential(const std::vector<int>& vector);
-
-private:
+    
+ private:
     int worldSize;
     int worldRank;
 };
 
-#endif  // TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_H_
+#endif  // TASKS_TASK_1_SKOTIN_A_MIN_OF_VECTOR_ELEMENTS_MIN_OF_VECTOR_ELEMENTS_H_

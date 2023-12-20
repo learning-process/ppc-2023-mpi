@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-#include "min_of_vector_elements.h"
+#include "task_1/skotin_a_min_of_vector_elements/min_of_vector_elements.h"
 
 TEST(VectorMinFinderTest, TestWithFixedValues) {
     int rank;

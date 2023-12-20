@@ -1,5 +1,5 @@
 // Copyright 2023 Skotin Alexander
-#include "min_of_vector_elements.h"
+#include "task_1/skotin_a_min_of_vector_elements/min_of_vector_elements.h"
 #include <mpi.h>
 #include <limits>
 #include <algorithm>
