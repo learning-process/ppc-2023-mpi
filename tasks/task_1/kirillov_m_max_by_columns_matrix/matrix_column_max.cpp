@@ -6,7 +6,7 @@
 #include <boost/mpi/collectives.hpp>
 
 std::pair<int, int> getColIndexAndCount(size_t columns, int rank);
-std::vector<int> getRandomMatrix(int rows, int columns){
+std::vector<int> getRandomMatrix(int rows, int columns) {
     std::random_device dev;
     std::mt19937 gen(dev());
     int size = rows * columns;
@@ -17,7 +17,7 @@ std::vector<int> getRandomMatrix(int rows, int columns){
     return matrix;
 }
 
-std::vector<int> getSequentialMaxInColumns(std::vector<int>&matrix, size_t rows, size_t columns){
+std::vector<int> getSequentialMaxInColumns(std::vector<int>&matrix, size_t rows, size_t columns) {
     std::vector<int> maxValues(columns, std::numeric_limits<int>::min());
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++ ) {
@@ -27,7 +27,7 @@ std::vector<int> getSequentialMaxInColumns(std::vector<int>&matrix, size_t rows,
     return maxValues;
 }
 
-std::vector<int> getParallelMaxInColumns(std::vector<int>&matrix, size_t rows, size_t columns){
+std::vector<int> getParallelMaxInColumns(std::vector<int>&matrix, size_t rows, size_t columns) {
     boost::mpi::communicator world;
     if (world.rank() != 0){
         matrix.resize(rows*columns);
@@ -58,7 +58,7 @@ std::vector<int> getParallelMaxInColumns(std::vector<int>&matrix, size_t rows, s
     return {};
 }
 
-std::pair<int, int> getColIndexAndCount(size_t columns, int rank){
+std::pair<int, int> getColIndexAndCount(size_t columns, int rank) {
     boost::mpi::communicator world;
     int size = world.size();
     int colsPerProcess = columns / size;
