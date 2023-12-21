@@ -29,6 +29,7 @@ double f5(double x) {
     return (exp(x) * pow(x, 2));
 }
 
+
 TEST(MPI_TESTS, Test_1) {
     bool flag = false;
     int rank;
@@ -45,8 +46,9 @@ TEST(MPI_TESTS, Test_1) {
             flag = true;
         ASSERT_EQ(flag, true);
 }
+}
 
-TEST(MPI_TESTS, Test_hard_log) {
+TEST(Parallel_Operations_MPI, Test_hard_log) {
     bool flag = false;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -63,7 +65,7 @@ TEST(MPI_TESTS, Test_hard_log) {
     }
 }
 
-TEST(MPI_TESTS, Test_hard_exp) {
+TEST(Parallel_Operations_MPI, Test_hard_exp) {
     bool flag = false;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -79,7 +81,7 @@ TEST(MPI_TESTS, Test_hard_exp) {
         ASSERT_EQ(flag, true);
     }
 }
-TEST(MPI_TESTS, Test_log) {
+TEST(Parallel_Operations_MPI, Test_log) {
     bool flag = false;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -96,7 +98,7 @@ TEST(MPI_TESTS, Test_log) {
     }
 }
 
-TEST(MPI_TESTS, Test_exp) {
+TEST(Parallel_Operations_MPI, Test_exp) {
     bool flag = false;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);;
