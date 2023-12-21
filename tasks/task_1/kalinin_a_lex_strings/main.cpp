@@ -57,8 +57,8 @@ TEST(MPI_TEST, Test4) {
 TEST(MPI_TEST, Test5) {
     int rankProc = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-    std::string str1 = "";
-    std::string str2 = "";
+    std::string str1 = " ";
+    std::string str2 = " ";
 
     int result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
