@@ -21,19 +21,40 @@ double getSequentialIntegral(std::function<double(double)> func,
     }
     return res;
 }
-
+using bounds = std::array<double, 2>;
 double getParallelIntegral(std::function<double(double)> func, 
                            double a, double b, uint32_t count_partitions) {
     boost::mpi::communicator world;
 
-    /*
-        TODO: 
-    */
+    bool is_invert_sign = false;
+    if(a >= b) {
+        std::swap(a, b);
+        is_invert_sign = true;
+    }
 
     int useless_ptr[5] = {0};
     if (world.rank() == 0) {
-        world.send(0, 0, useless_ptr, 0);
+        int sz = world.size();
+        bounds local_bounds = {a, b};
+        for (int proc = 1; proc < world.size(); proc++) {
+            world.send(proc, 0, local_bounds);
+        }
     }
 
-    return 0.0;
+    double global_res = 0.0;
+    double local_res = 0.0;
+
+    if(world.rank() != 0)
+    {
+        bounds local_bound;
+        world.recv(0, 0, local_bound);
+
+        local_res = getSequentialIntegral(func, a, b, count_partitions);
+        reduce(world, local_res, global_res, std::plus<int>(), 0.0);
+    }
+
+    if(is_invert_sign)
+        global_res *= -1.0;
+
+    return global_res;
 }
