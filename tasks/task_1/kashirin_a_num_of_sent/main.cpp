@@ -13,7 +13,6 @@ TEST(MPI_TEST, Test_no_sent) {
 
     std::string str = "sentence";
     int result = numPar(str);
-
     if (rankProc == 0) {
         std::vector<char> vec(str.begin(), str.end());
         int resSeq = numSeq(vec);
@@ -27,7 +26,6 @@ TEST(MPI_TEST, Test_one_sent) {
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-
     std::string str = "sentence1.";
 
     int result = numPar(str);

@@ -12,7 +12,7 @@ int numSeq(const std::vector<char>& str) {
     return num;
 }
 
-void generateRandomString(const std::string& str, int size) {
+void generateRandomString(std::string& str, int size) {
 
     std::string alphabet = "abcdefghijklmnopqrstuvwxyz.?!";
 	for (int i = 0; i < size; i++) {
