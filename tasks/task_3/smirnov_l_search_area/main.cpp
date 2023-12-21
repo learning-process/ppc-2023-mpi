@@ -109,7 +109,7 @@ TEST(GlobalOptimizationArea, ExponentialFunction) {
 TEST(GlobalOptimizationArea, CubicFunction) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  
+
     double lowerBound = -2.0;
     double upperBound = 2.0;
     double accuracy = 0.001;
