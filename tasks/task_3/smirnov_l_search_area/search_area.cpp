@@ -17,7 +17,7 @@ double ApplyGlobalOptimizationSequential(
     std::vector<double> interimResults;
     interimResults.push_back(lowerBound);
     interimResults.push_back(upperBound);
-
+    // 8
     int maxContr = 1;
     double coef = 2, controlParameter;
 
@@ -45,7 +45,7 @@ double ApplyGlobalOptimizationSequential(
             function(&interimResults.at(1)) -
             function(&interimResults.at(0)))
             / (interimResults.at(1) - interimResults.at(0));
-        //olo
+        
         for (int i = 2; i <= counter; i++) {
             meanRateOfChange = std::max(
                 meanRateOfChange,
