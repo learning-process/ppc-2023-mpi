@@ -18,7 +18,7 @@ static int getRandomOffset() {
     return dist(gen);
 }
 
-const int INFINITY_VALUE = 2000000000;
+const int INFINITY_VALUE = 1000000000;
 
 std::vector<int> generateRandomWeightedGraph(int size) {
     std::mt19937 generator;
