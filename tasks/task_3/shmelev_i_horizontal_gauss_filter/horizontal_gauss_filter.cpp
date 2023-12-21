@@ -48,8 +48,8 @@ unsigned char gaussian_filter_operation(const std::vector<unsigned char> &image,
   return sum / 33;
 }
 
-std::vector<unsigned char> seq_gaussian_filter(std::vector<unsigned char> image,
-                                                          int rows, int cols) {
+std::vector<unsigned char> seq_gaussian_filter
+    (const std::vector<unsigned char>& image, int rows, int cols) {
   std::vector<unsigned char> result(cols * rows);
   for (int i = 0; i < rows; ++i)
     for (int j = 0; j < cols; ++j) {
@@ -59,8 +59,8 @@ std::vector<unsigned char> seq_gaussian_filter(std::vector<unsigned char> image,
   return result;
 }
 
-std::vector<unsigned char> par_gaussian_filter(std::vector<unsigned char> image,
-                                                          int rows, int cols) {
+std::vector<unsigned char> par_gaussian_filter
+    (const std::vector<unsigned char>& image, int rows, int cols) {
   int comm_size, rank;
   MPI_Status status;
   std::vector<unsigned char> globalResult(cols * rows);
