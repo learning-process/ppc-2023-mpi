@@ -84,10 +84,10 @@ TEST(Parallel_Letter_Frequency_Calculation, random_test) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
   MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-  const char* str = "                    ";
+  std::string str;
 
-  for (int i = 0; i < 20; i++) {
-    str[i] = static_cast<char>(63 + (std::rand() % (90 - 63)));
+  for (int i = 0; i < 50; i++) {
+    str.append(std::string(63 + (std::rand() % (90 - 63))));
   }
 
   char letter = 'y';
