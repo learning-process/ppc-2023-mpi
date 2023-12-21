@@ -9,7 +9,7 @@ TEST(quick_sort_simple_merge, small_random_array_test) {
   srand(time(nullptr));
   int n = 10;
   int* a = new int[n];
-  for (int i = 0; i < n; ++i) a[i] = rand();
+  for (int i = 0; i < n; ++i) a[i] = rand_r();
 
   quickSortPar(a, n);
 
@@ -25,7 +25,7 @@ TEST(quick_sort_simple_merge, large_random_array_test) {
   srand(time(nullptr));
   int n = 1000;
   int* a = new int[n];
-  for (int i = 0; i < n; ++i) a[i] = rand();
+  for (int i = 0; i < n; ++i) a[i] = rand_r();
 
   quickSortPar(a, n);
 
@@ -62,7 +62,7 @@ TEST(quick_sort_simple_merge, very_large_array_test) {
   srand(time(nullptr));
   int n = 10000;
   int* a = new int[n];
-  for (int i = 0; i < n; ++i) a[i] = rand();
+  for (int i = 0; i < n; ++i) a[i] = rand_r();
 
   quickSortPar(a, n);
 
@@ -78,7 +78,7 @@ TEST(quick_sort_simple_merge, very_very_large_array_test) {
   srand(time(nullptr));
   int n = 20000;
   int* a = new int[n];
-  for (int i = 0; i < n; ++i) a[i] = rand();
+  for (int i = 0; i < n; ++i) a[i] = rand_r();
 
   quickSortPar(a, n);
 

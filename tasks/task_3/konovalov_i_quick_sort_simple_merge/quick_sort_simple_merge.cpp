@@ -2,7 +2,7 @@
 #include "task_3/konovalov_i_quick_sort_simple_merge/quick_sort_simple_merge.h"
 
 
-void swap(int* arr, int i, int j) {
+void swap_(int* arr, int i, int j) {
   int t = arr[i];
   arr[i] = arr[j];
   arr[j] = t;
@@ -26,7 +26,7 @@ void quickSortRec(int n, int* arr) {
     if (j >= k) {
       break;
     }
-    swap(arr, j++, k--);
+    swap_(arr, j++, k--);
   }
   quickSortRec(j, arr);
   quickSortRec(n - j, arr + j);
@@ -38,8 +38,7 @@ void merge(int n1, int n2, int* left, int* right, int* res) {
     if (left[i] < right[j]) {
       res[i + j] = left[i];
       i++;
-    }
-    else {
+    } else {
       res[i + j] = right[j];
       j++;
     }
@@ -48,8 +47,7 @@ void merge(int n1, int n2, int* left, int* right, int* res) {
     for (; j < n2; j++) {
       res[i + j] = right[j];
     }
-  }
-  else if (n1 != i) {
+  } else if (n1 != i) {
     for (; i < n1; i++) {
       res[i + j] = left[i];
     }
@@ -91,10 +89,8 @@ void quickSortPar(int* res, size_t n) {
       merge(centralChunk + chunk * (i - 1), chunk, arr, 
         arr[centralChunk + chunk * (i - 1)], res);
     }
-
     delete[] arr;
-  }
-  else {
+  } else {
     MPI_Status status;
     int* buf;
     int count;
@@ -104,7 +100,6 @@ void quickSortPar(int* res, size_t n) {
     MPI_Recv(buf, count, MPI_INT, 0, 100, MPI_COMM_WORLD, &status);
     quickSortRec(centralChunk, buf);
     MPI_Send(buf, count, MPI_INT, 0, 200, MPI_COMM_WORLD);
-
     delete[] buf;
   }
 }
