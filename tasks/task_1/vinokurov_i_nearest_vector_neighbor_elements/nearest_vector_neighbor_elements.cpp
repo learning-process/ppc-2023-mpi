@@ -2,24 +2,23 @@
 #include <mpi.h>
 #include <iostream>
 #include <vector>
+#include <utility>
 #include "task_1/vinokurov_i_nearest_vector_neighbor_elements/nearest_vector_neighbor_elements.h"
 
 #define INT_MAX 2147483647
 
-std::pair<int, int> funcFindClosestNeighborsMPI(std::vector<int>& _data, int _worldRank) {
+std::pair<int, int> funcFindClosestNeighborsMPI(const std::vector<int>& _data, int _worldRank) {
     if (_data.size() == 0) {
         return { -1, -1 };
     }
-    
     int minDifference = INT_MAX;
     int minIndex = -1;
     int closestNeighborIndex;
 
     for (int i = 0; i < _data.size(); i++) {
         int difference = std::abs(_data[i] - _data[i + 1]);
-		
         if (difference < minDifference) {
-            minIndex = i;
+	        minIndex = i;
             minDifference = difference;
         }
     }

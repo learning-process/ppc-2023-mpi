@@ -3,6 +3,7 @@
 #include <mpi.h>
 #include <iostream>
 #include <vector>
+#include <utility>
 #include "task_1/vinokurov_i_nearest_vector_neighbor_elements/nearest_vector_neighbor_elements.h"
 
 TEST(TESTS, CanRunFunction) {
