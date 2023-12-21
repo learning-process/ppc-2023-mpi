@@ -1,6 +1,5 @@
 // Copyright 2023 Shmelev Ivan
 #include <gtest/gtest.h>
-#include <mpi.h>
 #include <iostream>
 #include "./horizontal_gauss_filter.h"
 
