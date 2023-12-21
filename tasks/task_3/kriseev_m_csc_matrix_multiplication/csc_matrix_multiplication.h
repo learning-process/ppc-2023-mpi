@@ -4,6 +4,8 @@
 
 #include <vector>
 #include <boost/serialization/vector.hpp>
+#include <list>
+#include <boost/serialization/list.hpp>
 
 struct CscMatrix {
  public:

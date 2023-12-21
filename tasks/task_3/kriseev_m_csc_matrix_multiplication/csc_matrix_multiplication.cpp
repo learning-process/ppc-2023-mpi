@@ -10,7 +10,8 @@
 namespace boost {
 namespace serialization {
 template <class Archive>
-void serialize(Archive &ar, CscMatrix &m, const unsigned int version) {  // NOLINT
+void serialize(Archive &ar, CscMatrix &m,
+               const unsigned int version) {  // NOLINT
     ar & m.rows;
     ar & m.cols;
     ar & m.values;
@@ -63,6 +64,10 @@ bool CscMatrix::operator==(const CscMatrix &b) const {
 
 CscMatrix CscMatrix::transpose() const {
     CscMatrix n = {this->cols, this->rows};
+    if (this->rowIndices.empty()) {
+        n.columnPointers.push_back(0);
+        return n;
+    }
     size_t maxRow =
         *std::max_element(this->rowIndices.begin(), this->rowIndices.end());
     for (size_t i = 0; i <= maxRow; ++i) {
@@ -95,11 +100,10 @@ void CscMatrix::print() {
 void CscMatrix::setElement(size_t column, size_t row, double value) {
     size_t beginCol = columnPointers[column];
     size_t endCol = columnPointers[column + 1];
-    size_t insertIndex = beginCol;
-    for (; insertIndex < endCol && row > rowIndices[insertIndex];
-         ++insertIndex) {
-    }
-    if (row == rowIndices[insertIndex]) {
+    size_t insertIndex = std::lower_bound(rowIndices.begin() + beginCol,
+                                          rowIndices.begin() + endCol, row) -
+                         rowIndices.begin();
+    if (!rowIndices.empty() && row == rowIndices[insertIndex]) {
         values[insertIndex] = value;
         return;
     }
@@ -122,6 +126,7 @@ size_t CscMatrix::findElementColumn(size_t index) const {
 
 CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
     boost::mpi::communicator world;
+
     if (world.size() == 1) {
         return multiplyCscMatricesSequential(a, b);
     }
@@ -130,15 +135,17 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
         throw std::invalid_argument("b");
     }
     CscMatrix a_t(a.cols, a.rows);
-    CscMatrix b_c(b.rows, b.cols, b.values, b.rowIndices, b.columnPointers);
+    CscMatrix b_c(b);
     if (world.rank() == 0) {
         a_t = a.transpose();
     }
     CscMatrix res = {a_t.cols, b.cols, {}, {}, {0}};
-    std::vector<size_t> tempCol(a.cols, -1);
+
     boost::mpi::broadcast(world, a_t, 0);
 
     boost::mpi::broadcast(world, b_c, 0);
+    std::cout << "proc " << world.rank() << " transmission finished\n";
+    std::vector<size_t> tempCol(a_t.rows, -1);
 
     std::vector<size_t> i_indices(
         res.rows / world.size() +
@@ -155,19 +162,20 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
         for (size_t k = 0; k < res.cols % world.size(); ++k) {
             j_sizes[k]++;
         }
-
         std::vector<size_t> all_i_indices(res.rows);
         std::vector<size_t> all_j_indices(res.cols);
         std::iota(all_i_indices.begin(), all_i_indices.end(), 0);
         std::iota(all_j_indices.begin(), all_j_indices.end(), 0);
+
         boost::mpi::scatterv(world, all_i_indices, i_sizes, i_indices.data(),
                              0);
-        boost::mpi::scatterv(world, all_j_indices, i_sizes, j_indices.data(),
+        boost::mpi::scatterv(world, all_j_indices, j_sizes, j_indices.data(),
                              0);
     } else {
         boost::mpi::scatterv(world, i_indices.data(), i_indices.size(), 0);
         boost::mpi::scatterv(world, j_indices.data(), j_indices.size(), 0);
     }
+
     for (size_t j = 0; j < res.cols; ++j) {
         for (size_t i = 0; i < res.rows; ++i) {
             if (std::find(i_indices.begin(), i_indices.end(), i) ==
@@ -182,18 +190,17 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
             size_t beginColA = a_t.columnPointers[i];
             size_t beginColB = b_c.columnPointers[j];
             tempCol.assign(tempCol.size(), -1);
-
             for (size_t k = 0; k < colSizeA; ++k) {
                 size_t l = a_t.rowIndices[beginColA + k];
                 tempCol[l] = k;
             }
             for (size_t k = 0; k < colSizeB; ++k) {
-                size_t l = b.rowIndices[beginColB + k];
+                size_t l = b_c.rowIndices[beginColB + k];
                 if (tempCol[l] == -1) {
                     continue;
                 }
                 dot += a_t.values[beginColA + tempCol[l]] *
-                       b.values[beginColB + k];
+                       b_c.values[beginColB + k];
             }
             if (dot != 0) {
                 res.values.push_back(dot);
@@ -202,17 +209,17 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
         }
         res.columnPointers.push_back(res.values.size());
     }
+    std::cout << "proc " << world.rank() << " finished job\n";
     CscMatrix finalRes(res.rows, res.cols);
     boost::mpi::reduce(world, res, finalRes, MergeMatrices(), 0);
     return finalRes;
 }
 
 CscMatrix MergeMatrices::operator()(const CscMatrix &a, const CscMatrix &b) {
-    if (a.cols != b.cols || a.rows != b.rows) {
-        throw std::logic_error("Matrices are of different sizes");
-    }
     CscMatrix res(a);
     size_t col = 0;
+    res.rowIndices.reserve(res.rowIndices.size() + b.rowIndices.size());
+    res.values.reserve(res.values.size() + b.values.size());
     for (size_t i = 0; i < b.rowIndices.size(); ++i) {
         while (i == b.columnPointers[col + 1]) {
             col++;
