@@ -1,7 +1,6 @@
 // Copyright 2023 Borisov Saveliy
 #include "task_2/borisov_s_grid_torus_topology/grid_torus_topology.h"
 
-
 int getNext(int rows, int cols, int rank, int rankDestination) {
     if (rank == rankDestination) {
         return rankDestination;
