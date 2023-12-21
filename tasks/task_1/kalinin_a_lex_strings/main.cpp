@@ -8,9 +8,9 @@ TEST(MPI_TEST, Test1) {
     char str1[] = "fff";
     char str2[] = "aaa";
 
-    int result = parallelLexicographicStrings(str1, str2);
+    bool result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
-        int resSeq = checkOrder(str1, str2);
+        bool resSeq = checkOrder(str1, str2);
         ASSERT_EQ(result, resSeq);
     }
 }
@@ -21,9 +21,9 @@ TEST(MPI_TEST, Test2) {
     char str1[] = "abc";
     char str2[] = "def";
 
-    int result = parallelLexicographicStrings(str1, str2);
+    bool result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
-        int resSeq = checkOrder(str1, str2);
+        bool resSeq = checkOrder(str1, str2);
         ASSERT_EQ(result, resSeq);
     }
 }
@@ -34,9 +34,9 @@ TEST(MPI_TEST, Test3) {
     char str1[] = "xyz";
     char str2[] = "uvw";
 
-    int result = parallelLexicographicStrings(str1, str2);
+    bool result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
-        int resSeq = checkOrder(str1, str2);
+        bool resSeq = checkOrder(str1, str2);
         ASSERT_EQ(result, resSeq);
     }
 }
@@ -47,9 +47,9 @@ TEST(MPI_TEST, Test4) {
     char str1[] = "123";
     char str2[] = "456";
 
-    int result = parallelLexicographicStrings(str1, str2);
+    bool result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
-        int resSeq = checkOrder(str1, str2);
+        bool resSeq = checkOrder(str1, str2);
         ASSERT_EQ(result, resSeq);
     }
 }
@@ -60,9 +60,9 @@ TEST(MPI_TEST, Test5) {
     char str1[] = "aaa";
     char str2[] = "aaa";
 
-    int result = parallelLexicographicStrings(str1, str2);
+    bool result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
-        int resSeq = checkOrder(str1, str2);
+        bool resSeq = checkOrder(str1, str2);
         ASSERT_EQ(true, true);
     }
 }

@@ -1,14 +1,14 @@
 // Copyright 2023 Kalinin Alexandr
 #include "task_1/kalinin_a_lex_strings/lex_strings.h"
 
-int checkOrder(char* str1, char* str2) {
+bool checkOrder(char* str1, char* str2) {
     if (strcmp(str1, str2) > 0)
-        return 0;
+        return false;
     else
-        return 1;
+        return true;
 }
 
-int parallelLexicographicStrings(char* str1, char* str2) {
+bool parallelLexicographicStrings(char* str1, char* str2) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);

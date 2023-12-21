@@ -7,6 +7,6 @@
 #include <vector>
 #include <algorithm>
 
-int checkOrder(char* str1, char* str2);
-int parallelLexicographicStrings(char* str1, char* str2);
+bool checkOrder(char* str1, char* str2);
+bool parallelLexicographicStrings(char* str1, char* str2);
 #endif  // TASKS_TASK_1_KALININ_A_LEX_STRINGS_LEX_STRINGS_H_
