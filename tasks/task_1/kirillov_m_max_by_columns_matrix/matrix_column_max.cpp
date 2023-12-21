@@ -8,7 +8,18 @@
 #include <boost/mpi/collectives.hpp>
 #include "task_1/kirillov_m_max_by_columns_matrix/matrix_column_max.h"
 
-std::pair<int, int> getColIndexAndCount(size_t columns, int rank);
+std::pair<int, int> getColIndexAndCount(size_t columns, int rank) {
+    boost::mpi::communicator world;
+    int size = world.size();
+    int colsPerProcess = columns / size;
+    int reminder = columns % size;
+    int colsCount = colsPerProcess + (rank < reminder ? 1 : 0);
+    int colIndex = colsPerProcess * rank + (rank < reminder ? rank : reminder);
+    if (rank >= columns) {
+        colIndex = 0;
+    }
+    return std::make_pair(colsCount, colIndex);
+}
 
 std::vector<int> getRandomMatrix(int rows, int columns) {
     std::random_device dev;
@@ -67,15 +78,4 @@ std::vector<int> getParallelMaxInColumns(const std::vector<int>&matrixc,
     return {};
 }
 
-std::pair<int, int> getColIndexAndCount(size_t columns, int rank) {
-    boost::mpi::communicator world;
-    int size = world.size();
-    int colsPerProcess = columns / size;
-    int reminder = columns % size;
-    int colsCount = colsPerProcess + (rank < reminder ? 1 : 0);
-    int colIndex = colsPerProcess * rank + (rank < reminder ? rank : reminder);
-    if (rank >= columns) {
-        colIndex = 0;
-    }
-    return std::make_pair(colsCount, colIndex);
-}
+

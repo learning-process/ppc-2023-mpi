@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <iostream>
+#include <utility>
+
+std::pair<int, int> getColIndexAndCount(size_t columns, int rank);
 
 std::vector<int> getRandomMatrix(int rows, int columns);
 
