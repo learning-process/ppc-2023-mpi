@@ -26,7 +26,9 @@ void quickSortRec(int n, int* arr) {
     if (j >= k) {
       break;
     }
-    swap_(arr, j++, k--);
+    swap_(arr, j, k);
+    j++;
+    k--;
   }
   quickSortRec(j, arr);
   quickSortRec(n - j, arr + j);
@@ -87,7 +89,11 @@ void quickSortPar(int* res, size_t n) {
 
     for (int i = 1; i < numProc; ++i) {
       merge(centralChunk + chunk * (i - 1), chunk, arr,
-        arr + centralChunk + chunk * (i - 1), res);
+        &arr[centralChunk + chunk * (i - 1)], arr);
+    }
+
+    for (int i = 0; i < n; i++) {
+      res[i] = arr[i];
     }
     delete[] arr;
   } else {
