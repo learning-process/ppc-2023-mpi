@@ -3,7 +3,7 @@
 
 int cross(vec a, vec b) {
   return a.x * b.y - b.x * a.y;
-};
+}
 
 std::vector<point> get_convex_hull(const std::vector<int>& image, int n, int m) {
   std::vector<point> points;
@@ -18,7 +18,7 @@ std::vector<point> get_convex_hull(const std::vector<int>& image, int n, int m) 
     }
   }
   for (int i = 1; i < points.size(); ++i) {
-    if (points[i].x < points[0].x || 
+    if (points[i].x < points[0].x ||
        (points[i].x == points[0].x && points[i].y < points[0].y)) {
       std::swap(points[0], points[i]);
     }
@@ -29,7 +29,7 @@ std::vector<point> get_convex_hull(const std::vector<int>& image, int n, int m) 
     ch.push_back(points[cur]);
     int id = -1;
     for (int i = 0; i < points.size(); ++i) {
-      if (i != cur && (id == -1 || 
+      if (i != cur && (id == -1 ||
           cross(vec(points[cur], points[i]), vec(points[cur], points[id])) > 0)) {
         id = i;
       }
@@ -40,7 +40,7 @@ std::vector<point> get_convex_hull(const std::vector<int>& image, int n, int m) 
     cur = id;
   }
   return ch;
-};
+}
 
 std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n, int m) {
   int ProcNum, ProcRank;
@@ -73,7 +73,7 @@ std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n
     start_points.resize(ProcNum);
     from_proc.resize(ProcNum);
   }
-  MPI_Scatterv(image.data(), sendcounts.data(), displs.data(), 
+  MPI_Scatterv(image.data(), sendcounts.data(), displs.data(),
     MPI_INT, part_image.data(), part_image.size(), MPI_INT, 0, MPI_COMM_WORLD);
   int count = size;
   if (ProcRank == 0)
@@ -87,8 +87,7 @@ std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n
           p.x = (count + ost + (ProcRank - 1) * size) + i;
           p.y = j;
           points.push_back(p);
-        }
-        else {
+        } else {
           point p;
           p.x = i;
           p.y = j;
@@ -98,7 +97,7 @@ std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n
     }
   }
   for (int i = 1; i < points.size(); ++i) {
-    if (points[i].x < points[0].x || 
+    if (points[i].x < points[0].x ||
       (points[i].x == points[0].x && points[i].y < points[0].y)) {
       std::swap(points[0], points[i]);
     }
@@ -109,18 +108,17 @@ std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n
     item.x = points[0].x,
     item.y = points[0].y
     };
-  }
-  else {
+  } else {
     item = {
     item.x = m + 1,
     item.y = n + 1
     };
   }
-  MPI_Gather(&item, sizeof(point), MPI_BYTE, 
+  MPI_Gather(&item, sizeof(point), MPI_BYTE,
     start_points.data(), sizeof(point), MPI_BYTE, 0, MPI_COMM_WORLD);
   if (ProcRank == 0) {
     for (int i = 1; i < start_points.size(); ++i) {
-      if (start_points[i].x < start_points[0].x || 
+      if (start_points[i].x < start_points[0].x ||
         (start_points[i].x == start_points[0].x && start_points[i].y < start_points[0].y)) {
         std::swap(start_points[0], start_points[i]);
       }
@@ -130,17 +128,16 @@ std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n
     item1.y = start_points[0].y
     };
   }
-  MPI_Bcast(&item1, sizeof(point), 
+  MPI_Bcast(&item1, sizeof(point),
     MPI_BYTE, 0, MPI_COMM_WORLD);
   point cur = item1;
   while (true) {
-
     if (ProcRank == 0) {
       res.push_back(cur);
     }
     int id = -1;
     for (int i = 0; i < points.size(); i++) {
-      if ((points[i].x != cur.x || points[i].y != cur.y) && 
+      if ((points[i].x != cur.x || points[i].y != cur.y) &&
         (id == -1 || cross(vec(cur, points[i]), vec(cur, points[id])) > 0)) {
         id = i;
       }
@@ -151,19 +148,18 @@ std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n
       item3.x = points[id].x,
       item3.y = points[id].y
       };
-    }
-    else {
+    } else {
       item3 = {
       item3.x = cur.x,
       item3.y = cur.y
       };
     }
-    MPI_Gather(&item3, sizeof(point), MPI_BYTE, 
+    MPI_Gather(&item3, sizeof(point), MPI_BYTE,
       from_proc.data(), sizeof(point), MPI_BYTE, 0, MPI_COMM_WORLD);
     if (ProcRank == 0) {
       int id = -1;
       for (int i = 0; i < from_proc.size(); i++) {
-        if ((from_proc[i].x != cur.x || from_proc[i].y != cur.y) && 
+        if ((from_proc[i].x != cur.x || from_proc[i].y != cur.y) &&
           (id == -1 || cross(vec(cur, from_proc[i]), vec(cur, from_proc[id])) > 0)) {
           id = i;
         }
@@ -179,7 +175,7 @@ std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n
       break;
   }
   return res;
-};
+}
 
 bool check_answers(std::vector<point> not_par, std::vector<point> par) {
   if (not_par.size() != par.size()) return false;
@@ -188,4 +184,4 @@ bool check_answers(std::vector<point> not_par, std::vector<point> par) {
       return false;
   }
   return true;
-};
+}
