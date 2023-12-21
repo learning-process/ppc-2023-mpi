@@ -1,6 +1,5 @@
 // Copyright 2023 Smirnov Pavel
-
-#include "task_3/fedotov_v_global_optimization/global_optimization.h"
+#include "task_3/smirnov_p_global_optimization/global_optimization.h"
 
 // global min of ONE argument function.
 // fixed variable is need for dimensional reduction method,
