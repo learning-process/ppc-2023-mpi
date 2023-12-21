@@ -6,10 +6,11 @@
 TEST(quick_sort_simple_merge, small_random_array_test) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  srand(time(nullptr));
+  std::random_device rd;
+  std::mt19937 mt(rd());
   int n = 10;
   int* a = new int[n];
-  for (int i = 0; i < n; ++i) a[i] = rand_r();
+  for (int i = 0; i < n; ++i) a[i] = mt();
 
   quickSortPar(a, n);
 
@@ -22,10 +23,11 @@ TEST(quick_sort_simple_merge, small_random_array_test) {
 TEST(quick_sort_simple_merge, large_random_array_test) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  srand(time(nullptr));
+  std::random_device rd;
+  std::mt19937 mt(rd());
   int n = 1000;
   int* a = new int[n];
-  for (int i = 0; i < n; ++i) a[i] = rand_r();
+  for (int i = 0; i < n; ++i) a[i] = mt();
 
   quickSortPar(a, n);
 
@@ -59,10 +61,11 @@ TEST(quick_sort_simple_merge, large_range_array_consistency_test) {
 TEST(quick_sort_simple_merge, very_large_array_test) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  srand(time(nullptr));
+  std::random_device rd;
+  std::mt19937 mt(rd());
   int n = 10000;
   int* a = new int[n];
-  for (int i = 0; i < n; ++i) a[i] = rand_r();
+  for (int i = 0; i < n; ++i) a[i] = mt();
 
   quickSortPar(a, n);
 
@@ -75,10 +78,11 @@ TEST(quick_sort_simple_merge, very_large_array_test) {
 TEST(quick_sort_simple_merge, very_very_large_array_test) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  srand(time(nullptr));
+  std::random_device rd;
+  std::mt19937 mt(rd());
   int n = 20000;
   int* a = new int[n];
-  for (int i = 0; i < n; ++i) a[i] = rand_r();
+  for (int i = 0; i < n; ++i) a[i] = mt();
 
   quickSortPar(a, n);
 

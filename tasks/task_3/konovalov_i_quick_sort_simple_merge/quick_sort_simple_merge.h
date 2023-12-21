@@ -2,7 +2,6 @@
 #ifndef TASKS_TASK_3_KONOVALOV_I_QUICK_SORT_SIMPLE_MERGE_QUICK_SORT_SIMPLE_MERGE_H_
 #define TASKS_TASK_3_KONOVALOV_I_QUICK_SORT_SIMPLE_MERGE_QUICK_SORT_SIMPLE_MERGE_H_
 
-#include <time>
 #include <mpi.h>
 #include <vector>
 #include <iostream>
