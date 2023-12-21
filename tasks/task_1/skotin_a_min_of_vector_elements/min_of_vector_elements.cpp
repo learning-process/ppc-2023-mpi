@@ -2,7 +2,7 @@
 #include "task_1/skotin_a_min_of_vector_elements/min_of_vector_elements.h"
 #include <mpi.h>
 #include <random>
-
+#include <climits>
 
 int findMinElementMPI(const std::vector<int>& vec, int vecSize) {
     int worldRank, worldSize;
