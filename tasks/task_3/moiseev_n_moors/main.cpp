@@ -69,6 +69,7 @@ TEST(MPI_TESTS, Test_On_Size_100) {
 TEST(MPI_TESTS, Test_On_Size_1) {
     int process_rank;
     int graph_size = 1;
+
     MPI_Comm_rank(MPI_COMM_WORLD, &process_rank);
     std::vector<int> graph(graph_size * graph_size);
     if (process_rank == 0)
