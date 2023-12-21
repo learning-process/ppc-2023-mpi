@@ -2,6 +2,71 @@
 #include <gtest/gtest.h>
 #include "task_1/kalinin_a_lex_strings/lex_strings.h"
 
+TEST(MPI_TEST, Test1) {
+    int rankProc = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    std::string str1 = "";
+    std::string str2 = "aaa";
+
+    int result = parallelLexicographicStrings(str1, str2);
+    if (rankProc == 0) {
+        int resSeq = checkOrder(str1, str2);
+        ASSERT_EQ(result, resSeq);
+    }
+}
+
+TEST(MPI_TEST, Test2) {
+    int rankProc = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    std::string str1 = "aaa";
+    std::string str2 = "";
+
+    int result = parallelLexicographicStrings(str1, str2);
+    if (rankProc == 0) {
+        int resSeq = checkOrder(str1, str2);
+        ASSERT_EQ(result, resSeq);
+    }
+}
+
+TEST(MPI_TEST, Test3) {
+    int rankProc = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    std::string str1 = "abcde";
+    std::string str2 = "abcdef";
+
+    int result = parallelLexicographicStrings(str1, str2);
+    if (rankProc == 0) {
+        int resSeq = checkOrder(str1, str2);
+        ASSERT_EQ(result, resSeq);
+    }
+}
+
+TEST(MPI_TEST, Test4) {
+    int rankProc = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    std::string str1 = "banana";
+    std::string str2 = "apple";
+
+    int result = parallelLexicographicStrings(str1, str2);
+    if (rankProc == 0) {
+        int resSeq = checkOrder(str1, str2);
+        ASSERT_EQ(result, resSeq);
+    }
+}
+
+TEST(MPI_TEST, Test5) {
+    int rankProc = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    std::string str1 = "";
+    std::string str2 = "";
+
+    int result = parallelLexicographicStrings(str1, str2);
+    if (rankProc == 0) {
+        int resSeq = checkOrder(str1, str2);
+        ASSERT_EQ(result, resSeq);
+    }
+}
+
 int main(int argc, char** argv) {
     int result_code = 0;
     ::testing::InitGoogleTest(&argc, argv);
