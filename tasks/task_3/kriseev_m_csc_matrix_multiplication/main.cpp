@@ -1,6 +1,6 @@
 // Copyright 2023 Kriseev Mikhail
-#include <random>
 #include <gtest/gtest.h>
+#include <random>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/timer.hpp>
@@ -10,13 +10,12 @@ void initRandomCscMatrix(CscMatrix& a) {  // NOLINT
     double lambda = 0.05;
     std::random_device rd;
     std::mt19937 gen(rd());
-    // std::exponential_distribution<double> d(lambda);
     std::uniform_int_distribution<int> d(0, a.rows / 2);
     std::uniform_int_distribution<int> d_i(0, a.rows - 1);
     std::uniform_real_distribution<double> d_v(2, 10);
     std::vector<size_t> sizes;
     for (size_t i = 0; i < a.cols; ++i) {
-        size_t size = (size_t)(d(gen));
+        size_t size = static_cast<size_t>(d(gen));
         if (size > a.rows) {
             size = a.rows;
         }
@@ -94,19 +93,17 @@ TEST(CSC_Matrix_Multiplication, incompatible_matrices) {
         ASSERT_ANY_THROW(CscMatrix actualSequential =
                              multiplyCscMatricesSequential(a, b));
     }
-
 }
 
 TEST(CSC_Matrix_Multiplication, big_random_matrices) {
     boost::mpi::communicator world;
-    size_t cols_a = 20; 
+    size_t cols_a = 20;
     size_t rows_a = 30;
     size_t cols_b = 50;
     size_t rows_b = cols_a;
     CscMatrix a(rows_a, cols_a, {}, {}, std::vector<size_t>(cols_a + 1, 0));
     CscMatrix b(rows_b, cols_b, {}, {}, std::vector<size_t>(cols_b + 1, 0));
-    if(world.rank() == 0)
-    {
+    if (world.rank() == 0) {
         initRandomCscMatrix(a);
         initRandomCscMatrix(b);
     }
@@ -114,8 +111,7 @@ TEST(CSC_Matrix_Multiplication, big_random_matrices) {
     auto parallelResult = multiplyCscMatricesParallel(a, b);
     double parallelTime = timer.elapsed();
 
-    if(world.rank() == 0)
-    {
+    if (world.rank() == 0) {
         std::cout << "parallel time: " << parallelTime << "\n";
         timer.restart();
         auto sequentialResult = multiplyCscMatricesSequential(a, b);

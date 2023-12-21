@@ -10,7 +10,7 @@
 namespace boost {
 namespace serialization {
 template <class Archive>
-void serialize(Archive &ar, CscMatrix &m,
+void serialize(Archive &ar, CscMatrix &m,     // NOLINT
                const unsigned int version) {  // NOLINT
     ar & m.rows;
     ar & m.cols;
