@@ -1,6 +1,9 @@
 // Copyright 2023 Sredneva Anastasiya
 #include "task_2/sredneva_a_hypercube/hypercube.h"
 #include <queue>
+#include <algorithm>
+#include <iostream>
+#include <cmath>
 
 int degree(int n) {
     int i = 0;
