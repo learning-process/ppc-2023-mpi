@@ -1,6 +1,5 @@
 // Copyright 2023 Dostavalov Semen
 #include <math.h>
-#include <iostream>
 #include <gtest/gtest.h>
 #include <boost/core/invoke_swap.hpp>
 #include <boost/mpi/environment.hpp>
