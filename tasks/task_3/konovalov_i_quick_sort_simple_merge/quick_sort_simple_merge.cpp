@@ -86,7 +86,7 @@ void quickSortPar(int* res, size_t n) {
     }
 
     for (int i = 1; i < numProc; ++i) {
-      merge(centralChunk + chunk * (i - 1), chunk, arr, 
+      merge(centralChunk + chunk * (i - 1), chunk, arr,
         arr[centralChunk + chunk * (i - 1)], res);
     }
     delete[] arr;
