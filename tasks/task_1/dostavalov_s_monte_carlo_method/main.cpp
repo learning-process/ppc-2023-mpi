@@ -48,7 +48,7 @@ TEST(MPI_TESTS, Test_1) {
 }
 }
 
-TEST(Parallel_Operations_MPI, Test_hard_log) {
+TEST(MPI_TESTS, Test_hard_log) {
     bool flag = false;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -65,7 +65,7 @@ TEST(Parallel_Operations_MPI, Test_hard_log) {
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_hard_exp) {
+TEST(MPI_TESTS, Test_hard_exp) {
     bool flag = false;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -81,7 +81,7 @@ TEST(Parallel_Operations_MPI, Test_hard_exp) {
         ASSERT_EQ(flag, true);
     }
 }
-TEST(Parallel_Operations_MPI, Test_log) {
+TEST(MPI_TESTS, Test_log) {
     bool flag = false;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -98,7 +98,7 @@ TEST(Parallel_Operations_MPI, Test_log) {
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_exp) {
+TEST(MPI_TESTS, Test_exp) {
     bool flag = false;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);;
