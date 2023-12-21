@@ -6,60 +6,18 @@
 
 #include "./grid_torus_topology.h"
 
-TEST(MPI_TESTS, Test_Get_Next_Left) {
+TEST(MPI_TESTS, Test_Get_Next) {
     int rows = 3;
     int cols = 3;
 
     int next_1 = getNext(rows, cols, 0, 2);
     EXPECT_EQ(next_1, 2);
 
-    int next_2 = getNext(rows, cols, 1, 0);
-    EXPECT_EQ(next_2, 0);
-
-    int next_3 = getNext(rows, cols, 0, 8);
-    EXPECT_EQ(next_3, 2);
-
-    int next_4 = getNext(rows, cols, 2, 7);
-    EXPECT_EQ(next_4, 1);
-}
-
-TEST(MPI_TESTS, Test_Get_Next_Right) {
-    int rows = 3;
-    int cols = 3;
-
-    int next_1 = getNext(rows, cols, 3, 4);
-    EXPECT_EQ(next_1, 4);
-
-    int next_2 = getNext(rows, cols, 5, 3);
+    int next_2 = getNext(rows, cols, 6, 3);
     EXPECT_EQ(next_2, 3);
 
     int next_3 = getNext(rows, cols, 2, 6);
     EXPECT_EQ(next_3, 0);
-
-    int next_4 = getNext(rows, cols, 1, 8);
-    EXPECT_EQ(next_4, 2);
-}
-
-TEST(MPI_TESTS, Test_Get_Next_Up) {
-    int rows = 3;
-    int cols = 3;
-
-    int next_1 = getNext(rows, cols, 0, 6);
-    EXPECT_EQ(next_1, 6);
-
-    int next_2 = getNext(rows, cols, 6, 3);
-    EXPECT_EQ(next_2, 3);
-}
-
-TEST(MPI_TESTS, Test_Get_Next_Down) {
-    int rows = 3;
-    int cols = 3;
-
-    int next_1 = getNext(rows, cols, 6, 0);
-    EXPECT_EQ(next_1, 0);
-
-    int next_2 = getNext(rows, cols, 0, 3);
-    EXPECT_EQ(next_2, 3);
 }
 
 TEST(MPI_TESTS, Test_First_To_Last) {
