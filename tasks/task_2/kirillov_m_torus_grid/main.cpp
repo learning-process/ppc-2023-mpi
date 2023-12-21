@@ -2,8 +2,6 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include "./torus_grid.h"
-#include <boost/mpi/environment.hpp>
-#include <boost/mpi/communicator.hpp>
 
 TEST(Torus_Topology, Test_Tor1) {
     int rank, size;
