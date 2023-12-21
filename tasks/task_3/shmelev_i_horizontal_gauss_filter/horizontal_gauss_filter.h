@@ -17,7 +17,7 @@ bool compare_vectors(const std::vector<unsigned char>& vec1,
 const unsigned char matrix_gauss[3][3] {{1, 4, 1}, {4, 12, 4}, {1, 4, 1}};
 std::vector<unsigned char> generate_random_image(int columns, int rows);
 unsigned char gaussian_filter_pixel_operation(const std::vector<unsigned char>
-                                &image, int x1, int y1, int rows, int cols);
+                            &image, int x1, int y1, int rows, int cols);
 std::vector<unsigned char> par_gaussian_filter
     (const std::vector<unsigned char>& image, int rows, int cols);
 std::vector<unsigned char> seq_gaussian_filter
