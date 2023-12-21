@@ -17,7 +17,7 @@ double ApplyGlobalOptimizationSequential(
     std::vector<double> interimResults;
     interimResults.push_back(lowerBound);
     interimResults.push_back(upperBound);
-    // ==
+    
     int maxContr = 1;
     double coef = 2, controlParameter;
 
