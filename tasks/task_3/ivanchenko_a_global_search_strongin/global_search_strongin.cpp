@@ -65,7 +65,7 @@ double searchParallel(double x0, double x1, double eps) {
         while (true) {
             sort(x.begin(), x.end());
             int part = static_cast<int>(x.size() - 1) / size;
-            int remain = static_cast<int>(x.size() - 1) % size;       
+            int remain = static_cast<int>(x.size() - 1) % size;
             for (int i = 1; i < size; ++i) {
                 MPI_Send(x.data() + remain + i * part, 1, MPI_DOUBLE, i, 0,
                        MPI_COMM_WORLD);
