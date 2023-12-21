@@ -87,14 +87,14 @@ TEST(Parallel_Letter_Frequency_Calculation, random_test) {
   std::string str;
 
   for (int i = 0; i < 50; i++) {
-    str.append(std::string(63 + (std::rand() % (90 - 63))));
+    str.append(std::to_string(63 + (std::rand() % (90 - 63))));
   }
 
   char letter = 'y';
-  double resPar = letterFreqCalcPar(str, letter);
+  double resPar = letterFreqCalcPar(str.data(), letter);
 
   if (rankProc == 0) {
-    double resSeq = letterFreqCalcSeq(str, letter);
+    double resSeq = letterFreqCalcSeq(str.data(), letter);
     ASSERT_EQ(resPar, resSeq);
   }
 }
