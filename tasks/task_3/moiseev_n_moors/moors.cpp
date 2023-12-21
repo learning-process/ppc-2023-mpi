@@ -6,10 +6,16 @@
 #include <stdexcept>
 #include <algorithm>
 #include <limits>
+#include <stdlib.h>
 #include "task_3/moiseev_n_moors/moors.h"
 
 static int getRandomOffset() {
-    return (rand_r() % 1000) + 1;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    const int low = -999;
+    const int up = 999;
+    std::uniform_int_distribution<int> dist(low, up);
+    return dist(gen);
 }
 
 const int INFINITY_VALUE = 2000000000;
