@@ -1,13 +1,5 @@
 // Copyright 2023 Shmelev Ivan
 #include "task_3/shmelev_i_horizontal_gauss_filter/horizontal_gauss_filter.h"
-#include <iostream>
-#include <random>
-#include <array>
-#include <numeric>
-#include <algorithm>
-#include <vector>
-#include <ctime>
-#include <list>
 
 bool compare_vectors(const std::vector<unsigned char>& vector1,
                     const std::vector<unsigned char>& vector2) {

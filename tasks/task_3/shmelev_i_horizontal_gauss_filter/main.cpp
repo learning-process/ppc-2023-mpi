@@ -1,8 +1,5 @@
 // Copyright 2023 Shmelev Ivan
 #include <gtest/gtest.h>
-#include <iostream>
-#include <vector>
-#include <array>
 #include "./horizontal_gauss_filter.h"
 
 TEST(MPI_TESTS, Test_Given_Image) {

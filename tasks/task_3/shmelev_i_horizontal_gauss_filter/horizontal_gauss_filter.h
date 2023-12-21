@@ -3,7 +3,14 @@
 #define TASKS_TASK_3_SHMELEV_I_HORIZONTAL_GAUSS_FILTER_HORIZONTAL_GAUSS_FILTER_H_
 
 #include <mpi.h>
+#include <iostream>
 #include <vector>
+#include <random>
+#include <array>
+#include <numeric>
+#include <algorithm>
+#include <ctime>
+#include <list>
 
 bool compare_vectors(const std::vector<unsigned char>& vec1,
                     const std::vector<unsigned char>& vec2);
