@@ -3,6 +3,7 @@
 #define TASKS_TASK_3_MOISEEV_N_MOORS_MOORS_H_
 
 #include <mpi.h>
+#include <vector>
 
 static int getRandomOffset();
 std::vector<int> generateRandomWeightedGraph(int size);

@@ -9,7 +9,7 @@
 #include "task_3/moiseev_n_moors/moors.h"
 
 static int getRandomOffset() {
-    return (rand() % 1000) + 1;
+    return (rand_r() % 1000) + 1;
 }
 
 const int INFINITY_VALUE = 2000000000;
