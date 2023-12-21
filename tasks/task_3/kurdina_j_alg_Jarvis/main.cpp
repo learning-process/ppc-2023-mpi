@@ -57,7 +57,7 @@ TEST(Parallel_Operations_MPI, Test3) {
                             0, 0, 0, 179, 0, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 179, 223, 0, 0, 0, 220, 220, 0, 0,
                             0, 0, 128, 0, 80, 0, 80, 0, 0, 0, 0, 0,
-                            0, 0, 0, 179, 223, 0, 0, 0, 100, 0, 0, 0,};
+                            0, 0, 0, 179, 223, 0, 0, 0, 100, 0, 0, 0 };
   std::vector<point> not_par;
   std::vector<point> par;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
