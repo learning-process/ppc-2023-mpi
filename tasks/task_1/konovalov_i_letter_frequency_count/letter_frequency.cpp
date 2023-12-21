@@ -10,7 +10,7 @@ double letterFreqCalcSeq(const char* str, char l) {
 	  count++;
 	}
   }
-  return std::static_cast<double>(count) / std::static_cast<double>(i);
+  return static_cast<double>(count) / static_cast<double>(i);
 }
 
 int letterCountInChunk(const char* str, char l) {
@@ -55,10 +55,10 @@ double letterFreqCalcPar(const char* str, char l) {
   MPI_Scatterv(str, recv_counts.data(), displs.data(), MPI_CHAR, recv_data.data(),
 	recv_counts[rankProc], MPI_INT, 0, MPI_COMM_WORLD);
 
-  int localCount = letterCountInChunk(recv_data, l);
+  int localCount = letterCountInChunk(recv_data.data(), l);
   int globalCount = 0;
 
-  MPI_Reduce(&localFreq, &globalFreq, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&localCount, &globalCount, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-  return std::static_cast<double>(globalCount) / std::static_cast<double>(len);
+  return static_cast<double>(globalCount) / static_cast<double>(len);
 }

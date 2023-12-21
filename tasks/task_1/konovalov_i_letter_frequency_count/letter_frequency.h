@@ -4,6 +4,7 @@
 
 #include <mpi.h>
 #include <vector>
+#include <string>
 
 double letterFreqCalcPar(const char* str, char l);
 int letterCountInChunk(const char* str, char l);
