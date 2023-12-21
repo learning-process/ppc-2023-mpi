@@ -20,7 +20,7 @@ TEST(Gather_Realization, simple_int_test) {
   int* refResult;
 
   for (int i = 0; i < n; i++) {
-    sendArr[i] = rankProc;
+    send[i] = rankProc;
   }
 
   if (rankProc == rootProc) {
@@ -28,8 +28,8 @@ TEST(Gather_Realization, simple_int_test) {
     refResult = static_cast<int*>(malloc(numProc * n * sizeof(int)));
   }
 
-  int returnCode = custom_gather(sendArr, n, MPI_INT, rbuf, n, MPI_INT, rootProc, comm);
-  MPI_Gather(sendArr, n, MPI_INT, refResult, n, MPI_INT, rootProc, comm);
+  int returnCode = custom_gather(send, n, MPI_INT, rbuf, n, MPI_INT, rootProc, comm);
+  MPI_Gather(send, n, MPI_INT, refResult, n, MPI_INT, rootProc, comm);
   if (rankProc == rootProc) {
     if (returnCode != MPI_SUCCESS)
       FAIL();
@@ -52,12 +52,12 @@ TEST(Gather_Realization, simple_double_test) {
 
   int rootProc = 0;
   int n = 10;
-  double* send = new int[n];
+  double* send = new double[n];
   double* rbuf;
   double* refResult;
 
   for (int i = 0; i < n; i++) {
-    send[i] = std::static_cast<double>(rankProc);
+    send[i] = static_cast<double>(rankProc);
   }
 
   if (rankProc == rootProc) {
@@ -89,12 +89,12 @@ TEST(Gather_Realization, simple_float_test) {
 
   int rootProc = 0;
   int n = 10;
-  float* send = new int[n];
+  float* send = new float[n];
   float* rbuf;
   float* refResult;
 
   for (int i = 0; i < n; i++) {
-    send[i] = std::static_cast<float>(rankProc);
+    send[i] = static_cast<float>(rankProc);
   }
 
   if (rankProc == rootProc) {
@@ -161,7 +161,7 @@ TEST(Gather_Realization, root_error_test) {
   if (rankProc == rootProc) {
     rbuf = static_cast<int*>(malloc(numProc * 10 * sizeof(int)));
   }
-  int returnCode = Gather(send, 10, MPI_INT, rbuf, 10, MPI_INT, rootProc, comm);
+  int returnCode = custom_gather(send, 10, MPI_INT, rbuf, 10, MPI_INT, rootProc, comm);
   if (rankProc == 0) {
     EXPECT_EQ(MPI_ERR_ROOT, returnCode);
     free(rbuf);

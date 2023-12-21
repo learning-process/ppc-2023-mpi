@@ -23,8 +23,8 @@ int custom_gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, voi
   int size;
   int prevProc = rankProc - 1;
   int nextProc = rankProc + 1;
-  MPI_Type_size(sendtype, &sizeofType);
-  size_t bytes = static_cast<size_t>(sendcount * sizeofType);
+  MPI_Type_size(sendtype, &size);
+  size_t bytes = static_cast<size_t>(sendcount * size);
   void* buf = std::malloc(bytes * (numProc - rankProc));
   std::memcpy(buf, sendbuf, bytes);
 
