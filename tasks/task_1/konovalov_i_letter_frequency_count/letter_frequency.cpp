@@ -6,9 +6,9 @@ double letterFreqCalcSeq(const char* str, char l) {
   int count = 0;
   int i;
   for (i = 0; str[i] != '\0'; i++) {
-	if (str[i] == l) {
-	  count++;
-	}
+    if (str[i] == l) {
+      count++;
+    }
   }
   return static_cast<double>(count) / static_cast<double>(i);
 }
@@ -16,9 +16,9 @@ double letterFreqCalcSeq(const char* str, char l) {
 int letterCountInChunk(const char* str, char l) {
   int count = 0;
   for (int i = 0; str[i] != '\0'; i++) {
-	if (str[i] == l) {
-	  count++;
-	}
+    if (str[i] == l) {
+      count++;
+    }
   }
   return count;
 }
@@ -37,23 +37,23 @@ double letterFreqCalcPar(const char* str, char l) {
   std::vector<int> displs(numProc);
 
   for (int i = 0; i < numProc; i++) {
-	recv_counts[i] = 0;
+    recv_counts[i] = 0;
   }
 
   int chunk_size = len / numProc;
   int remaining = len % numProc;
 
   for (int i = 0; i < numProc; i++) {
-	recv_counts[i] = chunk_size;
-	if (i < remaining) {
-	  recv_counts[i]++;
-	}
-	displs[i] = (i > 0) ? (displs[i - 1] + recv_counts[i - 1]) : 0;
+    recv_counts[i] = chunk_size;
+    if (i < remaining) {
+      recv_counts[i]++;
+    }
+    displs[i] = (i > 0) ? (displs[i - 1] + recv_counts[i - 1]) : 0;
   }
 
   std::string recv_data(str, displs[rankProc], recv_counts[rankProc]);
   MPI_Scatterv(str, recv_counts.data(), displs.data(), MPI_CHAR, recv_data.data(),
-	recv_counts[rankProc], MPI_INT, 0, MPI_COMM_WORLD);
+    recv_counts[rankProc], MPI_INT, 0, MPI_COMM_WORLD);
 
   int localCount = letterCountInChunk(recv_data.data(), l);
   int globalCount = 0;

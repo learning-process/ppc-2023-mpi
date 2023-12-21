@@ -10,4 +10,4 @@ double letterFreqCalcPar(const char* str, char l);
 int letterCountInChunk(const char* str, char l);
 double letterFreqCalcSeq(const char* str, char l);
 
-#endif  //TASKS_TASK_1_KONOVALOV_I_LETTER_FREQUENCY_COUNT_LETTER_FREQUENCY_H_
+#endif  // TASKS_TASK_1_KONOVALOV_I_LETTER_FREQUENCY_COUNT_LETTER_FREQUENCY_H_
