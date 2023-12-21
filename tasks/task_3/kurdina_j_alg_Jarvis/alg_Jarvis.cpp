@@ -164,10 +164,12 @@ std::vector<point> get_convex_hull_parallel(const std::vector<int>& image, int n
           id = i;
         }
       }
-      item4 = {
-      item4.x = from_proc[id].x,
-      item4.y = from_proc[id].y
-      };
+      if (id != -1) {
+        item4 = {
+        item4.x = from_proc[id].x,
+        item4.y = from_proc[id].y
+        };
+      }
     }
     MPI_Bcast(&item4, sizeof(point), MPI_BYTE, 0, MPI_COMM_WORLD);
     cur = item4;
