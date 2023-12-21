@@ -15,7 +15,7 @@ TEST(quick_sort_simple_merge, small_random_array_test) {
   quickSortPar(a, n);
 
   if (rank == 0) {
-    EXPECT_TRUE(check(a, n));
+    EXPECT_TRUE(check(n, a));
   }
   delete[] a;
 }
@@ -32,7 +32,7 @@ TEST(quick_sort_simple_merge, large_random_array_test) {
   quickSortPar(a, n);
 
   if (rank == 0) {
-    EXPECT_TRUE(check(a, n));
+    EXPECT_TRUE(check(n, a));
   }
   delete[] a;
 }
@@ -70,7 +70,7 @@ TEST(quick_sort_simple_merge, very_large_array_test) {
   quickSortPar(a, n);
 
   if (rank == 0) {
-    EXPECT_TRUE(check(a, n));
+    EXPECT_TRUE(check(n, a));
   }
   delete[] a;
 }
@@ -87,7 +87,7 @@ TEST(quick_sort_simple_merge, very_very_large_array_test) {
   quickSortPar(a, n);
 
   if (rank == 0) {
-    EXPECT_TRUE(check(a, n));
+    EXPECT_TRUE(check(n, a));
   }
   delete[] a;
 }

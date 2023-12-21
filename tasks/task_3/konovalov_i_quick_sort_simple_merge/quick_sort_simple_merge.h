@@ -8,7 +8,7 @@
 #include <random>
 
 void swap_(int* arr, int i, int j);
-void quickSortRec(int n, int* arr)
+void quickSortRec(int n, int* arr);
 void merge(int n1, int n2, int* left, int* right, int* res);
 void quickSortPar(int* res, size_t n);
 bool check(int n, int* arr);

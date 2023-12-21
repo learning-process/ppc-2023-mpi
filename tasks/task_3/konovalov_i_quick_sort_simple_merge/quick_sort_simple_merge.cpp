@@ -62,7 +62,7 @@ void quickSortPar(int* res, size_t n) {
   int numProc = 0;
 
   MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-  MPI_Comm_rankProc(MPI_COMM_WORLD, &rankProc);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
 
   if (rankProc == 0) {
     int* arr = new int[n];
@@ -87,7 +87,7 @@ void quickSortPar(int* res, size_t n) {
 
     for (int i = 1; i < numProc; ++i) {
       merge(centralChunk + chunk * (i - 1), chunk, arr,
-        arr[centralChunk + chunk * (i - 1)], res);
+        arr + centralChunk + chunk * (i - 1), res);
     }
     delete[] arr;
   } else {
@@ -98,7 +98,7 @@ void quickSortPar(int* res, size_t n) {
     MPI_Get_count(&status, MPI_INT, &count);
     buf = new int[count];
     MPI_Recv(buf, count, MPI_INT, 0, 100, MPI_COMM_WORLD, &status);
-    quickSortRec(centralChunk, buf);
+    quickSortRec(count, buf);
     MPI_Send(buf, count, MPI_INT, 0, 200, MPI_COMM_WORLD);
     delete[] buf;
   }
