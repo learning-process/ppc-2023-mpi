@@ -3,7 +3,7 @@
 #include <queue>
 
 int degree(int n) {
-	int i = 0;
+    int i = 0;
 	while (n > 1) {
 		if (n % 2 != 0) {
 			return -1;
