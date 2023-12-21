@@ -5,7 +5,6 @@ int custom_gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, voi
   int recvcount, MPI_Datatype recvtype, int root, MPI_Comm comm) {
   int numProc;
   int rankProc;
-  
   MPI_Comm_size(comm, &numProc);
   MPI_Comm_rank(comm, &rankProc);
 
