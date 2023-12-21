@@ -18,7 +18,7 @@ std::pair<int, int> funcFindClosestNeighborsMPI(const std::vector<int>& _data, i
     for (int i = 0; i < _data.size(); i++) {
         int difference = std::abs(_data[i] - _data[i + 1]);
         if (difference < minDifference) {
-	        minIndex = i;
+            minIndex = i;
             minDifference = difference;
         }
     }
