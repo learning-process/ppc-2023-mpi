@@ -2,74 +2,114 @@
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
-#include "letter_frequency.h"
+#include "./letter_frequency.h"
 
 TEST(Parallel_Letter_Frequency_Calculation, simple_test) {
-    int rankProc = 0;
-    int numProc = 0;
+  int rankProc = 0;
+  int numProc = 0;
 
-    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+  MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    const char* str = "qwertyy";
+  const char* str = "qwertyy";
 
-    char letter = 'y';
-    double resPar = letterFreqCalcPar(str, letter);
+  char letter = 'y';
+  double resPar = letterFreqCalcPar(str, letter);
 
-    if (rankProc == 0) {
-        double resSeq = letterFreqCalcSeq(str, letter);
-        ASSERT_EQ(resPar, resSeq);
-    }
+  if (rankProc == 0) {
+    double resSeq = letterFreqCalcSeq(str, letter);
+    ASSERT_EQ(resPar, resSeq);
+  }
 }
 
 
 TEST(Parallel_Letter_Frequency_Calculation, empty_string_test) {
-    int rankProc = 0;
-    int numProc = 0;
+  int rankProc = 0;
+  int numProc = 0;
 
-    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+  MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    const char* str = "";
+  const char* str = "";
 
-    char letter = 'y';
-    double resPar = letterFreqCalcPar(str, letter);
+  char letter = 'y';
+  double resPar = letterFreqCalcPar(str, letter);
 
-    if (rankProc == 0) {
-        double resSeq = letterFreqCalcSeq(str, letter);
-        ASSERT_EQ(resPar, resSeq);
-    }
+  if (rankProc == 0) {
+    double resSeq = letterFreqCalcSeq(str, letter);
+    ASSERT_EQ(resPar, resSeq);
+  }
 }
 
 TEST(Parallel_Letter_Frequency_Calculation, frequency_eq_1_test) {
-    int rankProc = 0;
-    int numProc = 0;
+  int rankProc = 0;
+  int numProc = 0;
 
-    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+  MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    std::string str("yyyyyyy");
+  const char* str = "yyyyyyy";
 
-    char letter = 'y';
-    double resPar = letterFreqCalcPar(str, letter);
+  char letter = 'y';
+  double resPar = letterFreqCalcPar(str, letter);
 
-    if (rankProc == 0) {
-        double resSeq = letterFreqCalcSeq(str, letter);
-        ASSERT_EQ(resPar, resSeq);
-    }
+  if (rankProc == 0) {
+    double resSeq = letterFreqCalcSeq(str, letter);
+    ASSERT_EQ(resPar, resSeq);
+  }
+}
+
+TEST(Parallel_Letter_Frequency_Calculation, frequrncy_eq_0_test) {
+  int rankProc = 0;
+  int numProc = 0;
+
+  MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+  MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+
+  const char* str = "yyyyyyy";
+
+  char letter = 'a';
+  double resPar = letterFreqCalcPar(str, letter);
+
+  if (rankProc == 0) {
+    double resSeq = letterFreqCalcSeq(str, letter);
+    ASSERT_EQ(resPar, resSeq);
+  }
+}
+
+TEST(Parallel_Letter_Frequency_Calculation, random_test) {
+  int rankProc = 0;
+  int numProc = 0;
+
+  MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+  MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+
+  const char* str = "                    ";
+
+  for (int i = 0; i < 20; i++) {
+    str[i] = static_cast<char>(63 + (std::rand() % (90 - 63)));
+  }
+
+  char letter = 'y';
+  double resPar = letterFreqCalcPar(str, letter);
+
+  if (rankProc == 0) {
+    double resSeq = letterFreqCalcSeq(str, letter);
+    ASSERT_EQ(resPar, resSeq);
+  }
 }
 
 int main(int argc, char** argv) {
-    int result_code = 0;
+  int result_code = 0;
 
-    ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners =
-        ::testing::UnitTest::GetInstance()->listeners();
+  ::testing::InitGoogleTest(&argc, argv);
+  ::testing::TestEventListeners& listeners =
+    ::testing::UnitTest::GetInstance()->listeners();
 
-    if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
-        MPI_Abort(MPI_COMM_WORLD, -1);
-    result_code = RUN_ALL_TESTS();
-    MPI_Finalize();
+  if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
+    MPI_Abort(MPI_COMM_WORLD, -1);
+  result_code = RUN_ALL_TESTS();
+  MPI_Finalize();
 
-    return result_code;
+  return result_code;
 }
