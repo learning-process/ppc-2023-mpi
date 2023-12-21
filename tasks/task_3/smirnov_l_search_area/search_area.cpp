@@ -45,7 +45,7 @@ double ApplyGlobalOptimizationSequential(
             function(&interimResults.at(1)) -
             function(&interimResults.at(0)))
             / (interimResults.at(1) - interimResults.at(0));
-        // ***
+        
         for (int i = 2; i <= counter; i++) {
             meanRateOfChange = std::max(
                 meanRateOfChange,
