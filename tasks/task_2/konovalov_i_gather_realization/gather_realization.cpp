@@ -1,10 +1,11 @@
 // Copyright 2023 Konovalov Igor
-#include "gather_realization.h"
+#include "task_2/konovalov_i_gather_realization/gather_realization.h"
 
-int custom_gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, void* recvbuf, int recvcount, MPI_Datatype recvtype, int root, MPI_Comm comm) {
+int custom_gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, void* recvbuf,
+  int recvcount, MPI_Datatype recvtype, int root, MPI_Comm comm) {
   int numProc;
   int rankProc;
-    
+  
   MPI_Comm_size(comm, &numProc);
   MPI_Comm_rank(comm, &rankProc);
 
@@ -30,23 +31,21 @@ int custom_gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, voi
 
   if (numProc == 1) {
     std::memcpy(recvbuf, buf, bytes);
-  }
-  else {
+  } else {
     if (rankProc != 0) {
       if (nextProc < numProc) {
-        MPI_Recv(static_cast<char*>(buf) + 1 * recvcount * size, recvcount * (numProc - rankProc - 1), sendtype, nextProc, 0, comm, MPI_STATUS_IGNORE);
+        MPI_Recv(static_cast<char*>(buf) + 1 * recvcount * size, recvcount * (numProc - rankProc - 1),
+          sendtype, nextProc, 0, comm, MPI_STATUS_IGNORE);
         MPI_Send(buf, sendcount * (numProc - rankProc), sendtype, prevProc, 0, comm);
-      }
-      else {
+      } else {
         MPI_Send(buf, sendcount, sendtype, prevProc, 0, comm);
       }
-    }
-    else {
-      MPI_Recv(static_cast<char*>(buf) + 1 * recvcount * size, recvcount * (numProc - rankProc - 1), sendtype, nextProc, 0, comm, MPI_STATUS_IGNORE);
+    } else {
+      MPI_Recv(static_cast<char*>(buf) + 1 * recvcount * size, recvcount * (numProc - rankProc - 1), sendtype,
+        nextProc, 0, comm, MPI_STATUS_IGNORE);
       if (rankProc == root) {
         std::memcpy(recvbuf, buf, bytes * (numProc - rankProc));
-      }
-      else {
+      } else {
         MPI_Send(buf, sendcount * numProc, sendtype, root, 0, comm);
       }
     }
@@ -56,5 +55,4 @@ int custom_gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, voi
   }
   free(buf);
   return MPI_SUCCESS;
-
 }
