@@ -16,7 +16,7 @@ TEST(Gather_Realization, simple_int_test) {
   int rootProc = 0;
   int n = 10;
   int* send = new int[n];
-  int* rbuf;
+  int* rbuf = nullptr;
   int* refResult;
 
   for (int i = 0; i < n; i++) {
@@ -53,7 +53,7 @@ TEST(Gather_Realization, simple_double_test) {
   int rootProc = 0;
   int n = 10;
   double* send = new double[n];
-  double* rbuf;
+  double* rbuf = nullptr;
   double* refResult;
 
   for (int i = 0; i < n; i++) {
@@ -90,7 +90,7 @@ TEST(Gather_Realization, simple_float_test) {
   int rootProc = 0;
   int n = 10;
   float* send = new float[n];
-  float* rbuf;
+  float* rbuf = nullptr;
   float* refResult;
 
   for (int i = 0; i < n; i++) {
@@ -126,7 +126,7 @@ TEST(Gather_Realization, count_error_test) {
 
   int rootProc = 0;
   int send[10];
-  int* rbuf;
+  int* rbuf = nullptr;
 
   for (int i = 0; i < 10; i++) {
     send[i] = rankProc;
@@ -154,7 +154,7 @@ TEST(Gather_Realization, root_error_test) {
 
   int rootProc = -5;
   int send[10];
-  int* rbuf;
+  int* rbuf = nullptr;
   for (int i = 0; i < 10; i++) {
     send[i] = rankProc;
   }
