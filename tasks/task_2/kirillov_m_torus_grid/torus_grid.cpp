@@ -1,15 +1,8 @@
 // Copyright 2023 Kirillov Maxim
-#include <vector>
-#include <string>
-#include <random>
+
 #include <algorithm>
-#include <functional>
-#include <boost/mpi/communicator.hpp>
-#include <boost/mpi/collectives.hpp>
-#include <boost/mpi/environment.hpp>
-#include <boost/mpi/cartesian_communicator.hpp>
-#include <boost/mpi.hpp>
 #include "./torus_grid.h"
+#include "task_2/kirillov_m_torus_grid/torus_grid.h"
 
 int getNext(int sender, int receiver) {
     int size;
