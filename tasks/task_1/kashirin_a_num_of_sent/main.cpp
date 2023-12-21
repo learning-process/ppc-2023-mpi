@@ -1,4 +1,4 @@
-//Copyright 2023 Kashirin Alexander
+//cCopyright 2023 Kashirin Alexander
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
@@ -12,7 +12,6 @@ TEST(MPI_TEST, Test_no_sent) {
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
     std::string str = "sentence";
-    
     int result = numPar(str);
 
     if (rankProc == 0) {
@@ -66,7 +65,6 @@ TEST(MPI_TEST, Test_random_string) {
 
     std::string str = "";
     generateRandomString(str, 20);
-    
 
     int result = numPar(str);
 
@@ -77,8 +75,7 @@ TEST(MPI_TEST, Test_random_string) {
     }
 }
 
-TEST(MPI_TEST, Test_all_dots)
-{
+TEST(MPI_TEST, Test_all_dots){
     int rankProc = 0;
     int numProc = 0;
 
@@ -123,7 +120,7 @@ int main(int argc, char** argv) {
     int result_code = 0;
 
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = 
+    ::testing::TestEventListeners& listeners =
         ::testing::UnitTest::GetInstance()->listeners();
 
     if (MPI_Init(&argc, &argv) != MPI_SUCCESS) 
