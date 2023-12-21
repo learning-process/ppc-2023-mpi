@@ -28,7 +28,6 @@ double ApplyGlobalOptimizationSequential(
         / (interimResults.at(1) - interimResults.at(0));
 
     double stepSize = (meanRateOfChange > 0) ? meanRateOfChange * coef : 1;
-
     double candidatePoint;
     candidatePoint = ((interimResults.at(1) + interimResults.at(0)) / 2 -
         (function(&interimResults.at(1)) - function(&interimResults.at(0)))
