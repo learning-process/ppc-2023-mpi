@@ -163,6 +163,7 @@ TEST(GlobalOptimizationArea, CosFunction) {
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
     int result = 0;
+
     ::testing::InitGoogleTest(&argc, argv);
     ::testing::TestEventListeners& listeners =
         ::testing::UnitTest::GetInstance()->listeners();
