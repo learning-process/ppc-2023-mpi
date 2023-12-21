@@ -55,11 +55,12 @@ TEST(MPI_TESTS, Test_Small_Matrix) {
 TEST(MPI_TESTS, Test_LT_CommSize_Matrix) {
     int rank = 0;
     int size;
+
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    //const size_t m = 4;
-    //const size_t n = 4;
+    // const size_t m = 4;
+    // const size_t n = 4;
     size_t image_size;
     const uint8_t new_min = 0;
     const uint8_t new_max = 255;
