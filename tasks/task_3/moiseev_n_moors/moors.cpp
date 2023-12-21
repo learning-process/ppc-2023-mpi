@@ -1,12 +1,12 @@
 // Copyright 2023 Moiseev Nikita
 #include <mpi.h>
+#include <stdlib.h>
 #include <random>
 #include <ctime>
 #include <vector>
 #include <stdexcept>
 #include <algorithm>
 #include <limits>
-#include <stdlib.h>
 #include "task_3/moiseev_n_moors/moors.h"
 
 static int getRandomOffset() {
