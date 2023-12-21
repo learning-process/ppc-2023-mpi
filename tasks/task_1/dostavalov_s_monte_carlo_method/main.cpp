@@ -1,4 +1,4 @@
-// Copyright 2023 Dostavalov Semen
+// Copyright 2023 Dostavalov Semen.
 #include <math.h>
 #include <gtest/gtest.h>
 #include <boost/core/invoke_swap.hpp>
