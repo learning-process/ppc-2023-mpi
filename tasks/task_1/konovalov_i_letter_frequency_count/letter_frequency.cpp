@@ -10,7 +10,7 @@ double letterFreqCalcSeq(const char* str, char l) {
       count++;
     }
   }
-  return static_cast<double>(count) / static_cast<double>(i);
+  return (count != 0) ? (static_cast<double>(count) / static_cast<double>(i)) : static_cast<double>(0);
 }
 
 int letterCountInChunk(const char* str, char l) {
@@ -60,5 +60,5 @@ double letterFreqCalcPar(const char* str, char l) {
 
   MPI_Reduce(&localCount, &globalCount, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-  return static_cast<double>(globalCount) / static_cast<double>(len);
+  return (globalCount != 0) ? (static_cast<double>(globalCount) / static_cast<double>(len)) : static_cast<double>(0);
 }
