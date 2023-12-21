@@ -1,7 +1,7 @@
 // Copyright 2023 Kashirin Alexander
 
-#ifndef TASKS_TASK1_KASHIRIN_A_NUM_OS_SENT_NUM_OF_SENT_H_
-#define TASKS_TASK1_KASHIRIN_A_NUM_OS_SENT_NUM_OF_SENT_H_
+#ifndef TASKS_TASK1_KASHIRIN_A_NUM_OF_SENT_NUM_OF_SENT_H_
+#define TASKS_TASK1_KASHIRIN_A_NUM_OF_SENT_NUM_OF_SENT_H_
 
 #include <mpi.h>
 #include <string>
@@ -15,4 +15,4 @@ void generateRandomString(const std::string& str, int size);
 
 
 
-#endif  // TASKS_TASK1_KASHIRIN_A_NUM_OS_SENT_NUM_OF_SENT_H_
+#endif  // TASKS_TASK1_KASHIRIN_A_NUM_OF_SENT_NUM_OF_SENT_H_

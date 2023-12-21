@@ -1,4 +1,4 @@
-//cCopyright 2023 Kashirin Alexander
+// Copyright 2023 Kashirin Alexander
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
@@ -75,7 +75,7 @@ TEST(MPI_TEST, Test_random_string) {
     }
 }
 
-TEST(MPI_TEST, Test_all_dots){
+TEST(MPI_TEST, Test_all_dots) {
     int rankProc = 0;
     int numProc = 0;
 
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
     ::testing::TestEventListeners& listeners =
         ::testing::UnitTest::GetInstance()->listeners();
 
-    if (MPI_Init(&argc, &argv) != MPI_SUCCESS) 
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
         MPI_Abort(MPI_COMM_WORLD, -1);
     result_code = RUN_ALL_TESTS();
     MPI_Finalize();
