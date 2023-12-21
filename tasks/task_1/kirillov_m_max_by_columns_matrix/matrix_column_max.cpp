@@ -9,6 +9,7 @@
 #include "task_1/kirillov_m_max_by_columns_matrix/matrix_column_max.h"
 
 std::pair<int, int> getColIndexAndCount(size_t columns, int rank);
+
 std::vector<int> getRandomMatrix(int rows, int columns) {
     std::random_device dev;
     std::mt19937 gen(dev());
