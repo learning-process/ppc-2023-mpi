@@ -5,7 +5,7 @@
 #include <boost/mpi/collectives.hpp>
 #include "task_3/ivanchenko_a_global_search_strongin/global_search_strongin.h"
 
-double f(double x) { 
+double f(double x) {
     return 1 + x*x + x*x*x;
 }
 
@@ -61,15 +61,15 @@ double searchParallel(double x0, double x1, double eps) {
     if (rank == 0) {
         std::vector<double> x;
         x.push_back(x0);
-        x.push_back(x1);        
+        x.push_back(x1);
         while (true) {
-            sort(x.begin(), x.end());     
+            sort(x.begin(), x.end());
             int part = static_cast<int>(x.size() - 1) / size;
             int remain = static_cast<int>(x.size() - 1) % size;       
             for (int i = 1; i < size; ++i) {
                 MPI_Send(x.data() + remain + i * part, 1, MPI_DOUBLE, i, 0,
                        MPI_COMM_WORLD);
-            }     
+            }
             double lipshM = 0, lipshm, lipsh;
             for (int i = 0; i < part + remain; ++i) {
                 lipsh = std::abs((f(x[i + 1]) - f(x[i])) / (x[i + 1] - x[i]));
@@ -87,7 +87,7 @@ double searchParallel(double x0, double x1, double eps) {
                         lipshm = 2 * lipsh;
                     }
                 }
-            }     
+            }
             int interval = 0;
             double tempR;
             double R = 0.0;
@@ -115,12 +115,12 @@ double searchParallel(double x0, double x1, double eps) {
         int part = 0;
         while (true) {
             MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-            MPI_Get_count(&status, MPI_DOUBLE, &part);  
+            MPI_Get_count(&status, MPI_DOUBLE, &part);
             std::vector<double> x(part + 1);
             MPI_Recv(x.data(), 1, MPI_DOUBLE, 0, MPI_ANY_TAG, MPI_COMM_WORLD,
-                     &status);  
+                     &status);
             if (status.MPI_TAG == 1)
-              return 0; 
+              return 0;
             double lipshM = 0, lipshm = 1.0, lipsh;
             if (part != 0) {
                 for (int i = 0; i < static_cast<int>(x.size()) - 1; ++i) {
