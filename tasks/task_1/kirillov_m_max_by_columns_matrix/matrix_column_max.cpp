@@ -49,6 +49,7 @@ std::vector<int> getParallelMaxInColumns(const std::vector<int>&matrixc,
                 std::max(localMaxValues[i - colIndex], matrix[j * columns + i]);
         }
     }
+
     if (world.rank() != 0) {
         boost::mpi::gatherv(world, localMaxValues, 0);
     } else {
