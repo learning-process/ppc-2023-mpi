@@ -2,6 +2,30 @@
 #include <gtest/gtest.h>
 #include "task_2/kalinin_a_gorA_verB/gorA_verB.h"
 
+TEST(Parallel_Operations_MPI, more_columns) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<int>::size_type row_count = 20, column_count = 30;
+    std::vector<int> matrix1(row_count * column_count),
+        matrix2(row_count * column_count);
+
+    if (rank == 0) {
+        matrix1 = getRandomMatrix(row_count, column_count);
+        matrix2 = getRandomMatrix(column_count, row_count);
+    }
+
+    std::vector<int> res = getParallelOperations(matrix1,
+        matrix2, row_count, column_count);
+
+    if (rank == 0) {
+        std::vector<int> expected_res =
+            getSequentialOperations(matrix1, matrix2, row_count,
+                column_count, row_count);
+
+        ASSERT_EQ(res, expected_res);
+    }
+}
+
 int main(int argc, char** argv) {
     int result_code = 0;
     ::testing::InitGoogleTest(&argc, argv);
