@@ -19,21 +19,36 @@ bool parallelLexicographicStrings(char* str1, char* str2) {
     int ost2 = len2 % size;
     int n1 = len1 / size;
     int n2 = len2 / size;
-    if (rank < ost1)
-        n1++;
-    if (rank < ost2)
-        n2++;
 
-    char* localStr1 = new char[n1 + 1];
-    char* localStr2 = new char[n2 + 1];
+    std::vector<int> counts(size, n1);
+    std::vector<int> displs(size, 0);
+    for (int i = 0; i < ost1; ++i) {
+        ++counts[i];
+    }
+    for (int i = 1; i < size; ++i) {
+        displs[i] = displs[i - 1] + counts[i - 1];
+    }
 
-    MPI_Scatter(str1, n1, MPI_CHAR,
-        localStr1, n1, MPI_CHAR, 0, MPI_COMM_WORLD);
-    MPI_Scatter(str2, n2, MPI_CHAR,
-        localStr2, n2, MPI_CHAR, 0, MPI_COMM_WORLD);
+    char* localStr1 = new char[counts[rank] + 1];
 
-    localStr1[n1] = '\0';
-    localStr2[n2] = '\0';
+    MPI_Scatterv(str1, counts.data(), displs.data(), MPI_CHAR,
+        localStr1, counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+
+    std::fill(counts.begin(), counts.end(), n2);
+    for (int i = 0; i < ost2; ++i) {
+        ++counts[i];
+    }
+    for (int i = 1; i < size; ++i) {
+        displs[i] = displs[i - 1] + counts[i - 1];
+    }
+
+    char* localStr2 = new char[counts[rank] + 1];
+
+    MPI_Scatterv(str2, counts.data(), displs.data(), MPI_CHAR,
+        localStr2, counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+
+    localStr1[counts[rank]] = '\0';
+    localStr2[counts[rank]] = '\0';
 
     bool local_result = checkOrder(localStr1, localStr2);
     bool globalResult;
