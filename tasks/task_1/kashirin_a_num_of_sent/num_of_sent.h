@@ -10,7 +10,7 @@
 
 int numSeq(const std::vector<char> &str);
 int numPar(const std::string &str);
-void generateRandomString(std::string& str, int size);
+void generateRandomString(std::string* str, int size);
 
 
 

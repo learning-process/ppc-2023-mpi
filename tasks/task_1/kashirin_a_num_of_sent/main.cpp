@@ -62,7 +62,7 @@ TEST(MPI_TEST, Test_random_string) {
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
     std::string str = "";
-    generateRandomString(str, 20);
+    generateRandomString(&str, 20);
 
     int result = numPar(str);
 

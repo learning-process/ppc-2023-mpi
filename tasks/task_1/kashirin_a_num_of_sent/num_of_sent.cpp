@@ -12,11 +12,10 @@ int numSeq(const std::vector<char>& str) {
     return num;
 }
 
-void generateRandomString(std::string& str, int size) {
-
+void generateRandomString(std::string* str, int size) {
     std::string alphabet = "abcdefghijklmnopqrstuvwxyz.?!";
 	for (int i = 0; i < size; i++) {
-        str  += alphabet[rand() % 30];
+        *str += alphabet[rand() % 30];
     }
 }
 
@@ -26,7 +25,7 @@ int numPar(const std::string& str) {
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    
+
     int strSize = str.size();
     std::vector<int> displs(numProc);
     std::vector<int> sendcount(numProc);
