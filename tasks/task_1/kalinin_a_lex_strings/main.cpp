@@ -5,8 +5,8 @@
 TEST(MPI_TEST, Test1) {
     int rankProc = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-    std::string str1 = "";
-    std::string str2 = "aaa";
+    std::string str1 = "aaa";
+    std::string str2 = "";
 
     int result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
@@ -31,8 +31,8 @@ TEST(MPI_TEST, Test2) {
 TEST(MPI_TEST, Test3) {
     int rankProc = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-    std::string str1 = "abcde";
-    std::string str2 = "abcdef";
+    std::string str1 = " ";
+    std::string str2 = " ";
 
     int result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
@@ -52,13 +52,15 @@ TEST(MPI_TEST, Test4) {
         int resSeq = checkOrder(str1, str2);
         ASSERT_EQ(result, resSeq);
     }
+
 }
 
 TEST(MPI_TEST, Test5) {
+
     int rankProc = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-    std::string str1 = " ";
-    std::string str2 = " ";
+    std::string str1 = "aaa";
+    std::string str2 = "";
 
     int result = parallelLexicographicStrings(str1, str2);
     if (rankProc == 0) {
