@@ -3,7 +3,6 @@
 #include <mpi.h>
 #include <iostream>
 #include "./horizontal_gauss_filter.h"
-#include <gtest-mpi-listener.hpp>
 
 TEST(MPI_TESTS, Test_Given_Image) {
   int rank;
