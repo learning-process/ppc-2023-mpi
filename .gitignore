@@ -1,5 +1,6 @@
 build
 mpich
+3rdparty
 cmake-build-release*
 cmake-build-debug*
 .idea/

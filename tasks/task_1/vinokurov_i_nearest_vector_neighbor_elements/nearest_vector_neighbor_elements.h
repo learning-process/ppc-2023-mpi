@@ -1,0 +1,12 @@
+// Copyright 2023 Vinokurov Ivan
+#ifndef TASKS_TASK_1_VINOKUROV_I_NEAREST_VECTOR_NEIGHBOR_ELEMENTS_NEAREST_NEIGHBOR_ELEMENTS_H_
+#define TASKS_TASK_1_VINOKUROV_I_NEAREST_VECTOR_NEIGHBOR_ELEMENTS_NEAREST_NEIGHBOR_ELEMENTS_H_
+
+#include <mpi.h>
+
+#include <vector>
+
+std::pair<int, int> funcFindClosestNeighborsMPI(std::vector<int>& _data, int _worldSize);
+
+
+#endif  // TASKS_TASK_1_VINOKUROV_I_NEAREST_VECTOR_NEIGHBOR_ELEMENTS_NEAREST_NEIGHBOR_ELEMENTS_H_
