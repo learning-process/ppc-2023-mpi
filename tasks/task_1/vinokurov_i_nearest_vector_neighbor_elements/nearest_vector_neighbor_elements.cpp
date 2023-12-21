@@ -7,7 +7,7 @@
 
 #define INT_MAX 2147483647
 
-std::pair<int, int> funcFindClosestNeighborsMPI(const std::vector<int>& _data, int _worldRank) {
+std::pair<int, int> funcFindClosestNeighborsMPI(const std::vector<int>& _data) {
     if (_data.size() == 0) {
         return { -1, -1 };
     }
@@ -25,12 +25,5 @@ std::pair<int, int> funcFindClosestNeighborsMPI(const std::vector<int>& _data, i
 
     MPI_Allreduce(&minIndex, &closestNeighborIndex, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);
 
-    switch (_worldRank) {
-        case 0: {
-            return { closestNeighborIndex, closestNeighborIndex + 1 };
-        }
-        default: {
-            return { -1, -1 };
-        }
-    }
+    return { closestNeighborIndex, closestNeighborIndex + 1 };
 }

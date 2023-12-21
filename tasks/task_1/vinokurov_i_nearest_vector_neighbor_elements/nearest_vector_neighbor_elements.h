@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-std::pair<int, int> funcFindClosestNeighborsMPI(const std::vector<int>& _data, int _worldSize);
+std::pair<int, int> funcFindClosestNeighborsMPI(const std::vector<int>& _data);
 
 
 #endif  // TASKS_TASK_1_VINOKUROV_I_NEAREST_VECTOR_NEIGHBOR_ELEMENTS_NEAREST_VECTOR_NEIGHBOR_ELEMENTS_H_

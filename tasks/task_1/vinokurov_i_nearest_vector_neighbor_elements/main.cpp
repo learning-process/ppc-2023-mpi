@@ -14,7 +14,7 @@ TEST(TESTS, CanRunFunction) {
 
     std::pair<int, int> res;
 
-    ASSERT_NO_THROW(res = funcFindClosestNeighborsMPI(testData, worldRank));
+    ASSERT_NO_THROW(res = funcFindClosestNeighborsMPI(testData));
 }
 
 TEST(TESTS, CanCheckBasic) {
@@ -23,7 +23,7 @@ TEST(TESTS, CanCheckBasic) {
     int worldRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
 
-    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData, worldRank);
+    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData);
 
     EXPECT_EQ(res.first, 3);
     EXPECT_EQ(res.second, 4);
@@ -35,7 +35,7 @@ TEST(TESTS, CanCheckEmptyVector) {
     int worldRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
 
-    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData, worldRank);
+    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData);
 
     EXPECT_EQ(res.first, -1);
     EXPECT_EQ(res.second, -1);
@@ -47,7 +47,7 @@ TEST(TESTS, CanCheckNegative) {
     int worldRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
 
-    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData, worldRank);
+    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData);
 
     EXPECT_EQ(res.first, 0);
     EXPECT_EQ(res.second, 1);
@@ -59,7 +59,7 @@ TEST(TESTS, CanCheckLargeNumbers) {
     int worldRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
 
-    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData, worldRank);
+    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData);
 
     EXPECT_EQ(res.first, 3);
     EXPECT_EQ(res.second, 4);
@@ -72,7 +72,7 @@ TEST(TESTS, CanCheckEquality) {
     int worldRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
 
-    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData, worldRank);
+    std::pair<int, int> res = funcFindClosestNeighborsMPI(testData);
 
     EXPECT_EQ(res.first, 0);
     EXPECT_EQ(res.second, 1);
