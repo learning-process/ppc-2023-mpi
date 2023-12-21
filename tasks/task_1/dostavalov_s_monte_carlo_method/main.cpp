@@ -9,7 +9,9 @@
 #define count 1000000
 #define err 0.1
 
-
+double f1(double x) {
+    return (pow(x, 2));
+}
 
 double f2(double x) {
     return (1 / log(x));
@@ -25,6 +27,23 @@ double f4(double x) {
 
 double f5(double x) {
     return (exp(x) * pow(x, 2));
+}
+
+TEST(MPI_TESTS, Test_1) {
+    bool flag = false;
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    int low = 0;
+    int high = 1;
+
+    double res = monteCarlo(low, high, count, &f1);
+    double corRes = 0.33;
+
+    if (rank == 0) {
+        if (abs(res - corRes) <= err)
+            flag = true;
+        ASSERT_EQ(flag, true);
 }
 
 TEST(MPI_TESTS, Test_hard_log) {
