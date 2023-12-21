@@ -5,7 +5,8 @@ bool checkOrder(const std::string& str1, const std::string& str2) {
     return str1 <= str2;
 }
 
-bool parallelLexicographicStrings(const std::string& str1, const std::string& str2) {
+bool parallelLexicographicStrings(const std::string& str1,
+    const std::string& str2) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -18,13 +19,16 @@ bool parallelLexicographicStrings(const std::string& str1, const std::string& st
     std::vector<char> localStr1(n);
     std::vector<char> localStr2(n);
 
-    // Разделите строки между процессами
-    MPI_Scatter(str1.data(), n, MPI_CHAR, localStr1.data(), n, MPI_CHAR, 0, MPI_COMM_WORLD);
-    MPI_Scatter(str2.data(), n, MPI_CHAR, localStr2.data(), n, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatter(str1.data(), n, MPI_CHAR,
+        localStr1.data(), n, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatter(str2.data(), n, MPI_CHAR,
+        localStr2.data(), n, MPI_CHAR, 0, MPI_COMM_WORLD);
 
-    bool localResult = checkOrder(std::string(localStr1.begin(), localStr1.end()), std::string(localStr2.begin(), localStr2.end()));
+    bool localResult = checkOrder(std::string(localStr1.begin(),
+        localStr1.end()), std::string(localStr2.begin(), localStr2.end()));
     bool globalResult;
-    MPI_Allreduce(&localResult, &globalResult, 1, MPI_C_BOOL, MPI_LAND, MPI_COMM_WORLD);
+    MPI_Allreduce(&localResult, &globalResult, 1,
+        MPI_C_BOOL, MPI_LAND, MPI_COMM_WORLD);
 
     return globalResult;
 }
