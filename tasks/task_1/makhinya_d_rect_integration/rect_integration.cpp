@@ -26,35 +26,37 @@ double getParallelIntegral(std::function<double(double)> func,
                            double a, double b, uint32_t count_partitions) {
     boost::mpi::communicator world;
 
-    bool is_invert_sign = false;
-    if(a >= b) {
-        std::swap(a, b);
-        is_invert_sign = true;
-    }
-
-    int useless_ptr[5] = {0};
+    double local_res = 0.0;
     if (world.rank() == 0) {
-        int sz = world.size();
-        bounds local_bounds = {a, b};
-        for (int proc = 1; proc < world.size(); proc++) {
+        auto sz = world.size();
+        double dx_per_proc =  (b - a) / sz;
+
+        for (int proc = 1; proc < sz; proc++) {
+            double loc_a = a + proc * dx_per_proc;
+            double loc_b = loc_a + dx_per_proc;
+            bounds local_bounds = {loc_a, loc_b};
             world.send(proc, 0, local_bounds);
         }
+        uint32_t delta = count_partitions / sz + count_partitions % world.size();
+        double loc_a = a;
+        double loc_b = a + dx_per_proc;
+        local_res = getSequentialIntegral(func, loc_a, loc_b, delta);
     }
 
-    double global_res = 0.0;
-    double local_res = 0.0;
 
     if(world.rank() != 0)
     {
-        bounds local_bound;
-        world.recv(0, 0, local_bound);
-
-        local_res = getSequentialIntegral(func, a, b, count_partitions);
-        reduce(world, local_res, global_res, std::plus<int>(), 0.0);
+        bounds local_bounds;
+        world.recv(0, 0, local_bounds);
+        double loc_a = local_bounds[0];
+        double loc_b = local_bounds[1];
+        uint32_t delta = count_partitions / world.size();
+        local_res = getSequentialIntegral(func, loc_a, loc_b, delta);
     }
 
-    if(is_invert_sign)
-        global_res *= -1.0;
+    double global_res = 0.0;
+    
+    reduce(world, local_res, global_res, std::plus<double>(), 0);
 
     return global_res;
 }
