@@ -18,7 +18,7 @@ TEST(StringCountTest, Test_1) {
     if (rank == 0) {
         int sequentiaCount = parCountNonMatchingChars(str1, str2);
         ASSERT_EQ(parallelCount, sequentiaCount);
-    }
+    }    
 }
 
 TEST(StringCountTest, Test_2) {
