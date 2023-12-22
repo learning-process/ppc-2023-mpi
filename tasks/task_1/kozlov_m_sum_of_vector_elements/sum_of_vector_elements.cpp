@@ -1,4 +1,4 @@
-
+// Copyright 2023 Kozlov Mikhail
 #include <random>
 #include <iostream>
 #include "task_1/kozlov_m_sum_of_vector_elements/sum_of_vector_elements.h"

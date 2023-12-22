@@ -1,4 +1,4 @@
-
+// Copyright 2023 Kozlov Mikhail
 #include <gtest/gtest.h>
 #include <vector>
 #include "./sum_of_vector_elements.h"
