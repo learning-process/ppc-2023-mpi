@@ -30,7 +30,6 @@ if( USE_MPI )
     target_link_libraries(${ProjectId} gtest gtest_main boost_mpi)
 
     enable_testing()
-
     add_test(NAME ${ProjectId} COMMAND ${ProjectId})
 
     CPPCHECK_AND_COUNTS_TESTS("${ProjectId}" "${ALL_SOURCE_FILES}")
