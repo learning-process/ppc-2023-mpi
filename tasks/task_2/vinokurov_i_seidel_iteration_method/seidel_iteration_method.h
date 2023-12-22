@@ -2,7 +2,9 @@
 #ifndef TASKS_TASK_2_VINOKUROV_I_SEIDEL_ITERATION_METHOD_SEIDEL_ITERATION_METHOD_H_
 #define TASKS_TASK_2_VINOKUROV_I_SEIDEL_ITERATION_METHOD_SEIDEL_ITERATION_METHOD_H_
 #include <vector>
+#include <cmath>
+#include <mpi.h>
 
-
+std::vector<double> funcSystemSolveSeidelMPI(std::vector<std::vector<double>>& _mtxA, const std::vector<double>& _vectorB, int _numRows, double _eps);
 
 #endif  //  TASKS_TASK_2_VINOKUROV_I_SEIDEL_ITERATION_METHOD_SEIDEL_ITERATION_METHOD_H_
