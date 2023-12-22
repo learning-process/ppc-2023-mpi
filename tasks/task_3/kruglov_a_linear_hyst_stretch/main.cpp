@@ -1,4 +1,4 @@
-// Copyright 2023 Kruglov Alexey
+// Copyright 2023 Kruglov Alexeypar_increase_contrast
 #include <gtest/gtest.h>
 #include "task_3/kruglov_a_linear_hyst_stretch/linear_hyst_stretch.h"
 
@@ -12,16 +12,16 @@ TEST(MPI_TESTS, Test_Big_Random_Matrix) {
     const uint8_t new_max = 200;
 
     std::vector<uint8_t> image;
-    if (rank == 0) image = create_random_image(m * n, 0, 255);
+    if (rank == 0) image = getRandomImage(m * n, 0, 255);
     std::vector copyImage(image);
 
-    par_increase_contrast(&image, m * n, new_min, new_max);
+    parStretchContrast(&image, m * n, new_min, new_max);
 
     if (rank == 0) {
         uint8_t old_min = *std::min_element(copyImage.begin(), copyImage.end());
         uint8_t old_max = *std::max_element(copyImage.begin(), copyImage.end());
 
-        seq_increase_contrast(&copyImage, old_min, old_max, new_min, new_max);
+        seqStretchContrast(&copyImage, old_min, old_max, new_min, new_max);
 
         ASSERT_EQ(image, copyImage);
     }
@@ -41,13 +41,13 @@ TEST(MPI_TESTS, Test_Small_Matrix) {
                                 0, 89, 100, 0, 1, 255, 4, 205 };
     std::vector copyImage(image);
 
-    par_increase_contrast(&image, m * n, new_min, new_max);
+    parStretchContrast(&image, m * n, new_min, new_max);
 
     if (rank == 0) {
         uint8_t old_min = *std::min_element(copyImage.begin(), copyImage.end());
         uint8_t old_max = *std::max_element(copyImage.begin(), copyImage.end());
 
-        seq_increase_contrast(&copyImage, old_min, old_max, new_min, new_max);
+        seqStretchContrast(&copyImage, old_min, old_max, new_min, new_max);
 
         ASSERT_EQ(image, copyImage);
     }
@@ -69,16 +69,16 @@ TEST(MPI_TESTS, Test_LT_CommSize_Matrix) {
     
 
     std::vector<uint8_t> image;
-    if (rank == 0) image = create_random_image(image_size, new_min, new_max);
+    if (rank == 0) image = getRandomImage(image_size, new_min, new_max);
     std::vector copyImage(image);
 
-    par_increase_contrast(&image, image_size, new_min, new_max);
+    parStretchContrast(&image, image_size, new_min, new_max);
 
     if (rank == 0) {
         uint8_t old_min = *std::min_element(copyImage.begin(), copyImage.end());
         uint8_t old_max = *std::max_element(copyImage.begin(), copyImage.end());
 
-        seq_increase_contrast(&copyImage, old_min, old_max, new_min, new_max);
+        seqStretchContrast(&copyImage, old_min, old_max, new_min, new_max);
 
         ASSERT_EQ(image, copyImage);
     }
@@ -97,13 +97,13 @@ TEST(MPI_TESTS, Test_all_zero_Matrix) {
     if (rank == 0) image.resize(m * n, 0);
     std::vector copyImage(image);
 
-    par_increase_contrast(&image, m * n, new_min, new_max);
+    parStretchContrast(&image, m * n, new_min, new_max);
 
     if (rank == 0) {
         uint8_t old_min = *std::min_element(copyImage.begin(), copyImage.end());
         uint8_t old_max = *std::max_element(copyImage.begin(), copyImage.end());
 
-        seq_increase_contrast(&copyImage, old_min, old_max, new_min, new_max);
+        seqStretchContrast(&copyImage, old_min, old_max, new_min, new_max);
 
         ASSERT_EQ(image, copyImage);
     }
@@ -122,13 +122,13 @@ TEST(MPI_TESTS, Test_all_255_Matrix) {
     if (rank == 0) image.resize(m * n, 255);
     std::vector copyImage(image);
 
-    par_increase_contrast(&image, m * n, new_min, new_max);
+    parStretchContrast(&image, m * n, new_min, new_max);
 
     if (rank == 0) {
         uint8_t old_min = *std::min_element(copyImage.begin(), copyImage.end());
         uint8_t old_max = *std::max_element(copyImage.begin(), copyImage.end());
 
-        seq_increase_contrast(&copyImage, old_min, old_max, new_min, new_max);
+        seqStretchContrast(&copyImage, old_min, old_max, new_min, new_max);
 
         ASSERT_EQ(image, copyImage);
     }
@@ -146,7 +146,7 @@ TEST(MPI_TESTS, Test_empty_Matrix) {
     std::vector<uint8_t> image{};
     std::vector copyImage(image);
 
-    par_increase_contrast(&image, m * n, new_min, new_max);
+    parStretchContrast(&image, m * n, new_min, new_max);
 
     if (rank == 0) {
         ASSERT_EQ(image, copyImage);

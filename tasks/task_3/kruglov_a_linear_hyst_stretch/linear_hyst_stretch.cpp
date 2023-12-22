@@ -2,7 +2,7 @@
 
 #include "task_3/kruglov_a_linear_hyst_stretch/linear_hyst_stretch.h"
 
-std::vector<uint8_t> create_random_image(size_t count_pix, uint8_t min,
+std::vector<uint8_t> getRandomImage(size_t count_pix, uint8_t min,
     uint8_t max) {
     if (count_pix == 0) return std::vector<uint8_t>();
 
@@ -16,7 +16,7 @@ std::vector<uint8_t> create_random_image(size_t count_pix, uint8_t min,
     return arr;
 }
 
-void seq_increase_contrast(std::vector<uint8_t>* image, uint8_t old_min,
+void seqStretchContrast(std::vector<uint8_t>* image, uint8_t old_min,
     uint8_t old_max, uint8_t new_min, uint8_t new_max) {
     if (old_min >= old_max || new_min > new_max) return;
     for (uint8_t& pix : *image) {
@@ -24,7 +24,7 @@ void seq_increase_contrast(std::vector<uint8_t>* image, uint8_t old_min,
     }
 }
 
-void par_increase_contrast(std::vector<uint8_t>* image, size_t count_pix,
+void parStretchContrast(std::vector<uint8_t>* image, size_t count_pix,
     uint8_t new_min, uint8_t new_max) {
     if (new_min > new_max) return;
 
@@ -64,7 +64,7 @@ void par_increase_contrast(std::vector<uint8_t>* image, size_t count_pix,
     MPI_Allreduce(&local_min, &global_min, 1, MPI_UINT8_T, MPI_MIN, MPI_COMM_WORLD);
     MPI_Allreduce(&local_max, &global_max, 1, MPI_UINT8_T, MPI_MAX, MPI_COMM_WORLD);
 
-    seq_increase_contrast(&local_img, global_min, global_max, new_min, new_max);
+    seqStretchContrast(&local_img, global_min, global_max, new_min, new_max);
 
     MPI_Gatherv(local_img.data(), send_counts[rank], MPI_UINT8_T, image->data(),
         send_counts.data(), displs.data(), MPI_UINT8_T, 0, MPI_COMM_WORLD);
