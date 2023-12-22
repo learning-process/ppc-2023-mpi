@@ -19,10 +19,6 @@ void serialize(Archive &ar, CscMatrix &m,     // NOLINT
     ar & m.columnPointers;
 }
 }  // namespace serialization
-namespace mpi {
-template <>
-struct is_commutative<MergeMatrices, CscMatrix> : mpl::true_ {};
-}  // namespace mpi
 }  // namespace boost
 
 CscMatrix::CscMatrix(size_t rows, size_t cols,
@@ -82,7 +78,7 @@ CscMatrix CscMatrix::transpose() const {
     return n;
 }
 
-void CscMatrix::print() {
+void CscMatrix::print() const {
     std::cout << "v: ";
     for (auto v : values) {
         std::cout << v << " ";
@@ -136,20 +132,12 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
     }
     CscMatrix a_t(a.cols, a.rows);
     CscMatrix b_c(b);
-    if (world.rank() == 0) {
-        a_t = a.transpose();
-    }
+
+    a_t = a.transpose();
     CscMatrix res = {a_t.cols, b.cols, {}, {}, {0}};
 
-    boost::mpi::broadcast(world, a_t, 0);
-
-    boost::mpi::broadcast(world, b_c, 0);
-    std::cout << "proc " << world.rank() << " transmission finished\n";
     std::vector<size_t> tempCol(a_t.rows, -1);
 
-    std::vector<size_t> i_indices(
-        res.rows / world.size() +
-        (world.rank() < res.rows % world.size() ? 1 : 0));
     std::vector<size_t> j_indices(
         res.cols / world.size() +
         (world.rank() < res.cols % world.size() ? 1 : 0));
@@ -162,26 +150,19 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
         for (size_t k = 0; k < res.cols % world.size(); ++k) {
             j_sizes[k]++;
         }
-        std::vector<size_t> all_i_indices(res.rows);
         std::vector<size_t> all_j_indices(res.cols);
-        std::iota(all_i_indices.begin(), all_i_indices.end(), 0);
         std::iota(all_j_indices.begin(), all_j_indices.end(), 0);
 
-        boost::mpi::scatterv(world, all_i_indices, i_sizes, i_indices.data(),
-                             0);
         boost::mpi::scatterv(world, all_j_indices, j_sizes, j_indices.data(),
                              0);
     } else {
-        boost::mpi::scatterv(world, i_indices.data(), i_indices.size(), 0);
         boost::mpi::scatterv(world, j_indices.data(), j_indices.size(), 0);
     }
 
     for (size_t j = 0; j < res.cols; ++j) {
         for (size_t i = 0; i < res.rows; ++i) {
-            if (std::find(i_indices.begin(), i_indices.end(), i) ==
-                    i_indices.end() &&
-                std::find(j_indices.begin(), j_indices.end(), j) ==
-                    j_indices.end()) {
+            if (std::find(j_indices.begin(), j_indices.end(), j) ==
+                j_indices.end()) {
                 continue;
             }
             double dot = 0;
@@ -209,7 +190,6 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
         }
         res.columnPointers.push_back(res.values.size());
     }
-    std::cout << "proc " << world.rank() << " finished job\n";
     CscMatrix finalRes(res.rows, res.cols);
     boost::mpi::reduce(world, res, finalRes, MergeMatrices(), 0);
     return finalRes;
@@ -217,15 +197,28 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
 
 CscMatrix MergeMatrices::operator()(const CscMatrix &a, const CscMatrix &b) {
     CscMatrix res(a);
+
     size_t col = 0;
     res.rowIndices.reserve(res.rowIndices.size() + b.rowIndices.size());
     res.values.reserve(res.values.size() + b.values.size());
-    for (size_t i = 0; i < b.rowIndices.size(); ++i) {
-        while (i == b.columnPointers[col + 1]) {
-            col++;
+
+    for (size_t i = 0; i < b.columnPointers.size() - 1; ++i) {
+        auto colSize = b.columnPointers[i + 1] - b.columnPointers[i];
+        if (colSize) {
+            for (size_t j = 0; j < colSize; ++j) {
+                res.values.insert(
+                    res.values.begin() + res.columnPointers[i] + j,
+                    b.values[b.columnPointers[i] + j]);
+                res.rowIndices.insert(
+                    res.rowIndices.begin() + +res.columnPointers[i] + j,
+                    b.rowIndices[b.columnPointers[i] + j]);
+            }
+            for (size_t k = i + 1; k < res.columnPointers.size(); ++k) {
+                res.columnPointers[k] += colSize;
+            }
         }
-        res.setElement(col, b.rowIndices[i], b.values[i]);
     }
+
     return res;
 }
 

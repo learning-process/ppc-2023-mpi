@@ -23,7 +23,7 @@ struct CscMatrix {
 
     CscMatrix transpose() const;
 
-    void print();
+    void print() const;
 
     void setElement(size_t column, size_t row, double value);
 

@@ -6,26 +6,6 @@
 #include <boost/mpi/timer.hpp>
 #include "./csc_matrix_multiplication.h"
 
-void initRandomCscMatrix(CscMatrix& a) {  // NOLINT
-    double lambda = 0.05;
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    gen.seed(39857781);
-    std::uniform_int_distribution<int> d(0, a.rows / 2);
-    std::uniform_int_distribution<int> d_i(0, a.rows - 1);
-    std::uniform_real_distribution<double> d_v(2, 10);
-    std::vector<size_t> sizes;
-    for (size_t i = 0; i < a.cols; ++i) {
-        size_t size = static_cast<size_t>(d(gen));
-        if (size > a.rows) {
-            size = a.rows;
-        }
-        for (int j = 0; j < size; ++j) {
-            a.setElement(i, d_i(gen), d_v(gen));
-        }
-    }
-}
-
 TEST(CSC_Matrix_Multiplication, matrix_1x1) {
     boost::mpi::communicator world;
     CscMatrix a = {1, 1, {3}, {0}, {0, 1}};
@@ -35,6 +15,12 @@ TEST(CSC_Matrix_Multiplication, matrix_1x1) {
 
     if (world.rank() == 0) {
         CscMatrix actualSequential = multiplyCscMatricesSequential(a, b);
+        std::cout << "expected: \n";
+        expected.print();
+        std::cout << "actual (seq): \n";
+        actualSequential.print();
+        std::cout << "actual (par): \n";
+        actualParallel.print();
         ASSERT_EQ(expected, actualSequential);
         ASSERT_EQ(expected, actualParallel);
     }
@@ -55,6 +41,12 @@ TEST(CSC_Matrix_Multiplication, matrix_4x3) {
 
     if (world.rank() == 0) {
         CscMatrix actualSequential = multiplyCscMatricesSequential(a, b);
+        std::cout << "expected: \n";
+        expected.print();
+        std::cout << "actual (seq): \n";
+        actualSequential.print();
+        std::cout << "actual (par): \n";
+        actualParallel.print();
         ASSERT_EQ(expected, actualSequential);
         ASSERT_EQ(expected, actualParallel);
     }
@@ -71,6 +63,12 @@ TEST(CSC_Matrix_Multiplication, identity_matrix) {
 
     if (world.rank() == 0) {
         CscMatrix actualSequential = multiplyCscMatricesSequential(a, b);
+        std::cout << "expected: \n";
+        expected.print();
+        std::cout << "actual (seq): \n";
+        actualSequential.print();
+        std::cout << "actual (par): \n";
+        actualParallel.print();
         ASSERT_EQ(expected, actualSequential);
         ASSERT_EQ(expected, actualParallel);
     }
@@ -102,15 +100,17 @@ TEST(CSC_Matrix_Multiplication, matrix_vector_product) {
         4, 3, {1, 3, 5, 2, 4, 8, 7, 3}, {0, 2, 3, 1, 3, 0, 1, 2}, {0, 3, 5, 8}};
     CscMatrix b = {3, 1, {5, 7}, {0, 2}, {0, 2}};
 
-    CscMatrix expected = {4,
-                          1,
-                          {61, 49, 36, 25},
-                          {0, 1, 2, 3},
-                          {0, 4}};
+    CscMatrix expected = {4, 1, {61, 49, 36, 25}, {0, 1, 2, 3}, {0, 4}};
     auto actualParallel = multiplyCscMatricesParallel(a, b);
 
     if (world.rank() == 0) {
         CscMatrix actualSequential = multiplyCscMatricesSequential(a, b);
+        std::cout << "expected: \n";
+        expected.print();
+        std::cout << "actual (seq): \n";
+        actualSequential.print();
+        std::cout << "actual (par): \n";
+        actualParallel.print();
         ASSERT_EQ(expected, actualSequential);
         ASSERT_EQ(expected, actualParallel);
     }
