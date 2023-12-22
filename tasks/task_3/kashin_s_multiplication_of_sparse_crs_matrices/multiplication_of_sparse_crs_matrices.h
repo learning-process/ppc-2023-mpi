@@ -10,10 +10,10 @@
 double multiLine(std::vector<double> v1, std::vector<double> v2);
 
 class CRS {
-public:
+ public:
     std::vector<double> values;
     std::vector<int> col_indices, row_ptr;
-    int row,col;
+    int row, col;
 
     std::vector<double> getRow(int indexRow) {
         std::vector<double> line(col);
@@ -33,7 +33,7 @@ public:
         }
         return line;
     }
-    CRS(){}
+    CRS() {}
     CRS(std::vector<double> matrix, int _row, int _col){
         col = _col;
         row = _row;
@@ -42,17 +42,15 @@ public:
         row_ptr.clear();
         int i;
         int val = 0;
-        for (i = 0; i < matrix.size();++i) {
+        for (i = 0; i < matrix.size(); ++i) {
             if (i%col == 0) {
                 row_ptr.push_back(val);
             }
-            if (matrix[i] != 0)
-            {
+            if (matrix[i] != 0) {
                 val+=1;
                 values.push_back(matrix[i]);
                 col_indices.push_back(i%col);
             }
-
         }
         row_ptr.push_back(val);
         while (row_ptr.size() < row+1) {

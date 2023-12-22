@@ -9,18 +9,17 @@ double multiLine(std::vector<double> v1, std::vector<double> v2) {
     return ans;
 }
 
-CRS multiMatrix(CRS leftMatrix, CRS rightMatrix, int size, int rank)
-{
+CRS multiMatrix(CRS leftMatrix, CRS rightMatrix, int size, int rank) {
     CRS ansMatrix;
     ansMatrix.row = leftMatrix.row;
     ansMatrix.col = rightMatrix.col;
-    std::vector<double> line,answer;
+    std::vector<double> line, answer;
     answer.resize(ansMatrix.row*ansMatrix.col);
 
     std::vector<double> vrow, vcol;
     int step_row = ansMatrix.row  / size;
     int step_end = step_row + (rank == size - 1 ? ansMatrix.row %size: 0);
-    std::vector<int>displs,recvcounts;
+    std::vector<int>displs, recvcounts;
     if (rank == 0) {
         displs.resize(size);
         recvcounts.resize(size);
@@ -36,15 +35,23 @@ CRS multiMatrix(CRS leftMatrix, CRS rightMatrix, int size, int rank)
         vrow = leftMatrix.getRow(row);
         for (int col = 0; col < ansMatrix.col; ++col) {
             vcol = rightMatrix.getCol(col);
-            line.push_back(multiLine(vrow,vcol));
+            line.push_back(multiLine(vrow, vcol));
         }
     }
-    MPI_Gatherv(line.data(),line.size(),MPI_DOUBLE,answer.data(),recvcounts.data(),displs.data(),MPI_DOUBLE,0,MPI_COMM_WORLD);
+    MPI_Gatherv(
+            line.data(),
+            line.size(),
+            MPI_DOUBLE,
+            answer.data(),
+            recvcounts.data(),
+            displs.data(),
+            MPI_DOUBLE,
+            0,
+            MPI_COMM_WORLD);
 
     if (rank == 0) {
-        CRS ans(answer,ansMatrix.row,ansMatrix.col);
+        CRS ans(answer, ansMatrix.row, ansMatrix.col);
         return ans;
     }
-
     return ansMatrix;
 }
