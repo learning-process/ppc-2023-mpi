@@ -1,4 +1,4 @@
-// Copyright 2023 Kruglov Alexeypar_increase_contrast
+// Copyright 2023 Kruglov Alexey
 #include <gtest/gtest.h>
 #include "task_3/kruglov_a_linear_hyst_stretch/linear_hyst_stretch.h"
 
