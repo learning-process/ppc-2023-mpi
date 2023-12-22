@@ -4,7 +4,6 @@
 #include <cmath>
 #include "./readers_writers.h"
 
-
 TEST(Parallel_Readers_Writes_MPI, Test_no_throw1) {
     int rank = 0;
     int size_world = 0;
@@ -12,7 +11,7 @@ TEST(Parallel_Readers_Writes_MPI, Test_no_throw1) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size_world);
 
-    run_problem_readers_writers(2,2);
+    run_problem_readers_writers(2, 2);
 
     if (rank == 0) {
         ASSERT_NO_THROW();
@@ -26,7 +25,7 @@ TEST(Parallel_Readers_Writes_MPI, Test_no_throw2) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size_world);
 
-    run_problem_readers_writers(1,2);
+    run_problem_readers_writers(1, 2);
 
     if (rank == 0) {
         ASSERT_NO_THROW();
@@ -40,7 +39,7 @@ TEST(Parallel_Readers_Writes_MPI, Test_no_throw3) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size_world);
 
-    run_problem_readers_writers(2,1);
+    run_problem_readers_writers(2, 1);
 
     if (rank == 0) {
         ASSERT_NO_THROW();
@@ -52,7 +51,7 @@ TEST(Parallel_Readers_Writes_MPI, Test_no_throw4) {
     int size_world = 0;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    run_problem_readers_writers(1,1);
+    run_problem_readers_writers(1, 1);
 
     if (rank == 0) {
         ASSERT_NO_THROW();
@@ -66,7 +65,7 @@ TEST(Parallel_Readers_Writes_MPI, Test_no_throw5) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size_world);
 
-    run_problem_readers_writers(0,0);
+    run_problem_readers_writers(0, 0);
 
     if (rank == 0) {
         ASSERT_NO_THROW();
