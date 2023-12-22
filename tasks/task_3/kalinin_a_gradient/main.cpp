@@ -1,7 +1,6 @@
 // Copyright 2023 Kalinin Alexandr
 #include <gtest/gtest.h>
-#include "./gradient.h"
-}
+#include "task_3/kalinin_a_gradient/gradient.h"
 
 int main(int argc, char** argv) {
     int result_code = 0;
