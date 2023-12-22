@@ -3,6 +3,7 @@
 
 #include <random>
 #include <vector>
+#include <algorithm>
 
 #include "task_3/lysanova_j_graham_convex_hull/graham_convex_hull.h"
 
