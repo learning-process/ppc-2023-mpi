@@ -26,6 +26,7 @@ if( USE_MPI )
     if( MPI_LINK_FLAGS )
         set_target_properties( ${ProjectId} PROPERTIES LINK_FLAGS "${MPI_LINK_FLAGS}" )
     endif( MPI_LINK_FLAGS )
+
     target_link_libraries( ${ProjectId} ${MPI_LIBRARIES} )
     target_link_libraries(${ProjectId} gtest gtest_main boost_mpi)
 
