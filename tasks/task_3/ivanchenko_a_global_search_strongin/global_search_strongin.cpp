@@ -6,14 +6,14 @@
 #include "task_3/ivanchenko_a_global_search_strongin/global_search_strongin.h"
 
 double f(double x) {
-    return 1 + x*x + x*x*x;
+    return 1.563e-6 * x*x*x*x - 0.25*x*x;
 }
 
 double searchSequential(double x0, double x1, double eps) {
     std::vector<double> x;
     std::vector<double> y;
-    double lipshM = 0.0;
-    double lipshm;
+    double M = 0.0;
+    double m;
     double R = 0.0;
     int interval = 0;
     if (x1 > x0) {
@@ -30,11 +30,11 @@ double searchSequential(double x0, double x1, double eps) {
         }
         for (size_t i = 0ull; i < static_cast<int>(x.size()) - 1ull; i++) {
             double lipsh = std::abs((y[i + 1ull] - y[i]) / (x[i + 1ull] - x[i]));
-            if (lipsh > lipshM) {
-                lipshM = lipsh;
-                lipshm = lipsh + lipsh;
-                double tempR = lipshm * (x[i + 1] - x[i]) +
-                    pow((y[i + 1] - y[i]), 2) / (lipshm * (x[i + 1] - x[i])) -
+            if (lipsh > M) {
+                M = lipsh;
+                m = lipsh + lipsh;
+                double tempR = m * (x[i + 1] - x[i]) +
+                    pow((y[i + 1] - y[i]), 2) / (m * (x[i + 1] - x[i])) -
                     2 * (y[i + 1] + y[i]);
                 if (tempR > R) {
                     R = tempR;
@@ -47,7 +47,7 @@ double searchSequential(double x0, double x1, double eps) {
         }
         double newX = 0.0;
         newX = (x[interval + 1] - x[interval]) / 2 + x[interval] +
-               (y[interval + 1] - y[interval]) / (2 * lipshm);
+               (y[interval + 1] - y[interval]) / (2 * m);
         x.push_back(newX);
         sort(x.begin(), x.end());
         y.clear();
@@ -70,21 +70,21 @@ double searchParallel(double x0, double x1, double eps) {
                 MPI_Send(x.data() + remain + i * part, 1, MPI_DOUBLE, i, 0,
                        MPI_COMM_WORLD);
             }
-            double lipshM = 0, lipshm, lipsh;
+            double M = 0, m, lipsh;
             for (int i = 0; i < part + remain; ++i) {
                 lipsh = std::abs((f(x[i + 1]) - f(x[i])) / (x[i + 1] - x[i]));
-                if (lipsh > lipshM) {
-                    lipshM = lipsh;
-                    lipshm = 2 * lipsh;
+                if (lipsh > M) {
+                    M = lipsh;
+                    m = 2 * lipsh;
                 }
             }
             if (part > 0) {
                 for (int i = 1; i < size; i++) {
                     MPI_Recv(&lipsh, 1, MPI_DOUBLE, i, MPI_ANY_TAG, MPI_COMM_WORLD,
                          &status);
-                    if (lipsh > lipshM) {
-                        lipshM = lipsh;
-                        lipshm = 2 * lipsh;
+                    if (lipsh > M) {
+                        M = lipsh;
+                        m = 2 * lipsh;
                     }
                 }
             }
@@ -92,8 +92,8 @@ double searchParallel(double x0, double x1, double eps) {
             double tempR;
             double R = 0.0;
             for (int i = 0; i < static_cast<int>(x.size()) - 1; i++) {
-                tempR = lipshm * (x[i + 1] - x[i]) +
-                      pow((f(x[i + 1]) - f(x[i])), 2) / (lipshm * (x[i + 1] - x[i])) -
+                tempR = m * (x[i + 1] - x[i]) +
+                      pow((f(x[i + 1]) - f(x[i])), 2) / (m * (x[i + 1] - x[i])) -
                       2 * (f(x[i + 1]) + f(x[i]));
                 if (tempR > R) {
                     R = tempR;
@@ -108,7 +108,7 @@ double searchParallel(double x0, double x1, double eps) {
             }
 
             double newX = (x[interval] + x[interval + 1]) / 2 -
-                        (f(x[interval + 1]) - f(x[interval])) / (lipshm + lipshm);
+                        (f(x[interval + 1]) - f(x[interval])) / (m + m);
             x.push_back(newX);
         }
     } else {
@@ -121,17 +121,17 @@ double searchParallel(double x0, double x1, double eps) {
                      &status);
             if (status.MPI_TAG == 1)
               return 0;
-            double lipshM = 0, lipshm = 1.0, lipsh;
+            double M = 0, m = 1.0, lipsh;
             if (part != 0) {
                 for (int i = 0; i < static_cast<int>(x.size()) - 1; ++i) {
                     lipsh = (std::abs(f(x[i + 1]) - f(x[i]))) / (x[i + 1] - x[i]);
-                    if (lipsh > lipshM) {
-                        lipshM = lipsh;
-                        lipshm = lipshM + lipshM;
+                    if (lipsh > M) {
+                        M = lipsh;
+                        m = M + M;
                     }
                 }
             }
-            MPI_Send(&lipshm, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+            MPI_Send(&m, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
         }
         return 0;
     }
