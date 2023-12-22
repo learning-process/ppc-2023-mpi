@@ -3,6 +3,7 @@
 #include <random>
 #include <numeric>
 #include <functional>
+#include <algorithm>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 
@@ -72,7 +73,7 @@ void handler(uint16_t readerCount, uint16_t writerCount) {
     int sizeWorld = 0;
     MPI_Comm_size(MPI_COMM_WORLD, &sizeWorld);
 
-    uint16_t processesLeft = std::min((int)(readerCount + writerCount), (sizeWorld - 1));
+    uint16_t processesLeft = std::min(static_cast<int>(readerCount + writerCount), (sizeWorld - 1));
     while (processesLeft) {
         MPI_Status status;
         int flag = 0;
