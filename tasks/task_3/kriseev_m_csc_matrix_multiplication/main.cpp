@@ -10,6 +10,7 @@ void initRandomCscMatrix(CscMatrix& a) {  // NOLINT
     double lambda = 0.05;
     std::random_device rd;
     std::mt19937 gen(rd());
+    gen.seed(39857781);
     std::uniform_int_distribution<int> d(0, a.rows / 2);
     std::uniform_int_distribution<int> d_i(0, a.rows - 1);
     std::uniform_real_distribution<double> d_v(2, 10);
@@ -95,30 +96,23 @@ TEST(CSC_Matrix_Multiplication, incompatible_matrices) {
     }
 }
 
-TEST(CSC_Matrix_Multiplication, big_random_matrices) {
+TEST(CSC_Matrix_Multiplication, matrix_vector_product) {
     boost::mpi::communicator world;
-    size_t cols_a = 20;
-    size_t rows_a = 30;
-    size_t cols_b = 50;
-    size_t rows_b = cols_a;
-    CscMatrix a(rows_a, cols_a, {}, {}, std::vector<size_t>(cols_a + 1, 0));
-    CscMatrix b(rows_b, cols_b, {}, {}, std::vector<size_t>(cols_b + 1, 0));
-    if (world.rank() == 0) {
-        initRandomCscMatrix(a);
-        initRandomCscMatrix(b);
-    }
-    boost::mpi::timer timer;
-    auto parallelResult = multiplyCscMatricesParallel(a, b);
-    double parallelTime = timer.elapsed();
+    CscMatrix a = {
+        4, 3, {1, 3, 5, 2, 4, 8, 7, 3}, {0, 2, 3, 1, 3, 0, 1, 2}, {0, 3, 5, 8}};
+    CscMatrix b = {3, 1, {5, 7}, {0, 2}, {0, 2}};
+
+    CscMatrix expected = {4,
+                          1,
+                          {61, 49, 36, 25},
+                          {0, 1, 2, 3},
+                          {0, 4}};
+    auto actualParallel = multiplyCscMatricesParallel(a, b);
 
     if (world.rank() == 0) {
-        std::cout << "parallel time: " << parallelTime << "\n";
-        timer.restart();
-        auto sequentialResult = multiplyCscMatricesSequential(a, b);
-        double sequentialTime = timer.elapsed();
-        std::cout << "sequential time: " << sequentialTime << "\n";
-
-        ASSERT_EQ(sequentialResult, parallelResult);
+        CscMatrix actualSequential = multiplyCscMatricesSequential(a, b);
+        ASSERT_EQ(expected, actualSequential);
+        ASSERT_EQ(expected, actualParallel);
     }
 }
 
