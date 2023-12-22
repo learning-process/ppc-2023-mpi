@@ -11,7 +11,9 @@ std::vector<int> getRandomMatrix(int row_count, int column_count) {
     return vec;
 }
 
-std::vector<int> getSequentialOperations(const std::vector<int>& matrix1, const std::vector<int>& matrix2,
+std::vector<int> getSequentialOperations(
+    const std::vector<int>& matrix1,
+    const std::vector<int>& matrix2,
     int row_count_matrix1, int column_count_matrix1, int column_count_matrix2) {
 
     std::vector<int> res(row_count_matrix1 * column_count_matrix2, 0);
@@ -20,14 +22,16 @@ std::vector<int> getSequentialOperations(const std::vector<int>& matrix1, const 
         for (int j = 0; j < column_count_matrix2; j++) {
             for (int k = 0; k < column_count_matrix1; k++) {
                 res[i * column_count_matrix2 + j] +=
-                    matrix1[i * column_count_matrix1 + k] * matrix2[k * column_count_matrix2 + j];
+                    matrix1[i * column_count_matrix1 + k]
+                    * matrix2[k * column_count_matrix2 + j];
             }
         }
     }
     return res;
 }
 
-std::vector<int> getParallelOperations(const std::vector<int>& matrix1, const std::vector<int>& matrix2,
+std::vector<int> getParallelOperations(
+    const std::vector<int>& matrix1, const std::vector<int>& matrix2,
     int row_count_matrix1, int column_count_matrix1) {
 
     int size, rank;
@@ -36,7 +40,8 @@ std::vector<int> getParallelOperations(const std::vector<int>& matrix1, const st
 
     if (size > row_count_matrix1 || size == 1) {
         return rank == 0 ?
-            getSequentialOperations(matrix1, matrix2, row_count_matrix1, column_count_matrix1, row_count_matrix1) :
+            getSequentialOperations(matrix1, matrix2,
+                row_count_matrix1, column_count_matrix1, row_count_matrix1) :
             std::vector<int>{};
     }
 
@@ -60,10 +65,12 @@ std::vector<int> getParallelOperations(const std::vector<int>& matrix1, const st
                 int step_row = i % local_count;
                 int step_column = (i / local_count) * column_count_matrix2;
 
-                send_vector_b[i] = matrix2[step_matrix2 + step_row + step_column];
+                send_vector_b[i] =
+                    matrix2[step_matrix2 + step_row + step_column];
             }
 
-            MPI_Send(matrix1.data() + step_matrix1, local_count * column_count_matrix1,
+            MPI_Send(matrix1.data() + step_matrix1,
+                local_count * column_count_matrix1,
                 MPI_INT, proc, 1, MPI_COMM_WORLD);
             MPI_Send(send_vector_b.data(), send_vector_b.size(),
                 MPI_INT, proc, 2, MPI_COMM_WORLD);
@@ -77,16 +84,18 @@ std::vector<int> getParallelOperations(const std::vector<int>& matrix1, const st
     if (rank == 0) {
         for (int i = 0; i < local_size; i++) {
             int step_row = i % (local_count + remaining);
-            int step_column = (i / (local_count + remaining)) * column_count_matrix2;
+            int step_column = (i / (local_count + remaining))
+                * column_count_matrix2;
             local_vector_b[i] = matrix2[step_row + step_column];
             local_vector_a[i] = matrix1[i];
         }
-    }
-    else {
+    } else {
         MPI_Status status;
-        MPI_Recv(local_vector_a.data(), static_cast<int>(local_size - remaining * column_count_matrix1),
+        MPI_Recv(local_vector_a.data(), static_cast<int>(
+            local_size - remaining * column_count_matrix1),
             MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
-        MPI_Recv(local_vector_b.data(), static_cast<int>(local_size - remaining * column_count_matrix1),
+        MPI_Recv(local_vector_b.data(), static_cast<int>(
+            local_size - remaining * column_count_matrix1),
             MPI_INT, 0, 2, MPI_COMM_WORLD, &status);
     }
     local_vector_b[local_size] = rank == 0 ? 0 : rank * local_count + remaining;
@@ -97,17 +106,23 @@ std::vector<int> getParallelOperations(const std::vector<int>& matrix1, const st
     int reciever = (rank - 1) < 0 ? size - 1 : rank - 1;
 
     for (int i = 0; i < size; i++) {
-        int local_row_count_matrix1 = rank == 0 ? local_count + remaining : local_count;
+        int local_row_count_matrix1 =
+            rank == 0 ? local_count + remaining : local_count;
         int local_column_count_matrix2 =
             (rank + i) % size == 0 ? local_count + remaining : local_count;
 
-        std::vector<int> tmp_res = getSequentialOperations(local_vector_a, local_vector_b,
-            local_row_count_matrix1, column_count_matrix1, local_column_count_matrix2);
+        std::vector<int> tmp_res =
+            getSequentialOperations(local_vector_a, local_vector_b,
+            local_row_count_matrix1, column_count_matrix1,
+                local_column_count_matrix2);
 
-        int step_matrix = rank == 0 ? 0 : (rank * local_count + remaining) * row_count_matrix1;
+        int step_matrix = rank == 0 ? 0 :
+            (rank * local_count + remaining) * row_count_matrix1;
         for (int j = 0; j < tmp_res.size(); j++) {
-            int step_row = local_vector_b[local_size] + j % local_column_count_matrix2;
-            int step_column = (j / local_column_count_matrix2) * row_count_matrix1;
+            int step_row =
+                local_vector_b[local_size] + j % local_column_count_matrix2;
+            int step_column =
+                (j / local_column_count_matrix2) * row_count_matrix1;
 
             local_res[step_matrix + step_row + step_column] += tmp_res[j];
         }
