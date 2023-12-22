@@ -36,7 +36,8 @@ TEST(MPI_TESTS, Test_Small_Matrix) {
     const uint8_t new_min = 0;
     const uint8_t new_max = 255;
 
-    std::vector<uint8_t> image{ 26,  111, 23, 43, 230, 67,  0, 9,
+    std::vector<uint8_t> image;
+    if (rank == 0) image = { 26,  111, 23, 43, 230, 67,  0, 9,
                                 0, 89, 100, 0, 1, 255, 4, 205 };
     std::vector copyImage(image);
 
@@ -61,12 +62,14 @@ TEST(MPI_TESTS, Test_LT_CommSize_Matrix) {
 
     // const size_t m = 4;
     // const size_t n = 4;
-    size_t image_size;
+    const size_t image_size = size == 1 ? 4 : size / 2;
     const uint8_t new_min = 0;
     const uint8_t new_max = 255;
 
-    std::vector<uint8_t> image = create_random_image(image_size = size == 1 ?
-        4 : size / 2, new_min, new_max);
+    
+
+    std::vector<uint8_t> image;
+    if (rank == 0) image = create_random_image(image_size, new_min, new_max);
     std::vector copyImage(image);
 
     par_increase_contrast(&image, image_size, new_min, new_max);
@@ -90,7 +93,8 @@ TEST(MPI_TESTS, Test_all_zero_Matrix) {
     const uint8_t new_min = 0;
     const uint8_t new_max = 255;
 
-    std::vector<uint8_t> image(m * n, 0);
+    std::vector<uint8_t> image;
+    if (rank == 0) image.resize(m * n, 0);
     std::vector copyImage(image);
 
     par_increase_contrast(&image, m * n, new_min, new_max);
@@ -114,7 +118,8 @@ TEST(MPI_TESTS, Test_all_255_Matrix) {
     const uint8_t new_min = 0;
     const uint8_t new_max = 255;
 
-    std::vector<uint8_t> image(m * n, 255);
+    std::vector<uint8_t> image;
+    if (rank == 0) image.resize(m * n, 255);
     std::vector copyImage(image);
 
     par_increase_contrast(&image, m * n, new_min, new_max);

@@ -18,7 +18,7 @@ std::vector<uint8_t> create_random_image(size_t count_pix, uint8_t min,
 
 void seq_increase_contrast(std::vector<uint8_t>* image, uint8_t old_min,
     uint8_t old_max, uint8_t new_min, uint8_t new_max) {
-    if (old_min == old_max) return;
+    if (old_min >= old_max || new_min > new_max) return;
     for (uint8_t& pix : *image) {
         pix = (pix - old_min) * (new_max - new_min) / (old_max - old_min) + new_min;
     }
@@ -26,6 +26,8 @@ void seq_increase_contrast(std::vector<uint8_t>* image, uint8_t old_min,
 
 void par_increase_contrast(std::vector<uint8_t>* image, size_t count_pix,
     uint8_t new_min, uint8_t new_max) {
+    if (new_min > new_max) return;
+
     int rank = 0;
     int size = 0;
 
