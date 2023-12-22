@@ -5,10 +5,10 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
-
 #include "task_2/vinokurov_i_seidel_iteration_method/seidel_iteration_method.h"
 
-std::vector<double> funcSystemSolveSeidelMPI(std::vector<std::vector<double>>& _mtxA, const std::vector<double>& _vectorB, int _numRows, double _eps)
+std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<double>>& _mtxA, 
+                                             const std::vector<double>& _vectorB, int _numRows, double _eps)
 {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -39,27 +39,22 @@ std::vector<double> funcSystemSolveSeidelMPI(std::vector<std::vector<double>>& _
             xNew[i] = (_vectorB[i] - sum1 - sum2) / _mtxA[i][i + rank * _numRows];
         }
 
-        
         if (rank > 0) {
             MPI_Send(xNew.data(), _numRows, MPI_DOUBLE, rank - 1, 0, MPI_COMM_WORLD);
         }
 
-       
         if (rank < size - 1) {
             MPI_Recv(xNew.data(), _numRows, MPI_DOUBLE, rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         }
 
-        
         if (rank < size - 1) {
             MPI_Send(xNew.data() + (_numRows - 1), _numRows, MPI_DOUBLE, rank + 1, 0, MPI_COMM_WORLD);
         }
 
-        
         if (rank > 0) {
             MPI_Recv(xNew.data() + (_numRows - 1), _numRows, MPI_DOUBLE, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         }
 
-        
         if (rank > 0) {
             for (int i = 0; i < _numRows; ++i) {
                 xNew[i] = recvBuff[i];
@@ -72,7 +67,6 @@ std::vector<double> funcSystemSolveSeidelMPI(std::vector<std::vector<double>>& _
             }
         }
 
-        
         double local_max_diff = 0.0;
         for (int i = 0; i < _numRows; ++i) {
             double diff = std::abs(xNew[i] - x[i]);
@@ -81,15 +75,13 @@ std::vector<double> funcSystemSolveSeidelMPI(std::vector<std::vector<double>>& _
             }
         }
 
-
         double global_max_diff;
         MPI_Allreduce(&local_max_diff, &global_max_diff, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
         if (global_max_diff < _eps) {
-            converged = true; 
+            converged = true;
         }
 
         x = xNew;
     }
-
     return x; 
 }
