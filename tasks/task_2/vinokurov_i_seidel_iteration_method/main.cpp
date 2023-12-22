@@ -29,7 +29,6 @@ TEST(TESTS, ConvergenceTest) {
     std::vector<double> b = { 15, 10, 10, 10 };
     int numRows = 4;
     double eps = 0.0001;
-    
     std::vector<double> result = funcSystemSolveSeidelMPI(A, b, numRows, eps);
 
     ASSERT_NEAR(result[0], 5, 0.0001);
