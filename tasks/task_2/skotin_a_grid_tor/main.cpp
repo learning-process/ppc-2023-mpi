@@ -1,64 +1,109 @@
 // Copyright 2023 Skotin Alexander
 #include <gtest/gtest.h>
-#include "task_2/skotin_a_grid_tor/grid_alg.h"
+#include <mpi.h>
+#include "task_2/skotin_a_grid_tor/grid_tor.h"
 
-TEST(TorusGridTest, SendToAdjacentNode) {
-    TorusGrid grid;
-    int testData = 0;
-    if (grid.rank == 0) {
-        testData = 10;
-        grid.sendToNeighbor(&testData, 1, MPI_INT, 0, 1, 0);
-    } else if (grid.rank == 1) {
-        MPI_Status status;
-        MPI_Recv(&testData, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
-        ASSERT_EQ(testData, 10);
+TEST(GridTorusTopology, GetNextNodeTest) {
+    int rows = 3, cols = 3;
+
+    int nextNode1 = GridTorusTopology::getNextNode(0, 8, rows, cols);
+    EXPECT_EQ(nextNode1, 1);
+
+    int nextNode2 = GridTorusTopology::getNextNode(6, 3, rows, cols);
+    EXPECT_EQ(nextNode2, 7);
+
+    int nextNode3 = GridTorusTopology::getNextNode(2, 6, rows, cols);
+    EXPECT_EQ(nextNode3, 5);
+}
+
+TEST(GridTorusTopology, DataTransferFirstToLastTest) {
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    auto gridDims = GridTorusTopology::getGridDimensions(size);
+    int rows = gridDims.first;
+    int cols = gridDims.second;
+
+    std::vector<int> dataToSend = {1, 2, 3};
+    std::vector<int> receivedData(3);
+
+    if (rank == 0) {
+        GridTorusTopology::sendData(0, size - 1, 0, MPI_COMM_WORLD, dataToSend);
+    } else if (rank == size - 1) {
+        MPI_Recv(receivedData.data(), receivedData.size(), MPI_INT, 0, 0,
+                                        MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        EXPECT_EQ(receivedData, dataToSend);
     }
 }
 
-TEST(TorusGridTest, SendToDistantNode) {
-    TorusGrid grid;
-    int testData = 0;
+TEST(GridTorusTopology, DataTransferLastToFirstTest) {
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    if (grid.rank == 0) {
-        testData = 20;
-        grid.sendToNeighbor(&testData, 1, MPI_INT, 0, 2, 0);
-    } else if (grid.rank == 2) {
-        MPI_Status status;
-        MPI_Recv(&testData, 1, MPI_INT, MPI_ANY_SOURCE, 0,
-                                  MPI_COMM_WORLD, &status);
-        ASSERT_EQ(testData, 20);
+    auto gridDims = GridTorusTopology::getGridDimensions(size);
+    int rows = gridDims.first;
+    int cols = gridDims.second;
+
+    std::vector<int> dataToSend = {4, 5, 6};
+    std::vector<int> receivedData(3);
+
+    if (rank == size - 1) {
+        GridTorusTopology::sendData(size - 1, 0, 0, MPI_COMM_WORLD, dataToSend);
+    } else if (rank == 0) {
+        MPI_Recv(receivedData.data(), receivedData.size(), MPI_INT, size - 1, 0,
+                                            MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        EXPECT_EQ(receivedData, dataToSend);
     }
 }
 
-TEST(TorusGridTest, SendToNodeInReverse) {
-    TorusGrid grid;
-    int testData = 0;
+TEST(GridTorusTopology, DataTransferFirstToNeighbourTest) {
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    if (grid.rank == 3) {
-        testData = 30;
-        grid.sendToNeighbor(&testData, 1, MPI_INT, 3, 0, 0);
-    } else if (grid.rank == 0) {
-        MPI_Status status;
-        MPI_Recv(&testData, 1, MPI_INT, MPI_ANY_SOURCE, 0,
-                                  MPI_COMM_WORLD, &status);
-        ASSERT_EQ(testData, 30);
+    auto gridDims = GridTorusTopology::getGridDimensions(size);
+    int rows = gridDims.first;
+    int cols = gridDims.second;
+
+    std::vector<int> dataToSend = {7, 8, 9};
+    std::vector<int> receivedData(3);
+
+    if (rank == 0) {
+        GridTorusTopology::sendData(0, 1, 0, MPI_COMM_WORLD, dataToSend);
+    } else if (rank == 1) {
+        MPI_Recv(receivedData.data(), receivedData.size(), MPI_INT, 0, 0,
+                                        MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        EXPECT_EQ(receivedData, dataToSend);
     }
 }
 
-TEST(TorusGridTest, SendToSelf) {
-    TorusGrid grid;
-    int testData = 40;
+TEST(GridTorusTopology, DataTransferNeighbourToFirstTest) {
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    grid.sendToNeighbor(&testData, 1, MPI_INT, grid.rank, grid.rank, 0);
-    ASSERT_EQ(testData, 40);
+    auto gridDims = GridTorusTopology::getGridDimensions(size);
+    int rows = gridDims.first;
+    int cols = gridDims.second;
+
+    std::vector<int> dataToSend = {10, 11, 12};
+    std::vector<int> receivedData(3);
+
+    if (rank == 1) {
+        GridTorusTopology::sendData(1, 0, 0, MPI_COMM_WORLD, dataToSend);
+    } else if (rank == 0) {
+        MPI_Recv(receivedData.data(), receivedData.size(), MPI_INT, 1, 0,
+                                    MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        EXPECT_EQ(receivedData, dataToSend);
+    }
 }
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     MPI_Init(&argc, &argv);
-
     int result = RUN_ALL_TESTS();
-
     MPI_Finalize();
     return result;
 }
