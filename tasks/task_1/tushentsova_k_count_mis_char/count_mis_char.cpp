@@ -1,14 +1,10 @@
 // Copyright 2023 Tushentsova Karina
 #include "task_1/tushentsova_k_count_mis_char/count_mis_char.h"
 
-int countNonMatchingChars(const std::string &str1, const std::string &str2) {
-    int count = 0, length = 0;
-    if (str1.length() < str2.length()) {
-        length = str1.length();
-    } else {
-        length = str2.length();
-    }
-    for (int i = 0; i < length; i++) {
+int countNonMatchingChars(
+        const std::string &str1, const std::string &str2, int from, int to) {
+    int count = 0;
+    for (int i = from; i < to; i++) {
         if (str1[i] != str2[i])
             count++;
     }
@@ -20,30 +16,34 @@ int parCountNonMatchingChars(const std::string &str1, const std::string &str2) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int lCount = 0;
-    int procStrLen = str1.length() / size;
-    int remainder = str1.length() % size;
-
-    std::string localStr1, localStr2;
-    if (rank < remainder) {
-        localStr1 = str1.substr(rank * (procStrLen + 1), procStrLen + 1);
-        localStr2 = str2.substr(rank * (procStrLen + 1), procStrLen + 1);
+    int minStrSize = 0;
+    if (str1.size() < str2.size()) {
+        minStrSize = str1.size();
     } else {
-        localStr1 = str1.substr(rank * procStrLen + remainder, procStrLen);
-        localStr2 = str2.substr(rank * procStrLen + remainder, procStrLen);
+        minStrSize = str2.size();
     }
 
-    lCount = countNonMatchingChars(localStr1, localStr2);
+    int procStrLen = minStrSize / size;
+    int remainder = minStrSize % size != 0;
 
-    int *recvCounts = new int[size];
-    MPI_Allgather(&lCount, 1, MPI_INT, recvCounts, 1, MPI_INT, MPI_COMM_WORLD);
-
-    int totalCount = 0;
-    for (int i = 0; i < size; i++) {
-        totalCount += recvCounts[i];
+    int step = procStrLen + remainder;
+    int from = step * rank;
+    int to = 0;
+    if (minStrSize < step * (rank + 1)) {
+        to = minStrSize;
+    } else {
+        to = step * (rank + 1);
     }
 
-    delete[] recvCounts;
+    int localCount = countNonMatchingChars(str1, str2, from, to);
+
+    int count = 0;
+    MPI_Reduce(&localCount, &count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    int str1Size = str1.size();
+    int str2Size = str2.size();
+    int stringSizeDiff = std::abs(str1Size - str2Size);
+    int totalCount = count + stringSizeDiff;
 
     return totalCount;
 }

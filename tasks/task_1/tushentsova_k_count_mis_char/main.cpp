@@ -5,87 +5,77 @@
 #include "task_1/tushentsova_k_count_mis_char/count_mis_char.h"
 
 TEST(StringCountTest, Test_1) {
-    int rank = 0, size = 0;
-
+    int rank = 0;
+    int expResult = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     std::string str1 = "Don't stop!";
     std::string str2 = "Don't stop!";
 
-    int parallelCount = countNonMatchingChars(str1, str2);
+    int countDiff = parCountNonMatchingChars(str1, str2);
 
     if (rank == 0) {
-        int sequentiaCount = parCountNonMatchingChars(str1, str2);
-        ASSERT_EQ(parallelCount, sequentiaCount);
-    }    
+        ASSERT_EQ(expResult, countDiff);
+    }
 }
 
 TEST(StringCountTest, Test_2) {
-    int rank = 0, size = 0;
-
+    int rank = 0;
+    int expResult = 2;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     std::string str1 = "Don't stop!";
-    std::string str2 = "Don't stop";
+    std::string str2 = "Don't sto";
 
-    int parallelCount = countNonMatchingChars(str1, str2);
+    int countDiff = parCountNonMatchingChars(str1, str2);
 
     if (rank == 0) {
-        int sequentiaCount = parCountNonMatchingChars(str1, str2);
-        ASSERT_EQ(parallelCount, sequentiaCount);
+        ASSERT_EQ(expResult, countDiff);
     }
 }
 
 TEST(StringCountTest, Test_3) {
-    int rank = 0, size = 0;
-
+    int rank = 0;
+    int expResult = 1;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    std::string str1 = "Don't Stop!";
-    std::string str2 = "Don't stop!";
+    std::string str1 = "Don't stop!";
+    std::string str2 = "Don't Stop!";
 
-    int parallelCount = countNonMatchingChars(str1, str2);
+    int countDiff = parCountNonMatchingChars(str1, str2);
 
     if (rank == 0) {
-        int sequentiaCount = parCountNonMatchingChars(str1, str2);
-        ASSERT_EQ(parallelCount, sequentiaCount);
+        ASSERT_EQ(expResult, countDiff);
     }
 }
 
 TEST(StringCountTest, Test_4) {
-    int rank = 0, size = 0;
-
+    int rank = 0;
+    int expResult = 1;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    std::string str1 = "Don't Stop!";
+    std::string str1 = "Don't stop!";
     std::string str2 = "Don't shop!";
 
-    int parallelCount = countNonMatchingChars(str1, str2);
+    int countDiff = parCountNonMatchingChars(str1, str2);
 
     if (rank == 0) {
-        int sequentiaCount = parCountNonMatchingChars(str1, str2);
-        ASSERT_EQ(parallelCount, sequentiaCount);
+        ASSERT_EQ(expResult, countDiff);
     }
 }
 
 TEST(StringCountTest, Test_5) {
-    int rank = 0, size = 0;
-
+    int rank = 0;
+    int expResult = 11;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    std::string str1 = "Don't Stop!";
+    std::string str1 = "Don't stop!";
     std::string str2 = "";
 
-    int parallelCount = countNonMatchingChars(str1, str2);
+    int countDiff = parCountNonMatchingChars(str1, str2);
 
     if (rank == 0) {
-        int sequentiaCount = parCountNonMatchingChars(str1, str2);
-        ASSERT_EQ(parallelCount, sequentiaCount);
+        ASSERT_EQ(expResult, countDiff);
     }
 }
 
