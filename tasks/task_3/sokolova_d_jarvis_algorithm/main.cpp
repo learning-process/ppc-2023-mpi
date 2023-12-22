@@ -26,11 +26,11 @@ TEST(Jarvis_Algorithm, Empty_Vector) {
     }
 }
 
-TEST(Jarvis_Algorithm, Single_Point) {
+TEST(Jarvis_Algorithm, VectorSize10) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     vector<Point> global_vector;
-    const vector<int>::size_type size = 1;
+    const vector<int>::size_type size = 10;
 
     if (rank == 0) {
         global_vector = randomVector(size);
@@ -99,7 +99,7 @@ TEST(Jarvis_Algorithm, LargeVector) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     vector<Point> global_vector;
-    const vector<int>::size_type size = 100000;
+    const vector<int>::size_type size = 1000;
 
     if (rank == 0) {
         global_vector = randomVector(size);

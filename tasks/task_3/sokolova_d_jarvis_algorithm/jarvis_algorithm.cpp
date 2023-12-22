@@ -14,29 +14,31 @@ int rotate(const Point& vertex1, const Point& vertex2, const Point& vertex3) {
 void initializeStructPoint2d(MPI_Datatype* structPoint) {
     int blocklengthsArray[] = { 1, 1 };
     MPI_Datatype typesArray[] = { MPI_INT, MPI_INT };
-    MPI_Aint shiftsArray[] = { offsetof(Point, x), offsetof(Point, y) };
+    MPI_Aint shiftsArray[] = {
+        offsetof(Point, x), offsetof(Point, y) };
     MPI_Datatype tmp_type;
     MPI_Aint lb, large;
     MPI_Type_create_struct(2, blocklengthsArray,
         shiftsArray, typesArray, &tmp_type);
     MPI_Type_get_extent(tmp_type, &lb, &large);
-    MPI_Type_create_resized(tmp_type, lb, large, structPoint);
+    MPI_Type_create_resized(tmp_type, lb, large,
+        structPoint);
     MPI_Type_commit(structPoint);
 }
 
 vector<Point> randomVector(const vector<int>::size_type size) {
     std::mt19937 gen(100);
     vector<Point> vectorVertex(size);
-    for (vector<int>::size_type i = 0; i < size; i++) {
-        int randomX = gen() % 10000;
-        int randomY = gen() % 10000;
-        Point randomPoint(randomX, randomY);
-        vectorVertex[i] = randomPoint;
+  for (vector<int>::size_type i = 0; i < size; i++) {
+         vectorVertex[i] = Point(gen() % 10000,
+             gen() % 10000);
     }
+
     return vectorVertex;
 }
 
-vector<Point> consistentJarvisMarch(const vector<Point>& vertexVector) {
+vector<Point> consistentJarvisMarch(const vector<Point>&
+    vertexVector) {
     if (vertexVector.empty()) {
         return {};
     }
@@ -53,22 +55,26 @@ vector<Point> consistentJarvisMarch(const vector<Point>& vertexVector) {
     indexVector.erase(indexVector.begin());
     indexVector.push_back(curve[0]);
     int right = 0;
-    do {
-        for (vector<int>::size_type i = 1; i <
-            indexVector.size(); i++) {
+    while (true) {
+        int right = 0;
+        for (vector<int>::size_type i = 1;
+            i < indexVector.size(); i++) {
             if (rotate(vertexVector[curve[curve.size() - 1]],
                 vertexVector[indexVector[right]],
                 vertexVector[indexVector[i]]) < 0) {
                 right = i;
             }
         }
-        if (indexVector[right] != curve[0]) {
+        if (indexVector[right] == curve[0]) {
+            break;
+        } else {
             curve.push_back(indexVector[right]);
             indexVector.erase(indexVector.begin() + right);
         }
-    } while (indexVector[right] != curve[0]);
+    }
     vector<Point> curve_vertex(curve.size());
-    for (vector<int>::size_type i = 0; i < curve.size(); i++) {
+    for (vector<int>::size_type i = 0; i < curve.size();
+        i++) {
         curve_vertex[i] = vertexVector[curve[i]];
     }
     return curve_vertex;
@@ -103,8 +109,10 @@ vector<Point> parallelJarvisMarch(const vector<Point>&
             MPI_Status status;
             int receivedElements = 0;
             MPI_Probe(i, 0, MPI_COMM_WORLD, &status);
-            MPI_Get_count(&status, customPoint2d, &receivedElements);
-            vector<int>::size_type previousSize = localJarvis.size();
+            MPI_Get_count(&status, customPoint2d,
+                &receivedElements);
+            vector<int>::size_type previousSize =
+                localJarvis.size();
             localJarvis.resize(previousSize + receivedElements);
             MPI_Recv(localJarvis.data() + previousSize,
                 receivedElements, customPoint2d, i, 0,
