@@ -1,17 +1,17 @@
 // Copyright 2023 Makhinya Danil
 #include <gtest/gtest.h>
 #include <vector>
+#include <cmath>
 #include "./rect_integration.h"
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
-#include <cmath>
 
 TEST(Parallel_Rect_Integration_MPI, Test_x3_plus_x2_plus_5) {
     boost::mpi::communicator world;
     auto func = [](double x) { return x*x*x+x*x+5.0;};
 
     const uint32_t count_partitions = 30000;
-    const double eps = 10.0 / count_partitions;  
+    const double eps = 10.0 / count_partitions;
     const double a = 1.0;
     const double b = 2.0;
     double global_sum = getParallelIntegral(func, a, b, count_partitions);
@@ -27,7 +27,7 @@ TEST(Parallel_Rect_Integration_MPI, Test_exp_sin_x) {
     auto func = [](double x) { return std::exp(std::sin(x));};
 
     const uint32_t count_partitions = 30000;
-    const double eps = 10.0 / count_partitions;  
+    const double eps = 10.0 / count_partitions;
     const double a = 1.0;
     const double b = 2.0;
     double global_sum = getParallelIntegral(func, a, b, count_partitions);
@@ -43,7 +43,7 @@ TEST(Parallel_Rect_Integration_MPI, Test_cos_cos_x) {
     auto func = [](double x) { return std::cos(std::cos(x));};
 
     const uint32_t count_partitions = 30000;
-    const double eps = 10.0 / count_partitions;  
+    const double eps = 10.0 / count_partitions;
     const double a = 1.0;
     const double b = 2.0;
     double global_sum = getParallelIntegral(func, a, b, count_partitions);
@@ -59,7 +59,7 @@ TEST(Parallel_Rect_Integration_MPI, Test_identical_zero) {
     auto func = [](double x) { return 0.0;};
 
     const uint32_t count_partitions = 30000;
-    const double eps = 10.0 / count_partitions;  
+    const double eps = 10.0 / count_partitions;
     const double a = 1.0;
     const double b = 2.0;
     double global_sum = getParallelIntegral(func, a, b, count_partitions);
@@ -75,7 +75,7 @@ TEST(Parallel_Rect_Integration_MPI, Test_odd_function_symmetric_segment) {
     auto func = [](double x) { return x*x*x*x*x;};
 
     const uint32_t count_partitions = 30000;
-    const double eps = 10.0 / count_partitions;  
+    const double eps = 10.0 / count_partitions;
     const double a = -1.0;
     const double b = 1.0;
     double global_sum = getParallelIntegral(func, a, b, count_partitions);
