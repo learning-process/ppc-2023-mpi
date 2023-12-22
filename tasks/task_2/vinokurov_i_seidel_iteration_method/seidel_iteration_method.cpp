@@ -8,17 +8,16 @@
 #include "task_2/vinokurov_i_seidel_iteration_method/seidel_iteration_method.h"
 
 std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<double>>& _mtxA,
-                                             const std::vector<double>& _vectorB, int _numRows, double _eps) {
-    int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+                                             const std::vector<double>& _vectorB,
+                                             int _numRows, double _eps) {
+    int size, _rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int n = _numRows * size;
     int k = 0;
 
     std::vector<double> x(_numRows, 0.0);
     std::vector<double> xNew(_numRows, 0.0);
-    std::vector<double> recvBuff(_numRows, 0.0);
 
     bool converged = false;
     while (!converged) {
@@ -29,42 +28,13 @@ std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<doubl
         }
         for (int i = 0; i < _numRows; ++i) {
             double sum1 = 0.0, sum2 = 0.0;
-            for (int j = 0; j < i + rank * _numRows; ++j) {
-                sum1 += _mtxA[i][j] * xNew[j - rank * _numRows];
+            for (int j = 0; j < i; ++j) {
+                sum1 += _mtxA[i][j] * xNew[j];
             }
-            for (int j = i + 1 + rank * _numRows; j < n; ++j) {
-                sum2 += _mtxA[i][j] * x[j - rank * _numRows];
+            for (int j = i + 1; j < _numRows; ++j) {
+                sum2 += _mtxA[i][j] * x[j];
             }
-            xNew[i] = (_vectorB[i] - sum1 - sum2) / _mtxA[i][i + rank * _numRows];
-        }
-
-        if (rank > 0) {
-            MPI_Send(xNew.data(), _numRows, MPI_DOUBLE, rank - 1, 0, MPI_COMM_WORLD);
-        }
-
-        if (rank < size - 1) {
-            MPI_Recv(xNew.data(), _numRows, MPI_DOUBLE, rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        }
-
-        if (rank < size - 1) {
-            MPI_Send(xNew.data() + (_numRows - 1), _numRows, MPI_DOUBLE, rank + 1, 0, MPI_COMM_WORLD);
-        }
-
-        if (rank > 0) {
-            MPI_Recv(xNew.data() + (_numRows - 1), _numRows, MPI_DOUBLE,
-                     rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        }
-
-        if (rank > 0) {
-            for (int i = 0; i < _numRows; ++i) {
-                xNew[i] = recvBuff[i];
-            }
-        }
-
-        if (rank < size - 1) {
-            for (int i = _numRows; i < 2 * _numRows; ++i) {
-                xNew[i - _numRows] = recvBuff[i];
-            }
+            xNew[i] = (_vectorB[i] - sum1 - sum2) / _mtxA[i][i];
         }
 
         double local_max_diff = 0.0;

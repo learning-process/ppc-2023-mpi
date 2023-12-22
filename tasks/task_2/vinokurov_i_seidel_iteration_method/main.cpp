@@ -5,6 +5,8 @@
 #include "task_2/vinokurov_i_seidel_iteration_method/seidel_iteration_method.h"
 
 TEST(TESTS, CanUseFunctionTest) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> A = { {4, -1, 0, 0},
                                            {-1, 4, -1, 0},
                                            {0, -1, 4, -1},
@@ -18,6 +20,8 @@ TEST(TESTS, CanUseFunctionTest) {
 }
 
 TEST(TESTS, ConvergenceTest) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> A = { {4, -1, 0, 0},
                                            {-1, 4, -1, 0},
                                            {0, -1, 4, -1},
@@ -34,6 +38,8 @@ TEST(TESTS, ConvergenceTest) {
 }
 
 TEST(TESTS, ConvergenceTestLargeNumbers) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> A = { {100, -20, 3, -4},
                                            {-20, 120, 5, 6},
                                            {3, 5, 90, -7},
@@ -50,6 +56,8 @@ TEST(TESTS, ConvergenceTestLargeNumbers) {
 }
 
 TEST(TESTS, ConvergenceTestNegativeNumbers) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> A = { {-4, -1, 0, 0},
                                            {-1, -4, -1, 0},
                                            {0, -1, -4, -1},
@@ -66,6 +74,8 @@ TEST(TESTS, ConvergenceTestNegativeNumbers) {
 }
 
 TEST(TESTS, NotConvergentTest) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> A = { {-5, -4, -3, -2},
                                            {-3, -6, -7, -8},
                                            {-9, -10, -11, -12},
