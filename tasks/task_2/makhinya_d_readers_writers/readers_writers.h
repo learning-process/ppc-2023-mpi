@@ -2,17 +2,14 @@
 #ifndef TASKS_TASK_2_MAKHINYA_D_READERS_WRITERS_READERS_WRITERS_H_
 #define TASKS_TASK_2_MAKHINYA_D_READERS_WRITERS_READERS_WRITERS_H_
 
-#include <functional>
+#include <mpi.h>
+#include <utility>
 
-void start_task();
+void run_problem_readers_writers(uint16_t readerCount, uint16_t writerCount);
+void handler(uint16_t readerCount, uint16_t writerCount);
 
-void run_random_order_read_and_write(int seed, uint16_t count_people);
-
-void run_random_order_read_and_write(int seed, uint16_t count_writer, uint16_t count_reader);
-
-int read_data();
-
-void write_data(int data);
+void write();
+void read();
 
 
 #endif  // TASKS_TASK_2_MAKHINYA_D_READERS_WRITERS_READERS_WRITERS_H_

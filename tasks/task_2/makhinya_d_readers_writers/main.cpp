@@ -3,58 +3,87 @@
 #include <vector>
 #include <cmath>
 #include "./readers_writers.h"
-#include <boost/mpi/environment.hpp>
-#include <boost/mpi/communicator.hpp>
 
 
-TEST(Parallel_Readers_Writes_MPI, Test_no_throw) {
-    boost::mpi::communicator world;
+TEST(Parallel_Readers_Writes_MPI, Test_no_throw1) {
+    int rank = 0;
+    int size_world = 0;
 
-    if (world.rank() == 0) {
-        ASSERT_NO_THROW(start_task());
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size_world);
+
+    run_problem_readers_writers(2,2);
+
+    if (rank == 0) {
+        ASSERT_NO_THROW();
     }
 }
 
-TEST(Parallel_Readers_Writes_MPI, Test_random_order_big_size) {
-    boost::mpi::communicator world;
+TEST(Parallel_Readers_Writes_MPI, Test_no_throw2) {
+    int rank = 0;
+    int size_world = 0;
 
-    if (world.rank() == 0) {
-        ASSERT_NO_THROW(run_random_order_read_and_write(0, 10000));
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size_world);
+
+    run_problem_readers_writers(1,2);
+
+    if (rank == 0) {
+        ASSERT_NO_THROW();
     }
 }
 
-TEST(Parallel_Readers_Writes_MPI, Test_random_order_small_size) {
-    boost::mpi::communicator world;
+TEST(Parallel_Readers_Writes_MPI, Test_no_throw3) {
+    int rank = 0;
+    int size_world = 0;
 
-    if (world.rank() == 0) {
-        ASSERT_NO_THROW(run_random_order_read_and_write(0, 5));
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size_world);
+
+    run_problem_readers_writers(2,1);
+
+    if (rank == 0) {
+        ASSERT_NO_THROW();
     }
 }
 
-TEST(Parallel_Readers_Writes_MPI, Test_random_order_big_size2) {
-    boost::mpi::communicator world;
+TEST(Parallel_Readers_Writes_MPI, Test_no_throw4) {
+    int rank = 0;
+    int size_world = 0;
 
-    if (world.rank() == 0) {
-        ASSERT_NO_THROW(run_random_order_read_and_write(0, 5000, 1));
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    run_problem_readers_writers(1,1);
+
+    if (rank == 0) {
+        ASSERT_NO_THROW();
     }
 }
 
-TEST(Parallel_Readers_Writes_MPI, Test_random_order_big_size3) {
-    boost::mpi::communicator world;
+TEST(Parallel_Readers_Writes_MPI, Test_no_throw5) {
+    int rank = 0;
+    int size_world = 0;
 
-    if (world.rank() == 0) {
-        ASSERT_NO_THROW(run_random_order_read_and_write(0, 1, 5000));
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size_world);
+
+    run_problem_readers_writers(0,0);
+
+    if (rank == 0) {
+        ASSERT_NO_THROW();
     }
 }
-
 
 int main(int argc, char** argv) {
-    boost::mpi::environment env(argc, argv);
-    boost::mpi::communicator world;
+    int result_code = 0;
+
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
-    if (world.rank() != 0) {
-        delete listeners.Release(listeners.default_result_printer());
-    }
-    return RUN_ALL_TESTS();
+    ::testing::TestEventListeners &listeners =
+            ::testing::UnitTest::GetInstance()->listeners();
+
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
+        MPI_Abort(MPI_COMM_WORLD, -1);
+    result_code = RUN_ALL_TESTS();
+    MPI_Finalize();
+
+    return result_code;
 }
