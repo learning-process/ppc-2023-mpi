@@ -17,7 +17,7 @@ double threeVariableFunction(const std::vector<double>& variables) {
     return sin(variables[0]) * cos(variables[1]) + sqrt(variables[2]);
 }
 
-TEST(Test_Sequential_Integrate, Test_Single_Variable) {
+TEST(Rectangle_Integrate_MPI_Sequential, Test_Single_Variable) {
     boost::mpi::communicator world;
     if (world.rank() == 0) {
         double true_value = exp(1)- 1 / exp(1);
@@ -28,12 +28,11 @@ TEST(Test_Sequential_Integrate, Test_Single_Variable) {
         std::vector<std::pair<double, double>> limits = {{-1.0, 1.0}};
 
         double numerical_value = integrateSequentially(vars, singleVariableFunction, parts, limits);
-        std::cout << "numeric: " << numerical_value << std::endl;
         ASSERT_LT(fabs(true_value - numerical_value), eps);
     }
 }
 
-TEST(Test_Sequential_Integrate, Test_Two_Variables) {
+TEST(Rectangle_Integrate_MPI_Sequential, Test_Two_Variables) {
     boost::mpi::communicator world;
     if (world.rank() == 0) {
         double true_value = 4 * sin(1);
@@ -44,12 +43,11 @@ TEST(Test_Sequential_Integrate, Test_Two_Variables) {
         std::vector<std::pair<double, double>> limits = {{-1.0, 1.0}, {-1.0, 1.0}};
 
         double numerical_value = integrateSequentially(vars, twoVariableFunction, parts, limits);
-        std::cout << "numeric: " << numerical_value << std::endl;
         ASSERT_LT(fabs(true_value - numerical_value), eps);
     }
 }
 
-TEST(Test_Sequential_Integrate, Test_Three_Variables) {
+TEST(Rectangle_Integrate_MPI_Sequential, Test_Three_Variables) {
     boost::mpi::communicator world;
     if (world.rank() == 0) {
         double true_value = 0.228538683989507;
@@ -59,12 +57,11 @@ TEST(Test_Sequential_Integrate, Test_Three_Variables) {
         std::vector<std::pair<double, double>> limits = {{2.0, 2.5}, {1.0, 2.0}, {0.5, 1.0}};
 
         double numerical_value = integrateSequentially(vars, threeVariableFunction, parts, limits);
-        std::cout << "numeric: " << numerical_value << std::endl;
         ASSERT_LT(fabs(true_value - numerical_value), eps);
     }
 }
 
-TEST(Test_Parallel_Integrate, Test_Single_Variable) {
+TEST(Rectangle_Integrate_MPI_Parallel, Test_Single_Variable) {
     boost::mpi::communicator world;
     int vars = 1;
     std::vector<int> parts = {1000};
@@ -77,13 +74,11 @@ TEST(Test_Parallel_Integrate, Test_Single_Variable) {
     double parallel_result = integrateInParallel(vars, singleVariableFunction, parts, limits);
     if (world.rank() == 0) {
         double sequentially_result = integrateSequentially(vars, singleVariableFunction, parts, limits);
-        std::cout << "par: " << parallel_result << std::endl;
-        std::cout << "seq: " << sequentially_result << std::endl;
         ASSERT_LT(fabs(parallel_result - sequentially_result), eps);
     }
 }
 
-TEST(Test_Parallel_Integrate, Test_Two_Variables) {
+TEST(Rectangle_Integrate_MPI_Parallel, Test_Two_Variables) {
     boost::mpi::communicator world;
     int vars = 2;
     std::vector<int> parts = {1000, 1000};
@@ -100,7 +95,7 @@ TEST(Test_Parallel_Integrate, Test_Two_Variables) {
     }
 }
 
-TEST(Test_Parallel_Integrate, Test_Three_Variables) {
+TEST(Rectangle_Integrate_MPI_Parallel, Test_Three_Variables) {
     boost::mpi::communicator world;
     int vars = 3;
     std::vector<int> parts = {100, 100, 100};
@@ -114,8 +109,6 @@ TEST(Test_Parallel_Integrate, Test_Three_Variables) {
     double parallel_result = integrateInParallel(vars, threeVariableFunction, parts, limits);
     if (world.rank() == 0) {
         double sequentially_result = integrateSequentially(vars, threeVariableFunction, parts, limits);
-        std::cout << "par: " << parallel_result << std::endl;
-        std::cout << "seq: " << sequentially_result << std::endl;
         ASSERT_LT(fabs(parallel_result - sequentially_result), eps);
     }
 }
