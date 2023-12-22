@@ -1,0 +1,12 @@
+// Copyright 2023 Smirnov Pavel
+#ifndef TASKS_TASK_1_SMIRNOV_P_MOST_DIFFERENT_NEIGHBOR_ELEMENTS_MOST_DIFFERENT_VECTOR_ELEMENTS_H_
+#define TASKS_TASK_1_SMIRNOV_P_MOST_DIFFERENT_NEIGHBOR_ELEMENTS_MOST_DIFFERENT_VECTOR_ELEMENTS_H_
+
+
+#include <vector>
+
+std::vector<int> getRandVect(int n);
+int single_find(std::vector<int> v);
+int mpi_find(std::vector<int> v);
+
+#endif  // TASKS_TASK_1_SMIRNOV_P_MOST_DIFFERENT_NEIGHBOR_ELEMENTS_MOST_DIFFERENT_VECTOR_ELEMENTS_H_
