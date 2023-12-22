@@ -5,7 +5,9 @@
 #include <vector>
 
 struct Point {
-    int x = 0, y = 0;
+    int x, y;
+    Point() : x(0), y(0) {}
+    Point(const int _x, const int _y) : x(_x), y(_y) {}
 };
 
 std::vector<Point> GrahamMethod(std::vector<Point> vectorOfVertex);

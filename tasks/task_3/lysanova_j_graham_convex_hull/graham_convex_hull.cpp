@@ -22,7 +22,7 @@ std::vector<Point> random(const std::vector<int>::size_type Size) {
     std::mt19937 gen(10);
     std::vector<Point> VertexVector(Size);
     for (std::vector<int>::size_type i = 0; i < Size; i++) {
-        VertexVector[i] = {(int) gen() % 10, (int) gen() % 20};
+        VertexVector[i] = Point(gen() % 10, gen() % 20);
     }
     return VertexVector;
 }
