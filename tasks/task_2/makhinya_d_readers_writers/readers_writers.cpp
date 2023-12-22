@@ -98,7 +98,7 @@ int read_data() {
         read_count++;
         world.send(0, IS_READ_COUNT, read_count);
 
-        if(read_count == 1) {
+        if (read_count == 1) {
             P(&world, IS_ACCESS_SEMOPHORE, sm_access);
         }
 
@@ -112,7 +112,7 @@ int read_data() {
         read_count--;
         world.send(0, IS_READ_COUNT, read_count);
 
-        if(read_count == 0) {
+        if (read_count == 0) {
             V(&world, IS_ACCESS_SEMOPHORE, sm_access);
         }
 
