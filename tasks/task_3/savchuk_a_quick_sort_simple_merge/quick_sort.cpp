@@ -1,5 +1,5 @@
 // Copyright 2023 Savchuk Anton
-#include "tasks/task_3/savchuk_a_quick_sort_simple_merge/quick_sort.h"
+#include "task_3/savchuk_a_quick_sort_simple_merge/quick_sort.h"
 
 #include <mpi.h>
 #include <algorithm>
