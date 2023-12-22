@@ -14,7 +14,7 @@ double getSequentialIntegral(std::function<double(double)> func,
     double res = 0.0;
     const double dx = (b - a) / count_partitions;
 
-    for( int i = 0; i < count_partitions; ++i) {
+    for (int i = 0; i < count_partitions; ++i) {
         double x = a + dx * i;
         double y = func(x);
         res += y * dx;
@@ -44,7 +44,7 @@ double getParallelIntegral(std::function<double(double)> func,
     }
 
 
-    if( world.rank() != 0) {
+    if (world.rank() != 0) {
         bounds local_bounds;
         world.recv(0, 0, local_bounds);
         double loc_a = local_bounds[0];
