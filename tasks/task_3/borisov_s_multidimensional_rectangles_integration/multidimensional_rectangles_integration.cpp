@@ -30,7 +30,7 @@ double calculateIntegralRectangles(int first_area_num, int last_area_num, int va
                                    double integrand(const std::vector<double>&),
                                    const std::vector<int>& partitions_number,
                                    const std::vector<std::pair<double, double>>& integration_limits) {
-   double result = 0.0;
+    double result = 0.0;
 
     for (int area_num = first_area_num; area_num < last_area_num; area_num++) {
         std::vector<double> variables(variables_number);
@@ -64,9 +64,8 @@ double integrateSequentially(int variables_number, double integrand(const std::v
                              const std::vector< std::pair<double, double>>& integration_limits) {
     int areas_number = getAreasNumber(partitions_number);
 
-    double result = calculateIntegralRectangles(0, areas_number, variables_number, integrand, 
+    double result = calculateIntegralRectangles(0, areas_number, variables_number, integrand,
                                                 partitions_number, integration_limits);
-    
     return result;
 }
 
@@ -75,7 +74,7 @@ double integrateInParallel(int variables_number, double integrand(const std::vec
                            std::vector<std::pair<double, double>> integration_limits) {
     boost::mpi::communicator comm;
     double global_result = 0;
- 
+
     integration_limits.resize(variables_number);
     boost::mpi::broadcast(comm, integration_limits.data(), variables_number, 0);
 
@@ -89,7 +88,8 @@ double integrateInParallel(int variables_number, double integrand(const std::vec
         last_area += global_areas_number % comm.size();
     }
 
-    double local_result = calculateIntegralRectangles(first_area, last_area, variables_number, integrand, partitions_number, integration_limits);
+    double local_result = calculateIntegralRectangles(first_area, last_area, variables_number, 
+                                                      integrand, partitions_number, integration_limits);
     boost::mpi::reduce(comm, local_result, global_result, std::plus(), 0);
     return global_result;
 }

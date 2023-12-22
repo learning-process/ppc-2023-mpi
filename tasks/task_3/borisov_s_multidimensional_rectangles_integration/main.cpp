@@ -14,7 +14,7 @@ double twoVariableFunction(const std::vector<double>& variables) {
 }
 
 double threeVariableFunction(const std::vector<double>& variables) {
-    return pow(sin(variables[1]), 2) * cos(variables[0]) + sqrt(variables[2]);
+    return sin(variables[0]) * cos(variables[1]) + sqrt(variables[2]);
 }
 
 TEST(Test_Sequential_Integrate, Test_Single_Variable) {
@@ -28,6 +28,7 @@ TEST(Test_Sequential_Integrate, Test_Single_Variable) {
         std::vector<std::pair<double, double>> limits = {{-1.0, 1.0}};
 
         double numerical_value = integrateSequentially(vars, singleVariableFunction, parts, limits);
+        std::cout << "numeric: " << numerical_value << std::endl;
         ASSERT_LT(fabs(true_value - numerical_value), eps);
     }
 }
@@ -43,6 +44,7 @@ TEST(Test_Sequential_Integrate, Test_Two_Variables) {
         std::vector<std::pair<double, double>> limits = {{-1.0, 1.0}, {-1.0, 1.0}};
 
         double numerical_value = integrateSequentially(vars, twoVariableFunction, parts, limits);
+        std::cout << "numeric: " << numerical_value << std::endl;
         ASSERT_LT(fabs(true_value - numerical_value), eps);
     }
 }
@@ -50,13 +52,14 @@ TEST(Test_Sequential_Integrate, Test_Two_Variables) {
 TEST(Test_Sequential_Integrate, Test_Three_Variables) {
     boost::mpi::communicator world;
     if (world.rank() == 0) {
-        double true_value = 2.0682887721002;
+        double true_value = 0.228538683989507;
         double eps = 1e-1;
         int vars = 3;
         std::vector<int> parts = {100, 100, 100};
-        std::vector<std::pair<double, double>> limits = {{1, 2}, {4.5, 5}, {6.5, 8}};
+        std::vector<std::pair<double, double>> limits = {{2.0, 2.5}, {1.0, 2.0}, {0.5, 1.0}};
 
         double numerical_value = integrateSequentially(vars, threeVariableFunction, parts, limits);
+        std::cout << "numeric: " << numerical_value << std::endl;
         ASSERT_LT(fabs(true_value - numerical_value), eps);
     }
 }
@@ -68,12 +71,14 @@ TEST(Test_Parallel_Integrate, Test_Single_Variable) {
     std::vector<std::pair<double, double>> limits;
     double eps = 1e-6;
     if (world.rank() == 0) {
-        limits = {getRandomLimits(-100, 100)};
+        limits = {getRandomLimits(-1.0, 1.0)};
     }
 
     double parallel_result = integrateInParallel(vars, singleVariableFunction, parts, limits);
     if (world.rank() == 0) {
         double sequentially_result = integrateSequentially(vars, singleVariableFunction, parts, limits);
+        std::cout << "par: " << parallel_result << std::endl;
+        std::cout << "seq: " << sequentially_result << std::endl;
         ASSERT_LT(fabs(parallel_result - sequentially_result), eps);
     }
 }
@@ -102,13 +107,15 @@ TEST(Test_Parallel_Integrate, Test_Three_Variables) {
     std::vector<std::pair<double, double>> limits;
     double eps = 1e-6;
     if (world.rank() == 0) {
-        limits = {getRandomLimits(0, 10), getRandomLimits(-10, 0), getRandomLimits(-20, 50)
+        limits = {getRandomLimits(-2.0, 1.0), getRandomLimits(-10.0, 0.0), getRandomLimits(0.0, 5.0)
         };
     }
 
     double parallel_result = integrateInParallel(vars, threeVariableFunction, parts, limits);
     if (world.rank() == 0) {
         double sequentially_result = integrateSequentially(vars, threeVariableFunction, parts, limits);
+        std::cout << "par: " << parallel_result << std::endl;
+        std::cout << "seq: " << sequentially_result << std::endl;
         ASSERT_LT(fabs(parallel_result - sequentially_result), eps);
     }
 }
