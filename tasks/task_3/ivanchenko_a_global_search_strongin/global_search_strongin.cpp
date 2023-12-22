@@ -5,7 +5,11 @@
 #include <boost/mpi/collectives.hpp>
 #include "task_3/ivanchenko_a_global_search_strongin/global_search_strongin.h"
 
-double searchSequential(double (*f)(double), double x0, double x1, double eps) {
+double f(double x) {
+    return 1.563e-6 * x*x*x*x - 0.25*x*x;
+}
+
+double searchSequential(double x0, double x1, double eps) {
     std::vector<double> x;
     std::vector<double> y;
     double M = 0.0;
@@ -49,7 +53,7 @@ double searchSequential(double (*f)(double), double x0, double x1, double eps) {
         y.clear();
     }
 }
-double searchParallel(double (*f)(double), double x0, double x1, double eps) {
+double searchParallel(double x0, double x1, double eps) {
     int size, rank;
     MPI_Status status;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
