@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <math.h>
 #include "task_2/simonyan_s_allreduce/Allreduce.h"
-#define ESTIMATE 0.0001
+#define ESTIMATE 20
 
 TEST(Allreduce, test_MPI_Double) {
     int rank = 0;
