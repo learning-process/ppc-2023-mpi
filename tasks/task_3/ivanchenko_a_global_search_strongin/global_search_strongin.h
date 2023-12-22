@@ -4,7 +4,7 @@
 
 #include <vector>
 
-double searchSequential(double x0, double x1, double eps);
-double searchParallel(double x0, double x1, double eps);
+double searchSequential(double (*f)(double), double x0, double x1, double eps);
+double searchParallel(double (*f)(double), double x0, double x1, double eps);
 
 #endif  // TASKS_TASK_3_IVANCHENKO_A_GLOBAL_SEARCH_STRONGIN_GLOBAL_SEARCH_STRONGIN_H_
