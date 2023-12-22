@@ -9,6 +9,7 @@
 unsigned char InputAnotherPixel(const std::vector<unsigned char>& image,
   int x, int y, int rows, int cols) {
   int sum = 0;
+
   unsigned char gauss[3][3]{ {1, 2, 1}, {2, 4, 2}, {1, 2, 1} };
 
   for (int i = 0; i < 3; i++)
