@@ -88,7 +88,7 @@ double integrateInParallel(int variables_number, double integrand(const std::vec
         last_area += global_areas_number % comm.size();
     }
 
-    double local_result = calculateIntegralRectangles(first_area, last_area, variables_number, 
+    double local_result = calculateIntegralRectangles(first_area, last_area, variables_number,
                                                       integrand, partitions_number, integration_limits);
     boost::mpi::reduce(comm, local_result, global_result, std::plus(), 0);
     return global_result;

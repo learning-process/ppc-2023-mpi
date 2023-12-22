@@ -5,7 +5,7 @@
 #include <cmath>
 #include <vector>
 #include <random>
-#include <utility> 
+#include <utility>
 #include <boost/mpi/collectives.hpp>
 #include <boost/mpi/communicator.hpp>
 #include <boost/serialization/utility.hpp>
