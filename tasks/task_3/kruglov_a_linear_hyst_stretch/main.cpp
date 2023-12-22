@@ -66,8 +66,6 @@ TEST(MPI_TESTS, Test_LT_CommSize_Matrix) {
     const uint8_t new_min = 0;
     const uint8_t new_max = 255;
 
-    
-
     std::vector<uint8_t> image;
     if (rank == 0) image = getRandomImage(image_size, new_min, new_max);
     std::vector copyImage(image);
