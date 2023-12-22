@@ -7,9 +7,8 @@
 #include <cmath>
 #include "task_2/vinokurov_i_seidel_iteration_method/seidel_iteration_method.h"
 
-std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<double>>& _mtxA, 
-                                             const std::vector<double>& _vectorB, int _numRows, double _eps)
-{
+std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<double>>& _mtxA,
+                                             const std::vector<double>& _vectorB, int _numRows, double _eps) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -52,7 +51,8 @@ std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<doubl
         }
 
         if (rank > 0) {
-            MPI_Recv(xNew.data() + (_numRows - 1), _numRows, MPI_DOUBLE, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(xNew.data() + (_numRows - 1), _numRows, MPI_DOUBLE,
+                     rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         }
 
         if (rank > 0) {
@@ -83,5 +83,5 @@ std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<doubl
 
         x = xNew;
     }
-    return x; 
+    return x;
 }

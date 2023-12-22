@@ -25,10 +25,10 @@ TEST(TESTS, ConvergenceTest) {
     std::vector<std::vector<double>> A = { {4, -1, 0, 0},
                                            {-1, 4, -1, 0},
                                            {0, -1, 4, -1},
-                                           {0, 0, -1, 3} }; 
-    std::vector<double> b = { 15, 10, 10, 10 }; 
-    int numRows = 4; 
-    double eps = 0.0001; 
+                                           {0, 0, -1, 3} };
+    std::vector<double> b = { 15, 10, 10, 10 };
+    int numRows = 4;
+    double eps = 0.0001;
     
     std::vector<double> result = funcSystemSolveSeidelMPI(A, b, numRows, eps);
 
@@ -86,7 +86,7 @@ TEST(TESTS, NotConvergentTest) {
     double eps = 0.001;
 
     std::vector<double> result = funcSystemSolveSeidelMPI(A, b, numRows, eps);
-    // returns 0 if there are no roots for the system  
+    // returns 0 if there are no roots for the system
     ASSERT_NEAR(result[0], 0, 0.001);
     ASSERT_NEAR(result[1], 0, 0.001);
     ASSERT_NEAR(result[2], 0, 0.001);
