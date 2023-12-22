@@ -31,11 +31,9 @@ int My_AllReduce(const void* sendbuf, void* recvbuf, int count,
                 MPI_STATUS_IGNORE);
             if (datatype == MPI_INT) {
                 operation<int>(buf, recvbuf, op);
-            }
-            else if (datatype == MPI_FLOAT) {
+            } else if (datatype == MPI_FLOAT) {
                 operation<float>(buf, recvbuf, op);
-            }
-            else if (datatype == MPI_DOUBLE) {
+            } else if (datatype == MPI_DOUBLE) {
                 operation<double>(buf, recvbuf, op);
             }
         }
@@ -44,8 +42,7 @@ int My_AllReduce(const void* sendbuf, void* recvbuf, int count,
                 MPI_Send(recvbuf, count, datatype, i, 0, comm);
             }
         }
-    }
-    else {
+    } else {
         MPI_Send(sendbuf, count, datatype, root, 0, comm);
     }
 
