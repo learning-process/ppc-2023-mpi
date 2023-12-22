@@ -3,7 +3,6 @@
 #include <random>
 #include <numeric>
 #include <functional>
-#include <random>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 
@@ -23,7 +22,7 @@ void run_random_order_read_and_write(int seed, uint16_t count_people) {
     for (int i = 0; i < count_people; ++i) {
         if (std::rand() & 1) {
             write_data(1);
-        } else { 
+        } else {
             read_data();
         }
     }
@@ -38,26 +37,26 @@ void run_random_order_read_and_write(int seed, uint16_t count_writer, uint16_t c
         if (std::rand() & 1 || count_reader == 0) {
             write_data(1);
             count_writer--;
-        } else { 
+        } else {
             read_data();
             count_reader--;
         }
     }
 }
 
-void P(boost::mpi::communicator& world, int tag, int& semophore) {
+void P(boost::mpi::communicator* world, int tag, int semophore) {
     do {
-        world.recv(0, tag, semophore);
+        world->recv(0, tag, semophore);
     } while (semophore == 0);
-    
+
     semophore--;
-    world.send(0, tag, semophore);
+    world->send(0, tag, semophore);
 }
 
-void V(boost::mpi::communicator& world, int tag, int& semophore) {
-    world.recv(0, tag, semophore);
+void V(boost::mpi::communicator* world, int tag, int semophore) {
+    world->recv(0, tag, semophore);
     semophore++;
-    world.send(0, tag, semophore);
+    world->send(0, tag, semophore);
 }
 
 
@@ -90,34 +89,34 @@ int read_data() {
     int res = 0;
 
     if (world.rank() != 0) {
-        P(world, IS_S_SEMOPHORE, sm_s);
-        V(world, IS_S_SEMOPHORE, sm_s);
+        P(&world, IS_S_SEMOPHORE, sm_s);
+        V(&world, IS_S_SEMOPHORE, sm_s);
 
-        P(world, IS_READ_COUNT, sm_rc);
+        P(&world, IS_READ_COUNT, sm_rc);
 
         world.recv(0, IS_READ_COUNT, read_count);
         read_count++;
         world.send(0, IS_READ_COUNT, read_count);
 
         if(read_count == 1) {
-            P(world, IS_ACCESS_SEMOPHORE, sm_access);
+            P(&world, IS_ACCESS_SEMOPHORE, sm_access);
         }
 
-        V(world, IS_RC_SEMOPHORE, sm_rc);
+        V(&world, IS_RC_SEMOPHORE, sm_rc);
 
         world.recv(0, IS_SHARED_DATA, res);
 
-        P(world, IS_RC_SEMOPHORE, sm_rc);
+        P(&world, IS_RC_SEMOPHORE, sm_rc);
 
         world.recv(0, IS_READ_COUNT, read_count);
         read_count--;
         world.send(0, IS_READ_COUNT, read_count);
 
         if(read_count == 0) {
-            V(world, IS_ACCESS_SEMOPHORE, sm_access);
+            V(&world, IS_ACCESS_SEMOPHORE, sm_access);
         }
 
-        V(world, IS_RC_SEMOPHORE, sm_rc);
+        V(&world, IS_RC_SEMOPHORE, sm_rc);
     }
 
     return res;
@@ -131,14 +130,14 @@ void write_data(int new_data) {
     int shared_data = 0;
 
     if (world.rank() != 0) {
-        P(world, IS_RC_SEMOPHORE, sm_rc);
-        P(world, IS_ACCESS_SEMOPHORE, sm_access);
-        V(world, IS_S_SEMOPHORE, sm_s);
+        P(&world, IS_RC_SEMOPHORE, sm_rc);
+        P(&world, IS_ACCESS_SEMOPHORE, sm_access);
+        V(&world, IS_S_SEMOPHORE, sm_s);
 
         world.recv(0, IS_SHARED_DATA, shared_data);
         shared_data = new_data;
         world.send(0, IS_SHARED_DATA, shared_data);
 
-        V(world, IS_ACCESS_SEMOPHORE, sm_access);
+        V(&world, IS_ACCESS_SEMOPHORE, sm_access);
     }
 }
