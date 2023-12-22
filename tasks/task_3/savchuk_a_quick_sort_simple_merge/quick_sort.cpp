@@ -1,106 +1,105 @@
 // Copyright 2023 Savchuk Anton
 #include "task_3/savchuk_a_quick_sort_simple_merge/quick_sort.h"
 
-#include <mpi.h>
-#include <algorithm>
-#include <vector>
-#include <iostream>
-#include <utility>
 
-std::pair<int, int> split(int* arr, int n) {
-  int val = arr[n / 2];
-  int l = 0, r = n - 1;
-  while (l <= r) {
-    while (arr[l] < val) ++l;
-    while (arr[r] > val) --r;
-    if (l <= r) {
-      std::swap(arr[l], arr[r]);
-      l++;
-      r--;
+std::pair<int, int> split(int* array, int n) {
+    int val = array[n / 2];
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        while (array[left] < val) ++left;
+        while (array[right] > val) --right;
+        if (left <= right) {
+            std::swap(array[left], array[right]);
+            left++;
+            right--;
+        }
     }
-  }
-  return {l, r};
+    return { left, right };
 }
 
-void single_quick_sort(int* arr, int n) {
-  if (n < 2) return;
-  std::pair<int, int> pos = split(arr, n);
-  if (pos.second > 0) single_quick_sort(arr, pos.second + 1);
-  if (pos.first < n) single_quick_sort(&arr[pos.first], n - pos.first);
+void recursive_quick_sort(int* array, int n) {
+    if (n < 2) return;
+    std::pair<int, int> pos = split(array, n);
+    if (pos.second > 0) recursive_quick_sort(array, pos.second + 1);
+    if (pos.first < n) recursive_quick_sort(&array[pos.first], n - pos.first);
 }
 
-void merge(int* arr1, int size1, int size2) {
-  int* arr2 = &arr1[size1];
-  int com_size = size1 + size2;
-  int* arr = new int[com_size];
-  int l, r;
-  l = r = 0;
-  int i = 0;
-  while (l < size1 && r < size2) {
-    if (arr1[l] < arr2[r]) {
-      arr[i] = arr1[l];
-      i++;
-      l++;
+void Merge(int* array1, int size1, int size2) {
+    int* array2 = &array1[size1];
+    int com_size = size1 + size2;
+    int* array = new int[com_size];
+    int left, right;
+    left = right = 0;
+    int i = 0;
+    while (left < size1 && right < size2) {
+        if (array1[left] < array2[right]) {
+            array[i] = array1[left];
+            i++;
+            left++;
+        } else {
+            array[i] = array2[right];
+            i++;
+            right++;
+        }
+    }
+    while (left < size1) array[i++] = array1[left++];
+    while (right < size2) array[i++] = array2[right++];
+
+    for (i = 0; i < com_size; ++i) {
+        array1[i] = array[i];
+    }
+    delete[] array;
+}
+
+void parallelQuickSort(int* array, size_t n) {
+    int rank = 0;
+    int ProcNum = 0;
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (rank == 0) {
+        MPI_Status status;
+        int my_count = (n % ProcNum);
+        int other_count = (n - my_count) / ProcNum;
+        my_count += other_count;
+
+        for (int i = 1; i < ProcNum; ++i) {
+            MPI_Send(&array[my_count + other_count * (i - 1)],
+                other_count, MPI_INT, i,
+                123, MPI_COMM_WORLD);
+        }
+        recursive_quick_sort(array, my_count);
+
+        for (int i = 1; i < ProcNum; ++i) {
+            MPI_Recv(&array[my_count + other_count * (i - 1)],
+                other_count, MPI_INT, i,
+                456, MPI_COMM_WORLD, &status);
+        }
+
+        for (int i = 1; i < ProcNum; ++i) {
+            Merge(array, my_count + other_count * (i - 1), other_count);
+        }
     } else {
-      arr[i] = arr2[r];
-      i++;
-      r++;
-    }
-  }
-  while (l < size1) arr[i++] = arr1[l++];
-  while (r < size2) arr[i++] = arr2[r++];
+        MPI_Status status;
+        int* array;
+        int count;
+        MPI_Probe(0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+        MPI_Get_count(&status, MPI_INT, &count);
+        array = new int[count];
 
-  for (i = 0; i < com_size; ++i) {
-    arr1[i] = arr[i];
-  }
-  delete[] arr;
+        MPI_Recv(array, count, MPI_INT, 0, 123, MPI_COMM_WORLD, &status);
+
+        recursive_quick_sort(array, count);
+
+        MPI_Send(array, count, MPI_INT, 0, 456, MPI_COMM_WORLD);
+
+        delete[] array;
+    }
 }
 
-void parallel_quick_sort(int* arr, size_t n) {
-  int rank = 0;
-  int ProcNum = 0;
-  MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  if (rank == 0) {
-    MPI_Status status;
-    int my_count = (n % ProcNum);
-    int other_count = (n - my_count) / ProcNum;
-    my_count += other_count;
-    for (int i = 1; i < ProcNum; ++i) {
-      MPI_Send(&arr[my_count + other_count * (i - 1)], other_count, MPI_INT, i,
-               123, MPI_COMM_WORLD);
+bool checking(int* array, int n) {
+    for (int i = 0; i < n - 1; ++i) {
+        if (array[i] > array[i + 1]) return false;
     }
-    single_quick_sort(arr, my_count);
-
-    for (int i = 1; i < ProcNum; ++i) {
-      MPI_Recv(&arr[my_count + other_count * (i - 1)], other_count, MPI_INT, i,
-               456, MPI_COMM_WORLD, &status);
-    }
-
-    for (int i = 1; i < ProcNum; ++i) {
-      merge(arr, my_count + other_count * (i - 1), other_count);
-    }
-  } else {
-    MPI_Status status;
-    int* arr;
-    int count;
-    MPI_Probe(0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-    MPI_Get_count(&status, MPI_INT, &count);
-    arr = new int[count];
-    MPI_Recv(arr, count, MPI_INT, 0, 123, MPI_COMM_WORLD, &status);
-
-    single_quick_sort(arr, count);
-
-    MPI_Send(arr, count, MPI_INT, 0, 456, MPI_COMM_WORLD);
-
-    delete[] arr;
-  }
-}
-
-bool check(int* arr, int n) {
-  for (int i = 0; i < n - 1; ++i) {
-    if (arr[i] > arr[i + 1]) return false;
-  }
-  return true;
+    return true;
 }
