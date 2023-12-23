@@ -48,9 +48,9 @@ TEST(Parallel_Max_Of_Matrix_Rows_MPI, Test_Manual) {
 
     if (world.rank() == 0) {
         ASSERT_EQ(0, global_maxes[0]);
-        ASSERT_EQ(0, global_maxes[1]);
-        ASSERT_EQ(2, global_maxes[2]);
-        ASSERT_EQ(2, global_maxes[3]);
+        ASSERT_EQ(0+n, global_maxes[1]);
+        ASSERT_EQ(2+n*2, global_maxes[2]);
+        ASSERT_EQ(2+n*3, global_maxes[3]);
     }
 }
 
@@ -84,33 +84,34 @@ TEST(Parallel_Max_Of_Matrix_Rows_MPI, Test_ManualAllEQ) {
 
     if (world.rank() == 0) {
         global_matr = {
-            42, 42, 42, 42, 42,
-            42, 42, 42, 42, 42,
-            42, 42, 42, 42, 42,
-            42, 42, 42, 42, 42};
+            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1};
     }
 
     std::vector<size_t> global_maxes = getParallelMaxInRows(global_matr, m, n);
 
     if (world.rank() == 0) {
         ASSERT_EQ(0, global_maxes[0]);
-        ASSERT_EQ(0, global_maxes[1]);
-        ASSERT_EQ(0, global_maxes[2]);
-        ASSERT_EQ(0, global_maxes[3]);
+        ASSERT_EQ(n, global_maxes[1]);
+        ASSERT_EQ(n*2, global_maxes[2]);
+        ASSERT_EQ(n*3, global_maxes[3]);
     }
 }
 
 TEST(Parallel_Max_Of_Matrix_Rows_MPI, Test_NegativeNumbers) {
     boost::mpi::communicator world;
     std::vector<int> global_matr;
-    const int m = 3;
-    const int n = 4;
+    const int m = 4;
+    const int n = 5;
 
     if (world.rank() == 0) {
         global_matr = {
-            -1, -2, -3, -4,
-            -8, -7, -6, -5,
-            -10, -9, -12, -11
+            -1, -2, -3, -4, -5,
+            -8, -7, -6, -5, -11,
+            -10, -9, -12, -11, -2,
+            -100, -1, -2, -30, -14,
         };
     }
 
@@ -118,8 +119,9 @@ TEST(Parallel_Max_Of_Matrix_Rows_MPI, Test_NegativeNumbers) {
 
     if (world.rank() == 0) {
         ASSERT_EQ(0, global_maxes[0]);
-        ASSERT_EQ(3, global_maxes[1]);
-        ASSERT_EQ(1, global_maxes[2]);
+        ASSERT_EQ(3+n, global_maxes[1]);
+        ASSERT_EQ(4+n*2, global_maxes[2]);
+        ASSERT_EQ(1+n*3, global_maxes[3]);
     }
 }
 
