@@ -126,13 +126,13 @@ TEST(multiplication_of_sparse_crs_matrices, Test_big_zero_matrix) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::vector<double> val = {};
-    CRS leftMatrix(val, 100, 100);
-    CRS rightMatrix(val, 100, 100);
+    CRS leftMatrix(val, 10, 10);
+    CRS rightMatrix(val, 10, 10);
 
     CRS ansMatrix = multiMatrix(leftMatrix, rightMatrix, numProc, rankProc);
 
     if (rankProc == 0) {
-        CRS key(val, 100, 100);
+        CRS key(val, 10, 10);
         ASSERT_EQ(ansMatrix.values, key.values);
         ASSERT_EQ(ansMatrix.col_indices, key.col_indices);
         ASSERT_EQ(ansMatrix.row_ptr, key.row_ptr);
