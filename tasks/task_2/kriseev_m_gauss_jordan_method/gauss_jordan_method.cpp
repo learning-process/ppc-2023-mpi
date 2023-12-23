@@ -73,8 +73,6 @@ std::vector<double> gaussJordanMethodParallel(
     auto solutionVector = std::vector<double>(constants);
     auto oldPivotRows = std::vector<double>();
 
-
-
     int extraWork = matrixSize % world.size();
     int work = matrixSize / world.size();
     std::vector<int> sizes_(world.size(), work * matrixSize);
@@ -91,7 +89,7 @@ std::vector<double> gaussJordanMethodParallel(
         beginIndices[i] = beginIndices[i - 1] + solutionSizes[i - 1];
     }
 
-    auto myWork = sizes[world.rank()];
+    auto myWork = solutionSizes[world.rank()];
     auto myBeginIndex = beginIndices[world.rank()];
 
     for (int k = 0; k < matrixSize; ++k) {
@@ -120,7 +118,8 @@ std::vector<double> gaussJordanMethodParallel(
             boost::mpi::broadcast(world,
                                   systemMatrix.data() + pivotRow * matrixSize,
                                   matrixSize, 0);
-            boost::mpi::broadcast(world, solutionVector.data(), solutionVector.size(), 0);
+            boost::mpi::broadcast(world, solutionVector.data(),
+                                  solutionVector.size(), 0);
         } else {
             bool flag = false;
             boost::mpi::broadcast(world, flag, 0);
@@ -131,7 +130,8 @@ std::vector<double> gaussJordanMethodParallel(
             boost::mpi::broadcast(world,
                                   systemMatrix.data() + pivotRow * matrixSize,
                                   matrixSize, 0);
-            boost::mpi::broadcast(world, solutionVector.data(), solutionVector.size(), 0);
+            boost::mpi::broadcast(world, solutionVector.data(),
+                                  solutionVector.size(), 0);
         }
         for (int i = myBeginIndex; i < myBeginIndex + myWork; ++i) {
             if (pivotRow == i) {
@@ -145,12 +145,22 @@ std::vector<double> gaussJordanMethodParallel(
 
             solutionVector[i] -= solutionVector[pivotRow] * oldFirst;
         }
-        boost::mpi::all_gatherv(world, solutionVector.data() + myBeginIndex, solutionVector.data(), solutionSizes);
-        boost::mpi::all_gatherv(world, systemMatrix.data() + myBeginIndex * matrixSize, systemMatrix.data(), sizes);
-        sleep(0);
+        std::vector<double> solCopy(myWork);
+        std::vector<double> rowsCopy(myWork * matrixSize);
+        for (int i = 0; i < myWork; ++i) {
+            solCopy[i] = solutionVector[myBeginIndex + i];
+        }
+        for (int i = 0; i < rowsCopy.size(); ++i) {
+            rowsCopy[i] = systemMatrix[i + myBeginIndex * matrixSize];
+        }
+        boost::mpi::all_gatherv(world, solutionVector.data() + myBeginIndex,
+                                solutionVector.data(), solutionSizes);
+        boost::mpi::all_gatherv(world,
+                                systemMatrix.data() + myBeginIndex * matrixSize,
+                                systemMatrix.data(), sizes);
     }
 
-    /*for (int i = 0; i < matrixSize; ++i) {
+    for (int i = 0; i < matrixSize; ++i) {
         bool flag = true;
         if (solutionVector[i] == 0) {
             flag = false;
@@ -164,7 +174,5 @@ std::vector<double> gaussJordanMethodParallel(
             throw std::invalid_argument("unknownsMatrix");
         }
     }
-*/
-sleep(0);
     return solutionVector;
 }
