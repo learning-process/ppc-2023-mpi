@@ -82,7 +82,6 @@ TEST(MAX_ACROSS_COLUMN, parallel_matrix_5x5_negative) {
     boost::mpi::communicator world;
     std::vector<int> vec;
     size_t rows = 5, columns = 5;
-
     if (world.rank() == 0) {
         vec = getRandomMatrix(rows, columns, -1000, 0);
     }
