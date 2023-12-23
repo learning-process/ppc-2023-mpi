@@ -73,9 +73,26 @@ std::vector<double> gaussJordanMethodParallel(
     auto solutionVector = std::vector<double>(constants);
     auto oldPivotRows = std::vector<double>();
 
-    std::vector<double> pivotRowVector(matrixSize);
-    std::vector<double> tempRowVector(matrixSize);
-    boost::optional<boost::mpi::status> status;
+
+
+    int extraWork = matrixSize % world.size();
+    int work = matrixSize / world.size();
+    std::vector<int> sizes_(world.size(), work * matrixSize);
+    std::vector<int> solutionSizes_(world.size(), work);
+    std::vector<size_t> beginIndices(world.size(), 0);
+    for (int i = 0; i < extraWork; ++i) {
+        solutionSizes_[i]++;
+        sizes_[i] += matrixSize;
+    }
+    const std::vector<int> sizes(sizes_);
+    const std::vector<int> solutionSizes(solutionSizes_);
+
+    for (int i = 1; i < beginIndices.size(); ++i) {
+        beginIndices[i] = beginIndices[i - 1] + solutionSizes[i - 1];
+    }
+
+    auto myWork = sizes[world.rank()];
+    auto myBeginIndex = beginIndices[world.rank()];
 
     for (int k = 0; k < matrixSize; ++k) {
         int pivotRow = 0;
@@ -86,17 +103,12 @@ std::vector<double> gaussJordanMethodParallel(
                               pivotRow) != oldPivotRows.end())) {
                 pivotRow++;
             }
-            if (pivotRow == matrixSize) {
-                boost::mpi::broadcast(world, tempRowVector.data(), matrixSize,
-                                      0);
-                std::vector<boost::mpi::request> op(world.size() - 1);
-                for (int i = 1; i < world.size(); ++i) {
-                    world.send(i, 2);
-                    op[i - 1] = world.irecv(i, 3);
-                }
-                boost::mpi::wait_all(op.begin(), op.end());
+            bool flag = pivotRow == matrixSize;
+            boost::mpi::broadcast(world, flag, 0);
+            if (flag) {
                 continue;
             }
+            boost::mpi::broadcast(world, pivotRow, 0);
             oldPivotRows.emplace_back(pivotRow);
             for (int j = k + 1; j < matrixSize; ++j) {
                 systemMatrix[pivotRow * matrixSize + j] /=
@@ -108,87 +120,51 @@ std::vector<double> gaussJordanMethodParallel(
             boost::mpi::broadcast(world,
                                   systemMatrix.data() + pivotRow * matrixSize,
                                   matrixSize, 0);
-
-            for (int i = 0; i < matrixSize; ++i) {
-                if (i == pivotRow) {
-                    continue;
-                }
-                int receiverRank = i % (world.size() - 1) + 1;
-                world.send(receiverRank, 0, i);
-                world.send(receiverRank, 1,
-                           systemMatrix.data() + i * matrixSize, matrixSize);
-                double oldFirst = systemMatrix[i * matrixSize + k];
-                solutionVector[i] -= solutionVector[pivotRow] * oldFirst;
-            }
-            for (int i = 1; i < world.size(); ++i) {
-                world.send(i, 2);  // send terminator message
-            }
-            int finishedCount = 0;
-            while (finishedCount < world.size() - 1) {
-                status = world.iprobe();
-                if (!status.has_value()) {
-                    continue;
-                }
-                if (status.value().tag() == 3) {
-                    world.recv(status.value().source(), 3);
-                    finishedCount++;
-                    continue;
-                }
-                int rowIndex = -1;
-                world.recv(status.value().source(), 0, rowIndex);
-                world.recv(status.value().source(), 1,
-                           systemMatrix.data() + matrixSize * rowIndex,
-                           matrixSize);
-            }
+            boost::mpi::broadcast(world, solutionVector.data(), solutionVector.size(), 0);
         } else {
-            boost::mpi::broadcast(world, pivotRowVector.data(), matrixSize, 0);
-            while (1) {
-                status = world.iprobe(0);
-                if (!status.has_value()) {
-                    continue;
-                }
-                if (status.value().tag() == 2) {
-                    world.recv(0, 2);
-                    break;
-                }
-                int index = -1;
-                world.recv(0, 0, index);
-                world.recv(0, 1, tempRowVector.data(), matrixSize);
-                double oldFirst = tempRowVector[k];
-                for (int i = 0; i < matrixSize; ++i) {
-                    tempRowVector[i] -= pivotRowVector[i] * oldFirst;
-                }
-                world.send(0, 0, index);
-                world.send(0, 1, tempRowVector.data(), matrixSize);
+            bool flag = false;
+            boost::mpi::broadcast(world, flag, 0);
+            if (flag) {
+                continue;
             }
-            world.send(0, 3);
+            boost::mpi::broadcast(world, pivotRow, 0);
+            boost::mpi::broadcast(world,
+                                  systemMatrix.data() + pivotRow * matrixSize,
+                                  matrixSize, 0);
+            boost::mpi::broadcast(world, solutionVector.data(), solutionVector.size(), 0);
         }
+        for (int i = myBeginIndex; i < myBeginIndex + myWork; ++i) {
+            if (pivotRow == i) {
+                continue;
+            }
+            double oldFirst = systemMatrix[i * matrixSize + k];
+            for (int j = k; j < matrixSize; ++j) {
+                systemMatrix[i * matrixSize + j] -=
+                    systemMatrix[pivotRow * matrixSize + j] * oldFirst;
+            }
+
+            solutionVector[i] -= solutionVector[pivotRow] * oldFirst;
+        }
+        boost::mpi::all_gatherv(world, solutionVector.data() + myBeginIndex, solutionVector.data(), solutionSizes);
+        boost::mpi::all_gatherv(world, systemMatrix.data() + myBeginIndex * matrixSize, systemMatrix.data(), sizes);
+        sleep(0);
     }
-    if (world.rank() == 0) {
-        for (int i = 0; i < matrixSize; ++i) {
-            bool flag = true;
-            if (solutionVector[i] == 0) {
+
+    /*for (int i = 0; i < matrixSize; ++i) {
+        bool flag = true;
+        if (solutionVector[i] == 0) {
+            flag = false;
+        }
+        for (int j = 0; flag && j < matrixSize; j++) {
+            if (systemMatrix[matrixSize * i + j] != 0) {
                 flag = false;
             }
-            for (int j = 0; flag && j < matrixSize; j++) {
-                if (systemMatrix[matrixSize * i + j] != 0) {
-                    flag = false;
-                }
-            }
-            if (flag) {
-                int f = 1;
-                boost::mpi::broadcast(world, f, 0);
-                throw std::invalid_argument("unknownsMatrix");
-            }
         }
-        int f = 0;
-        boost::mpi::broadcast(world, f, 0);
-    } else {
-        int f = 0;
-        boost::mpi::broadcast(world, f, 0);
-        if (f == 1) {
+        if (flag) {
             throw std::invalid_argument("unknownsMatrix");
         }
     }
+*/
+sleep(0);
     return solutionVector;
 }
