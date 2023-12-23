@@ -6,7 +6,35 @@
 
 
 TEST(SentenceCounterTest, BasicTest) {
-    std::string input = "This is a sentence. This is another sentence.";
+    std::string input = "This is a small sentence. This is another sentence.";
+    EXPECT_EQ(SentenceCounter::countSentences(input), 2);
+}
+
+TEST(SentenceCounterTest, BiggerSentencesAmountTest) {
+    std::string input = "This. Sentence. Has. More. Sentences!";
+    EXPECT_EQ(SentenceCounter::countSentences(input), 5);
+}
+
+TEST(SentenceCounterTest, BiggerSentencesTextTest) {
+    std::string input = "This is a small sentence. ";
+    std::string input2 = "This is another sentence but bigger. ";
+    std::string input3 = "This sentence is actually huge though.";
+    std::string hugeInput = input + input2 + input3;
+    EXPECT_EQ(SentenceCounter::countSentences(hugeInput), 2);
+}
+
+TEST(SentenceCounterTest, MoreSignsTextTest) {
+    std::string input = "This is a small sentence! This is another sentence?";
+    EXPECT_EQ(SentenceCounter::countSentences(input), 2);
+}
+
+TEST(SentenceCounterTest, MoreSignsTextTest) {
+    std::string input = "This is a small sentence! This is another sentence?";
+    EXPECT_EQ(SentenceCounter::countSentences(input), 2);
+}
+
+TEST(SentenceCounterTest, SingleSignTextTest) {
+    std::string input = "F.";
     EXPECT_EQ(SentenceCounter::countSentences(input), 2);
 }
 
