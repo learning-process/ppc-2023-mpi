@@ -1,13 +1,13 @@
 // Copyright 2023 Karagodin Andrey
 
-#ifndef SENTENCE_COUNTER_H
-#define SENTENCE_COUNTER_H
+#ifndef TASKS_TASK_1_KARAGODIN_A_STRING_SENTENCES_STRING_SENTENCES_H_
+#define TASKS_TASK_1_KARAGODIN_A_STRING_SENTENCES_STRING_SENTENCES_H_
 
 #include <string>
 
 class SentenceCounter {
-public:
+ public:
     static int countSentences(const std::string& input);
 };
 
-#endif // SENTENCE_COUNTER_H
+#endif  // TASKS_TASK_1_KARAGODIN_A_STRING_SENTENCES_STRING_SENTENCES_H_

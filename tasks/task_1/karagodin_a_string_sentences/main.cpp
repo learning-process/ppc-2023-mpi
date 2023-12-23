@@ -1,9 +1,9 @@
 // Copyright 2023 Karagodin Andrey
 
-#include "./string_sentences.h"
-#include "string_sentences.h"
-#include <gtest/gtest.h>
 #include <mpi.h>
+#include <gtest/gtest.h>
+#include "./string_sentences.h"
+
 
 TEST(SentenceCounterTest, BasicTest) {
     std::string input = "This is a sentence. This is another sentence.";

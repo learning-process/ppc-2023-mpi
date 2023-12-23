@@ -1,6 +1,6 @@
 // Copyright 2023 Karagodin Andrey
 
-#include "string_sentences.h"
+#include "task_1/karagodin_a_string_sentences/string_sentences.h"
 #include <mpi.h>
 
 int SentenceCounter::countSentences(const std::string& input) {
@@ -21,13 +21,15 @@ int SentenceCounter::countSentences(const std::string& input) {
 
     // Counting sentences amount
     for (int i = 0; i < localInput.size(); i++) {
-        if (localInput[i] == '.' || localInput[i] == '!' || localInput[i] == '?') {
+        if (localInput[i] == '.' || localInput[i] == '!'
+         || localInput[i] == '?') {
             localCount++;
         }
     }
 
     // Gather results from all processes
-    MPI_Reduce(&localCount, &globalCount, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&localCount, &globalCount, 1,
+     MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
     return globalCount;
 }
