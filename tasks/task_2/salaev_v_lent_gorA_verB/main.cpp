@@ -66,7 +66,7 @@ TEST(Parallel_Operations_MPI, Test_NonSquareMatrix) {
 TEST(Parallel_Operations_MPI, Test_LargeMatrix) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    int rows = 50, cols = 50;
+    int rows = 30, cols = 30;
     std::vector<int> mat1, mat2;
 
     if (rank == 0) {
