@@ -12,11 +12,11 @@ TEST(Parallel_Readers_Writes_MPI, Test1) {
     vector b;
     
     if (world.rank() == 0) {
-        A = {{ 2,-1, 0},
-             {-1, 2,-1},
-             { 0,-1, 2}};
+        A = {{ 2, -1,  0},
+             {-1,  2, -1},
+             { 0, -1,  2}};
 
-        b = {1,2,3};
+        b = {1, 2, 3};
     }
 
     vector x = solve_parallel(A, b);
@@ -33,11 +33,11 @@ TEST(Parallel_Readers_Writes_MPI, Test2) {
     vector b;
     
     if (world.rank() == 0) {
-        A = {{ 2,-1, 0},
-             {-1, 2,-1},
-             { 0,-1, 2}};
+        A = {{ 2, -1,  0},
+             {-1,  2, -1},
+             { 0, -1,  2}};
 
-        b = {0,0,0};
+        b = {0, 0, 0};
     }
 
     vector x = solve_parallel(A, b);
@@ -54,11 +54,11 @@ TEST(Parallel_Readers_Writes_MPI, Test3) {
     vector b;
     
     if (world.rank() == 0) {
-        A = {{ 2,-1, 0},
-             {-1, 2,-1},
-             { 0,-1, 2}};
+        A = {{ 2, -1,  0},
+             {-1,  2, -1},
+             { 0, -1,  2}};
 
-        b = {1,0,1};
+        b = {1, 0, 1};
     }
 
     vector x = solve_parallel(A, b);
@@ -75,11 +75,11 @@ TEST(Parallel_Readers_Writes_MPI, Test4) {
     vector b;
     
     if (world.rank() == 0) {
-        A = {{-11,6,-6},
-             { 6,-6, 3},
-             {-6,3, -6}};
+        A = {{-11, 6, -6},
+             { 6, -6,  3},
+             {-6,  3, -6}};
 
-        b = {-66,18,-54};
+        b = {-66, 18, -54};
     }
 
     vector x = solve_parallel(A, b);
@@ -96,11 +96,11 @@ TEST(Parallel_Readers_Writes_MPI, Test5) {
     vector b;
     
     if (world.rank() == 0) {
-        A = {{-11,6,-6},
-             { 6,-6, 3},
-             {-6,3, -6}};
+        A = {{-11, 6, -6},
+             { 6, -6,  3},
+             {-6,  3, -6}};
 
-        b = {-5,3,0};
+        b = {-5, 3, 0};
     }
 
     vector x = solve_parallel(A, b);
@@ -119,6 +119,5 @@ int main(int argc, char** argv) {
     if (world.rank() != 0) {
         delete listeners.Release(listeners.default_result_printer());
     }
-    RUN_ALL_TESTS();
-    return 0;
+    return RUN_ALL_TESTS();
 }
