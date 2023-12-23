@@ -4,7 +4,7 @@
 #include <iostream>
 #include "./vector_sum.h"
 
-TEST(Parallel_Vector_Sum, Test_only_1) {
+TEST(Parallel_Vector_Mean, Test_only_1) {
     int rankProc = 0;
     int numProc = 0;
 
@@ -21,7 +21,7 @@ TEST(Parallel_Vector_Sum, Test_only_1) {
     }
 }
 
-TEST(Parallel_Vector_Sum, Test_only_0) {
+TEST(Parallel_Vector_Mean, Test_only_0) {
     int rankProc = 0;
     int numProc = 0;
 
@@ -38,7 +38,7 @@ TEST(Parallel_Vector_Sum, Test_only_0) {
     }
 }
 
-TEST(Parallel_Vector_Sum, Test_not_elems) {
+TEST(Parallel_Vector_Mean, Test_not_elems) {
     int rankProc = 0;
     int numProc = 0;
 
@@ -54,7 +54,7 @@ TEST(Parallel_Vector_Sum, Test_not_elems) {
     }
 }
 
-TEST(Parallel_Vector_Sum, Test_random_elems) {
+TEST(Parallel_Vector_Mean, Test_random_elems) {
     int rankProc = 0;
     int numProc = 0;
 
@@ -73,7 +73,7 @@ TEST(Parallel_Vector_Sum, Test_random_elems) {
     }
 }
 
-TEST(Parallel_Vector_Sum, Test_half_elems) {
+TEST(Parallel_Vector_Mean, Test_half_elems) {
     int rankProc = 0;
     int numProc = 0;
 
