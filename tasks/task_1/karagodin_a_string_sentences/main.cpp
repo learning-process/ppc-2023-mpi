@@ -19,7 +19,10 @@ TEST(SentenceCounterTest, BiggerSentencesTextTest) {
     std::string input = "This is a small sentence. ";
     std::string input2 = "This is another sentence but bigger. ";
     std::string input3 = "This sentence is actually huge though.";
-    std::string hugeInput = input + input2 + input3;
+    std::string hugeInput = "";
+    hugeInput.append(input);
+    hugeInput.append(input2);
+    hugeInput.append(input3);
     EXPECT_EQ(SentenceCounter::countSentences(hugeInput), 3);
 }
 
