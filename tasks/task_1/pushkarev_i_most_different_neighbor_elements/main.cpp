@@ -1,10 +1,9 @@
-
 // Copyright 2023 Pushkarev Ilya
 #include <gtest/gtest.h>
+#include <vector>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/environment.hpp>
-#include <mpi.h>
-#include <iostream>
+#include <boost/serialization/vector.hpp>
 #include "./most_different_neighbor_elements.h"
 
 TEST(Parallel_Vector_Difference, Test_only_1) {

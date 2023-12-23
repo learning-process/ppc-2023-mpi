@@ -56,7 +56,7 @@ std::vector<int> create_random_vector(size_t size, int lower_bound, int upper_bo
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    std::uniform_int_distribution<int> distribution(lower_bound,upper_bound);
+    std::uniform_int_distribution<int> distribution(lower_bound, upper_bound);
 
     for (int &element : random_vector) {
         element = distribution(gen);
