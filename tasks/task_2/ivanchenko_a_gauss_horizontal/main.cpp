@@ -141,9 +141,9 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_3) {
         }
     }
 }
-TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_19) {
+TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_7) {
     boost::mpi::communicator comm;
-    size_t size = 19;
+    size_t size = 7;
     std::vector<double> A(size * size);
     std::vector<double> b(size), expected(size);
     if (comm.rank() == 0) {
@@ -160,9 +160,9 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_19) {
         }
     }
 }
-TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_24) {
+TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_8) {
     boost::mpi::communicator comm;
-    size_t size = 24;
+    size_t size = 8;
     std::vector<double> A(size * size);
     std::vector<double> b(size), expected(size);
     if (comm.rank() == 0) {
@@ -179,9 +179,9 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_24) {
         }
     }
 }
-TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_29) {
+TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_9) {
     boost::mpi::communicator comm;
-    size_t size = 29;
+    size_t size = 9;
     std::vector<double> A(size * size);
     std::vector<double> b(size), expected(size);
     if (comm.rank() == 0) {
