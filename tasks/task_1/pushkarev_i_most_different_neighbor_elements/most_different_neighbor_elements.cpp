@@ -1,6 +1,6 @@
 // Copyright 2023 Pushkarev Ilya
 
-#include "./most_different_neighbor_elements.h"
+#include "task_1/pushkarev_i_most_different_neighbor_elements/most_different_neighbor_elements.h"
 #include <random>
 
 int maxDifferenceSeq(const std::vector<int> &vec) {
