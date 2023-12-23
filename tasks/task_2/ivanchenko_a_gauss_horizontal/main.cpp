@@ -182,6 +182,7 @@ TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_8) {
 TEST(GAUSS_HORIZONTAL, test_parallel_random_fill_9) {
     boost::mpi::communicator comm;
     size_t size = 9;
+
     std::vector<double> A(size * size);
     std::vector<double> b(size), expected(size);
     if (comm.rank() == 0) {
