@@ -5,8 +5,6 @@
 
 
 std::vector<double> seidel_parallel(const std::vector<std::vector<double>>& A, const std::vector<double>& B, int n) {
-
-
     int rank, size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -44,7 +42,7 @@ std::vector<double> seidel_parallel(const std::vector<std::vector<double>>& A, c
                 }
             }
 
-            MPI_Allreduce(&localSum, &globalSum, 1, MPI_DOUBLE, MPI_SUM,MPI_COMM_WORLD);
+            MPI_Allreduce(&localSum, &globalSum, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
             x[i] = (B[i] - globalSum) / A[i][i];
         }
@@ -61,7 +59,6 @@ std::vector<double> seidel_parallel(const std::vector<std::vector<double>>& A, c
 }
 
 std::vector<double> seidel_seq(const std::vector<std::vector<double>>& A, const std::vector<double>& B, int n) {
-
     std::vector<double> x(n);
     std::vector<double> prev_x(n);
 
