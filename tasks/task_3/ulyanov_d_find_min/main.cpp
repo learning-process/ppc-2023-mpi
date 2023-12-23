@@ -58,8 +58,8 @@ TEST(find_min, test4) {
   double resSeq = findMinSeq(1, 4, func, 0.00001);
 
   if (rank == 0) {
-    ASSERT_NEAR(1, resPar, 0.01);
-    ASSERT_NEAR(1, resSeq, 0.01);
+    ASSERT_NEAR(1, resPar, 0.001);
+    ASSERT_NEAR(1, resSeq, 0.001);
   }
 }
 
@@ -77,6 +77,7 @@ TEST(find_min, test5) {
     ASSERT_NEAR(4, resSeq, 0.001);
   }
 }
+
 
 int main(int argc, char** argv) {
   int result_code = 0;
