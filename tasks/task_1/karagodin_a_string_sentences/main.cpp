@@ -12,6 +12,7 @@ TEST(SentenceCounterTest, BasicTest) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "This is a small sentence. This is another sentence.";
+    std::cout << input << std::endl;
     EXPECT_EQ(SentenceCounter::countSentences(input), 2);
 }
 
@@ -22,6 +23,7 @@ TEST(SentenceCounterTest, BiggerSentencesAmountTest) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "This. Sentence. Has. More. Sentences!";
+    std::cout << input << std::endl;
     EXPECT_EQ(SentenceCounter::countSentences(input), 5);
 }
 
@@ -38,6 +40,7 @@ TEST(SentenceCounterTest, BiggerSentencesTextTest) {
     hugeInput.append(input);
     hugeInput.append(input2);
     hugeInput.append(input3);
+    std::cout << hugeInput << std::endl;
     EXPECT_EQ(SentenceCounter::countSentences(hugeInput), 3);
 }
 
@@ -48,6 +51,7 @@ TEST(SentenceCounterTest, MoreSignsSmallTextTest) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "This is a small sentence! This is another sentence?";
+    std::cout << input << std::endl;
     EXPECT_EQ(SentenceCounter::countSentences(input), 2);
 }
 
@@ -64,6 +68,7 @@ TEST(SentenceCounterTest, MoreSignsBigTextTest) {
     hugeInput.append(input);
     hugeInput.append(input2);
     hugeInput.append(input3);
+    std::cout << hugeInput << std::endl;
     EXPECT_EQ(SentenceCounter::countSentences(hugeInput), 3);
 }
 
@@ -74,6 +79,7 @@ TEST(SentenceCounterTest, SingleSignTextTest) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "F.";
+    std::cout << input << std::endl;
     EXPECT_EQ(SentenceCounter::countSentences(input), 1);
 }
 
