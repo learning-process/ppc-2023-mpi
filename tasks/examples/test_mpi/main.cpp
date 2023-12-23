@@ -93,7 +93,6 @@ TEST(Parallel_Operations_MPI, Test_Max_2) {
 }
 
 int main(int argc, char** argv) {
-    std::cout << "Hello world!\n";
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
     ::testing::InitGoogleTest(&argc, argv);
