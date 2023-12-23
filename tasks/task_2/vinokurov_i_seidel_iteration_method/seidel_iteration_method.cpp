@@ -16,17 +16,28 @@ std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<doubl
 
     int k = 0;
 
+    int blockSize = _numRows / size;
+    int remainingRows = _numRows % size;
+
+    int startRow = _rank * blockSize + std::min(_rank, remainingRows);
+    int endRow = startRow + blockSize + (_rank < remainingRows ? 1 : 0);
+
+    int localRowCount = endRow - startRow;
+
+    int totalRowCount;
+    MPI_Allreduce(&localRowCount, &totalRowCount, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
     std::vector<double> x(_numRows, 0.0);
     std::vector<double> xNew(_numRows, 0.0);
 
     bool converged = false;
     while (!converged) {
         k++;
-        if (k > 100000) {
+        if (k > 100) {
             // having this many cycle repetitions means there are no roots for this system
             return std::vector<double>(_numRows, 0.0);
         }
-        for (int i = 0; i < _numRows; ++i) {
+        for (int i = startRow; i < endRow; ++i) {
             double sum1 = 0.0, sum2 = 0.0;
             for (int j = 0; j < i; ++j) {
                 sum1 += _mtxA[i][j] * xNew[j];
@@ -37,17 +48,20 @@ std::vector<double> funcSystemSolveSeidelMPI(const std::vector<std::vector<doubl
             xNew[i] = (_vectorB[i] - sum1 - sum2) / _mtxA[i][i];
         }
 
-        double local_max_diff = 0.0;
+        MPI_Allgather(&xNew[startRow], localRowCount, MPI_DOUBLE,
+            &xNew[0], localRowCount, MPI_DOUBLE, MPI_COMM_WORLD);
+
+        double localMaxDiff = 0.0;
         for (int i = 0; i < _numRows; ++i) {
             double diff = std::abs(xNew[i] - x[i]);
-            if (diff > local_max_diff) {
-                local_max_diff = diff;
+            if (diff > localMaxDiff) {
+                localMaxDiff = diff;
             }
         }
 
-        double global_max_diff;
-        MPI_Allreduce(&local_max_diff, &global_max_diff, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-        if (global_max_diff < _eps) {
+        double globalMaxDiff;
+        MPI_Allreduce(&localMaxDiff, &globalMaxDiff, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+        if (globalMaxDiff < _eps) {
             converged = true;
         }
 
