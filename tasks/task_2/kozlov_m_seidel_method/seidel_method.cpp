@@ -4,7 +4,7 @@
 #include "task_2/kozlov_m_seidel_method/seidel_method.h"
 
 
-std::vector<double> seidel_parallel(std::vector<std::vector<double>> A, std::vector<double> B, int n) {
+std::vector<double> seidel_parallel(const std::vector<std::vector<double>>& A, const std::vector<double>& B, int n) {
     int rank, size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -58,7 +58,7 @@ std::vector<double> seidel_parallel(std::vector<std::vector<double>> A, std::vec
     return x;
 }
 
-std::vector<double> seidel_seq(std::vector<std::vector<double>> A, std::vector<double> B, int n) {
+std::vector<double> seidel_seq(const std::vector<std::vector<double>>& A, const std::vector<double>& B, int n) {
     std::vector<double> x(n);
     std::vector<double> prev_x(n);
 
