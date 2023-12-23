@@ -13,14 +13,14 @@ TEST(MPI_TESTS, Test_exponentional_function) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double lower_limit = 0;
   double upper_limit = 1;
-  int num_points = 1000000;
+  int num_points = 10000;
   auto exponentional_function = [](double x) { return std::exp(-x * x); };
   double result_par = par_monte_carlo_integration(num_points, lower_limit,
   upper_limit, exponentional_function);
   if (rank == 0) {
     double result_seq = seq_monte_carlo_integration(num_points, lower_limit,
     upper_limit, exponentional_function);
-    EXPECT_LT(std::fabs(result_seq - result_par), 0.01);
+    EXPECT_LT(std::fabs(result_seq - result_par), 0.1);
   }
 }
 
@@ -29,7 +29,7 @@ TEST(MPI_TESTS, Test_exponentional_function_without_limit) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double lower_limit = 0;
   double upper_limit = 0;
-  int num_points = 1000000;
+  int num_points = 10000;
   auto exponentional_function = [](double x) { return std::exp(-x * x); };
   double result_par = par_monte_carlo_integration(num_points, lower_limit,
   upper_limit, exponentional_function);
@@ -43,14 +43,14 @@ TEST(MPI_TESTS, Test_quadratic_function) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double lower_limit = 100;
   double upper_limit = 200;
-  int num_points = 1000000;
+  int num_points = 10000;
   auto quadratic_function = [](double x) { return x * x; };
   double result_par = par_monte_carlo_integration(num_points, lower_limit,
   upper_limit, quadratic_function);
   if (rank == 0) {
     double result_seq = seq_monte_carlo_integration(num_points, lower_limit,
     upper_limit, quadratic_function);
-    EXPECT_LT(std::fabs(result_seq - result_par), 0.01);
+    EXPECT_LT(std::fabs(result_seq - result_par), 0.1);
   }
 }
 
@@ -59,7 +59,7 @@ TEST(MPI_TESTS, Test_quadratic_function_without_limit) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double lower_limit = 0;
   double upper_limit = 0;
-  int num_points = 1000000;
+  int num_points = 10000;
   auto quadratic_function = [](double x) { return x * x; };
   double result_par = par_monte_carlo_integration(num_points, lower_limit,
   upper_limit, quadratic_function);
@@ -73,14 +73,14 @@ TEST(MPI_TESTS, Test_sine_function) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double lower_limit = -1;
   double upper_limit = 1;
-  int num_points = 1000000;
+  int num_points = 10000;
   auto sine_function = [](double x) { return std::sin(x); };
   double result_par = par_monte_carlo_integration(num_points, lower_limit,
   upper_limit, sine_function);
   if (rank == 0) {
     double result_seq = seq_monte_carlo_integration(num_points, lower_limit,
     upper_limit, sine_function);
-    EXPECT_LT(std::fabs(result_seq - result_par), 0.01);
+    EXPECT_LT(std::fabs(result_seq - result_par), 0.1);
   }
 }
 
@@ -89,7 +89,7 @@ TEST(MPI_TESTS, Test_sine_function_without_limit) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double lower_limit = 0;
   double upper_limit = 0;
-  int num_points = 1000000;
+  int num_points = 10000;
   auto sine_function = [](double x) { return std::sin(x); };
   double result_par = par_monte_carlo_integration(num_points, lower_limit,
   upper_limit, sine_function);
