@@ -36,7 +36,6 @@ TEST(SentenceCounterTest, MoreSignsBigTextTest) {
     hugeInput.append(input);
     hugeInput.append(input2);
     hugeInput.append(input3);
-    std::cout << hugeInput << std::endl;
     EXPECT_EQ(SentenceCounter::countSentences(hugeInput), 3);
 }
 
