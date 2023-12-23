@@ -100,6 +100,29 @@ TEST(Parallel_Max_Of_Matrix_Rows_MPI, Test_ManualAllEQ) {
     }
 }
 
+TEST(Parallel_Max_Of_Matrix_Rows_MPI, Test_NegativeNumbers) {
+    boost::mpi::communicator world;
+    std::vector<int> global_matr;
+    const int m = 3;
+    const int n = 4;
+
+    if (world.rank() == 0) {
+        global_matr = {
+            -1, -2, -3, -4,
+            -8, -7, -6, -5,
+            -10, -9, -12, -11
+        };
+    }
+
+    std::vector<size_t> global_maxes = getParallelMaxInRows(global_matr, m, n);
+
+    if (world.rank() == 0) {
+        ASSERT_EQ(0, global_maxes[0]);
+        ASSERT_EQ(3, global_maxes[1]);
+        ASSERT_EQ(1, global_maxes[2]);
+    }
+}
+
 int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
