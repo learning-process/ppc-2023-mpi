@@ -37,4 +37,18 @@ struct MergeMatrices {
     CscMatrix operator()(const CscMatrix &a, const CscMatrix &b);
 };
 
+namespace boost {
+namespace serialization {
+template <class Archive>
+void serialize(Archive &ar, CscMatrix &m,     // NOLINT
+               const unsigned int version) {  // NOLINT
+    ar & m.rows;
+    ar & m.cols;
+    ar & m.values;
+    ar & m.rowIndices;
+    ar & m.columnPointers;
+}
+}  // namespace serialization
+}  // namespace boost
+
 #endif  // TASKS_TASK_3_KRISEEV_M_CSC_MATRIX_MULTIPLICATION_CSC_MATRIX_MULTIPLICATION_H_

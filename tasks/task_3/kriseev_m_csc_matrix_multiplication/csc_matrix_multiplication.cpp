@@ -7,19 +7,18 @@
 #include <boost/mpi/collectives.hpp>
 #include <boost/serialization/vector.hpp>
 
-namespace boost {
-namespace serialization {
-template <class Archive>
-void serialize(Archive &ar, CscMatrix &m,     // NOLINT
-               const unsigned int version) {  // NOLINT
-    ar & m.rows;
-    ar & m.cols;
-    ar & m.values;
-    ar & m.rowIndices;
-    ar & m.columnPointers;
+void appendMatrix(CscMatrix &a, const CscMatrix &b) { // NOLINT
+    a.rowIndices.reserve(a.rowIndices.size() + b.rowIndices.size());
+    a.values.reserve(a.values.size() + b.values.size());
+
+    for (int i = 0; i < b.rowIndices.size(); ++i) {
+        a.rowIndices.push_back(b.rowIndices[i]);
+        a.values.push_back(b.values[i]);
+    }
+    for (int i = 1; i < b.columnPointers.size(); ++i) {
+        a.columnPointers[i] += b.columnPointers[i];
+    }
 }
-}  // namespace serialization
-}  // namespace boost
 
 CscMatrix::CscMatrix(size_t rows, size_t cols,
                      const std::vector<double> &values,
@@ -122,14 +121,13 @@ size_t CscMatrix::findElementColumn(size_t index) const {
 
 CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
     boost::mpi::communicator world;
-
     if (world.size() == 1) {
         return multiplyCscMatricesSequential(a, b);
     }
-
     if (a.cols != b.rows) {
         throw std::invalid_argument("b");
     }
+
     CscMatrix a_t(a.cols, a.rows);
     CscMatrix b_c(b);
 
@@ -137,89 +135,97 @@ CscMatrix multiplyCscMatricesParallel(const CscMatrix &a, const CscMatrix &b) {
     CscMatrix res = {a_t.cols, b.cols, {}, {}, {0}};
 
     std::vector<size_t> tempCol(a_t.rows, -1);
-
-    std::vector<size_t> j_indices(
-        res.cols / world.size() +
-        (world.rank() < res.cols % world.size() ? 1 : 0));
-    if (world.rank() == 0) {
-        std::vector<int> i_sizes(world.size(), res.rows / world.size());
-        for (size_t k = 0; k < res.rows % world.size(); ++k) {
-            i_sizes[k]++;
-        }
-        std::vector<int> j_sizes(world.size(), res.cols / world.size());
-        for (size_t k = 0; k < res.cols % world.size(); ++k) {
-            j_sizes[k]++;
-        }
-        std::vector<size_t> all_j_indices(res.cols);
-        std::iota(all_j_indices.begin(), all_j_indices.end(), 0);
-
-        boost::mpi::scatterv(world, all_j_indices, j_sizes, j_indices.data(),
-                             0);
-    } else {
-        boost::mpi::scatterv(world, j_indices.data(), j_indices.size(), 0);
+    std::vector<int> j_sizes(world.size(), res.cols / world.size());
+    for (size_t k = 0; k < res.cols % world.size(); ++k) {
+        j_sizes[k]++;
     }
-
+    size_t myFirstIndex = 0;
+    for (int i = 0; i < world.rank(); ++i) {
+        myFirstIndex += j_sizes[i];
+    }
+    size_t myLastIndex = myFirstIndex + j_sizes[world.rank()];
     for (size_t j = 0; j < res.cols; ++j) {
-        for (size_t i = 0; i < res.rows; ++i) {
-            if (std::find(j_indices.begin(), j_indices.end(), j) ==
-                j_indices.end()) {
-                continue;
-            }
-            double dot = 0;
-            size_t colSizeA = a_t.columnPointers[i + 1] - a_t.columnPointers[i];
-            size_t colSizeB = b_c.columnPointers[j + 1] - b_c.columnPointers[j];
-            size_t beginColA = a_t.columnPointers[i];
-            size_t beginColB = b_c.columnPointers[j];
-            tempCol.assign(tempCol.size(), -1);
-            for (size_t k = 0; k < colSizeA; ++k) {
-                size_t l = a_t.rowIndices[beginColA + k];
-                tempCol[l] = k;
-            }
-            for (size_t k = 0; k < colSizeB; ++k) {
-                size_t l = b_c.rowIndices[beginColB + k];
-                if (tempCol[l] == -1) {
-                    continue;
+        if (j >= myFirstIndex && j < myLastIndex) {
+            for (size_t i = 0; i < res.rows; ++i) {
+                double dot = 0;
+                size_t colSizeA =
+                    a_t.columnPointers[i + 1] - a_t.columnPointers[i];
+                size_t colSizeB =
+                    b_c.columnPointers[j + 1] - b_c.columnPointers[j];
+                size_t beginColA = a_t.columnPointers[i];
+                size_t beginColB = b_c.columnPointers[j];
+                tempCol.assign(tempCol.size(), -1);
+                for (size_t k = 0; k < colSizeA; ++k) {
+                    size_t l = a_t.rowIndices[beginColA + k];
+                    tempCol[l] = k;
                 }
-                dot += a_t.values[beginColA + tempCol[l]] *
-                       b_c.values[beginColB + k];
-            }
-            if (dot != 0) {
-                res.values.push_back(dot);
-                res.rowIndices.push_back(i);
+                for (size_t k = 0; k < colSizeB; ++k) {
+                    size_t l = b_c.rowIndices[beginColB + k];
+                    if (tempCol[l] == -1) {
+                        continue;
+                    }
+                    dot += a_t.values[beginColA + tempCol[l]] *
+                           b_c.values[beginColB + k];
+                }
+                if (dot != 0) {
+                    res.values.push_back(dot);
+                    res.rowIndices.push_back(i);
+                }
             }
         }
         res.columnPointers.push_back(res.values.size());
     }
     CscMatrix finalRes(res.rows, res.cols);
-    boost::mpi::reduce(world, res, finalRes, MergeMatrices(), 0);
+    boost::mpi::all_reduce(world, res, finalRes, MergeMatrices());
     return finalRes;
 }
 
 CscMatrix MergeMatrices::operator()(const CscMatrix &a, const CscMatrix &b) {
-    CscMatrix res(a);
-
-    size_t col = 0;
-    res.rowIndices.reserve(res.rowIndices.size() + b.rowIndices.size());
-    res.values.reserve(res.values.size() + b.values.size());
-
-    for (size_t i = 0; i < b.columnPointers.size() - 1; ++i) {
-        auto colSize = b.columnPointers[i + 1] - b.columnPointers[i];
-        if (colSize) {
-            for (size_t j = 0; j < colSize; ++j) {
-                res.values.insert(
-                    res.values.begin() + res.columnPointers[i] + j,
-                    b.values[b.columnPointers[i] + j]);
-                res.rowIndices.insert(
-                    res.rowIndices.begin() + +res.columnPointers[i] + j,
-                    b.rowIndices[b.columnPointers[i] + j]);
-            }
-            for (size_t k = i + 1; k < res.columnPointers.size(); ++k) {
-                res.columnPointers[k] += colSize;
-            }
+    size_t aFirstCol = 0;
+    for (size_t l = 0; l < a.columnPointers.size() - 1; ++l) {
+        if (a.columnPointers[l] != a.columnPointers[l + 1]) {
+            aFirstCol = l;
+            break;
+        }
+    }
+    size_t bFirstCol = 0;
+    for (size_t l = 0; l < b.columnPointers.size() - 1; ++l) {
+        if (b.columnPointers[l] != b.columnPointers[l + 1]) {
+            bFirstCol = l;
+            break;
         }
     }
 
-    return res;
+    if (bFirstCol > aFirstCol) {
+        CscMatrix res(a);
+        appendMatrix(res, b);
+        return res;
+    } else {
+        CscMatrix res(b);
+        appendMatrix(res, a);
+        return res;
+    }
+    // res.rowIndices.reserve(res.rowIndices.size() + b.rowIndices.size());
+    // res.values.reserve(res.values.size() + b.values.size());
+
+    // for (size_t i = 0; i < b.columnPointers.size() - 1; ++i) {
+    //     auto colSize = b.columnPointers[i + 1] - b.columnPointers[i];
+    //     if (colSize) {
+    //         for (size_t j = 0; j < colSize; ++j) {
+    //             res.values.insert(
+    //                 res.values.begin() + res.columnPointers[i] + j,
+    //                 b.values[b.columnPointers[i] + j]);
+    //             res.rowIndices.insert(
+    //                 res.rowIndices.begin() + +res.columnPointers[i] + j,
+    //                 b.rowIndices[b.columnPointers[i] + j]);
+    //         }
+    //         for (size_t k = i + 1; k < res.columnPointers.size(); ++k) {
+    //             res.columnPointers[k] += colSize;
+    //         }
+    //     }
+    // }
+
+    // return res;
 }
 
 CscMatrix multiplyCscMatricesSequential(const CscMatrix &a,

@@ -2,9 +2,30 @@
 #include <gtest/gtest.h>
 #include <random>
 #include <boost/mpi/environment.hpp>
+#include <boost/mpi/collectives.hpp>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/timer.hpp>
 #include "./csc_matrix_multiplication.h"
+
+void initRandomCscMatrix(CscMatrix& a) {  // NOLINT
+    double lambda = 0.05;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    gen.seed(39857781);
+    std::uniform_int_distribution<int> d(0, a.rows / 2);
+    std::uniform_int_distribution<int> d_i(0, a.rows - 1);
+    std::uniform_real_distribution<double> d_v(2, 10);
+    std::vector<size_t> sizes;
+    for (size_t i = 0; i < a.cols; ++i) {
+        size_t size = static_cast<size_t>(d(gen));
+        if (size > a.rows) {
+            size = a.rows;
+        }
+        for (int j = 0; j < size; ++j) {
+            a.setElement(i, d_i(gen), d_v(gen));
+        }
+    }
+}
 
 TEST(CSC_Matrix_Multiplication, matrix_1x1) {
     boost::mpi::communicator world;
@@ -113,6 +134,35 @@ TEST(CSC_Matrix_Multiplication, matrix_vector_product) {
         actualParallel.print();
         ASSERT_EQ(expected, actualSequential);
         ASSERT_EQ(expected, actualParallel);
+    }
+}
+
+TEST(CSC_Matrix_Multiplication, random_matrices) {
+    boost::mpi::communicator world;
+    size_t cols_a = 20;
+    size_t rows_a = 30;
+    size_t cols_b = 500;
+    size_t rows_b = cols_a;
+    CscMatrix a(rows_a, cols_a, {}, {}, std::vector<size_t>(cols_a + 1, 0));
+    CscMatrix b(rows_b, cols_b, {}, {}, std::vector<size_t>(cols_b + 1, 0));
+    if (world.rank() == 0) {
+        initRandomCscMatrix(a);
+        initRandomCscMatrix(b);
+    }
+    boost::mpi::broadcast(world, a, 0);
+    boost::mpi::broadcast(world, b, 0);
+    std::cout << "matrices initialized\n";
+    boost::mpi::timer timer;
+    auto parallelResult = multiplyCscMatricesParallel(a, b);
+    double parallelTime = timer.elapsed();
+
+    if (world.rank() == 0) {
+        timer.restart();
+        auto sequentialResult = multiplyCscMatricesSequential(a, b);
+        double sequentialTime = timer.elapsed();
+        std::cout << "parallel time: " << parallelTime << "\n";
+        std::cout << "sequential time: " << sequentialTime << "\n";
+        ASSERT_EQ(sequentialResult, parallelResult);
     }
 }
 
