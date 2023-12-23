@@ -6,7 +6,6 @@
 
 using std::array;
 using std::function;
-using std::exp;
 
 TEST(Monte_Carlo_Multiple_Integral_MPI, Test1) {
     auto f = [](const array<double, 1> &x) -> double {
