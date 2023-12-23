@@ -53,7 +53,7 @@ TEST(Jarvis, test_1) {
 TEST(Jarvis, test_2) {
     boost::mpi::communicator world;
 
-    int n = 20
+    int n = 20;
     int m = 20;
     int delta = n / world.size();
     std::vector<std::vector<int>> image(0);
