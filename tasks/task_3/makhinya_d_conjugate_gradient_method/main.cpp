@@ -10,7 +10,7 @@ TEST(Parallel_Readers_Writes_MPI, Test1) {
     boost::mpi::communicator world;
     matrix A;
     vector b;
-    
+
     if (world.rank() == 0) {
         A = {{ 2, -1,  0},
              {-1,  2, -1},
@@ -31,7 +31,7 @@ TEST(Parallel_Readers_Writes_MPI, Test2) {
     boost::mpi::communicator world;
     matrix A;
     vector b;
-    
+
     if (world.rank() == 0) {
         A = {{ 2, -1,  0},
              {-1,  2, -1},
@@ -52,7 +52,7 @@ TEST(Parallel_Readers_Writes_MPI, Test3) {
     boost::mpi::communicator world;
     matrix A;
     vector b;
-    
+
     if (world.rank() == 0) {
         A = {{ 2, -1,  0},
              {-1,  2, -1},
@@ -73,7 +73,7 @@ TEST(Parallel_Readers_Writes_MPI, Test4) {
     boost::mpi::communicator world;
     matrix A;
     vector b;
-    
+
     if (world.rank() == 0) {
         A = {{-11, 6, -6},
              { 6, -6,  3},
@@ -94,7 +94,7 @@ TEST(Parallel_Readers_Writes_MPI, Test5) {
     boost::mpi::communicator world;
     matrix A;
     vector b;
-    
+
     if (world.rank() == 0) {
         A = {{-11, 6, -6},
              { 6, -6,  3},

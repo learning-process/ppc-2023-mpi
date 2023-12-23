@@ -1,6 +1,6 @@
 // Copyright 2023 Makhinya Danil
-#ifndef TASKS_TASK_2_MAKHINYA_D_CONJUGATE_GRADIENT_METHOD_GRADIENT_METHOD_H_
-#define TASKS_TASK_2_MAKHINYA_D_CONJUGATE_GRADIENT_METHOD_GRADIENT_METHOD_H_
+#ifndef TASKS_TASK_3_MAKHINYA_D_CONJUGATE_GRADIENT_METHOD_GRADIENT_METHOD_H_
+#define TASKS_TASK_3_MAKHINYA_D_CONJUGATE_GRADIENT_METHOD_GRADIENT_METHOD_H_
 
 #include <vector>
 
@@ -16,4 +16,4 @@ vector operator* (double c, const vector& b);
 vector operator+ (const vector& a, const vector& b);
 vector operator- (const vector& a, const vector& b);
 
-#endif  // TASKS_TASK_2_MAKHINYA_D_CONJUGATE_GRADIENT_METHOD_GRADIENT_METHOD_H_
+#endif  // TASKS_TASK_3_MAKHINYA_D_CONJUGATE_GRADIENT_METHOD_GRADIENT_METHOD_H_

@@ -72,8 +72,7 @@ vector solve_parallel(const matrix& A, const vector& b) {
         vector r_prev = b - A * x_prev;
         vector z_prev = r_prev;
         int count_iter = 0;
-        while (measure(r_prev) > EPS && count_iter < MAX_COUNT_ITER) 
-        {
+        while (measure(r_prev) > EPS && count_iter < MAX_COUNT_ITER) {
             double dot_r_prev = dot(r_prev, r_prev);
             vector tmp(sz);
             for (int i = 0; i < sz; ++i) {
@@ -88,7 +87,7 @@ vector solve_parallel(const matrix& A, const vector& b) {
 
             count_iter++;
         }
-        
+
         for (int proc = 1; proc < world_sz; ++proc) {
             world.send(proc, 0, usefull_ptr, 1);
         }
