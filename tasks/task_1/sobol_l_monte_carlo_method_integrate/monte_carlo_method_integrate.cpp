@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "task_1/sobol_l_monte_carlo_method_integrate/monte_carlo_method_integrate.h"
 
+
 double calculateMonteCarloIntegral(double lowerBound, double upperBound, double(*targetFunction)(double), int numberOfPoints) {
     int processCount, currentProcess;
     MPI_Comm_size(MPI_COMM_WORLD, &processCount);
