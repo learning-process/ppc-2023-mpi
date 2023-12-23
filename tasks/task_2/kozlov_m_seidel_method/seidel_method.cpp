@@ -4,7 +4,7 @@
 #include "task_2/kozlov_m_seidel_method/seidel_method.h"
 
 
-std::vector<double> seidel_parallel(const std::vector<std::vector<double>>& A, const std::vector<double>& B, int n) {
+std::vector<double> seidel_parallel(std::vector<std::vector<double>> A, std::vector<double> B, int n) {
     int rank, size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -22,8 +22,8 @@ std::vector<double> seidel_parallel(const std::vector<std::vector<double>>& A, c
 
     double localSum = 0.0, globalSum = 0.0, diff = 0.0;
 
-    std::vector<double> x(n);
-    std::vector<double> prev_x(n);
+    std::vector<double> x(n, 0.0);
+    std::vector<double> prev_x(n, 0.0);
 
     do {
         for (int i = 0; i < n; i++) {
@@ -58,7 +58,7 @@ std::vector<double> seidel_parallel(const std::vector<std::vector<double>>& A, c
     return x;
 }
 
-std::vector<double> seidel_seq(const std::vector<std::vector<double>>& A, const std::vector<double>& B, int n) {
+std::vector<double> seidel_seq(std::vector<std::vector<double>> A, std::vector<double> B, int n) {
     std::vector<double> x(n);
     std::vector<double> prev_x(n);
 
@@ -86,7 +86,7 @@ std::vector<double> seidel_seq(const std::vector<std::vector<double>>& A, const 
         for (int i = 0; i < n; i++) {
             diff += std::pow(x[i] - prev_x[i], 2);
         }
-    } while (!(std::sqrt(diff) < 1e-2));
+    } while (!(std::sqrt(diff) < 1e-3));
 
     return x;
 }

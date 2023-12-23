@@ -16,13 +16,10 @@ TEST(GaussSeidelTest, SequentialVsMPI1) {
     std::vector<double> b(N, 0.0);
     std::vector<double> xSequential(N, 0.0);
 
-    if (rank == 0) {
-        A = {{4, -1, 0},
-             {-1, 4, -1},
-             {0, -1, 4}};
-        b = {15, 10, 10};
-    }
-
+    A = {{4, -1, 0},
+         {-1, 4, -1},
+         {0, -1, 4}};
+    b = {15, 10, 10};
     // Call sequential Gauss-Seidel
     if (rank == 0) {
         xSequential = seidel_seq(A, b, N);
@@ -50,13 +47,11 @@ TEST(GaussSeidelTest, SequentialVsMPI2) {
     std::vector<double> b(N, 0.0);
     std::vector<double> xSequential(N, 0.0);
 
-    if (rank == 0) {
-        A = {{4, -1, 0, 0},
-             {-1, 4, -1, 0},
-             {0, -1, 4, -1},
-             {0, 0, -1, 4}};
-        b = {15, 10, 10, 5};
-    }
+    A = {{4, -1, 0, 0},
+         {-1, 4, -1, 0},
+         {0, -1, 4, -1},
+         {0, 0, -1, 4}};
+    b = {15, 10, 10, 5};
 
     // Call sequential Gauss-Seidel
     if (rank == 0) {
@@ -85,14 +80,12 @@ TEST(GaussSeidelTest, SequentialVsMPI3) {
     std::vector<double> b(N, 0.0);
     std::vector<double> xSequential(N, 0.0);
 
-    if (rank == 0) {
-        A = {{4, -1, 0, 0, 0},
-             {-1, 4, -1, 0, 0},
-             {0, -1, 4, -1, 0},
-             {0, 0, -1, 4, -1},
-             {0, 0, 0, -1, 4}};
-        b = {15, 10, 10, 5, 1};
-    }
+    A = {{4, -1, 0, 0, 0},
+         {-1, 4, -1, 0, 0},
+         {0, -1, 4, -1, 0},
+         {0, 0, -1, 4, -1},
+         {0, 0, 0, -1, 4}};
+    b = {15, 10, 10, 5, 1};
 
     if (rank == 0) {
         xSequential = seidel_seq(A, b, N);
@@ -119,15 +112,13 @@ TEST(GaussSeidelTest, SequentialVsMPI4) {
     std::vector<double> b(N, 0.0);
     std::vector<double> xSequential(N, 0.0);
 
-    if (rank == 0) {
-        A = {{4, -1, 0, 0, 0, 0},
-             {-1, 4, -1, 0, 0, 0},
-             {0, -1, 4, -1, 0, 0},
-             {0, 0, -1, 4, -1, 0},
-             {0, 0, 0, -1, 4, -1},
-             {0, 0, 0, 0, -1, 4}};
-        b = {15, 10, 10, 5, 1, 2};
-    }
+    A = {{4, -1, 0, 0, 0, 0},
+         {-1, 4, -1, 0, 0, 0},
+         {0, -1, 4, -1, 0, 0},
+         {0, 0, -1, 4, -1, 0},
+         {0, 0, 0, -1, 4, -1},
+         {0, 0, 0, 0, -1, 4}};
+    b = {15, 10, 10, 5, 1, 2};
 
     // Call sequential Gauss-Seidel
     if (rank == 0) {
@@ -155,11 +146,10 @@ TEST(GaussSeidelTest, SequentialVsMPI5) {
     std::vector<double> b(N, 0.0);
     std::vector<double> xSequential(N, 0.0);
 
-    if (rank == 0) {
-        A = {{4, -1},
-             {-1, 4}};
-        b = {15, 10};
-    }
+    A = {{4, -1},
+         {-1, 4}};
+    b = {15, 10};
+
 
     // Call sequential Gauss-Seidel
     if (rank == 0) {
