@@ -78,7 +78,6 @@ TEST(find_min, test5) {
   }
 }
 
-
 int main(int argc, char** argv) {
   int result_code = 0;
 
