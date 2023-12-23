@@ -6,16 +6,31 @@
 
 
 TEST(SentenceCounterTest, BasicTest) {
+    int rankProc = 0;
+    int numProc = 0;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "This is a small sentence. This is another sentence.";
     EXPECT_EQ(SentenceCounter::countSentences(input), 2);
 }
 
 TEST(SentenceCounterTest, BiggerSentencesAmountTest) {
+    int rankProc = 0;
+    int numProc = 0;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "This. Sentence. Has. More. Sentences!";
     EXPECT_EQ(SentenceCounter::countSentences(input), 5);
 }
 
 TEST(SentenceCounterTest, BiggerSentencesTextTest) {
+    int rankProc = 0;
+    int numProc = 0;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "This is a small sentence. ";
     std::string input2 = "This is another sentence but bigger. ";
     std::string input3 = "This sentence is actually huge though.";
@@ -27,11 +42,21 @@ TEST(SentenceCounterTest, BiggerSentencesTextTest) {
 }
 
 TEST(SentenceCounterTest, MoreSignsSmallTextTest) {
+    int rankProc = 0;
+    int numProc = 0;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "This is a small sentence! This is another sentence?";
     EXPECT_EQ(SentenceCounter::countSentences(input), 2);
 }
 
 TEST(SentenceCounterTest, MoreSignsBigTextTest) {
+    int rankProc = 0;
+    int numProc = 0;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
       std::string input = "This is a small sentence. ";
     std::string input2 = "This is another sentence but bigger! ";
     std::string input3 = "This sentence is actually huge though?";
@@ -43,6 +68,11 @@ TEST(SentenceCounterTest, MoreSignsBigTextTest) {
 }
 
 TEST(SentenceCounterTest, SingleSignTextTest) {
+    int rankProc = 0;
+    int numProc = 0;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
     std::string input = "F.";
     EXPECT_EQ(SentenceCounter::countSentences(input), 1);
 }
