@@ -50,7 +50,6 @@ TEST(GLOBAL_SEARCH_STRONGIN, parallel_2) {
     }
 }
 TEST(GLOBAL_SEARCH_STRONGIN, parallel_3) {
-
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     double seqRes, paralRes, start, end, timeSeq, timeParallel;
@@ -68,7 +67,6 @@ TEST(GLOBAL_SEARCH_STRONGIN, parallel_3) {
     }
 }
 TEST(GLOBAL_SEARCH_STRONGIN, parallel_4) {
-
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     double seqRes, paralRes, start, end, timeSeq, timeParallel;
@@ -86,7 +84,6 @@ TEST(GLOBAL_SEARCH_STRONGIN, parallel_4) {
     }
 }
 TEST(GLOBAL_SEARCH_STRONGIN, parallel_5) {
-
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     double seqRes, paralRes, start, end, timeSeq, timeParallel;
@@ -104,7 +101,6 @@ TEST(GLOBAL_SEARCH_STRONGIN, parallel_5) {
     }
 }
 TEST(GLOBAL_SEARCH_STRONGIN, parallel_6) {
-
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     double seqRes, paralRes, start, end, timeSeq, timeParallel;
@@ -119,7 +115,6 @@ TEST(GLOBAL_SEARCH_STRONGIN, parallel_6) {
     if (rank == 0) {
         end = MPI_Wtime();
         timeParallel = end - start;
-
     }
 }
 
