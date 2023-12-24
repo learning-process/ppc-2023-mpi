@@ -5,113 +5,118 @@
 #include "task_2/bonyuk_p_lintopol/lintopol.h"
 
 TEST(LinearTopol, test_one) {
-    int rank = 0;
-    int size = 0;
+    int rank;
+    int size;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    const int send = 0;
-    const int rec = size - 1;
-    int data = 0;
+    int data = (rank == 0) ? 100 : 0;
 
-    if (rank == send) data = 100;
-
-    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
-
-    if (rank == rec) {
-        ASSERT_EQ(100, data);
+    if (size > 1) {
+        Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, 0, size - 1, 0, MPI_COMM_WORLD);
     }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if (rank == size - 1) {
+       ASSERT_EQ(data, 100);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
 }
+
 TEST(LinearTopol, test_two) {
-    int rank = 0;
-    int size = 0;
+    int rank;
+    int size;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    const int send = size - 1;
-    const int rec = 0;
-    int data = 0;
+    int data = (rank == 0) ? 100 : 0;
 
-    if (rank == send) data = 100;
-
-    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
-
-    if (rank == rec) {
-        ASSERT_EQ(100, data);
+    if (size > 1) {
+        Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, size - 1, 0, 0, MPI_COMM_WORLD);
     }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if (rank == size - 1) {
+        ASSERT_EQ(data, 100);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
 }
 
 TEST(LinearTopol, test_three) {
-    int rank = 0;
-    int size = 0;
+    int rank;
+    int size;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    const int send = 0;
-    const int rec = 1;
-    int data = 0;
+    int data = (rank == 0) ? 100 : 0;
 
-    if (rank == send) data = 100;
-
-    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
-
-    if (rank == rec) {
-        ASSERT_EQ(100, data);
+    if (size > 1) {
+        Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, 0, 1, 0, MPI_COMM_WORLD);
     }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if (rank == size - 1) {
+        ASSERT_EQ(data, 100);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
 }
 
 TEST(LinearTopol, test_four) {
-    int rank = 0;
-    int size = 0;
+    int rank;
+    int size;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    const int send = 1;
-    const int rec = 0;
-    int data = 0;
+    int data = (rank == 0) ? 100 : 0;
 
-    if (rank == send) data = 100;
-
-    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
-
-    if (rank == rec) {
-        ASSERT_EQ(100, data);
+    if (size > 1) {
+        Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, 1, 0, 0, MPI_COMM_WORLD);
     }
-}
 
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if (rank == size - 1) {
+        ASSERT_EQ(data, 100);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+}
 TEST(LinearTopol, test_five) {
-    int rank = 0;
-    int size = 0;
+    int rank;
+    int size;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    const int send = 1;
-    const int rec = size - 1;
-    int data = 0;
+    int data = (rank == 0) ? 100 : 0;
 
-    if (rank == send) data = 100;
-
-    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
-
-    if (rank == rec) {
-        ASSERT_EQ(100, data);
+    if (size > 1) {
+         Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, 1, size - 1, 0, MPI_COMM_WORLD);
     }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if (rank == size - 1) {
+        ASSERT_EQ(data, 100);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
 }
+
 int main(int argc, char** argv) {
-    int result_code = 0;
-
+	MPI_Init(&argc, &argv);
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners =
-        ::testing::UnitTest::GetInstance()->listeners();
-
-    if (MPI_Init(&argc, &argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, -1);
-    result_code = RUN_ALL_TESTS();
+    int result = RUN_ALL_TESTS();
     MPI_Finalize();
-
-    return result_code;
+    return result;
 }
