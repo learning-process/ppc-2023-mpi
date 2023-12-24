@@ -1,4 +1,5 @@
-﻿#include <gtest/gtest.h>
+﻿// Copyright 2023 Bonyuk Petr
+#include <gtest/gtest.h>
 #include <iostream>
 #include <mpi.h>
 #include "task_1/bonyuk_p_tr_int/tr_int.h"

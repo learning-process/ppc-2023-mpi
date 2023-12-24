@@ -1,3 +1,4 @@
+// Copyright 2023 Bonyuk Petr
 #ifndef TASKS_TASK_1_BONYUK_P_TR_INT_TR_INT_H_
 #define TASKS_TASK_1_BONYUK_P_TR_INT_TR_INT_H_
 
