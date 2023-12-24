@@ -103,19 +103,15 @@ TEST(LinearTopol, test_five) {
     }
 }
 int main(int argc, char** argv) {
+    int result_code = 0;
+
     ::testing::InitGoogleTest(&argc, argv);
-    MPI_Init(&argc, &argv);
+    ::testing::TestEventListeners& listeners =
+        ::testing::UnitTest::GetInstance()->listeners();
 
-    int world_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-
-    int result_code = RUN_ALL_TESTS();
-    MPI_Barrier(MPI_COMM_WORLD);
-
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, -1);
+    result_code = RUN_ALL_TESTS();
     MPI_Finalize();
 
-    if (world_rank != 0) {
-        exit(0);
-    }
     return result_code;
 }
