@@ -2,6 +2,7 @@
 
 #include "task_1/pushkarev_i_most_different_neighbor_elements/most_different_neighbor_elements.h"
 #include <random>
+#include <algorithm>
 
 int maxDifferenceSeq(const std::vector<int> &vec) {
     int maxDiff = 0;
