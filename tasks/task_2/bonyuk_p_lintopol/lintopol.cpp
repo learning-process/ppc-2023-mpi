@@ -6,8 +6,7 @@
 bool is_in_path(int current, int src, int dest, bool is_forward) {
     if (is_forward) {
         return (current >= src && current <= dest);
-    }
-    else {
+    } else {
         return (current <= src && current >= dest);
     }
 }
