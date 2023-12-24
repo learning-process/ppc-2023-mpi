@@ -4,72 +4,104 @@
 #include <gtest/gtest.h>
 #include "task_2/bonyuk_p_lintopol/lintopol.h"
 
-const int TEST_DATA_VALUE = 100;
+TEST(LinearTopol, test_one) {
+    int rank = 0;
+    int size = 0;
 
-int runLinearTopologyTest(int sender, int receiver, MPI_Comm comm) {
-    int rank;
-    MPI_Comm_rank(comm, &rank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+    const int send = 0;
+    const int rec = size - 1;
     int data = 0;
-    if (rank == sender) {
-        data = TEST_DATA_VALUE;
-    }
 
-    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, sender, receiver, 0, comm);
+    if (rank == send) data = 100;
 
-    if (rank == receiver) {
-        return data;
-    } else {
-       return -1;
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
+
+    if (rank == rec) {
+        ASSERT_EQ(100, data);
     }
 }
+TEST(LinearTopol, test_two) {
+    int rank = 0;
+    int size = 0;
 
-void testWithMultipleProcesses(std::function<int(MPI_Comm)> testFunc, int expectedValue, MPI_Comm comm) {
-    int world_rank;
-    MPI_Comm_rank(comm, &world_rank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int value = testFunc(comm);
+    const int send = size - 1;
+    const int rec = 0;
+    int data = 0;
 
-    if (world_rank == 0) {
-        int result;
-        MPI_Reduce(&value, &result, 1, MPI_INT, MPI_MAX, 0, comm);
-        ASSERT_EQ(result, expectedValue);
-    } else if (value != -1) {
-        MPI_Reduce(&value, nullptr, 1, MPI_INT, MPI_MAX, 0, comm);
+    if (rank == send) data = 100;
+
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
+
+    if (rank == rec) {
+        ASSERT_EQ(100, data);
     }
-    MPI_Barrier(comm);
 }
 
-TEST(LinearTopol, TestMiddleSendDec) {
-    testWithMultipleProcesses([](MPI_Comm comm) {
-        return runLinearTopologyTest(2, 0, comm);
-    }, TEST_DATA_VALUE, MPI_COMM_WORLD);
+TEST(LinearTopol, test_three) {
+	int rank = 0;
+	int size = 0;
+
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+	const int send = 0;
+	const int rec = 1;
+	int data = 0;
+
+	if (rank == send) data = 100;
+
+	Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
+
+	if (rank == rec) {
+		ASSERT_EQ(100, data);
+	}
 }
 
-TEST(LinearTopol, TestFirstSend) {
-    testWithMultipleProcesses([](MPI_Comm comm) {
-        return runLinearTopologyTest(0, 3, comm);
-    }, TEST_DATA_VALUE, MPI_COMM_WORLD);
+TEST(LinearTopol, test_four) {
+    int rank = 0;
+    int size = 0;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    const int send = 1;
+    const int rec = 0;
+    int data = 0;
+
+    if (rank == send) data = 100;
+
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
+
+    if (rank == rec) {
+        ASSERT_EQ(100, data);
+    }
 }
 
-TEST(LinearTopol, TestLastSend) {
-    testWithMultipleProcesses([](MPI_Comm comm) {
-        return runLinearTopologyTest(3, 0, comm);
-    }, TEST_DATA_VALUE, MPI_COMM_WORLD);
-}
+TEST(LinearTopol, test_five) {
+    int rank = 0;
+    int size = 0;
 
-TEST(LinearTopol, TestMultipleSends) {
-    testWithMultipleProcesses([](MPI_Comm comm) {
-        return runLinearTopologyTest(2, 3, comm);
-    }, TEST_DATA_VALUE, MPI_COMM_WORLD);
-}
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-TEST(LinearTopol, TestAnotherMultipleSends) {
-    testWithMultipleProcesses([](MPI_Comm comm) {
-        return runLinearTopologyTest(0, 2, comm);
-    }, TEST_DATA_VALUE, MPI_COMM_WORLD);
-}
+    const int send = 1;
+    const int rec = size - 1;
+    int data = 0;
 
+    if (rank == send) data = 100;
+
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
+
+    if (rank == rec) {
+        ASSERT_EQ(100, data);
+    }
+}
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     MPI_Init(&argc, &argv);
