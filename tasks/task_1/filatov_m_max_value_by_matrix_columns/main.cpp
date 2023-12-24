@@ -1,7 +1,7 @@
 // Copyright 2023 Filatov Maxim
 
 #include <gtest/gtest.h>
-#include "task_1/filatov_m_max_value_matrix_by_columns/max_value_matrix_by_columns.h"
+#include "task_1/filatov_m_max_value_by_matrix_columns/max_value_matrix_by_columns.h"
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 
