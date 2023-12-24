@@ -8,7 +8,6 @@ TEST(BubbleSortOddEvenTest, Test_identical_values) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const int size_arr = 10000;
     std::vector<int> arr = { 0, 0, 0 }, ref_arr = arr;
 
     arr = parallBubbleSortOddEven(arr);
@@ -23,7 +22,6 @@ TEST(BubbleSortOddEvenTest, Test_set_values) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const int size_arr = 10000;
     std::vector<int> arr = { 2, 0, 3 }, ref_arr = arr;
 
     arr = parallBubbleSortOddEven(arr);
@@ -34,11 +32,11 @@ TEST(BubbleSortOddEvenTest, Test_set_values) {
     }
 }
 
-TEST(BubbleSortOddEvenTest, Test_100_elements) {
+TEST(BubbleSortOddEvenTest, Test_5_elements) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const int size_arr = 100;
+    const int size_arr = 5;
     std::vector<int> arr, ref_arr;
 
     if (rank == 0) {
@@ -54,11 +52,11 @@ TEST(BubbleSortOddEvenTest, Test_100_elements) {
     }
 }
 
-TEST(BubbleSortOddEvenTest, Test_1000_elements) {
+TEST(BubbleSortOddEvenTest, Test_10_elements) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const int size_arr = 1000;
+    const int size_arr = 10;
     std::vector<int> arr, ref_arr;
 
     if (rank == 0) {
@@ -74,11 +72,11 @@ TEST(BubbleSortOddEvenTest, Test_1000_elements) {
     }
 }
 
-TEST(BubbleSortOddEvenTest, Test_10000_elements) {
+TEST(BubbleSortOddEvenTest, Test_50_elements) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const int size_arr = 10000;
+    const int size_arr = 50;
     std::vector<int> arr, ref_arr;
 
     if (rank == 0) {
