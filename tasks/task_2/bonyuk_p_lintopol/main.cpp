@@ -44,23 +44,23 @@ TEST(LinearTopol, test_two) {
 }
 
 TEST(LinearTopol, test_three) {
-	int rank = 0;
-	int size = 0;
+    int rank = 0;
+    int size = 0;
 
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-	const int send = 0;
-	const int rec = 1;
-	int data = 0;
+    const int send = 0;
+    const int rec = 1;
+    int data = 0;
 
-	if (rank == send) data = 100;
+    if (rank == send) data = 100;
 
-	Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, rec, 0, MPI_COMM_WORLD);
 
-	if (rank == rec) {
-		ASSERT_EQ(100, data);
-	}
+    if (rank == rec) {
+        ASSERT_EQ(100, data);
+    }
 }
 
 TEST(LinearTopol, test_four) {
