@@ -6,7 +6,7 @@
 
 
 TEST(SentenceCounterTest, BasicTest) {
-    int rank = 0, size = 0, res;
+    int rank = 0, size = 0, res = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -20,7 +20,7 @@ TEST(SentenceCounterTest, BasicTest) {
 }
 
 TEST(SentenceCounterTest, BiggerSentencesAmountTest) {
-    int rank = 0, size = 0, res;
+    int rank = 0, size = 0, res = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     std::string input = "This. Sentence. Has. More. Sentences!";
@@ -33,7 +33,7 @@ TEST(SentenceCounterTest, BiggerSentencesAmountTest) {
 }
 
 TEST(SentenceCounterTest, BiggerSentencesTextTest) {
-    int rank = 0, size = 0, res;
+    int rank = 0, size = 0, res = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     std::string input = "This is a small sentence. ";
@@ -44,15 +44,15 @@ TEST(SentenceCounterTest, BiggerSentencesTextTest) {
     hugeInput.append(input2);
     hugeInput.append(input3);
     std::cout << hugeInput << std::endl;
-    res = SentenceCounter::countSentences(input);
+    res = SentenceCounter::countSentences(hugeInput);
     if (rank == 0) {
-        int resUnp = countFunc(input);
+        int resUnp = countFunc(hugeInput);
         ASSERT_EQ(res, resUnp);
   }
 }
 
 TEST(SentenceCounterTest, MoreSignsSmallTextTest) {
-    int rank = 0, size = 0, res;
+    int rank = 0, size = 0, res = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     std::string input = "This is a small sentence! This is another sentence?";
@@ -65,7 +65,7 @@ TEST(SentenceCounterTest, MoreSignsSmallTextTest) {
 }
 
 TEST(SentenceCounterTest, MoreSignsBigTextTest) {
-    int rank = 0, size = 0, res;
+    int rank = 0, size = 0, res = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
       std::string input = "This is a small sentence. ";
@@ -76,15 +76,15 @@ TEST(SentenceCounterTest, MoreSignsBigTextTest) {
     hugeInput.append(input2);
     hugeInput.append(input3);
     std::cout << hugeInput << std::endl;
-    res = SentenceCounter::countSentences(input);
+    res = SentenceCounter::countSentences(hugeInput);
     if (rank == 0) {
-        int resUnp = countFunc(input);
+        int resUnp = countFunc(hugeInput);
         ASSERT_EQ(res, resUnp);
   }
 }
 
 TEST(SentenceCounterTest, SingleSignTextTest) {
-    int rank = 0, size = 0, res;
+    int rank = 0, size = 0, res = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     std::string input = "F.";
