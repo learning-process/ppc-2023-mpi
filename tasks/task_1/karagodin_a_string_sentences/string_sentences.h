@@ -10,4 +10,5 @@ class SentenceCounter {
     static int countSentences(const std::string& input);
 };
 
+int countFunc(const std::string& input);
 #endif  // TASKS_TASK_1_KARAGODIN_A_STRING_SENTENCES_STRING_SENTENCES_H_
