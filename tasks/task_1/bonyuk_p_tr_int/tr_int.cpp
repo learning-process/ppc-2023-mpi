@@ -1,5 +1,5 @@
 // Copyright 2023 Bonyuk Petr
-#include "task_1/bonyuk_p_tr_int/tr_int.h"
+#include "./tr_int.h"
 #include <mpi.h>
 #include <cmath>
 #include <functional>
