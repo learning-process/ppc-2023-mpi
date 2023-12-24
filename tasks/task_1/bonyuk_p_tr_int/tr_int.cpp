@@ -1,4 +1,4 @@
-// Copyright 2023 Bonyuk Petr
+  //  Copyright 2023 Bonyuk Petr
 
 #include <mpi.h>
 #include <cmath>
