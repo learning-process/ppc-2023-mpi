@@ -1,6 +1,6 @@
 // Copyright 2023 Sobol Lubov
 
-#include "task_2/sobol_l_horizontal_ribbon_scheme/horizontal_ribbon_scheme.h"
+#include "task_2/sobol_l_horizontal_ribbon_scheme/horizontal_scheme.h"
 
 
 std::vector<int> generateRandomMatrix(int rows, int cols, int min, int max) {
