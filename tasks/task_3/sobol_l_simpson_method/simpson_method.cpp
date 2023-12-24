@@ -63,13 +63,39 @@ double parallelSimpsonMethod(double start, double end, double lower,
     double h1 = (end - start) / (intervals);
     double h2 = (upper - lower) / (intervals);
     double local_sum = 0.0;
-
-    // Calculate local start and end indices
+    double coef1 = 0.0;
+    double coef2 = 0.0;
     int local_start = rank * local_intervals + (rank > remain ? remain : rank);
     int local_end = local_start + local_intervals - 1;
+    for (int i = local_start; i <= local_end; i++) {
+        double x = start + i * h1;
+        for (int j = 0; j <= intervals; j++) {
+            double y = lower + j * h2;
 
-    // Calculate local integration using the sequential function for the local data
-    local_sum = simpsonMethod(start + local_start * h1, start + local_end * h1, lower, upper, local_intervals);
+            if (i == 0 || i == intervals) {
+                coef1 = 1.0;
+            } else {
+                if (i % 2 == 0) {
+                    coef1 = 2.0;
+                } else {
+                    coef1 = 4.0;
+                }
+            }
+
+            if (j == 0 || j == intervals) {
+                coef2 = 1.0;
+            } else {
+                if (j % 2 == 0) {
+                    coef2 = 2.0;
+                } else {
+                    coef2 = 4.0;
+                }
+            }
+
+            coef1 = coef1 * coef2;
+            local_sum += coef1 * x * y;
+        }
+    }
 
     double global_sum;
     MPI_Reduce(&local_sum, &global_sum, 1, MPI_DOUBLE, MPI_SUM, 0, comm);
