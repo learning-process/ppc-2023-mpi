@@ -6,7 +6,7 @@
 
 const int TEST_DATA_VALUE = 100;
 
-void initializeTestData(int rank, int sender, int data) {
+void initializeTestData(int rank, int sender, int &data) {
     if (rank == sender) {
         data = TEST_DATA_VALUE;
     }
