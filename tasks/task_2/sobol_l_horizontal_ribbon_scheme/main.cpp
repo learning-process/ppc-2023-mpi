@@ -81,7 +81,7 @@ TEST(Parallel_Vector_Sum, Test_Rectangle_Matrix) {
     int rows = 2;
     int cols = 3;
 
-    std::vector<int> matrix = {1, 1, 1, 2, 2, 2, 3, 3, 3};
+    std::vector<int> matrix = {1, 1, 1, 2, 2, 2};
     std::vector<int> vec{1, 2, 3};
 
 
@@ -89,7 +89,7 @@ TEST(Parallel_Vector_Sum, Test_Rectangle_Matrix) {
     result = parallelMatrixVector(matrix, vec, rows, cols);
 
     if (rank == 0) {
-        std::vector<int> resSeq{6, 12, 18};
+        std::vector<int> resSeq{6, 12};
         ASSERT_EQ(result, resSeq);
     }
 }
@@ -118,7 +118,7 @@ TEST(Parallel_Vector_Sum, Test_Random) {
     result = parallelMatrixVector(matrix, vec, rows, cols);
 
     if (rank == 0) {
-        std::vector<int> resSeq(10);
+        std::vector<int> resSeq(2);
         multiplyMatrixVector(matrix, vec, &resSeq, cols, start, end);
         ASSERT_EQ(result, resSeq);
     }
