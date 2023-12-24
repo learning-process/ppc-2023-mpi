@@ -72,16 +72,13 @@ TEST(LinearTopol, TestAnotherMultipleSends) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-
     MPI_Init(&argc, &argv);
 
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-    int result_code;
-    if (world_rank == 0) {
-        result_code = RUN_ALL_TESTS();
-    }
+    int result_code = RUN_ALL_TESTS();
+    MPI_Barrier(MPI_COMM_WORLD);
 
     MPI_Finalize();
 
