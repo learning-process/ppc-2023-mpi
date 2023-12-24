@@ -13,6 +13,6 @@ int generateSingleRandomNumber(int min, int max);
 void multiplyMatrixVector(const std::vector<int>& matrix, const std::vector<int>& vector,
                     std::vector<int>* result, int cols, int start, int end);
 std::vector<int> parallelMatrixVector(const std::vector<int>& matrix,
-				      const std::vector<int>& vector, int rows, int cols);
+                                      const std::vector<int>& vector, int rows, int cols);
 
 #endif  // TASKS_TASK_2_SOBOL_L_HORIZONTAL_RIBBON_SCHEME_HORIZONTAL_SCHEME_H_
