@@ -29,6 +29,7 @@ std::vector<std::vector<double>> MatrixMultiply(
 std::vector<std::vector<double>> CannonMultiply(
     const std::vector<std::vector<double>>& A,
     const std::vector<std::vector<double>>& B, int matrix_dimension) {
+
     int world_size, world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
@@ -39,37 +40,28 @@ std::vector<std::vector<double>> CannonMultiply(
 
     std::vector<double> local_A(local_matrix_size), local_B(local_matrix_size);
     std::vector<double> local_C(local_matrix_size, 0.0);
-
+    
+    std::vector<double> flat_A, flat_B;
     if (world_rank == 0) {
-        std::vector<double> flat_A(matrix_dimension * matrix_dimension);
-        std::vector<double> flat_B(matrix_dimension * matrix_dimension);
-        for (int i = 0; i < matrix_dimension; ++i) {
-            for (int j = 0; j < matrix_dimension; ++j) {
+        flat_A.resize(matrix_dimension * matrix_dimension);
+        flat_B.resize(matrix_dimension * matrix_dimension);
+        for (int i = 0; i < matrix_dimension; i++) {
+            for (int j = 0; j < matrix_dimension; j++) {
                 flat_A[i * matrix_dimension + j] = A[i][j];
                 flat_B[i * matrix_dimension + j] = B[i][j];
             }
         }
-
-        MPI_Scatter(flat_A.data(), local_matrix_size, MPI_DOUBLE,
-            local_A.data(), local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        MPI_Scatter(flat_B.data(), local_matrix_size, MPI_DOUBLE,
-            local_B.data(), local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    } else {
-        MPI_Scatter(nullptr, local_matrix_size, MPI_DOUBLE, local_A.data(),
-            local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        MPI_Scatter(nullptr, local_matrix_size, MPI_DOUBLE, local_B.data(),
-            local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
+
+    MPI_Scatter(flat_A.data(), local_matrix_size, MPI_DOUBLE, local_A.data(), local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatter(flat_B.data(), local_matrix_size, MPI_DOUBLE, local_B.data(), local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     for (int step = 0; step < sqrt_proc_num; step++) {
         for (int i = 0; i < local_size; i++) {
             for (int j = 0; j < local_size; j++) {
-                double sum = 0.0;
                 for (int k = 0; k < local_size; k++) {
-                    sum += local_A[i * local_size + k] *
-                        local_B[k * local_size + j];
+                    local_C[i * local_size + j] += local_A[i * local_size + k] * local_B[k * local_size + j];
                 }
-                local_C[i * local_size + j] += sum;
             }
         }
     }
@@ -78,8 +70,7 @@ std::vector<std::vector<double>> CannonMultiply(
     if (world_rank == 0) {
         gathered_C.resize(matrix_dimension * matrix_dimension);
     }
-    MPI_Gather(local_C.data(), local_matrix_size, MPI_DOUBLE, gathered_C.data(),
-        local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Gather(local_C.data(), local_matrix_size, MPI_DOUBLE, gathered_C.data(), local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     std::vector<std::vector<double>> result;
     if (world_rank == 0) {
