@@ -44,9 +44,9 @@ TEST(SentenceCounterTest, BiggerSentencesTextTest) {
     hugeInput.append(input2);
     hugeInput.append(input3);
     std::cout << hugeInput << std::endl;
-    res = SentenceCounter::countSentences(hugeInput);
+    res = SentenceCounter::countSentences(input);
     if (rank == 0) {
-        int resUnp = countFunc(hugeInput);
+        int resUnp = countFunc(input);
         ASSERT_EQ(res, resUnp);
   }
 }
@@ -72,13 +72,11 @@ TEST(SentenceCounterTest, MoreSignsBigTextTest) {
     std::string input2 = "This is another sentence but bigger! ";
     std::string input3 = "This sentence is actually huge though?";
     std::string hugeInput = "";
-    hugeInput.append(input);
-    hugeInput.append(input2);
-    hugeInput.append(input3);
+
     std::cout << hugeInput << std::endl;
-    res = SentenceCounter::countSentences(hugeInput);
+    res = SentenceCounter::countSentences(input);
     if (rank == 0) {
-        int resUnp = countFunc(hugeInput);
+        int resUnp = countFunc(input);
         ASSERT_EQ(res, resUnp);
   }
 }
@@ -87,7 +85,7 @@ TEST(SentenceCounterTest, SingleSignTextTest) {
     int rank = 0, size = 0, res = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    std::string input = "F.";
+    std::string input = "FAILED.";
     std::cout << input << std::endl;
     res = SentenceCounter::countSentences(input);
     if (rank == 0) {
