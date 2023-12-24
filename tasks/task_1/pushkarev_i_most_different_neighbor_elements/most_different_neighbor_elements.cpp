@@ -47,6 +47,11 @@ int maxDifferencePar(const std::vector<int> &vec) {
 
     MPI_Reduce(&localMaxDiff, &globalMaxDiff, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
 
+    if (rankProc == 0) {
+        int maxDiffOriginal = maxDifferenceSeq(vec);
+        globalMaxDiff = std::max(globalMaxDiff, maxDiffOriginal);
+    }
+
     return globalMaxDiff;
 }
 
