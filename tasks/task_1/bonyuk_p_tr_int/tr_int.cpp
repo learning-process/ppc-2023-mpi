@@ -47,14 +47,17 @@ double TrapecIntegr(double a, double b, functional f, int N) {
     const int leftover_steps = N % size;
     double local_a = a + steps_per_proc * step * rank;
     double local_b = local_a + steps_per_proc * step;
+    int local_N = steps_per_proc;
 
     if (rank < leftover_steps) {
         local_a += rank * step;
-        local_b += (rank + 1) * step;
+        local_b += step;
+        local_N++;
     } else {
         local_a += leftover_steps * step;
-        local_b += leftover_steps * step;
     }
+
+    local_b = local_a + local_N * step;
 
     int local_N = steps_per_proc + (rank < leftover_steps ? 1 : 0);
     double local_area = get_area(local_a, local_b, f, local_N);

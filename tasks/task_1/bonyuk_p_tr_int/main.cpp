@@ -5,12 +5,12 @@
 
 #include "task_1/bonyuk_p_tr_int/tr_int.h"
 
-#define ERRORRATE 0.1
+#define ERRORRATE 0.01
 
 TEST(TrapecIntegral, Fconst) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    const int N = 100;
+    const int N = 1000;
     const double a = 0, b = 10;
     const double real_var = 10;
 
@@ -24,7 +24,7 @@ TEST(TrapecIntegral, Fconst) {
 TEST(TrapecIntegral, standardfun) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    const int N = 100;
+    const int N = 1000;
     const double a = -1;
     const double b = 1;
     const double real_var = 1.5707963267948966;
@@ -39,7 +39,7 @@ TEST(TrapecIntegral, standardfun) {
 TEST(TrapecIntegral, complfun) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    const int N = 100;
+    const int N = 1000;
     const double a = -1;
     const double b = 1;
     const double real_var = 0.23042249506047835;
@@ -54,7 +54,7 @@ TEST(TrapecIntegral, complfun) {
 TEST(TrapecIntegral, sqrtfun) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    const int N = 100;
+    const int N = 1000;
     const double a = -1;
     const double b = 1;
     const double real_var = 329.3634120468287;
@@ -69,7 +69,7 @@ TEST(TrapecIntegral, sqrtfun) {
 TEST(TrapecIntegral, sincosfun) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    const int N = 100;
+    const int N = 1000;
     const double a = -3.141592653589793;
     const double b = 3.141592653589793;
     const double real_var = 4.442882938158356;
@@ -90,5 +90,7 @@ int main(int argc, char** argv) {
     if (rank != 0) {
         delete listeners.Release(listeners.default_result_printer());
     }
-    return RUN_ALL_TESTS();
+    int result = RUN_ALL_TESTS();
+    MPI_Finalize();
+    return result;
 }
