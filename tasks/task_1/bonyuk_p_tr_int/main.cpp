@@ -1,8 +1,9 @@
 ﻿// Copyright 2023 Bonyuk Petr
+
 #include <mpi.h>
 #include <gtest/gtest.h>
 
-#include "./tr_int.h"
+#include "task_1/bonyuk_p_tr_int/tr_int.h"
 
 #define ERRORRATE 0.1
 
