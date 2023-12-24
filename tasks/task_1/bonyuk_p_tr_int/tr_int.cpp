@@ -1,8 +1,9 @@
 // Copyright 2023 Bonyuk Petr
-#include "./tr_int.h"
+
 #include <mpi.h>
 #include <cmath>
 #include <functional>
+#include "./tr_int.h"
 
 double const_function(double x) {
     return 1;
