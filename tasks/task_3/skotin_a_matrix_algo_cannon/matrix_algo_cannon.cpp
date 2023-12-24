@@ -40,7 +40,6 @@ std::vector<std::vector<double>> CannonMultiply(
 
     std::vector<double> local_A(local_matrix_size), local_B(local_matrix_size);
     std::vector<double> local_C(local_matrix_size, 0.0);
-    
     std::vector<double> flat_A, flat_B;
     if (world_rank == 0) {
         flat_A.resize(matrix_dimension * matrix_dimension);
@@ -53,14 +52,17 @@ std::vector<std::vector<double>> CannonMultiply(
         }
     }
 
-    MPI_Scatter(flat_A.data(), local_matrix_size, MPI_DOUBLE, local_A.data(), local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Scatter(flat_B.data(), local_matrix_size, MPI_DOUBLE, local_B.data(), local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatter(flat_A.data(), local_matrix_size, MPI_DOUBLE, local_A.data(),
+     local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatter(flat_B.data(), local_matrix_size, MPI_DOUBLE, local_B.data(),
+     local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     for (int step = 0; step < sqrt_proc_num; step++) {
         for (int i = 0; i < local_size; i++) {
             for (int j = 0; j < local_size; j++) {
                 for (int k = 0; k < local_size; k++) {
-                    local_C[i * local_size + j] += local_A[i * local_size + k] * local_B[k * local_size + j];
+                    local_C[i * local_size + j] += local_A[i * local_size + k]
+                    * local_B[k * local_size + j];
                 }
             }
         }
@@ -70,7 +72,8 @@ std::vector<std::vector<double>> CannonMultiply(
     if (world_rank == 0) {
         gathered_C.resize(matrix_dimension * matrix_dimension);
     }
-    MPI_Gather(local_C.data(), local_matrix_size, MPI_DOUBLE, gathered_C.data(), local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Gather(local_C.data(), local_matrix_size, MPI_DOUBLE, gathered_C.data(),
+        local_matrix_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     std::vector<std::vector<double>> result;
     if (world_rank == 0) {
@@ -81,6 +84,5 @@ std::vector<std::vector<double>> CannonMultiply(
             }
         }
     }
-
     return result;
 }
