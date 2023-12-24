@@ -6,7 +6,7 @@
 
 int SentenceCounter::countSentences(const std::string& input) {
     int stringSize = input.length();
-    int rank, size;
+    int rank = 0, size = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     int globalCount = 0;
