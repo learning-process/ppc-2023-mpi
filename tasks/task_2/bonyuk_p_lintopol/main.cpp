@@ -18,7 +18,7 @@ int runLinearTopologyTest(int sender, int receiver, MPI_Comm comm) {
     Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, sender, receiver, 0, comm);
 
     if (rank == receiver) {
-		return data;
+        return data;
     } else {
        return -1;
     }
@@ -88,5 +88,5 @@ int main(int argc, char** argv) {
     if (world_rank != 0) {
         exit(0);
     }
-	return result_code;
+    return result_code;
 }
