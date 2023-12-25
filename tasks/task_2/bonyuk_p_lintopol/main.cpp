@@ -17,7 +17,7 @@ TEST(LinearTopol, test_one) {
 
     if (rank == send) data = 50;
 
-	Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
         ASSERT_EQ(500, data);
@@ -37,7 +37,7 @@ TEST(LinearTopol, test_two) {
 
     if (rank == send) data = 50;
 
-	Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
         ASSERT_EQ(500, data);
@@ -56,8 +56,7 @@ TEST(LinearTopol, test_three) {
     int data = 0;
 
     if (rank == send) data = 50;
-
-	Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
          ASSERT_EQ(500, data);
@@ -77,7 +76,7 @@ TEST(LinearTopol, test_four) {
 
     if (rank == send) data = 50;
 
-	Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
         ASSERT_EQ(500, data);
@@ -96,7 +95,7 @@ TEST(LinearTopol, test_five) {
 
     if (rank == send) data = 50;
 
-	Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
+    Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
          ASSERT_EQ(500, data);
