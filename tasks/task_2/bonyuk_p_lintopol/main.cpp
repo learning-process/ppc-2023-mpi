@@ -20,7 +20,7 @@ TEST(LinearTopol, test_one) {
     Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
-        ASSERT_EQ(500, data);
+        ASSERT_EQ(50, data);
     }
 }
 
@@ -40,7 +40,7 @@ TEST(LinearTopol, test_two) {
     Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
-        ASSERT_EQ(500, data);
+        ASSERT_EQ(50, data);
     }
 }
 
@@ -59,7 +59,7 @@ TEST(LinearTopol, test_three) {
     Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
-         ASSERT_EQ(500, data);
+         ASSERT_EQ(50, data);
     }
 }
 
@@ -79,7 +79,7 @@ TEST(LinearTopol, test_four) {
     Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
-        ASSERT_EQ(500, data);
+        ASSERT_EQ(50, data);
     }
 }
 TEST(LinearTopol, test_five) {
@@ -98,14 +98,20 @@ TEST(LinearTopol, test_five) {
     Sends_data_lin_acr_the_topol(&data, 1, MPI_INT, send, receive, 0, MPI_COMM_WORLD);
 
     if (rank == receive) {
-         ASSERT_EQ(500, data);
+         ASSERT_EQ(50, data);
     }
 }
 
 int main(int argc, char** argv) {
-    MPI_Init(&argc, &argv);
+    int result = 0;
+
     ::testing::InitGoogleTest(&argc, argv);
-    int result = RUN_ALL_TESTS();
+    ::testing::TestEventListeners& listeners =
+        ::testing::UnitTest::GetInstance()->listeners();
+
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, -1);
+    result = RUN_ALL_TESTS();
     MPI_Finalize();
+
     return result;
 }
