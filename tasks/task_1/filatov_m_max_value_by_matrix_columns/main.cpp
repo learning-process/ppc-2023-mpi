@@ -13,7 +13,7 @@ TEST(MPI_TESTS, parallel_matrix_3x3) {
     if (!communicator.rank()) {
         vec = { 1, 2, 3,
                 4, 5, 6,
-                7, 8, 9 };
+                1, 2, 3 };
     }
     std::vector<int> pres = calculateParallelMaxInColumns(vec, size, size);
     if (!communicator.rank()) {

@@ -61,66 +61,44 @@ std::vector<int> calculateParallelMaxInColumns(
     std::size_t columns
 ) {
     boost::mpi::communicator communicator;
-    std::vector<int> resultVector(columns);
-    std::size_t elementCountForProcess = (rows / communicator.size()) * columns;
-    std::size_t remainingElementsForRootProcess = (
-        rows % communicator.size()) * columns;
-    std::vector<int> localSizesForProcess(
-        communicator.size(),
-        elementCountForProcess);
-    std::vector<int> localMatrixPartForProcess(elementCountForProcess);
-    localSizesForProcess[0] += remainingElementsForRootProcess;
+    std::size_t rowCountForProcess = rows / communicator.size();
+    std::size_t remainingRows = rows % communicator.size();
+    std::size_t localMatrixSize = (communicator.rank() < remainingRows) ?
+                                (rowCountForProcess + 1) * columns
+                                : rowCountForProcess * columns;
+    std::vector<int> localMatrixPart(localMatrixSize);
+    std::vector<int> resultVector(columns, std::numeric_limits<int>::min());
+    std::vector<int> sendcounts(communicator.size());
+    std::vector<int> displs(communicator.size());
+    for (size_t i = 0; i < sendcounts.size(); ++i) {
+        sendcounts[i] = (i < remainingRows) ?
+            (rowCountForProcess + 1) * columns : rowCountForProcess * columns;
+        displs[i] = (i == 0) ? 0 : displs[i - 1] + sendcounts[i - 1];
+    }
+    boost::mpi::scatterv(
+        communicator,
+        matrix.data(),
+        sendcounts,
+        displs,
+        localMatrixPart.data(),
+        localMatrixSize, 0);
 
-    if (!elementCountForProcess) {
-        localMatrixPartForProcess = matrix;
-    } else {
-        if (!communicator.rank()) {
-            localMatrixPartForProcess.resize(localSizesForProcess[0]);
-            boost::mpi::scatterv(
-                communicator,
-                matrix,
-                localSizesForProcess,
-                localMatrixPartForProcess.data(),
-                0);
-        } else {
-            boost::mpi::scatterv(
-                communicator,
-                localMatrixPartForProcess.data(),
-                localSizesForProcess[communicator.rank()],
-                0);
+    std::vector<int> localMax(columns, std::numeric_limits<int>::min());
+    for (std::size_t i = 0; i < localMatrixSize / columns; i++) {
+        for (std::size_t j = 0; j < columns; j++) {
+            localMax[j] = std::max(
+                localMax[j],
+                localMatrixPart[i * columns + j]);
         }
     }
 
-    std::vector<int> localColumnMax(columns, std::numeric_limits<int>::min());
-    for (
-        int i = 0;
-        i < localSizesForProcess[communicator.rank()] / columns;
-        i++) {
-        int rowStart = i * columns;
-        int rowEnd = rowStart + columns;
-        std::vector<int> row(
-            matrix.begin() + rowStart,
-            matrix.begin() + rowEnd);
-        std::transform(row.begin(),
-            row.end(),
-            localColumnMax.begin(),
-            localColumnMax.begin(),
-            [](int a, int b) {
-            return std::max(a, b);
-        });
-    }
-
-    if (!elementCountForProcess) {
-        resultVector = (!communicator.rank() ? localColumnMax : resultVector);
-    } else {
-        boost::mpi::reduce(
-            communicator,
-            &localColumnMax.front(),
-            columns,
-            &resultVector.front(),
-            boost::mpi::maximum<int>(),
-            0);
-    }
+    boost::mpi::all_reduce(
+        communicator,
+        localMax.data(),
+        columns,
+        resultVector.data(),
+        boost::mpi::maximum<int>());
 
     return resultVector;
 }
+
