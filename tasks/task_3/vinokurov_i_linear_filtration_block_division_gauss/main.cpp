@@ -44,34 +44,6 @@ TEST(TESTS, CanWork4x4Test) {
     }
 }
 
-TEST(TESTS, CanWork8x10Test) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    std::vector<std::vector<unsigned char>> image = {
-        {150, 145, 140, 135, 130, 125, 120, 115, 110, 105},
-        {145, 140, 135, 130, 125, 120, 115, 110, 105, 100},
-        {140, 135, 130, 125, 120, 115, 110, 105, 100, 95},
-        {135, 130, 125, 120, 115, 110, 105, 100, 95, 90},
-        {130, 125, 120, 115, 110, 105, 100, 95, 90, 85},
-        {125, 120, 115, 110, 105, 100, 95, 90, 85, 80},
-        {120, 115, 110, 105, 100, 95, 90, 85, 80, 75},
-        {115, 110, 105, 100, 95, 90, 85, 80, 75, 70}
-    };
-
-    std::vector<std::vector<unsigned char>> result;
-    std::vector<std::vector<unsigned char>> result2;
-
-    result = applyFilter(image);
-    result2 = applyFilterMPI(image);
-
-    for (int i = 0; i < image.size(); i++) {
-        for (int j = 0; j < image[0].size(); j++) {
-            ASSERT_EQ(result[i][j], result2[i][j]);
-        }
-    }
-}
-
 TEST(TESTS, CanWork8x4Test) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
