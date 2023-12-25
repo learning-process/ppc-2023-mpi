@@ -29,7 +29,7 @@ void Sends_data_lin_acr_the_topol(void* data, int count, MPI_Datatype datatype, 
 
     bool is_forward = (destination - src > 0);
 
-    if (!is_in_path(rank, src, dest, is_forward)) return;
+    if (!is_in_path(rank, src, destination, is_forward)) return;
 
     if (rank == src) {
         MPI_Send(data, count, datatype, next_node(rank, is_forward), tag, comm);

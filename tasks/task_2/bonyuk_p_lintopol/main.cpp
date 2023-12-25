@@ -70,7 +70,7 @@ TEST(LinearTopol, test_four) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    const int sender = size / 2;
+    const int send = size / 2;
     const int receive = size - 1;
     int data = 0;
 
