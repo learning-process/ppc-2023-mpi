@@ -11,7 +11,7 @@ TEST(Matrix_Cannon_Multiply, Test_Identity_Matrix) {
     int size = 4;
     std::vector<std::vector<double>> a = GetMatrixRandom(size);
     std::vector<std::vector<double>> b(size, std::vector<double>(size, 0));
-    for(int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         b[i][i] = 1;
     }
     std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
@@ -28,7 +28,8 @@ TEST(Matrix_Cannon_Multiply, Test_Zero_Matrix) {
     std::vector<std::vector<double>> a = GetMatrixRandom(size);
     std::vector<std::vector<double>> b(size, std::vector<double>(size, 0));
     std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
-    std::vector<std::vector<double>> expected(size, std::vector<double>(size, 0));
+    std::vector<std::vector<double>> expected(size,
+        std::vector<double>(size, 0));
     if (world_rank == 0) {
         ASSERT_EQ(expected, res);
     }
