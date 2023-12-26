@@ -8,12 +8,12 @@
 #include <random>
 #include <limits>
 
-std::vector<int> fillMatrixRandom(size_t rows, size_t cols, int min, int max);
+std::vector<int> fillMatrixRandom(int rows, int cols, int min, int max);
 std::vector<int> findMaxByMatrixColumns(std::vector<int> matrix,
-                                        size_t rows,
-                                        size_t cols);
+    int rows,
+    int cols);
 std::vector<int> findMaxByMatrixColumnsConsistently(std::vector<int> matrix,
-                                                    size_t rows,
-                                                    size_t cols);
+    int rows,
+    int cols);
 
 #endif  // TASKS_TASK_1_ZAWADOWSKI_J_MAX_MATRIX_COLUMNS_MAX_MATRIX_COLUMNS_H_

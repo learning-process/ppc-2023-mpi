@@ -1,7 +1,7 @@
 // Copyright 2023 Zawadowski Jan
 #include "task_1/zawadowski_j_max_matrix_columns/max_matrix_columns.h"
 
-std::vector<int> fillMatrixRandom(size_t rows, size_t cols, int min, int max) {
+std::vector<int> fillMatrixRandom(int rows, int cols, int min, int max) {
     std::vector<int> matrix(rows * cols);
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -17,8 +17,8 @@ std::vector<int> fillMatrixRandom(size_t rows, size_t cols, int min, int max) {
 }
 
 std::vector<int> findMaxByMatrixColumns(std::vector<int> matrix,
-                                        size_t rows,
-                                        size_t cols) {
+    int rows,
+    int cols) {
     std::vector<int> maxValues,
                      sendCounts,
                      displacement,
@@ -83,8 +83,8 @@ std::vector<int> findMaxByMatrixColumns(std::vector<int> matrix,
 }
 
 std::vector<int> findMaxByMatrixColumnsConsistently(std::vector<int> matrix,
-                                                    size_t rows,
-                                                    size_t cols) {
+    int rows,
+    int cols) {
     std::vector<int> maxValues;
 
     for (int i = 0; i < cols; i++) {

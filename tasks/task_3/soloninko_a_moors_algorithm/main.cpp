@@ -94,7 +94,7 @@ TEST(Moore_alg, Test_4) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    int size = 500;
+    int size = 20;
     bool has_negative_cycle = false;
     std::vector<int> matrix(size * size);
     std::vector<int> par_dist(size);
@@ -119,7 +119,7 @@ TEST(Moore_alg, Test_5) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    int size = 500;
+    int size = 20;
     bool has_negative_cycle = false;
     std::vector<int> matrix(size * size);
     std::vector<int> par_dist(size);

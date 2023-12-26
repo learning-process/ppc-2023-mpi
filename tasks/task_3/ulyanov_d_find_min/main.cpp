@@ -54,12 +54,12 @@ TEST(find_min, test4) {
   MPI_Comm_size(MPI_COMM_WORLD, &count);
 
   auto func = [](double x) { return sqrt(x); };
-  double resPar = findMinPar(0, 4, func, 0.00001);
-  double resSeq = findMinSeq(0, 4, func, 0.00001);
+  double resPar = findMinPar(1, 4, func, 0.00001);
+  double resSeq = findMinSeq(1, 4, func, 0.00001);
 
   if (rank == 0) {
-    ASSERT_NEAR(0, resPar, 0.01);
-    ASSERT_NEAR(0, resSeq, 0.01);
+    ASSERT_NEAR(1, resPar, 0.001);
+    ASSERT_NEAR(1, resSeq, 0.001);
   }
 }
 
