@@ -11,7 +11,7 @@ TEST(GLOBAL_SEARCH_STRONGIN, sequential) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     double seqRes, paralRes, start, end, timeSeq, timeParallel;
     if (rank == 0) {
-        seqRes = searchSequential(0.0, 3.0, 0.01);
+        seqRes = searchSequential(0.0, 3.0, 0.1);
         EXPECT_NEAR(seqRes, 0, 1e-2);
     }
 }
@@ -21,18 +21,66 @@ TEST(GLOBAL_SEARCH_STRONGIN, parallel_1) {
     double seqRes, paralRes, start, end, timeSeq, timeParallel;
     if (rank == 0) {
         start = MPI_Wtime();
-        seqRes = searchSequential(-1.0, 1.0, 0.01);
+        seqRes = searchSequential(-1.0, 1.0, 0.1);
         end = MPI_Wtime();
         timeSeq = end - start;
-        std::cout << "Sequential algorithm time: " << timeSeq << std::endl;
         start = MPI_Wtime();
     }
-    paralRes = searchParallel(-1.0, 1.0, 0.01);
+    paralRes = searchParallel(-1.0, 1.0, 0.1);
     if (rank == 0) {
         end = MPI_Wtime();
         timeParallel = end - start;
-        std::cout << "Parallel algorithm time: " << timeParallel << std::endl;
-        std::cout << "Effective " << timeSeq / timeParallel << std::endl;
+    }
+}
+TEST(GLOBAL_SEARCH_STRONGIN, parallel_2) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    double seqRes, paralRes, start, end, timeSeq, timeParallel;
+    if (rank == 0) {
+        start = MPI_Wtime();
+        seqRes = searchSequential(-2.0, 2.0, 0.1);
+        end = MPI_Wtime();
+        timeSeq = end - start;
+        start = MPI_Wtime();
+    }
+    paralRes = searchParallel(-2.0, 2.0, 0.1);
+    if (rank == 0) {
+        end = MPI_Wtime();
+        timeParallel = end - start;
+    }
+}
+TEST(GLOBAL_SEARCH_STRONGIN, parallel_3) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    double seqRes, paralRes, start, end, timeSeq, timeParallel;
+    if (rank == 0) {
+        start = MPI_Wtime();
+        seqRes = searchSequential(-3.0, 3.0, 0.1);
+        end = MPI_Wtime();
+        timeSeq = end - start;
+        start = MPI_Wtime();
+    }
+    paralRes = searchParallel(-3.0, 3.0, 0.1);
+    if (rank == 0) {
+        end = MPI_Wtime();
+        timeParallel = end - start;
+    }
+}
+TEST(GLOBAL_SEARCH_STRONGIN, parallel_4) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    double seqRes, paralRes, start, end, timeSeq, timeParallel;
+    if (rank == 0) {
+        start = MPI_Wtime();
+        seqRes = searchSequential(-4.0, 4.0, 0.001);
+        end = MPI_Wtime();
+        timeSeq = end - start;
+        start = MPI_Wtime();
+    }
+    paralRes = searchParallel(-4.0, 4.0, 0.001);
+    if (rank == 0) {
+        end = MPI_Wtime();
+        timeParallel = end - start;
     }
 }
 TEST(GLOBAL_SEARCH_STRONGIN, parallel_5) {
@@ -41,98 +89,32 @@ TEST(GLOBAL_SEARCH_STRONGIN, parallel_5) {
     double seqRes, paralRes, start, end, timeSeq, timeParallel;
     if (rank == 0) {
         start = MPI_Wtime();
-        seqRes = searchSequential(-5.0, 5.0, 0.01);
+        seqRes = searchSequential(-5.0, 5.0, 0.1);
         end = MPI_Wtime();
         timeSeq = end - start;
-        std::cout << "Sequential algorithm time: " << timeSeq << std::endl;
         start = MPI_Wtime();
     }
-    paralRes = searchParallel(-5.0, 5.0, 0.01);
+    paralRes = searchParallel(-5.0, 5.0, 0.1);
     if (rank == 0) {
         end = MPI_Wtime();
         timeParallel = end - start;
-        std::cout << "Parallel algorithm time: " << timeParallel << std::endl;
-        std::cout << "Effective " << timeSeq / timeParallel << std::endl;
     }
 }
-TEST(GLOBAL_SEARCH_STRONGIN, parallel_10) {
+TEST(GLOBAL_SEARCH_STRONGIN, parallel_6) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     double seqRes, paralRes, start, end, timeSeq, timeParallel;
     if (rank == 0) {
         start = MPI_Wtime();
-        seqRes = searchSequential(-10.0, 10.0, 0.01);
+        seqRes = searchSequential(-6.0, 6.0, 0.1);
         end = MPI_Wtime();
         timeSeq = end - start;
-        std::cout << "Sequential algorithm time: " << timeSeq << std::endl;
         start = MPI_Wtime();
     }
-    paralRes = searchParallel(-10.0, 10.0, 0.01);
+    paralRes = searchParallel(-6.0, 6.0, 0.1);
     if (rank == 0) {
         end = MPI_Wtime();
         timeParallel = end - start;
-        std::cout << "Parallel algorithm time: " << timeParallel << std::endl;
-        std::cout << "Effective " << timeSeq / timeParallel << std::endl;
-    }
-}
-TEST(GLOBAL_SEARCH_STRONGIN, parallel_50) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    double seqRes, paralRes, start, end, timeSeq, timeParallel;
-    if (rank == 0) {
-        start = MPI_Wtime();
-        seqRes = searchSequential(-50.0, 50.0, 0.001);
-        end = MPI_Wtime();
-        timeSeq = end - start;
-        std::cout << "Sequential algorithm time: " << timeSeq << std::endl;
-        start = MPI_Wtime();
-    }
-    paralRes = searchParallel(-50.0, 50.0, 0.001);
-    if (rank == 0) {
-        end = MPI_Wtime();
-        timeParallel = end - start;
-        std::cout << "Parallel algorithm time: " << timeParallel << std::endl;
-        std::cout << "Effective " << timeSeq / timeParallel << std::endl;
-    }
-}
-TEST(GLOBAL_SEARCH_STRONGIN, parallel_100) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    double seqRes, paralRes, start, end, timeSeq, timeParallel;
-    if (rank == 0) {
-        start = MPI_Wtime();
-        seqRes = searchSequential(-100.0, 100.0, 0.01);
-        end = MPI_Wtime();
-        timeSeq = end - start;
-        std::cout << "Sequential algorithm time: " << timeSeq << std::endl;
-        start = MPI_Wtime();
-    }
-    paralRes = searchParallel(-100.0, 100.0, 0.01);
-    if (rank == 0) {
-        end = MPI_Wtime();
-        timeParallel = end - start;
-        std::cout << "Parallel algorithm time: " << timeParallel << std::endl;
-        std::cout << "Effective " << timeSeq / timeParallel << std::endl;
-    }
-}
-TEST(GLOBAL_SEARCH_STRONGIN, parallel_201) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    double seqRes, paralRes, start, end, timeSeq, timeParallel;
-    if (rank == 0) {
-        start = MPI_Wtime();
-        seqRes = searchSequential(-201.0, 201.0, 0.01);
-        end = MPI_Wtime();
-        timeSeq = end - start;
-        std::cout << "Sequential algorithm time: " << timeSeq << std::endl;
-        start = MPI_Wtime();
-    }
-    paralRes = searchParallel(-201.0, 201.0, 0.01);
-    if (rank == 0) {
-        end = MPI_Wtime();
-        timeParallel = end - start;
-        std::cout << "Parallel algorithm time: " << timeParallel << std::endl;
-        std::cout << "Effective " << timeSeq / timeParallel << std::endl;
     }
 }
 

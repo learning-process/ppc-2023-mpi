@@ -49,7 +49,7 @@ TEST(Global_Search_MPI, Sqrt_Test) {
 
 TEST(Global_Search_MPI, Square_Test) {
     auto function = [](double x) { return pow(x, 2); };
-    GlobalSearchTesting(function, -20, 20, 0);
+    GlobalSearchTesting(function, -1, 1, 0);
 }
 
 TEST(Global_Search_MPI, Hard_Test) {

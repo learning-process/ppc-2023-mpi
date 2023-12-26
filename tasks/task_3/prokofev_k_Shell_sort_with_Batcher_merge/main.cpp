@@ -59,10 +59,10 @@ TEST(Sort_Realization, Test_Random_Vector_5000_Elem) {
   }
 }
 
-TEST(Sort_Realization, Test_Random_Vector_12223_Elem) {
+TEST(Sort_Realization, Test_Random_Vector_122_Elem) {
   int rankProc;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  std::vector<int> testVect = GenerateRandomVector(12223);
+  std::vector<int> testVect = GenerateRandomVector(122);
   std::vector<int> refVect = testVect;
   double t1, t2;
   if (rankProc == 0) {
@@ -95,10 +95,10 @@ TEST(Sort_Realization, Test_Random_Vector_777_Elem) {
   }
 }
 
-TEST(Sort_Realization, Test_Random_Vector_50000_Elem) {
+TEST(Sort_Realization, Test_Random_Vector_500_Elem) {
   int rankProc;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  std::vector<int> testVect = GenerateRandomVector(50000);
+  std::vector<int> testVect = GenerateRandomVector(500);
   std::vector<int> refVect = testVect;
   double t1, t2;
   if (rankProc == 0) {

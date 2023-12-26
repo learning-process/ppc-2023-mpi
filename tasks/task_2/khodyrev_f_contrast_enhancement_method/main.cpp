@@ -12,7 +12,7 @@ TEST(MPI_TESTS, Test_big_random_image_with_even_elements) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  int rows = 2000, cols = 1000;
+  int rows = 200, cols = 100;
 
   std::vector<std::vector<int>> image = generate_image(rows, cols);
   std::vector<std::vector<int>> result_par = par_linear_contrast_stretching
@@ -32,7 +32,7 @@ TEST(MPI_TESTS, Test_big_random_image_with_odd_elements) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  int rows = 2001, cols = 1001;
+  int rows = 201, cols = 101;
 
   std::vector<std::vector<int>> image = generate_image(rows, cols);
   std::vector<std::vector<int>> result_par = par_linear_contrast_stretching

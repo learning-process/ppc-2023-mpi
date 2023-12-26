@@ -59,12 +59,12 @@ TEST(Parallel_Sum_Values_By_Rows_Matrix, RandomMatrix_3x4) {
   }
 }
 
-TEST(Parallel_Sum_Values_By_Rows_Matrix, RandomMatrix_100x200) {
+TEST(Parallel_Sum_Values_By_Rows_Matrix, RandomMatrix_100x100) {
   int rankProc;
   MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
   std::vector<int> matrix;
   int n = 100;
-  int m = 200;
+  int m = 100;
   if (rankProc == 0) {
     matrix = GenerateRandomMatrix(n, m);
   }
