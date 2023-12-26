@@ -13,24 +13,11 @@
 #define WRITER_END_TAG 6
 
 
-void StartNewReaders(size_t* localReaderCount) {
-    MPI_Status status;
+void ExecuteReaders(const int& dest, size_t* processesLeft) {
     int in = 0;
     int out = 1;
-
-    MPI_Recv(&in, 1, MPI_INT, MPI_ANY_SOURCE, READER_READY_TAG, MPI_COMM_WORLD, &status);
-    MPI_Send(&out, 1, MPI_INT, status.MPI_SOURCE, READER_START_TAG, MPI_COMM_WORLD);
-
-    (*localReaderCount)++;
-}
-
-void FinishCompletedReaders(
-        size_t* localReaderCount,
-        size_t* processesLeft
-        ) {
-    int in = 0;
-    MPI_Recv(&in, 1, MPI_INT, MPI_ANY_SOURCE, READER_END_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    (*localReaderCount)--;
+    MPI_Send(&out, 1, MPI_INT, dest, READER_START_TAG, MPI_COMM_WORLD);
+    MPI_Recv(&in, 1, MPI_INT, dest, READER_END_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     (*processesLeft)--;
 }
 
@@ -62,30 +49,7 @@ void Controller(const size_t& readerCount, const size_t& writerCount) {
         }
 
         if (status.MPI_TAG == READER_READY_TAG) {
-            size_t localReaderCount = 1;
-            MPI_Send(&out, 1, MPI_INT, status.MPI_SOURCE, READER_START_TAG, MPI_COMM_WORLD);
-
-            MPI_Iprobe(MPI_ANY_SOURCE, WRITER_READY_TAG, MPI_COMM_WORLD, &flag, MPI_STATUS_IGNORE);
-            while (!flag && localReaderCount != 0) {
-                int readerEndFlag = 0;
-                MPI_Iprobe(MPI_ANY_SOURCE, READER_END_TAG, MPI_COMM_WORLD, &readerEndFlag, MPI_STATUS_IGNORE);
-                if (readerEndFlag) {
-                    FinishCompletedReaders(&localReaderCount, &processesLeft);
-                }
-
-                int readerReadyFlag = 0;
-                MPI_Iprobe(MPI_ANY_SOURCE, READER_READY_TAG, MPI_COMM_WORLD, &readerReadyFlag, MPI_STATUS_IGNORE);
-                if (readerReadyFlag) {
-                    StartNewReaders(&localReaderCount);
-                }
-
-                MPI_Iprobe(MPI_ANY_SOURCE, WRITER_READY_TAG, MPI_COMM_WORLD, &flag, MPI_STATUS_IGNORE);
-            }
-
-            while (localReaderCount) {
-                FinishCompletedReaders(&localReaderCount, &processesLeft);
-            }
-
+            ExecuteReaders(status.MPI_SOURCE, &processesLeft);
         } else if (status.MPI_TAG == WRITER_READY_TAG) {
             ExecuteWriter(status.MPI_SOURCE, &processesLeft);
         }
