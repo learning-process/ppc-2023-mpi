@@ -10,18 +10,13 @@
 
 #include "task_3/tushentsova_k_convex_hull/convex_hull.h"
 
-unsigned int seed = 1;
-int my_rand() {
-    seed = seed * 1103515245 + 12345;
-    return (seed / 65536) % 2;
-}
 std::vector<int> getRandomVector() {
     const int rows = 5, colls = 5;
     int matr[rows][colls];
     int c = 2;
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < colls; j++) {
-            matr[i][j] = my_rand();
+            matr[i][j] = (i + j) % 2;
         }
     }
     std::vector<int> vec(rows * colls);

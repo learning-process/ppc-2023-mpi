@@ -4,7 +4,6 @@
 
 #include <vector>
 
-int my_rand();
 std::vector<int> getRandomVector();
 std::vector<int> buildingConvexHull(
     const std::vector<int>& vecInput, int rows, int colls);
