@@ -1,9 +1,20 @@
 // Copyright 2023 Afanasyev Aleksey
-#ifndef TASKS_TASK_1_AFANASYEV_A_MAX_VALUES_BY_MATRIX_ROWS_H_
-#define TASKS_TASK_1_AFANASYEV_A_MAX_VALUES_BY_MATRIX_ROWS_H_
-
+#pragma once
+#include <mpi.h>
 #include <vector>
-std::vector<int> CalculateMaxValuesByMatrixRowsSequential(const std::vector<int>& matrix, size_t rowSize, size_t rowCount);
-std::vector<int> CalculateMaxValuesByMatrixRowsParallel(const std::vector<int>& matrix, size_t rowSize, size_t rowCount);
+#include <iostream>
+#include <random>
+#include <utility>
+#include <algorithm>
 
-#endif  // TASKS_TASK_1_AFANASYEV_A_MAX_VALUES_BY_MATRIX_ROWS_H_
+std::vector<int> CalculateMaxValuesByMatrixRowsSequential(
+    const std::vector<int>& matrix,
+    size_t rowSize, 
+    size_t rowCount);
+
+std::vector<int> CalculateMaxValuesByMatrixRowsParallel(
+    const std::vector<int>& matrix, 
+    size_t rowSize, 
+    size_t rowCount);
+
+#endif
