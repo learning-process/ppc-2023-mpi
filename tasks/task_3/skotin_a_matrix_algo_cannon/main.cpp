@@ -8,7 +8,7 @@ TEST(Matrix_Cannon_Multiply, Test_Identity_Matrix) {
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 
-    int size = 3;
+    int size = 4;
     std::vector<std::vector<double>> a = GetMatrixRandom(size);
     std::vector<std::vector<double>> b(size, std::vector<double>(size, 0));
     for (int i = 0; i < size; i++) {
@@ -24,7 +24,7 @@ TEST(Matrix_Cannon_Multiply, Test_Zero_Matrix) {
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-    int size = 3;
+    int size = 4;
     std::vector<std::vector<double>> a = GetMatrixRandom(size);
     std::vector<std::vector<double>> b(size, std::vector<double>(size, 0));
     std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
@@ -39,7 +39,7 @@ TEST(Matrix_Cannon_Multiply, Test_Random_Matrix) {
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-    int size = 3;
+    int size = 4;
     std::vector<std::vector<double>> a = GetMatrixRandom(size);
     std::vector<std::vector<double>> b = GetMatrixRandom(size);
     std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
@@ -53,7 +53,7 @@ TEST(Matrix_Cannon_Multiply, Test_Square_Matrix) {
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-    int size = 3;
+    int size = 4;
     std::vector<std::vector<double>> a(size, std::vector<double>(size, 2));
     std::vector<std::vector<double>> b(size, std::vector<double>(size, 2));
     std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
