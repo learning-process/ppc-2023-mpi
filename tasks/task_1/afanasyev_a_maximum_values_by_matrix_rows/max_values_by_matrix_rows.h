@@ -9,10 +9,10 @@
 
 std::vector<int> CalculateMaxValuesByMatrixRowsSequential(
     const std::vector<int>& matrix,
-    size_t rowSize, 
+    size_t rowSize,
     size_t rowCount);
 
 std::vector<int> CalculateMaxValuesByMatrixRowsParallel(
-    const std::vector<int>& matrix, 
-    size_t rowSize, 
+    const std::vector<int>& matrix,
+    size_t rowSize,
     size_t rowCount);

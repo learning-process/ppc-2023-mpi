@@ -25,8 +25,8 @@ std::vector<int> CalculateMaxValuesByMatrixRowsSequential(
 }
 
 std::vector<int> CalculateMaxValuesByMatrixRowsParallel(
-    const std::vector<int>& matrix, 
-    size_t rowSize, 
+    const std::vector<int>& matrix,
+    size_t rowSize,
     size_t rowCount) {
     if (rowSize == 1 && rowCount == 1)
         return { matrix[0] };
@@ -36,7 +36,7 @@ std::vector<int> CalculateMaxValuesByMatrixRowsParallel(
         return matrix;
     else if (rowCount == 1)
         return { *max_element(matrix.begin(), matrix.end()) };
-    
+
     int worldRank, worldSize;
     MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
     MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
@@ -49,24 +49,21 @@ std::vector<int> CalculateMaxValuesByMatrixRowsParallel(
 
     std::vector<int> localMaxValues(endRow - startRow);
 
-    for (int i = startRow; i < endRow; ++i) 
-    {
-        localMaxValues[i - startRow] = *std::max_element(matrix.begin() + i * rowSize, matrix.begin() + (i + 1) * rowSize);
+    for (int i = startRow; i < endRow; ++i) {
+        localMaxValues[i - startRow] = *std::max_element(
+            matrix.begin() + i * rowSize,
+            matrix.begin() + (i + 1) * rowSize);
     }
 
-    if (worldRank == 0)
-    {
-        for (int proc = 1; proc < worldSize; ++proc) 
-        {
+    if (worldRank == 0) {
+        for (int proc = 1; proc < worldSize; ++proc) {
             startRow = proc * rowsPerProcess + std::min(proc, leftoverRows);
             endRow = startRow + rowsPerProcess + (proc < leftoverRows);
             std::vector<int> procMaxValues(endRow - startRow);
             MPI_Recv(procMaxValues.data(), endRow - startRow, MPI_INT, proc, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             localMaxValues.insert(localMaxValues.end(), procMaxValues.begin(), procMaxValues.end());
         }
-    }
-    else 
-    {
+    } else {
         MPI_Send(localMaxValues.data(), endRow - startRow, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
 
