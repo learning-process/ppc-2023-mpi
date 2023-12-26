@@ -12,7 +12,7 @@
 #define EATING 3
 
 class Philosophers {
-public:
+ public:
     Philosophers(int philosopher_id, int total_philosophers);
 
     void initialize();
@@ -28,7 +28,7 @@ public:
 
     int state;
 
-private:
+ private:
     int philosopher_id;
     int total_philosophers;
     int left_neighbor;
