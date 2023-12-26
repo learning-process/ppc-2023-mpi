@@ -16,5 +16,3 @@ std::vector<int> CalculateMaxValuesByMatrixRowsParallel(
     const std::vector<int>& matrix, 
     size_t rowSize, 
     size_t rowCount);
-
-#endif

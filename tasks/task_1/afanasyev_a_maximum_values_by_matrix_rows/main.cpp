@@ -97,13 +97,15 @@ TEST(Max_Values_By_Matrix_Rows_MPI, matrix_with_10000_elements) {
 }
 
 int main(int argc, char** argv) {
-    boost::mpi::environment env(argc, argv);
-    boost::mpi::communicator world;
+    int result_code = 0;
+
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners =
-        ::testing::UnitTest::GetInstance()->listeners();
-    if (world.rank() != 0) {
-        delete listeners.Release(listeners.default_result_printer());
-    }
-    return RUN_ALL_TESTS();
+    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
+
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
+        MPI_Abort(MPI_COMM_WORLD, -1);
+    result_code = RUN_ALL_TESTS();
+    MPI_Finalize();
+
+    return result_code;
 }
