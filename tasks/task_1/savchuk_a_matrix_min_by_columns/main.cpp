@@ -1,97 +1,122 @@
 // Copyright 2023 Savchuk Anton
 #include <gtest/gtest.h>
+#include <vector>
 #include "./matrix_min_columns.h"
-#include "./mpi.h"
 
-TEST(Min_Values_Columns_Matrix, Test_min_given_matrix) {
-  const int ROW = 3,
-            COL = 4;
-  std::vector<int> matr = { 5, 6, 7, 8, -1, -2, -3, -4, 9, 10, 11, 12 },
-    min_v_par,
-    min_v_seq;
-  int rank = 0;
+TEST(matrix_operations, transpose) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if (rank == 0) {
+        std::vector<int> matrix = { 1, 2, 3, 4, 5, 6, 7, 8 };
+        std::vector<int> check = { 1, 5, 2, 6, 3, 7, 4, 8 };
+        std::vector<int> t = transposeMatrix(matrix, 2, 4);
 
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  min_v_par = getColumnMin_par(matr, ROW, COL);
-  if (rank == 0) {
-    min_v_seq = getColumnMin_seq(matr, ROW, COL);
-    ASSERT_EQ(min_v_par, min_v_seq);
-  }
+        ASSERT_EQ(t, check);
+    }
 }
 
-TEST(Min_Values_Columns_Matrix, Test_min_random_matrix) {
-  const int ROW = 3,
-            COL = 4,
-            MIN = -100,
-            MAX = 100;
-  std::vector<int> matr = getRandomMatrix(ROW, COL, MIN, MAX),
-            min_v_par,
-            min_v_seq;
-  int rank = 0;
+TEST(matrix_operations, test1) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  min_v_par = getColumnMin_par(matr, ROW, COL);
-  if (rank == 0) {
-    min_v_seq = getColumnMin_seq(matr, ROW, COL);
-    ASSERT_EQ(min_v_par, min_v_seq);
-  }
+    std::vector<int> matrix;
+    int n = 2;
+    int m = 4;
+    if (rank == 0) {
+        matrix = generateMatrix(n, m);
+    }
+
+    std::vector<int> parallelRes = getColumnMinParallel(matrix, n, m);
+
+    if (rank == 0) {
+        std::vector<int> check(m);
+        std::vector<int> t = transposeMatrix(matrix, n, m);
+
+        for (int i = 0; i < m; i++) {
+            check[i] = getMinInSequence(std::vector<int>(t.begin() + i * n,
+            t.begin() + i * n + n));
+        }
+
+        ASSERT_EQ(check, parallelRes);
+    }
 }
 
-TEST(Min_Values_Columns_Matrix, Test_min_positive_single_number_matrix) {
-  std::random_device dev;
-  std::mt19937 gen(dev());
-  std::uniform_int_distribution<> distrib(1, 100);
-  const int ROW = 2,
-            COL = 3,
-            NUM = distrib(gen);
-  std::vector<int> matr = { NUM, NUM, NUM, NUM, NUM, NUM },
-                   min_v_par,
-                   min_v_seq;
-  int rank = 0;
+TEST(matrix_operations, test2) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  min_v_par = getColumnMin_par(matr, ROW, COL);
-  if (rank == 0) {
-    min_v_seq = getColumnMin_seq(matr, ROW, COL);
-    ASSERT_EQ(min_v_par, min_v_seq);
-  }
+    std::vector<int> matrix;
+    int n = 6;
+    int m = 6;
+    if (rank == 0) {
+        matrix = generateMatrix(n, m);
+    }
+
+    std::vector<int> parallelRes = getColumnMinParallel(matrix, n, m);
+
+    if (rank == 0) {
+        std::vector<int> check(m);
+        std::vector<int> t = transposeMatrix(matrix, n, m);
+
+        for (int i = 0; i < m; i++) {
+            check[i] = getMinInSequence(std::vector<int>(t.begin() + i * n,
+            t.begin() + i * n + n));
+        }
+
+        ASSERT_EQ(check, parallelRes);
+    }
 }
 
-TEST(Min_Values_Columns_Matrix, Test_zero_only_matrix) {
-  const int ROW = 2,
-            COL = 3,
-            NUM = 0;
-  std::vector<int> matr = { NUM, NUM, NUM, NUM, NUM, NUM },
-                   min_v_par,
-                   min_v_seq;
-  int rank = 0;
+TEST(matrix_operations, test3) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  min_v_par = getColumnMin_par(matr, ROW, COL);
-  if (rank == 0) {
-    min_v_seq = getColumnMin_seq(matr, ROW, COL);
-    ASSERT_EQ(min_v_par, min_v_seq);
-  }
+    std::vector<int> matrix;
+    int n = 6;
+    int m = 12;
+    if (rank == 0) {
+        matrix = generateMatrix(n, m);
+    }
+
+    std::vector<int> parallelRes = getColumnMinParallel(matrix, n, m);
+
+    if (rank == 0) {
+        std::vector<int> check(m);
+        std::vector<int> t = transposeMatrix(matrix, n, m);
+
+        for (int i = 0; i < m; i++) {
+            check[i] = getMinInSequence(std::vector<int>(t.begin() + i * n,
+            t.begin() + i * n + n));
+        }
+
+        ASSERT_EQ(check, parallelRes);
+    }
 }
 
-TEST(Min_Values_Columns_Matrix, Test_min_negative_single_number_matrix) {
-  std::random_device dev;
-  std::mt19937 gen(dev());
-  std::uniform_int_distribution<> distrib(-100, -1);
-  const int ROW = 2,
-            COL = 3,
-            NUM = distrib(gen);
-  std::vector<int> matr = { NUM, NUM, NUM, NUM, NUM, NUM },
-                   min_v_par,
-                   min_v_seq;
-  int rank = 0;
+TEST(matrix_operations, test4) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  min_v_par = getColumnMin_par(matr, ROW, COL);
-  if (rank == 0) {
-    min_v_seq = getColumnMin_seq(matr, ROW, COL);
-    ASSERT_EQ(min_v_par, min_v_seq);
-  }
+    std::vector<int> matrix;
+    int n = 2;
+    int m = 2;
+    if (rank == 0) {
+        matrix = generateMatrix(n, m);
+    }
+
+    std::vector<int> parallelRes = getColumnMinParallel(matrix, n, m);
+
+    if (rank == 0) {
+        std::vector<int> check(m);
+        std::vector<int> t = transposeMatrix(matrix, n, m);
+
+        for (int i = 0; i < m; i++) {
+            check[i] = getMinInSequence(std::vector<int>(t.begin() + i * n,
+            t.begin() + i * n + n));
+        }
+
+        ASSERT_EQ(check, parallelRes);
+    }
 }
 
 int main(int argc, char** argv) {

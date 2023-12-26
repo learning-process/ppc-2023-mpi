@@ -21,20 +21,18 @@ void Philosopher::releaseForks(int left_fork, int right_fork) {
 }
 
 void Philosopher::think() {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
 
 void Philosopher::eat() {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
 
 void Philosopher::runSimulation() {
-    for (int i = 0; i < 5; ++i) {
-        think();
-        int left_fork = (phId + numPh - 1) % numPh;
-        int right_fork = (phId + 1) % numPh;
-        grabForks(left_fork, right_fork);
-        eat();
-        releaseForks(left_fork, right_fork);
-    }
+    think();
+    int left_fork = (phId + numPh - 1) % numPh;
+    int right_fork = (phId + 1) % numPh;
+    grabForks(left_fork, right_fork);
+    eat();
+    releaseForks(left_fork, right_fork);
 }
