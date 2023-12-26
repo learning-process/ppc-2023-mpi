@@ -3,6 +3,8 @@
 #include "./philosophers.h"
 
 TEST(Philosophers_MPI, initialization) {
+    int rank = 0;
+    int size = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     Philosophers philosopher(rank, size);
@@ -16,6 +18,8 @@ TEST(Philosophers_MPI, initialization) {
 }
 
 TEST(Philosophers_MPI, thinking_state) {
+    int rank = 0;
+    int size = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     Philosophers philosopher(rank, size);
@@ -26,6 +30,8 @@ TEST(Philosophers_MPI, thinking_state) {
 }
 
 TEST(Philosophers_MPI, hungry_state) {
+    int rank = 0;
+    int size = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -41,6 +47,8 @@ TEST(Philosophers_MPI, hungry_state) {
 }
 
 TEST(Philosophers_MPI, eating_state) {
+    int rank = 0;
+    int size = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -57,6 +65,8 @@ TEST(Philosophers_MPI, eating_state) {
 }
 
 TEST(Philosophers_MPI, _finalization) {
+    int rank = 0;
+    int size = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
