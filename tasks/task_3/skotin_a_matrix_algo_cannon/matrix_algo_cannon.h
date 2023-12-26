@@ -6,12 +6,15 @@
 #include <vector>
 #include <cmath>
 
+#include <boost/mpi/communicator.hpp>
+#include <boost/mpi/collectives.hpp>
+
 std::vector<std::vector<double>> MatrixMultiply(
-    const std::vector<std::vector<double>>& A,
-    const std::vector<std::vector<double>>& B, int matrix_dimension);
+    const std::vector<std::vector<double>>& matrix_1,
+    const std::vector<std::vector<double>>& matrix_2, int m_size);
 std::vector<std::vector<double>> CannonMultiply(
-    const std::vector<std::vector<double>>& A,
-    const std::vector<std::vector<double>>& B, int matrix_dimension);
+    const std::vector<std::vector<double>>& matrix_1,
+    const std::vector<std::vector<double>>& matrix_2, size_t m_size);
 std::vector<std::vector<double>> GetMatrixRandom(int size);
 
 #endif  // TASKS_TASK_3_SKOTIN_A_MATRIX_ALGO_CANNON_MATRIX_ALGO_CANNON_H_

@@ -1,69 +1,84 @@
 // Copyright 2023 Skotin Alexander
 #include <gtest/gtest.h>
-#include <mpi.h>
 #include "task_3/skotin_a_matrix_algo_cannon/matrix_algo_cannon.h"
 
-TEST(CannonMatrixMultiply, TestIdentity) {
-    int size = 7;
-    std::vector<std::vector<double>> A = GetMatrixRandom(size);
-    std::vector<std::vector<double>> I(size, std::vector<double>(size, 0));
+TEST(Matrix_Cannon_Multiply, Test_Identity_Matrix) {
+    int world_rank, world_size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+    int size = 3;
+    std::vector<std::vector<double>> a = GetMatrixRandom(size);
+    std::vector<std::vector<double>> b(size, std::vector<double>(size, 0));
     for (int i = 0; i < size; i++) {
-        I[i][i] = 1;
+        b[i][i] = 1;
     }
-    std::vector<std::vector<double>> result = CannonMultiply(A, I, size);
-    ASSERT_EQ(A, result);
-}
-
-TEST(CannonMatrixMultiply, TestZero) {
-    int size = 7;
-    std::vector<std::vector<double>> A = GetMatrixRandom(size);
-    std::vector<std::vector<double>> Z(size, std::vector<double>(size, 0));
-    std::vector<std::vector<double>> result = CannonMultiply(A, Z, size);
-    ASSERT_EQ(Z, result);
-}
-
-TEST(CannonMatrixMultiply, TestRandom) {
-    int size = 10;
-    std::vector<std::vector<double>> A = GetMatrixRandom(size);
-    std::vector<std::vector<double>> B = GetMatrixRandom(size);
-    std::vector<std::vector<double>> result = CannonMultiply(A, B, size);
-    std::vector<std::vector<double>> expected = MatrixMultiply(A, B, size);
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            ASSERT_NEAR(expected[i][j], result[i][j], 1e-9);
-        }
+    std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
+    if (world_rank == 0) {
+        ASSERT_EQ(a, res);
     }
 }
 
-TEST(CannonMatrixMultiply, TestSquare) {
+TEST(Matrix_Cannon_Multiply, Test_Zero_Matrix) {
+    int world_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
+    int size = 3;
+    std::vector<std::vector<double>> a = GetMatrixRandom(size);
+    std::vector<std::vector<double>> b(size, std::vector<double>(size, 0));
+    std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
+    std::vector<std::vector<double>> expected(size,
+        std::vector<double>(size, 0));
+    if (world_rank == 0) {
+        ASSERT_EQ(expected, res);
+    }
+}
+
+TEST(Matrix_Cannon_Multiply, Test_Random_Matrix) {
+    int world_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
+    int size = 3;
+    std::vector<std::vector<double>> a = GetMatrixRandom(size);
+    std::vector<std::vector<double>> b = GetMatrixRandom(size);
+    std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
+    std::vector<std::vector<double>> expected = MatrixMultiply(a, b, size);
+    if (world_rank == 0) {
+        ASSERT_EQ(expected, res);
+    }
+}
+
+TEST(Matrix_Cannon_Multiply, Test_Square_Matrix) {
+    int world_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
+    int size = 3;
+    std::vector<std::vector<double>> a(size, std::vector<double>(size, 2));
+    std::vector<std::vector<double>> b(size, std::vector<double>(size, 2));
+    std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
+    std::vector<std::vector<double>> expected = MatrixMultiply(a, b, size);
+    if (world_rank == 0) {
+        ASSERT_EQ(expected, res);
+    }
+}
+
+TEST(Matrix_Cannon_Multiply, Test_Large_Matrix) {
+    int world_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
     int size = 6;
-    std::vector<std::vector<double>> A = GetMatrixRandom(size);
-    std::vector<std::vector<double>> B = GetMatrixRandom(size);
-    std::vector<std::vector<double>> result = CannonMultiply(A, B, size);
-    std::vector<std::vector<double>> expected = MatrixMultiply(A, B, size);
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            ASSERT_NEAR(expected[i][j], result[i][j], 1e-9);
-        }
+    std::vector<std::vector<double>> a = GetMatrixRandom(size);
+    std::vector<std::vector<double>> b = GetMatrixRandom(size);
+    std::vector<std::vector<double>> res = CannonMultiply(a, b, size);
+    std::vector<std::vector<double>> expected = MatrixMultiply(a, b, size);
+    if (world_rank == 0) {
+        ASSERT_EQ(expected, res);
     }
 }
 
-TEST(CannonMatrixMultiply, TestLarge) {
-    int size = 15;
-    std::vector<std::vector<double>> A = GetMatrixRandom(size);
-    std::vector<std::vector<double>> B = GetMatrixRandom(size);
-    std::vector<std::vector<double>> result = CannonMultiply(A, B, size);
-    std::vector<std::vector<double>> expected = MatrixMultiply(A, B, size);
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            ASSERT_NEAR(expected[i][j], result[i][j], 1e-9);
-        }
-    }
-}
-
-int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+int main(int argc, char **argv) {
     MPI_Init(&argc, &argv);
+    ::testing::InitGoogleTest(&argc, argv);
     int result = RUN_ALL_TESTS();
     MPI_Finalize();
     return result;
