@@ -1,6 +1,7 @@
   // Copyright 2023 Kuznetsov Mikhail
 
 #include <gtest/gtest.h>
+#include <mpi.h>
 #include "task_1/kuznetsov_m_min_value_in_matrix/min_value_in_matrix.h"
 
 TEST(min_value_in_matrix, equal_values) {
