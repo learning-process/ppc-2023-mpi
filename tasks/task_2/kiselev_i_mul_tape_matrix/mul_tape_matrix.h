@@ -3,7 +3,8 @@
 #define TASKS_TASK_2_KISELEV_I_MUL_TAPE_MATRIX_MUL_TAPE_MATRIX_H_
 #include <vector>
 #include <iostream>
-#include <mpi.h>
+#include <boost/mpi/environment.hpp>
+#include <boost/mpi/communicator.hpp>
 
 
 std::vector<int> SeqMulMatrix(const std::vector<int> &a, const std::vector<int> &b, int n, int m);
