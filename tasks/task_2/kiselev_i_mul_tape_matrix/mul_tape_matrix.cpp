@@ -48,7 +48,8 @@ std::vector<int> ParMulMatrix(std::vector<int> * SeqMulMatrix, std::vector<int> 
         }
     }
 
-    std::vector<int> locRes = SeqMulMatrix(locVec, b, locVec.size() / m, m);
+    std::vector<int> locRes((locVec.size() / m) * (locVec.size() / m));
+    locRes = SeqMulMatrix(locVec, b, locVec.size() / m, m);
     std::vector<int> resMatrix(n * n);
     std::vector<int> send_counts(sizeProc);
     std::vector<int> displs(sizeProc);
