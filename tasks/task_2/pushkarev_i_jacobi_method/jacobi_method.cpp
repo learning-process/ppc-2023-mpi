@@ -1,6 +1,6 @@
 // Copyright 2023 Pushkarev Ilya
 
-#include "./jacobi_method.h"
+#include "task_2/pushkarev_i_jacobi_method/jacobi_method.h"
 #include <random>
 #include <algorithm>
 #include <boost/mpi/communicator.hpp>
