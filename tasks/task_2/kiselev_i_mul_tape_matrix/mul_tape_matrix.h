@@ -1,9 +1,9 @@
 // Copyright 2023 Kiselev Igor
 #ifndef TASKS_TASK_2_KISELEV_I_MUL_TAPE_MATRIX_MUL_TAPE_MATRIX_H_
 #define TASKS_TASK_2_KISELEV_I_MUL_TAPE_MATRIX_MUL_TAPE_MATRIX_H_
+#include <mpi.h>
 #include <vector>
 #include <iostream>
-#include <boost/mpi/environment.hpp>
 #include <boost/core/invoke_swap.hpp>
 
 
