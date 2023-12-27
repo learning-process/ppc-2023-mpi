@@ -1,5 +1,5 @@
 // Copyright 2023 Kiselev Igor
-#include "task_1/kiselev_i_strassen_mul/strassen_mul.h"
+#include "task_3/kiselev_i_strassen_mul/strassen_mul.h"
 
 vector<vector<double>> matrix_addition(const vector<vector<double>> &A, const vector<vector<double>> &B) {
 
