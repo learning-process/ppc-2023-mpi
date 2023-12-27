@@ -1,24 +1,23 @@
 // Copyright 2023 Kiselev Igor
-#ifndef TASKS_TASK_1_KISELEV_I_STRASSEN_MUL_STRASSEN_MUL_H
-#define TASKS_TASK_1_KISELEV_I_STRASSEN_MUL_STRASSEN_MUL_H
+#ifndef TASKS_TASK_3_KISELEV_I_STRASSEN_MUL_STRASSEN_MUL_H_
+#define TASKS_TASK_3_KISELEV_I_STRASSEN_MUL_STRASSEN_MUL_H_
+#include <mpi.h>
 #include <iostream>
 #include <vector>
-#include <mpi.h>
+#include <boost/core/invoke_swap.hpp>
 
-using namespace std;
-
-vector<vector<double>> matrix_addition(const vector<vector<double>>& A, const vector<vector<double>>& B);
-vector<vector<double>> matrix_subtraction(const vector<vector<double>>& A, const vector<vector<double>>& B);
-vector<vector<double>> matrix_multiplication(const vector<vector<double>>& A, const vector<vector<double>>& B);
-void subdivide_matrix(const vector<vector<double>>& A,
-                      vector<vector<double>>& A11,
-                      vector<vector<double>>& A12,
-                      vector<vector<double>>& A21,
-                      vector<vector<double>>& A22);
-vector<vector<double>> merge_matrix(const vector<vector<double>>& C11,
-                                              const vector<vector<double>>& C12,
-                                              const vector<vector<double>>& C21,
-                                              const vector<vector<double>>& C22);
-vector<vector<double>> strassen_mult(const vector<vector<double>>& A,
-                                               const vector<vector<double>>& B);
-#endif // TASKS_TASK_1_KISELEV_I_STRASSEN_MUL_STRASSEN_MUL_H
+std::vector<std::vector<double>> matrix_addition(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B);
+std::vector<std::vector<double>> matrix_subtraction(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B);
+std::vector<std::vector<double>> matrix_multiplication(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B);
+void subdivide_matrix(const std::vector<std::vector<double>>& A,
+                      std::vector<std::vector<double>>& A11,
+                      std::vector<std::vector<double>>& A12,
+                      std::vector<std::vector<double>>& A21,
+                      std::vector<std::vector<double>>& A22);
+std::vector<std::vector<double>> merge_matrix(const std::vector<std::vector<double>>& C11,
+                                              const std::vector<std::vector<double>>& C12,
+                                              const std::vector<std::vector<double>>& C21,
+                                              const std::vector<std::vector<double>>& C22);
+std::vector<std::vector<double>> strassen_mult(const std::vector<std::vector<double>>& A,
+                                               const std::vector<std::vector<double>>& B);
+#endif // TASKS_TASK_3_KISELEV_I_STRASSEN_MUL_STRASSEN_MUL_H_
