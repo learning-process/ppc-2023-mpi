@@ -87,7 +87,7 @@ TEST(Radix_Double_Simple_Merge, Test_Radix5) {
     if (world.rank() == 0) {
         auto seq = getSeqRadixSortSimpleMerge(vec);
         for (size_t i = 0; i < vec.size(); ++i) {
-            EXPECT_NEAR(seq[i], par[i], 1e-2);
+            EXPECT_NEAR(seq[i], par[i], 1e-5);
         }
     }
 }
