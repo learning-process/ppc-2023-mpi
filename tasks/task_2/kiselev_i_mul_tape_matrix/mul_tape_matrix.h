@@ -2,6 +2,7 @@
 #ifndef TASKS_TASK_2_KISELEV_I_MUL_TAPE_MATRIX_MUL_TAPE_MATRIX_H_
 #define TASKS_TASK_2_KISELEV_I_MUL_TAPE_MATRIX_MUL_TAPE_MATRIX_H_
 #include <vector>
+#include <iostream>
 #include <mpi.h>
 
 
