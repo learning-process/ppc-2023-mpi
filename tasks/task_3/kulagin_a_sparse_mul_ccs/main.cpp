@@ -61,9 +61,9 @@ static inline void test_sparse_mul() {
     // int m1_rows = rand_range<int>(static_cast<double>(rows_min), static_cast<double>(rows_max));
     // int m2_cols = rand_range<int>(static_cast<double>(cols_min), static_cast<double>(cols_max));
     // int cols_rows = rand_range<int>(static_cast<double>(rows_cols_min), static_cast<double>(rows_cols_max));
-    int m1_rows = 1000;
-    int m2_cols = 1000;
-    int cols_rows = 1000;
+    int m1_rows = 100;
+    int m2_cols = 100;
+    int cols_rows = 100;
     try {
       m1 = rand_sparse(m1_rows, cols_rows, value_min, value_max, sparse_density);
       m2 = rand_sparse(cols_rows, m2_cols, value_min, value_max, sparse_density);

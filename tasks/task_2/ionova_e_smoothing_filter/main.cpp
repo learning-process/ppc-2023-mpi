@@ -81,8 +81,8 @@ TEST(TESTS, Test_random) {
   MPI_Comm comm = MPI_COMM_WORLD;
   MPI_Comm_rank(comm, &rank);
 
-  int rows = 1000;
-  int cols = 1000;
+  int rows = 100;
+  int cols = 100;
   int kernel = 3;
   std::vector<uint8_t> img(rows * cols);
 

@@ -1,98 +1,98 @@
 // Copyright 2023 Savchuk Anton
+#include <mpi.h>
+#include <random>
+#include <limits>
 #include "task_1/savchuk_a_matrix_min_by_columns/matrix_min_columns.h"
-std::vector<int> getRandomMatrix(size_t row, size_t col, int min_v, int max_v) {
-  std::vector<int> matrix(row * col);
-  std::random_device dev;
-  std::mt19937 gen(dev());
-  std::uniform_int_distribution<> distrib(min_v, max_v);
 
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) {
-      matrix[i * col + j] = distrib(gen);
+std::vector<int> generateMatrix(int n, int m) {
+    std::random_device dev;
+    std::mt19937 gen(dev());
+    std::vector<int> vec(n * m);
+
+    for (int i = 0; i < n * m; i++) {
+        vec[i] = static_cast<int>(gen() % 100);
     }
-  }
-
-  return matrix;
+    return vec;
 }
 
-std::vector<int> getColumnMin_seq(const std::vector<int> &matr,
-                                  size_t row, size_t col) {
-  std::vector<int> trsp_matr(row * col);
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) {
-      trsp_matr[j * row + i] = matr[i * col + j];
+std::vector<int> transposeMatrix(const std::vector<int>& matrix, int n, int m) {
+    size_t size = matrix.size();
+    std::vector<int> vec(size);
+
+    int k = 0;
+    for (int j = 0; j < m; j++) {
+        for (int i = 0; i < n; i++) {
+            vec[k++] = matrix[i * m + j];
+        }
     }
-  }
 
-  std::vector<int> min_v(col);
-  int min = 0;
-
-  for (int i = 0; i < col; i++) {
-    min = std::numeric_limits<int>::max();
-    for (int j = 0; j < row; j++) {
-      min = std::min(min, trsp_matr[i * row + j]);
-    }
-    min_v[i] = min;
-  }
-
-  return min_v;
+    return vec;
 }
 
-std::vector<int> getColumnMin_par(const std::vector<int> &matr,
-                                  size_t row, size_t col) {
-  std::vector<int> trsp_matr(row * col);
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) {
-      trsp_matr[j * row + i] = matr[i * col + j];
+int getMinInSequence(const std::vector<int>& sec) {
+    int min = std::numeric_limits<int>::max();
+    for (int i : sec) {
+        if (min > i) {
+            min = i;
+        }
     }
-  }
 
-  int ProcRank, ProcNum;
-  MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
-  MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-  int size = col / ProcNum,
-      rem = col % ProcNum,
-      min_vs = 0;
-  std::vector<int> sendcnts(ProcNum);
-  std::vector<int> recvcnts(ProcNum);
-  std::vector<int> displs_1(ProcNum);
-  std::vector<int> displs_2(ProcNum);
-  std::vector<int> transm_col(size * row);
-  std::vector<int> min_v(col);
+    return min;
+}
 
-  if (ProcRank == 0) {
-    for (int i = 0; i < ProcNum; i++) {
-      sendcnts[i] = size * row;
-      displs_1[i] = 0;
-      recvcnts[i] = size;
-      displs_2[i] = 0;
+std::vector<int> getColumnMinParallel(const std::vector<int>& matrix,
+                                    int n, int m) {
+    int size, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    const int delta = n;
+    const int count = m / size;
+    const int remain = m % size;
+    int start = 0;
+
+    std::vector<int> part(delta * count);
+    std::vector<int> end(delta * remain);
+    std::vector<int> localResult(m, std::numeric_limits<int>::max());
+    std::vector<int> globalResult(m);
+
+    if (rank == 0) {
+        std::vector<int> t = transposeMatrix(matrix, n, m);
+        start = count;
+        for (int i = 1; i < size; i++) {
+            MPI_Send(&start, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+            MPI_Send(t.data() + count * i * delta, delta * count,
+                    MPI_INT, i, 0, MPI_COMM_WORLD);
+            start += count;
+        }
+
+        start = 0;
+
+        part = std::vector<int>(t.begin(), t.begin() + delta * count);
+        if (remain != 0) {
+            end = std::vector<int>(t.end() - remain * delta, t.end());
+        }
+    } else {
+        MPI_Status status;
+        MPI_Recv(&start, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        MPI_Recv(part.data(), delta * count, MPI_INT, 0, 0,
+                                MPI_COMM_WORLD, &status);
     }
-    sendcnts[0] += rem * row;
-    recvcnts[0] += rem;
-    for (int i = 1; i < ProcNum; i++) {
-      displs_1[i] = displs_1[i - 1] + sendcnts[i - 1];
-      displs_2[i] = displs_2[i - 1] + recvcnts[i - 1];
+
+    for (int i = 0; i < count; i++) {
+        localResult[start + i] = getMinInSequence(std::vector<int>
+        (part.begin() + i * delta, part.begin() + i * delta + delta));
     }
-    transm_col.resize((size + rem) * row);
-  }
 
-  MPI_Scatterv(trsp_matr.data(), sendcnts.data(), displs_1.data(),
-              MPI_INT, transm_col.data(), transm_col.size(),
-              MPI_INT, 0, MPI_COMM_WORLD);
-
-  std::vector<int> res_vec;
-  int k = transm_col.size() / row;
-  for (int i = 0; i < k; i++) {
-    min_vs = std::numeric_limits<int>::max();
-    for (int j = 0; j < row; j++) {
-      min_vs = std::min(min_vs, transm_col[i * row + j]);
+    if (rank == 0 && remain != 0) {
+        start = m - remain;
+        for (int i = 0; i < remain; i++) {
+            localResult[start + i] = getMinInSequence(std::vector<int>
+            (end.begin() + i * delta, end.begin() + i * delta + delta));
+        }
     }
-    res_vec.push_back(min_vs);
-  }
 
-  MPI_Gatherv(res_vec.data(), res_vec.size(),
-              MPI_INT, min_v.data(), recvcnts.data(),
-              displs_2.data(), MPI_INT, 0, MPI_COMM_WORLD);
-
-  return min_v;
+    MPI_Reduce(localResult.data(), globalResult.data(), m, MPI_INT, MPI_MIN, 0,
+                MPI_COMM_WORLD);
+    return globalResult;
 }

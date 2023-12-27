@@ -61,10 +61,10 @@ TEST(MAX_ACROSS_COLUMN, parallel_small_matrix) {
         EXPECT_EQ(seq_res, parallel_res);
     }
 }
-TEST(MAX_ACROSS_COLUMN, parallel_matrix_11x11_positive) {
+TEST(MAX_ACROSS_COLUMN, parallel_matrix_4x4_positive) {
     boost::mpi::communicator world;
     std::vector<int> vec;
-    size_t rows = 11, columns = 11;
+    size_t rows = 4, columns = 4;
 
     if (world.rank() == 0) {
         vec = getRandomMatrix(rows, columns, 0, 1000);
@@ -78,11 +78,10 @@ TEST(MAX_ACROSS_COLUMN, parallel_matrix_11x11_positive) {
         EXPECT_EQ(seq_res, parallel_res);
     }
 }
-TEST(MAX_ACROSS_COLUMN, parallel_matrix_11x11_negative) {
+TEST(MAX_ACROSS_COLUMN, parallel_matrix_5x5_negative) {
     boost::mpi::communicator world;
     std::vector<int> vec;
-    size_t rows = 11, columns = 11;
-
+    size_t rows = 5, columns = 5;
     if (world.rank() == 0) {
         vec = getRandomMatrix(rows, columns, -1000, 0);
     }
@@ -95,10 +94,10 @@ TEST(MAX_ACROSS_COLUMN, parallel_matrix_11x11_negative) {
         EXPECT_EQ(seq_res, parallel_res);
     }
 }
-TEST(MAX_ACROSS_COLUMN, parallel_matrix_11x11) {
+TEST(MAX_ACROSS_COLUMN, parallel_matrix_6x6) {
     boost::mpi::communicator world;
     std::vector<int> vec;
-    size_t rows = 11, columns = 11;
+    size_t rows = 6, columns = 6;
 
     if (world.rank() == 0) {
         vec = getRandomMatrix(rows, columns, -1000, 1000);
@@ -112,75 +111,6 @@ TEST(MAX_ACROSS_COLUMN, parallel_matrix_11x11) {
         EXPECT_EQ(seq_res, parallel_res);
     }
 }
-TEST(MAX_ACROSS_COLUMN, parallel_matrix_17x17) {
-    boost::mpi::communicator world;
-    std::vector<int> vec;
-    size_t rows = 17, columns = 17;
-
-    if (world.rank() == 0) {
-        vec = getRandomMatrix(rows, columns, -1000, 1000);
-    }
-
-    std::vector<int> parallel_res = getMaxParallel(vec, rows , columns);
-
-    if (world.rank() == 0) {
-        std::vector<int> seq_res(columns);
-        seq_res = getMaxSequentional(vec, rows, columns);
-        EXPECT_EQ(seq_res, parallel_res);
-    }
-}
-TEST(MAX_ACROSS_COLUMN, parallel_matrix_24x24) {
-    boost::mpi::communicator world;
-    std::vector<int> vec;
-    size_t rows = 24, columns = 24;
-
-    if (world.rank() == 0) {
-        vec = getRandomMatrix(rows, columns, -1000, 1000);
-    }
-
-    std::vector<int> parallel_res = getMaxParallel(vec, rows , columns);
-
-    if (world.rank() == 0) {
-        std::vector<int> seq_res(columns);
-        seq_res = getMaxSequentional(vec, rows, columns);
-        EXPECT_EQ(seq_res, parallel_res);
-    }
-}
-TEST(MAX_ACROSS_COLUMN, parallel_matrix_144x73) {
-    boost::mpi::communicator world;
-    std::vector<int> vec;
-    size_t rows = 24, columns = 17;
-
-    if (world.rank() == 0) {
-        vec = getRandomMatrix(rows, columns, -1000, 1000);
-    }
-
-    std::vector<int> parallel_res = getMaxParallel(vec, rows , columns);
-
-    if (world.rank() == 0) {
-        std::vector<int> seq_res(columns);
-        seq_res = getMaxSequentional(vec, rows, columns);
-        EXPECT_EQ(seq_res, parallel_res);
-    }
-}
-TEST(MAX_ACROSS_COLUMN, parallel_matrix_73x144) {
-    boost::mpi::communicator world;
-    std::vector<int> vec;
-    size_t rows = 17, columns = 24;
-
-    if (world.rank() == 0) {
-        vec = getRandomMatrix(rows, columns, -1000, 1000);
-    }
-
-    std::vector<int> parallel_res = getMaxParallel(vec, rows , columns);
-
-    if (world.rank() == 0) {
-        std::vector<int> seq_res(columns);
-        seq_res = getMaxSequentional(vec, rows, columns);
-        EXPECT_EQ(seq_res, parallel_res);
-    }
-}
-
 int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;

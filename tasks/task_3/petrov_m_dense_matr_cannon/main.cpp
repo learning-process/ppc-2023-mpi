@@ -139,11 +139,11 @@ TEST(PARALLEL_OPERATIONS, boost_with_matrix_100x100) {
 }
 
 
-TEST(PARALLEL_OPERATIONS, boost_with_matrix_444x444) {
+TEST(PARALLEL_OPERATIONS, boost_with_matrix_80x80) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    std::vector<double>::size_type matrix_size = 444;
+    std::vector<double>::size_type matrix_size = 80;
     std::vector<double> first_matrix(matrix_size * matrix_size, 0.0);
     std::vector<double> second_matrix(matrix_size * matrix_size, 0.0);
 

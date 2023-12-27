@@ -1,85 +1,90 @@
 // Copyright 2023 Savchuk Anton
+#include <math.h>
+#include <mpi.h>
+#include <iostream>
+#include <random>
+#include <algorithm>
+#include <queue>
 #include "task_2/savchuk_a_sleeping_barber/sleeping_barber.h"
 
-void CustomClient(int customRank, int customClients,
-                    int customSeats, MPI_Comm comm) {
-    if (customRank < 2) {
-        throw std::logic_error{ "incorrect customRank" };
-    } else if (customClients < 1) {
-        throw std::logic_error{ "incorrect number of customClients" };
-    } else if (customSeats < 1) {
-        throw std::logic_error{ "incorrect number of customSeats" };
-    }
 
-    int sendMes = customRank;
-    int recvMes = 0;
-    MPI_Status status;
+#define Get_in_line 1
+#define Go_Barber 2
+#define Get_un_line 3
+#define Exit_Queue 4
 
-    MPI_Send(&sendMes, 1, MPI_INT, R_ROOM, T_ENTER, comm);
-    MPI_Recv(&recvMes, 1, MPI_INT, R_ANY, T_ANY, comm, &status);
+double getRandomTime() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    return (10.0 + static_cast<double>(gen() % 20u)) / 100.0;
 }
 
-void CustomRoom(int customRank, int customClients,
-                 int customSeats, MPI_Comm comm) {
-    if (customRank != R_ROOM) {
-        throw std::logic_error{ "incorrect customRank" };
-    } else if (customClients < 1) {
-        throw std::logic_error{ "incorrect number of customClients" };
-    } else if (customSeats < 1) {
-        throw std::logic_error{ "incorrect number of customSeats" };
+void wait(double time) {
+    double start = MPI_Wtime();
+    while (MPI_Wtime() - start < time) {
     }
+}
 
-    int sendMes = 0;
-    int recvMes = 0;
-    int visits = 0;
-    double wait = 0.0;
-
+void client(int rank) {
+    wait(getRandomTime());
     MPI_Status status;
-    std::queue<int> queuecustomClients;
+    int queue_index = 0;
 
-    do {
-        if (visits++ < customClients) {
-            MPI_Recv(&recvMes, 1, MPI_INT, R_ANY, T_ENTER, comm, &status);
+    MPI_Send(&rank, 1, MPI_INT, 1, Get_in_line, MPI_COMM_WORLD);
+    MPI_Recv(&queue_index, 1, MPI_INT, MPI_ANY_SOURCE, Get_un_line,
+        MPI_COMM_WORLD, &status);
 
-            if (queuecustomClients.size() < customSeats) {
-                queuecustomClients.push(recvMes);
+    if (queue_index != 0) {
+        MPI_Send(&rank, 1, MPI_INT, 0, Go_Barber, MPI_COMM_WORLD);
+    } else {
+        int nun = -1;
+        MPI_Send(&nun, 1, MPI_INT, 0, Go_Barber, MPI_COMM_WORLD);
+    }
+}
+
+void Barber(int seats, int clients) {
+    int client_rank = 0;
+    MPI_Status status;
+    for (int i = 0; i < clients; i++) {
+        MPI_Recv(&client_rank, 1, MPI_INT, MPI_ANY_SOURCE, Go_Barber,
+            MPI_COMM_WORLD, &status);
+        if (client_rank != -1) {
+            MPI_Send(&client_rank, 1, MPI_INT, 1, Exit_Queue, MPI_COMM_WORLD);
+            wait(getRandomTime());
+        }
+    }
+}
+
+void queue(int seats, int clients) {
+    int client_rank;
+    int queue_index = 0, index = 0;
+    MPI_Status status;
+    std::queue<int> same_queue;
+    int i = 0;
+    while (i < clients) {
+        MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+        if (status.MPI_TAG != Exit_Queue && index < clients) {
+            MPI_Recv(&client_rank, 1, MPI_INT, MPI_ANY_SOURCE, Get_in_line,
+                MPI_COMM_WORLD, &status);
+            if ((same_queue.size()) < seats) {
+                same_queue.push(client_rank);
+                queue_index = 1;
+                index++;
+                MPI_Send(&queue_index, 1, MPI_INT, client_rank, Get_un_line,
+                    MPI_COMM_WORLD);
             } else {
-                MPI_Send(&sendMes, 1, MPI_INT, recvMes, T_LEAVE, comm);
-                MPI_Send(&recvMes, 1, MPI_INT, R_BARBER, T_LEAVE, comm);
+                queue_index = 0;
+                MPI_Send(&queue_index, 1, MPI_INT, client_rank, Get_un_line,
+                    MPI_COMM_WORLD);
+                i++;
+                index++;
             }
         }
-        if (CHECK_WAIT(wait, 0.1) && !queuecustomClients.empty()) {
-            sendMes = queuecustomClients.front();
-            queuecustomClients.pop();
-
-            MPI_Send(&sendMes, 1, MPI_INT, R_BARBER, T_WORK, comm);
-            MPI_Recv(&recvMes, 1, MPI_INT, R_BARBER, T_READY, comm, &status);
-
-            wait = MPI_Wtime();
-        }
-    } while (visits < customClients || !queuecustomClients.empty());
-}
-
-void CustomBarber(int customRank, int customClients,
-                 int customSeats, MPI_Comm comm) {
-    if (customRank != R_BARBER) {
-        throw std::logic_error{ "incorrect customRank" };
-    } else if (customClients < 1) {
-        throw std::logic_error{ "incorrect number of customClients" };
-    } else if (customSeats < 1) {
-        throw std::logic_error{ "incorrect number of customSeats" };
-    }
-
-    int sendMes = 1;
-    int recvMes = 0;
-    MPI_Status status;
-
-    for (int visits = 0; visits < customClients; ++visits) {
-        MPI_Recv(&recvMes, 1, MPI_INT, R_ROOM, MPI_ANY_TAG, comm, &status);
-
-        if (status.MPI_TAG == T_WORK) {
-            MPI_Ssend(&sendMes, 1, MPI_INT, R_ROOM, T_READY, comm);
-            MPI_Send(&sendMes, 1, MPI_INT, recvMes, T_EXIT, comm);
+        if (status.MPI_TAG == Exit_Queue || index == clients) {
+            MPI_Recv(&client_rank, 1, MPI_INT, MPI_ANY_SOURCE, Exit_Queue,
+                MPI_COMM_WORLD, &status);
+            same_queue.pop();
+            i++;
         }
     }
 }

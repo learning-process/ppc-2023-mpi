@@ -2,7 +2,22 @@
 #include <gtest/gtest.h>
 #include "./philosopher.h"
 
-TEST(PhilosopherTest, GrabAndReleaseForks) {
+TEST(PhilosopherTest, GrabForks) {
+    int rank, numProcesses;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProcesses);
+
+    int numPhilosophers = numProcesses;
+    Philosopher philosopher(rank, numPhilosophers);
+
+    if (numPhilosophers > 1) {
+        int left_fork = (rank + numPhilosophers - 1) % numPhilosophers;
+        int right_fork = (rank + 1) % numPhilosophers;
+        philosopher.grabForks(left_fork, right_fork);
+    }
+}
+
+TEST(PhilosopherTest, ReleaseForks) {
     int rank, numProcesses;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &numProcesses);
@@ -16,18 +31,6 @@ TEST(PhilosopherTest, GrabAndReleaseForks) {
         philosopher.grabForks(left_fork, right_fork);
         philosopher.releaseForks(left_fork, right_fork);
     }
-}
-
-TEST(PhilosopherTest, ThinkAndEat) {
-    int rank, numProcesses;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProcesses);
-
-    int numPhilosophers = numProcesses;
-    Philosopher philosopher(rank, numPhilosophers);
-
-    philosopher.think();
-    philosopher.eat();
 }
 
 TEST(PhilosopherTest, RunSimulation) {
@@ -41,7 +44,7 @@ TEST(PhilosopherTest, RunSimulation) {
     philosopher.runSimulation();
 }
 
-TEST(PhilosopherTest, DifferentPhilosophers) {
+TEST(PhilosopherTest, ThinkTest) {
     int rank, numProcesses;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &numProcesses);
@@ -49,15 +52,10 @@ TEST(PhilosopherTest, DifferentPhilosophers) {
     int numPhilosophers = numProcesses;
     Philosopher philosopher(rank, numPhilosophers);
 
-    if (numPhilosophers > 1) {
-        int left_fork = (rank + numPhilosophers - 1) % numPhilosophers;
-        int right_fork = (rank + 1) % numPhilosophers;
-        philosopher.grabForks(left_fork, right_fork);
-        philosopher.releaseForks(left_fork, right_fork);
-    }
+    philosopher.think();
 }
 
-TEST(PhilosopherTest, SimulateDining) {
+TEST(PhilosopherTest, EatTest) {
     int rank, numProcesses;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &numProcesses);
@@ -65,7 +63,7 @@ TEST(PhilosopherTest, SimulateDining) {
     int numPhilosophers = numProcesses;
     Philosopher philosopher(rank, numPhilosophers);
 
-    philosopher.runSimulation();
+    philosopher.eat();
 }
 
 int main(int argc, char **argv) {
