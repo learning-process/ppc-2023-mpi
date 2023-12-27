@@ -1,9 +1,9 @@
 // Copyright 2023 Kiselev Igor
-//#include <gtest/gtest.h>
+#include <gtest/gtest.h>
 #include <vector>
 #include <iostream>
 #include <mpi.h>
-#include "mul_tape_matrix.h"
+#include "./mul_tape_matrix.h"
 
 TEST(MulMatrix_test, test_3x3_of_1) {
     int rankProc = 0;

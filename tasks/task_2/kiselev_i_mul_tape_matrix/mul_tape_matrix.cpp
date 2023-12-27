@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <mpi.h>
-#include "mul_tape_matrix.h"
+#include "task_1/kiselev_i_mul_tape_matrix/mul_tape_matrix.h"
 
 std::vector<int> SeqMulMatrix(const std::vector<int> &a, const std::vector<int> &b, int n, int m) {
 
