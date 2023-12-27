@@ -1,14 +1,15 @@
+// Copyright 2023 Novostroev Ivan
 #include <gtest/gtest.h>
-#include <task_1/novostroev_sum_values_matrix_columns/sum_val_mat_col.h>
+#include <task_1/novostroev_i_sum_values_matrix_columns/sum_val_mat_col.h>
 #include <iostream>
 #include <utility>
 
-TEST(ParallelMatrixColsSum, Test1) {
+TEST(SumValMatrixCol, Test1) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    size_t rows = 4;
-    size_t cols = 6;
+    size_t row = 4;
+    size_t col = 6;
     std::vector<double> matrix;
 
     if (rank == 0) {
@@ -18,82 +19,82 @@ TEST(ParallelMatrixColsSum, Test1) {
             1.0, 2.0, 3.0, 4.0, 5.0, 6.0,
             1.0, 2.0, 3.0, 4.0, 5.0, 6.0
         };
-        matrix = transposition(matrix, rows, cols);
+        matrix = transposition(matrix, row, col);
     }
 
-    auto tmp = rows;
-    rows = cols;
-    cols = tmp;
+    auto tmp = row;
+    row = col;
+    col = tmp;
 
     std::vector<double> parallel_result =
-        matrixColsSumParallel(matrix, rows, cols);
+        sumMatrixColParallel(matrix, row, col);
 
     if (rank == 0) {
         std::vector<double> sequential_result =
-            matrixColsSumSequential(matrix, rows, cols);
+            sumMatrixColEquential(matrix, row, col);
         ASSERT_EQ(sequential_result, parallel_result);
     }
 }
 
-TEST(ParallelMatrixColsSum, Test2) {
+TEST(SumValMatrixCol, Test2) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    size_t rows = 50;
-    size_t cols = 50;
+    size_t row = 50;
+    size_t col = 50;
     std::vector<double> matrix;
 
     if (rank == 0) {
-        matrix = std::vector<double>(rows * cols, 1.0);
-        matrix = transposition(matrix, rows, cols);
+        matrix = std::vector<double>(row * col, 1.0);
+        matrix = transposition(matrix, row, col);
     }
 
-    auto tmp = rows;
-    rows = cols;
-    cols = tmp;
+    auto tmp = row;
+    row = col;
+    col = tmp;
 
     std::vector<double> parallel_result =
-        matrixColsSumParallel(matrix, rows, cols);
+        sumMatrixColParallel(matrix, row, col);
 
     if (rank == 0) {
         std::vector<double> sequential_result =
-            matrixColsSumSequential(matrix, rows, cols);
+            sumMatrixColEquential(matrix, row, col);
         ASSERT_EQ(sequential_result, parallel_result);
     }
 }
 
-TEST(ParallelMatrixColsSum, Test3) {
+TEST(SumValMatrixCol, Test3) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    size_t rows = 10;
-    size_t cols = 3;
+    size_t row = 10;
+    size_t col = 3;
     std::vector<double> matrix;
 
     if (rank == 0) {
-        matrix = std::vector<double>(rows * cols, 0.0);
+        matrix = std::vector<double>(row * col, 0.0);
     }
 
-    auto tmp = rows;
-    rows = cols;
-    cols = tmp;
+    auto tmp = row;
+    row = col;
+    col = tmp;
 
     std::vector<double> parallel_result =
-        matrixColsSumParallel(matrix, rows, cols);
+        sumMatrixColParallel(matrix, row, col);
 
     if (rank == 0) {
         std::vector<double> sequential_result =
-            matrixColsSumSequential(matrix, rows, cols);
+            sumMatrixColEquential(matrix, row, col);
         ASSERT_EQ(sequential_result, parallel_result);
     }
 }
 
-TEST(ParallelMatrixColsSum, Test4) {
+TEST(SumValMatrixCol, Test4) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    size_t rows = 4;
-    size_t cols = 6;
+    size_t row = 4;
+    size_t col = 6;
     std::vector<double> matrix;
 
     if (rank == 0) {
@@ -105,29 +106,29 @@ TEST(ParallelMatrixColsSum, Test4) {
             1.0, 2.0, 0.0, 0.0, 0.0, 0.0,
             1.0, 0.0, 0.0, 0.0, 0.0, 0.0
         };
-        matrix = transposition(matrix, rows, cols);
+        matrix = transposition(matrix, row, col);
     }
 
-    auto tmp = rows;
-    rows = cols;
-    cols = tmp;
+    auto tmp = row;
+    row = col;
+    col = tmp;
 
     std::vector<double> parallel_result =
-        matrixColsSumParallel(matrix, rows, cols);
+        sumMatrixColParallel(matrix, row, col);
 
     if (rank == 0) {
         std::vector<double> sequential_result =
-            matrixColsSumSequential(matrix, rows, cols);
+            sumMatrixColEquential(matrix, row, col);
         ASSERT_EQ(sequential_result, parallel_result);
     }
 }
 
-TEST(ParallelMatrixColsSum, Test5) {
+TEST(SumValMatrixCol, Test5) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    size_t rows = 4;
-    size_t cols = 6;
+    size_t row = 4;
+    size_t col = 6;
     std::vector<double> matrix;
 
     if (rank == 0) {
@@ -139,19 +140,19 @@ TEST(ParallelMatrixColsSum, Test5) {
             0.0, 2.0, 3.0, 4.0, 5.0, 0.0,
             0.0, 0.0, 3.0, 4.0, 0.0, 0.0
         };
-        matrix = transposition(matrix, rows, cols);
+        matrix = transposition(matrix, row, col);
     }
 
-    auto tmp = rows;
-    rows = cols;
-    cols = tmp;
+    auto tmp = row;
+    row = col;
+    col = tmp;
 
     std::vector<double> parallel_result =
-        matrixColsSumParallel(matrix, rows, cols);
+        sumMatrixColParallel(matrix, row, col);
 
     if (rank == 0) {
         std::vector<double> sequential_result =
-            matrixColsSumSequential(matrix, rows, cols);
+            sumMatrixColEquential(matrix, row, col);
         ASSERT_EQ(sequential_result, parallel_result);
     }
 }
