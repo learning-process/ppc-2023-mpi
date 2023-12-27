@@ -37,34 +37,6 @@ void write() {
     MPI_Send(&out, 1, MPI_INT, 0, WRITER_END_TAG, MPI_COMM_WORLD);
 }
 
-void FinishCompletedReaders(
-        uint16_t* localReaderCount,
-        uint16_t* processesLeft
-        ) {
-    int in = 0;
-    MPI_Recv(&in, 1, MPI_INT, MPI_ANY_SOURCE, READER_END_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    (*localReaderCount)--;
-    (*processesLeft)--;
-}
-
-void StartNewReaders(uint16_t* localReaderCount) {
-    MPI_Status status;
-    int in = 0;
-    int out = 1;
-
-    MPI_Recv(&in, 1, MPI_INT, MPI_ANY_SOURCE, READER_READY_TAG, MPI_COMM_WORLD, &status);
-    MPI_Send(&out, 1, MPI_INT, status.MPI_SOURCE, READER_START_TAG, MPI_COMM_WORLD);
-
-    (*localReaderCount)++;
-}
-
-void ExecuteWriter(const int& dest, uint16_t* processesLeft) {
-    int in = 0;
-    int out = 1;
-    MPI_Send(&out, 1, MPI_INT, dest, WRITER_START_TAG, MPI_COMM_WORLD);
-    MPI_Recv(&in, 1, MPI_INT, dest, WRITER_END_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    (*processesLeft)--;
-}
 
 void handler(uint16_t readerCount, uint16_t writerCount) {
     int in = 0;
@@ -86,32 +58,18 @@ void handler(uint16_t readerCount, uint16_t writerCount) {
         }
 
         if (status.MPI_TAG == READER_READY_TAG) {
-            uint16_t localReaderCount = 1;
+            int in = 0;
+            int out = 1;
             MPI_Send(&out, 1, MPI_INT, status.MPI_SOURCE, READER_START_TAG, MPI_COMM_WORLD);
-
-            MPI_Iprobe(MPI_ANY_SOURCE, WRITER_READY_TAG, MPI_COMM_WORLD, &flag, MPI_STATUS_IGNORE);
-            while (!flag && localReaderCount != 0) {
-                int readerEndFlag = 0;
-                MPI_Iprobe(MPI_ANY_SOURCE, READER_END_TAG, MPI_COMM_WORLD, &readerEndFlag, MPI_STATUS_IGNORE);
-                if (readerEndFlag) {
-                    FinishCompletedReaders(&localReaderCount, &processesLeft);
-                }
-
-                int readerReadyFlag = 0;
-                MPI_Iprobe(MPI_ANY_SOURCE, READER_READY_TAG, MPI_COMM_WORLD, &readerReadyFlag, MPI_STATUS_IGNORE);
-                if (readerReadyFlag) {
-                    StartNewReaders(&localReaderCount);
-                }
-
-                MPI_Iprobe(MPI_ANY_SOURCE, WRITER_READY_TAG, MPI_COMM_WORLD, &flag, MPI_STATUS_IGNORE);
-            }
-
-            while (localReaderCount) {
-                FinishCompletedReaders(&localReaderCount, &processesLeft);
-            }
+            MPI_Recv(&in, 1, MPI_INT, status.MPI_SOURCE, READER_END_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            processesLeft--;
 
         } else if (status.MPI_TAG == WRITER_READY_TAG) {
-            ExecuteWriter(status.MPI_SOURCE, &processesLeft);
+            int in = 0;
+            int out = 1;
+            MPI_Send(&out, 1, MPI_INT, status.MPI_SOURCE, WRITER_START_TAG, MPI_COMM_WORLD);
+            MPI_Recv(&in, 1, MPI_INT, status.MPI_SOURCE, WRITER_END_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            processesLeft--;
         }
     }
 }
