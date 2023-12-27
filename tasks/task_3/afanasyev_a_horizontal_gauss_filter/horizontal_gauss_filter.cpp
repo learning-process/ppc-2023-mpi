@@ -108,21 +108,18 @@ std::vector<unsigned char> applyParGaussianFilter
 
             if (proc != (comm_size - 1)) {
                 countSend = interval * cols + 2 * cols;
-            }
-            else {
+            } else {
                 countSend = interval * cols + cols;
             }
 
             MPI_Send(&image[0] + startAdress, countSend,
                 MPI_UNSIGNED_CHAR, proc, 0, MPI_COMM_WORLD);
         }
-    }
-    else if (rank != 0) {
+    } else if (rank != 0) {
         if (rank != comm_size - 1) {
             MPI_Recv(&localImage[0], (interval + 2) * cols + 2,
                 MPI_UNSIGNED_CHAR, 0, 0, MPI_COMM_WORLD, &status);
-        }
-        else {
+        } else {
             localImage.resize((interval + 1) * cols);
             MPI_Recv(&localImage[0], (interval + 1) * cols,
                 MPI_UNSIGNED_CHAR, 0, 0, MPI_COMM_WORLD, &status);
@@ -133,21 +130,18 @@ std::vector<unsigned char> applyParGaussianFilter
             for (int j = 0; j < cols; ++j)
                 localResult[(i - 1) * cols + j] = applyGaussianFilterPixelOperation(localImage,
                     i, j, interval + 1, cols);
-    }
-    else if (rank != 0) {
+    } else if (rank != 0) {
         for (int i = 1; i < interval + 1; ++i)
             for (int j = 0; j < cols; ++j)
                 localResult[(i - 1) * cols + j] = applyGaussianFilterPixelOperation(localImage,
                     i, j, interval + 2, cols);
-    }
-    else {
+    } else {
         if (comm_size != 1) {
             for (int i = 0; i < interval + last_interval; ++i)
                 for (int j = 0; j < cols; ++j)
                     globalResult[i * cols + j] = applyGaussianFilterPixelOperation(localImage,
                         i, j, interval + last_interval + 1, cols);
-        }
-        else {
+        } else {
             for (int i = 0; i < rows; ++i)
                 for (int j = 0; j < cols; ++j)
                     globalResult[i * cols + j] = applyGaussianFilterPixelOperation(image,
@@ -157,8 +151,7 @@ std::vector<unsigned char> applyParGaussianFilter
     if (rank != 0) {
         MPI_Send(&localResult[0], interval * cols,
             MPI_UNSIGNED_CHAR, 0, 0, MPI_COMM_WORLD);
-    }
-    else {
+    } else {
         for (int proc = 1; proc < comm_size; ++proc) {
             int start = ((interval + last_interval) * cols)
                 + ((proc - 1) * interval * cols);

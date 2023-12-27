@@ -1,4 +1,6 @@
 // Copyright 2023 Afanasyev Aleksey
+#ifndef TASKS_TASK_3_AFANASYEV_A_HORIZONTAL_GAUSS_FILTER_HORIZONTAL_GAUSS_FILTER_H_
+#define TASKS_TASK_3_AFANASYEV_A_HORIZONTAL_GAUSS_FILTER_HORIZONTAL_GAUSS_FILTER_H_
 
 #include <mpi.h>
 #include <iostream>
@@ -27,3 +29,5 @@ std::vector<unsigned char> applyParGaussianFilter
 
 std::vector<unsigned char> applySeqGaussianFilter
     (const std::vector<unsigned char>& image, int rows, int cols);
+
+#endif  // TASKS_TASK_3_AFANASYEV_A_HORIZONTAL_GAUSS_FILTER_HORIZONTAL_GAUSS_FILTER_H_
