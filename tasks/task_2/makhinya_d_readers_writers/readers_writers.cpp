@@ -9,83 +9,62 @@
 
 #include "task_2/makhinya_d_readers_writers/readers_writers.h"
 
-#define DEFAULT_TAG 0
-#define READER_START_TAG 1
-#define WRITER_START_TAG 2
-#define READER_READY_TAG 3
-#define READER_END_TAG 4
-#define WRITER_READY_TAG 5
-#define WRITER_END_TAG 6
+enum class READER_TAG {
+    START = 1,
+    READY = 2,
+    END = 3
+};
 
-void read() {
-    int in = 0;
-    int out = 1;
-    MPI_Send(&out, 1, MPI_INT, 0, READER_READY_TAG, MPI_COMM_WORLD);
-    MPI_Recv(&in, 1, MPI_INT, 0, READER_START_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-    // critical section
-    MPI_Send(&out, 1, MPI_INT, 0, READER_END_TAG, MPI_COMM_WORLD);
-}
-
-void write() {
-    int in = 0;
-    int out = 1;
-    MPI_Send(&out, 1, MPI_INT, 0, WRITER_READY_TAG, MPI_COMM_WORLD);
-    MPI_Recv(&in, 1, MPI_INT, 0, WRITER_START_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-    // critical section
-    MPI_Send(&out, 1, MPI_INT, 0, WRITER_END_TAG, MPI_COMM_WORLD);
-}
-
-
-void handler(uint16_t readerCount, uint16_t writerCount) {
-    int in = 0;
-    int out = 1;
-
-    int sizeWorld = 0;
-    MPI_Comm_size(MPI_COMM_WORLD, &sizeWorld);
-
-    uint16_t processesLeft = std::min(static_cast<int>(readerCount + writerCount), (sizeWorld - 1));
-    while (processesLeft) {
-        MPI_Status status;
-        int flag = 0;
-
-        MPI_Iprobe(MPI_ANY_SOURCE, WRITER_READY_TAG, MPI_COMM_WORLD, &flag, MPI_STATUS_IGNORE);
-        if (flag) {
-            MPI_Recv(&in, 1, MPI_INT, MPI_ANY_SOURCE, WRITER_READY_TAG, MPI_COMM_WORLD, &status);
-        } else {
-            MPI_Recv(&in, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-        }
-
-        if (status.MPI_TAG == READER_READY_TAG) {
-            int in = 0;
-            int out = 1;
-            MPI_Send(&out, 1, MPI_INT, status.MPI_SOURCE, READER_START_TAG, MPI_COMM_WORLD);
-            MPI_Recv(&in, 1, MPI_INT, status.MPI_SOURCE, READER_END_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            processesLeft--;
-
-        } else if (status.MPI_TAG == WRITER_READY_TAG) {
-            int in = 0;
-            int out = 1;
-            MPI_Send(&out, 1, MPI_INT, status.MPI_SOURCE, WRITER_START_TAG, MPI_COMM_WORLD);
-            MPI_Recv(&in, 1, MPI_INT, status.MPI_SOURCE, WRITER_END_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            processesLeft--;
-        }
-    }
-}
+enum class WRITER_TAG {
+    START = 4,
+    READY = 5,
+    END = 6
+};
 
 void run_problem_readers_writers(uint16_t readerCount, uint16_t writerCount) {
-    int rank = 0;
-    int sizeWorld = 0;
-
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &sizeWorld);
+    boost::mpi::communicator world;
+    int rank = world.rank();
+    int sizeWorld = world.size();
 
     if (rank == 0) {
-        handler(readerCount, writerCount);
+        int in = 0;
+        int out = 1;
+        uint16_t processesLeft = std::min(static_cast<int>(readerCount + writerCount), (sizeWorld - 1));
+        while (processesLeft) {
+            boost::mpi::status status;
+            auto flag = world.iprobe(boost::mpi::any_source, static_cast<int>(WRITER_TAG::READY));
+            if (!flag.is_initialized()) {
+                status = world.recv(boost::mpi::any_source, boost::mpi::any_tag, in);
+            } else {
+                status = world.recv(boost::mpi::any_source, static_cast<int>(WRITER_TAG::READY), in);
+            }
+
+            if (status.tag() == static_cast<int>(READER_TAG::READY)) {
+                int in = 0;
+                int out = 1;
+                world.send(status.source(), static_cast<int>(READER_TAG::START), out);
+                world.recv(status.source(), static_cast<int>(READER_TAG::END), in);
+                processesLeft--;
+
+            } else if (status.tag() == static_cast<int>(WRITER_TAG::READY)) {
+                int in = 0;
+                int out = 1;
+                world.send(status.source(), static_cast<int>(WRITER_TAG::START), out);
+                world.recv(status.source(), static_cast<int>(WRITER_TAG::END), in);
+                processesLeft--;
+            }
+        }
     } else if (rank <= readerCount) {
-        read();
+        int in = 0;
+        int out = 1;
+        world.send(0, static_cast<int>(READER_TAG::READY), out);
+        world.recv(0, static_cast<int>(READER_TAG::START), in);
+        world.send(0, static_cast<int>(READER_TAG::END), out);
     } else if (rank <= readerCount + writerCount) {
-        write();
+        int in = 0;
+        int out = 1;
+        world.send(0, static_cast<int>(WRITER_TAG::READY), out);
+        world.recv(0, static_cast<int>(WRITER_TAG::START), in);
+        world.send(0, static_cast<int>(WRITER_TAG::END), out);
     }
 }
