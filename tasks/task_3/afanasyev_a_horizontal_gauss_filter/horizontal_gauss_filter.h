@@ -12,7 +12,7 @@
 #include <ctime>
 #include <list>
 
-const unsigned char matrix_gauss[3][3] {{-1, -1, -1}, {-1, 9, -1}, {-1, -1, -1}};
+const unsigned char matrix_gauss[3][3] {{1, 1, 1}, {1, 9, 1}, {1, 1, 1}};
 
 bool compareVectors(const std::vector<unsigned char>& vec1,
                     const std::vector<unsigned char>& vec2);

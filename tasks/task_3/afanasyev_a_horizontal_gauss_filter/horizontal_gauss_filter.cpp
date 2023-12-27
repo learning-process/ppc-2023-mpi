@@ -62,7 +62,7 @@ unsigned char applyGaussianFilterPixelOperation(const std::vector<unsigned char>
         }
     }
 
-    return sum;
+    return sum/17;
 }
 
 std::vector<unsigned char> applySeqGaussianFilter
