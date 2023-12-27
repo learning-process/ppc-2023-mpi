@@ -5,7 +5,6 @@
 #include "task_2/kiselev_i_mul_tape_matrix/mul_tape_matrix.h"
 
 std::vector<int> SeqMulMatrix(const std::vector<int> &a, const std::vector<int> &b, int n, int m) {
-
     std::vector<int> resMatrix(n * n);
 
     for (int j = 0; j < n; j++) {
@@ -18,7 +17,6 @@ std::vector<int> SeqMulMatrix(const std::vector<int> &a, const std::vector<int> 
     return resMatrix;
 }
 std::vector<int> ParMulMatrix(std::vector<int> * SeqMulMatrix, std::vector<int> * ParMulMatrix, int n, int m) {
-
     std::vector<int> &a = *SeqMulMatrix;
     std::vector<int> &b = *ParMulMatrix;
 
