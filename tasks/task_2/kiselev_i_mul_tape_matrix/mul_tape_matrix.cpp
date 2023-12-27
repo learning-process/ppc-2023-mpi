@@ -13,9 +13,9 @@ std::vector<int> SeqMulMatrix(const std::vector<int> &a, const std::vector<int> 
     }
     return resMatrix;
 }
-std::vector<int> ParMulMatrix(std::vector<int> * SeqMulMatrix, std::vector<int> * ParMulMatrix, int n, int m) {
-    std::vector<int> &a = *SeqMulMatrix;
-    std::vector<int> &b = *ParMulMatrix;
+std::vector<int> ParMulMatrix(std::vector<int> * SMM, std::vector<int> * PMM, int n, int m) {
+    std::vector<int> &a = *SMM;
+    std::vector<int> &b = *PMM;
 
     int sizeProc = 0;
     int rankProc = 0;
@@ -49,7 +49,7 @@ std::vector<int> ParMulMatrix(std::vector<int> * SeqMulMatrix, std::vector<int> 
     }
 
     std::vector<int> locRes((locVec.size() / m) * (locVec.size() / m));
-    locRes = SeqMulMatrix(locVec, &b, locVec.size() / m, m);
+    locRes = SeqMulMatrix(locVec, b, locVec.size() / m, m);
     std::vector<int> resMatrix(n * n);
     std::vector<int> send_counts(sizeProc);
     std::vector<int> displs(sizeProc);
