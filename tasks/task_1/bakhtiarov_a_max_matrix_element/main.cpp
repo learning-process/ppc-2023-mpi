@@ -3,7 +3,7 @@
 #include <vector>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
-#include "./max_matrix_element.h"
+#include "task_1/bakhtiarov_a_max_matrix_element/max_matrix_element.h"
 TEST(Parallel_Max_Matrix_Element_MPI, Test_Equal_rows_and_cols) {
   boost::mpi::communicator world;
   std::vector<int> global_matrix;
