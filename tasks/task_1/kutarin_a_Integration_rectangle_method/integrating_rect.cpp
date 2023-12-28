@@ -18,7 +18,7 @@ double RectangleIntegrate(double left_border,
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
     double result = 0;
-    int countintervals = static_cast<int>((right_border - left_border) 
+    int countintervals = static_cast<int>((right_border - left_border)
         / step);
 
     if (countintervals > 0) {
