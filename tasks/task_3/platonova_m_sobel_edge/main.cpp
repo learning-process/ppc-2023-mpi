@@ -1,8 +1,8 @@
-// Copyright 2023 Krainev Alexander
+// Copyright 2023 Platonova Maria
 #include <gtest/gtest.h>
-#include "./sobel_edge.h"
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
+#include "task_3/platonova_m_sobel_edge/sobel_edge.h"
 
 TEST(STD_Sobel, Empty_Image) {
     Image image = white_image(15, 15);
