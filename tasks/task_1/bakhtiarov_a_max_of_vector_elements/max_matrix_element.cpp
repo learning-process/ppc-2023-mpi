@@ -33,7 +33,8 @@ int findMaxOfMatrix(const std::vector<int>& global_matrix) {
     return max;
 }
 
-int findMaxOfMatrixParallel(const std::vector<int>& global_matrix, int rows, int cols) {
+int findMaxOfMatrixParallel(const std::vector<int>& global_matrix,
+    int rows, int cols) {
     boost::mpi::communicator comm;
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -54,13 +55,16 @@ int findMaxOfMatrixParallel(const std::vector<int>& global_matrix, int rows, int
     }
 
     std::vector<int> local_matrix(send_counts[rank]);
-    MPI_Scatterv(global_matrix.data(), send_counts.data(), displs.data(), MPI_INT,
-                local_matrix.data(), send_counts[rank], MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(global_matrix.data(), send_counts.data(),
+        displs.data(), MPI_INT, local_matrix.data(),
+            send_counts[rank], MPI_INT, 0, MPI_COMM_WORLD);
 
-    int local_max = *std::max_element(local_matrix.begin(), local_matrix.end());
+    int local_max = *std::max_element(local_matrix.begin(),
+        local_matrix.end());
 
     int global_max = 0;
-    MPI_Reduce(&local_max, &global_max, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_max, &global_max, 1, MPI_INT, MPI_MAX, 0,
+        MPI_COMM_WORLD);
 
     return global_max;
 }
