@@ -8,6 +8,7 @@
 TEST(GaussJordanTests, TestSequentialSolving) {
     std::vector<std::vector<double>> A = {{2, 1, -1}, {-3, -1, 2}, {-2, 1, 2}};
     std::vector<double> b = {8, -11, -3};
+    
     if (world.rank() == 0) {
         std::vector<double> sequentialSolution = solve_linear_system_sequential(A, b);
         ASSERT_EQ(sequentialSolution.size(), b.size());
@@ -57,7 +58,7 @@ TEST(GaussJordanTests, TestInfiniteSolutions) {
 TEST(GaussJordanTests, TestRandomMatrix) {
     boost::mpi::environment env;
     boost::mpi::communicator world;
-    
+
     if (world.rank() == 0) {
         std::vector<std::vector<double>> A = generate_random_matrix(3, 3);
     }
