@@ -2,155 +2,162 @@
 
 #include "task_3/troitskiy_a_double_sort_simple_merge/double_radix_sort.h"
 
-void SortByCount(double *input, double *temp, int byte_num, int n) {
-    std::vector<std::vector<int>> count(256);
-    unsigned char *mas = (unsigned char *) input;
+void CountingSort(double *inp, double *tmp, int byteNum, int n) {
+    unsigned char *mas = (unsigned char *) inp;
+    std::vector <std::vector<int>> count(256);
     for (int i = 0; i < n; i++) {
-        count[mas[8 * i + byte_num]].push_back(i);
+        count[mas[8 * i + byteNum]].push_back(i);
     }
     int cur = 0;
     for (int i = 0; i < 256; i++) {
-        for (auto j : count[i]) {
-            temp[cur++] = input[j];
+        for ( auto j : count[i] ) {
+            tmp[cur] = inp[j];
+            cur++;
         }
     }
 }
 
-std::vector<double> DoubleRadixSortSeq(std::vector<double> vec) {
-    int n = vec.size();
+std::vector<double> SequenceRadixSortDouble(std::vector<double> a, int n) {
+    int cnt_neg = 0;
+    for (int i = 0; i < n; i++) {
+        if (a[i] < 0)
+            cnt_neg++;
+    }
 
-    int negative_count = std::count_if(vec.begin(), vec.end(), [](int num){
-        return num < 0;
-    });
+    double *inp_pos = new double[n - cnt_neg];
+    double *tmp_pos = new double[n - cnt_neg];
 
-    double *positives = new double[n - negative_count];
-    double *negatives = new double[negative_count];
-
-    double *temp_positive = new double[n - negative_count];
-    double *temp_negative = new double[negative_count];
-
+    double *inp_neg = new double[cnt_neg];
+    double *tmp_neg = new double[cnt_neg];
     int cur = 0;
     for (int i = 0; i < n; i++) {
-        if (vec[i] > 0) {
-            positives[cur] = vec[i];
+        if (a[i] > 0) {
+            inp_pos[cur] = a[i];
             cur++;
         } else {
-            negatives[i - cur] = - vec[i];
+            inp_neg[i - cur] = -a[i];
         }
     }
+    CountingSort(inp_pos, tmp_pos, 0, n - cnt_neg);
+    CountingSort(tmp_pos, inp_pos, 1, n - cnt_neg);
+    CountingSort(inp_pos, tmp_pos, 2, n - cnt_neg);
+    CountingSort(tmp_pos, inp_pos, 3, n - cnt_neg);
+    CountingSort(inp_pos, tmp_pos, 4, n - cnt_neg);
+    CountingSort(tmp_pos, inp_pos, 5, n - cnt_neg);
+    CountingSort(inp_pos, tmp_pos, 6, n - cnt_neg);
+    CountingSort(tmp_pos, inp_pos, 7, n - cnt_neg);
 
-    for (int i = 0; i < 8; i += 2) {
-        SortByCount(positives, temp_positive, i, n - negative_count);
-        SortByCount(temp_positive, positives, i + 1, n - negative_count);
-    }
-    for (int i = 0; i < 8; i += 2) {
-        SortByCount(negatives, temp_negative, i, negative_count);
-        SortByCount(temp_negative, negatives, i + 1, negative_count);
-    }
 
-    for (int i = negative_count - 1; i >= 0; i--) {
-        vec[negative_count - 1 - i] = -negatives[i];
+    CountingSort(inp_neg, tmp_neg, 0, cnt_neg);
+    CountingSort(tmp_neg, inp_neg, 1, cnt_neg);
+    CountingSort(inp_neg, tmp_neg, 2, cnt_neg);
+    CountingSort(tmp_neg, inp_neg, 3, cnt_neg);
+    CountingSort(inp_neg, tmp_neg, 4, cnt_neg);
+    CountingSort(tmp_neg, inp_neg, 5, cnt_neg);
+    CountingSort(inp_neg, tmp_neg, 6, cnt_neg);
+    CountingSort(tmp_neg, inp_neg, 7, cnt_neg);
+
+    for (int i = cnt_neg - 1; i >= 0; i--) {
+        a[cnt_neg - 1 - i] = -inp_neg[i];
     }
-    for (int i = 0; i < n - negative_count; i++) {
-        vec[i + negative_count] = positives[i];
+    for (int i = 0; i < n - cnt_neg; i++) {
+        a[i + cnt_neg] = inp_pos[i];
     }
-    delete[]temp_positive;
-    delete[]temp_negative;
-    delete[]positives;
-    delete[]negatives;
-    return vec;
+    delete[]tmp_pos;
+    delete[]tmp_neg;
+    delete[]inp_pos;
+    delete[]inp_neg;
+    return a;
 }
 
-std::vector<double> MergeVectors(const std::vector<double> &vec1, const std::vector<double> &vec2) {
-    std::vector<double> merged(vec1.size() + vec2.size());
-    int count1 = 0;
-    int count2 = 0;
-    while (count1 < vec1.size() || count2 < vec2.size()) {
-        if (count1 == vec1.size()) {
-            merged[count1 + count2] = vec2[count2];
-            count2++;
-        } else if (count2 == vec2.size()) {
-            merged[count1 + count2] = vec1[count1];
-            count1++;
+std::vector<double> merge(const std::vector<double> &a, const std::vector<double> &b) {
+    int sz = a.size() + b.size();
+    std::vector<double> ans(sz);
+    int l = 0;
+    int r = 0;
+    for (int i = 0; i < a.size() + b.size(); i++) {
+        if (l == a.size()) {
+            ans[i] = b[r];
+            r++;
+        } else if (r == b.size()) {
+            ans[i] = a[l];
+            l++;
         } else {
-            if (vec1[count1] < vec2[count2]) {
-                merged[count1 + count2] = vec1[count1];
-                count1++;
+            if (a[l] < b[r]) {
+                ans[i] = a[l];
+                l++;
             } else {
-                merged[count1 + count2] = vec2[count2];
-                count2++;
+                ans[i] = b[r];
+                r++;
             }
         }
     }
-    return merged;
+    return ans;
 }
 
-std::vector<double> DoubleRadixSortParallel(std::vector<double> vec) {
-    int n = vec.size();
+std::vector<double> ParallelRadixSortDouble(std::vector<double> a, int n) {
     int rank = 0;
-    int procs_count = 0;
+    int countProc = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &procs_count);
+    MPI_Comm_size(MPI_COMM_WORLD, &countProc);
     int size, offset;
-    int delta = n / procs_count;
-    int remain = n % procs_count;
+    int delta = n / countProc;
+    int remain = n % countProc;
     size = delta;
-    std::vector<int> disps;
-    std::vector<double> batch(delta);
-    std::vector<int> sent_counts;
+    std::vector<int> sendcounts;
+    std::vector<int> displs;
+    std::vector<double> piece(delta);
     if (rank == 0) {
-        sent_counts.resize(procs_count, delta);
-        sent_counts[0] += remain;
-        disps.resize(procs_count, 0);
-        for (int i = 1; i < procs_count; i++) {
-            disps[i] = disps[i - 1] + sent_counts[i - 1];
+        sendcounts.resize(countProc, delta);
+        sendcounts[0] += remain;
+        displs.resize(countProc, 0);
+        for (int i = 1; i < countProc; i++) {
+            displs[i] = displs[i - 1] + sendcounts[i - 1];
         }
-        batch.resize(sent_counts[0]);
+        piece.resize(sendcounts[0]);
     }
-    MPI_Scatterv(vec.data(), sent_counts.data(), disps.data(), MPI_DOUBLE, batch.data(), batch.size(),
+    MPI_Scatterv(a.data(), sendcounts.data(), displs.data(), MPI_DOUBLE, piece.data(), piece.size(),
                  MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    batch = DoubleRadixSortSeq(batch);
+    piece = SequenceRadixSortDouble(piece, piece.size());
     if (delta == 0) {
-        return batch;
+        return piece;
     }
-    int count = 1;
-    std::vector<double> vec_to;
-    while (count < procs_count) {
-        if (rank % (2 * count) == 0) {
-            if (rank + count < procs_count) {
-                // first proc
+    int cnt = 1;
+    std::vector<double> to;
+    while (cnt < countProc) {
+        if (rank % (2 * cnt) == 0) {
+            if (rank + cnt < countProc) {
+                // left proc
                 int sz;
-                if (rank + count + count >= procs_count) {
-                    sz = procs_count - (rank + count);
+                if (rank + cnt + cnt >= countProc) {
+                    sz = countProc - (rank + cnt);
                 } else {
-                    sz = count;
+                    sz = cnt;
                 }
-                vec_to.resize(sz * delta);
+                to.resize(sz * delta);
                 MPI_Status status;
-                MPI_Recv(vec_to.data(), sz * delta, MPI_DOUBLE, rank + count, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-                batch = MergeVectors(batch, vec_to);
+                MPI_Recv(to.data(), sz * delta, MPI_DOUBLE, rank + cnt, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+                piece = merge(piece, to);
             }
-        } else if (rank % count == 0) {
-            // second proc
-            vec_to = batch;
-            MPI_Send(vec_to.data(), vec_to.size(), MPI_DOUBLE, rank - count, 0, MPI_COMM_WORLD);
+        } else if (rank % cnt == 0) {
+            // right proc
+            to = piece;
+            MPI_Send(to.data(), to.size(), MPI_DOUBLE, rank - cnt, 0, MPI_COMM_WORLD);
         }
-        count *= 2;
+        cnt *= 2;
         MPI_Barrier(MPI_COMM_WORLD);
     }
-    return batch;
+    return piece;
 }
 
-std::vector<double> generateRandomDoubleVector(int n, double min, double max) {
+std::vector<double> getRandomInput(int n, double fMin, double fMax) {
     std::random_device device;
-    std::mt19937 gen_engine(device());
-    std::vector<double> result(n);
+    std::mt19937 generator(device());
+    std::vector<double> inp(n);
     for (int i = 0; i < n; i++) {
-        int x = static_cast<int>(gen_engine());
-        result[i] = min + x * (max - min) / RAND_MAX;
-        if (result[i] < 0) {
-            result[i] *= -1;
-        }
+        int f = static_cast<int>(generator());
+        inp[i] = fMin + f * (fMax - fMin) / RAND_MAX;
+        if (inp[i] < 0) inp[i] *= -1;
     }
-    return result;
+    return inp;
 }
