@@ -1,10 +1,10 @@
 // Copyright 2023 Gontsov Roman
 
-#include "task_3/gontsov_r_monte_carlo_integrate/monte_carlo_integrate.h"
 #include <random>
 #include <iostream>
-#include <utility>
+#include "task_3/gontsov_r_monte_carlo_integrate/monte_carlo_integrate.h"
 #include "../../../3rdparty/unapproved/unapproved.h"
+
 
 double getIntegralMonteCarlo(
     const std::function<double(const std::vector<double>&)>& f,
