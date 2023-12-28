@@ -1,126 +1,191 @@
 // Copyright 2023 Platonova Maria
-#include <algorithm>
-#include <cmath>
-#include "../../../3rdparty/unapproved/unapproved.h"
 #include "task_3/platonova_m_sobel_edge/sobel_edge.h"
+#include <utility>
+#include <boost/mpi.hpp>
 
-static std::vector<std::vector<int>> sobel_kernel = {
-    { 1, 2, 1},
-    { 0, 0, 0},
-    { -1, -2, -1}
-};
+using ConvolutionKernel = std::vector<std::vector<int>>;
 
-Pixel::Pixel(int r, int g, int b) :
-    r(r), g(g), b(b)
-{ }
+// Internal parallel declarations
+void DistributeImage(
+        const ImageMatrix& image, ImageMatrix& localImage, // NOLINT
+        size_t width, size_t height);
 
-bool Pixel::operator==(const Pixel& o) const {
-    return r == o.r && g == o.g && b == o.b;
-}
+std::pair<size_t, size_t> LocalRowsOffsetAndCountForDistribution(
+        size_t width, size_t height,
+        size_t processesCount, size_t processRank);
 
-static int clamp(int value, int min, int max) {
-    return std::max(min, std::min(value, max));
-}
 
-static Pixel get_pixel(
-    const std::vector<std::vector<Pixel>>& image, int x, int y) {
-    return image[clamp(y, 0, image.size() - 1)]
-                [clamp(x, 0, image[0].size() - 1)];
-}
+void CollectImage(
+        ImageMatrix& totalImage, const ImageMatrix& localImage, // NOLINT
+        size_t width, size_t height);
 
-std::vector<std::vector<Pixel>> white_image(int w, int h) {
-    const Pixel white = { 255, 255, 255 };
-    std::vector<std::vector<Pixel>> res(h, std::vector<Pixel>(w, white));
-    return res;
-}
+size_t LocalRowsCountForCollection(
+        size_t width, size_t height,
+        size_t processesCount, size_t processRank);
 
-std::vector<std::vector<Pixel>> black_image(int w, int h) {
-    const Pixel black = { 0, 0, 0 };
-    std::vector<std::vector<Pixel>> res(h, std::vector<Pixel>(w, black));
-    return res;
-}
+namespace mpi = boost::mpi;
 
-std::vector<std::vector<Pixel>> random_image(int w, int h) {
-    const Pixel black = { 0, 0, 0 };
-    std::vector<std::vector<Pixel>> res(h, std::vector<Pixel>(w, black));
-    std::random_device rnd_device;
-    std::mt19937 mt_gen(rnd_device());
-    for (int y = 0; y < res.size(); y++) {
-        for (int x = 0; x < res[0].size(); x++) {
-            res[y][x] = { static_cast<int>(mt_gen()) % 256,
-            static_cast<int>(mt_gen()) % 256,
-            static_cast<int>(mt_gen()) % 256 };
-        }
-    }
-    return res;
-}
 
-static Pixel sobel_pixel(
-        const std::vector<std::vector<Pixel>>& image, int x, int y) {
-    int gx_r = 0;
-    int gx_g = 0;
-    int gx_b = 0;
-    for (int l = -1; l <= 1; l++) {
-        for (int k = -1; k <= 1; k++) {
-            Pixel neighbor = get_pixel(image, x + k, y + l);
-            gx_r += neighbor.r * sobel_kernel[l + 1][k + 1];
-            gx_g += neighbor.g * sobel_kernel[l + 1][k + 1];
-            gx_b += neighbor.b * sobel_kernel[l + 1][k + 1];
-        }
-    }
-
-    int gy_r = 0;
-    int gy_g = 0;
-    int gy_b = 0;
-    for (int l = -1; l <= 1; l++) {
-        for (int k = -1; k <= 1; k++) {
-            Pixel neighbor = get_pixel(image, x + k, y + l);
-            gy_r += neighbor.r * sobel_kernel[k + 1][l + 1];
-            gy_g += neighbor.g * sobel_kernel[k + 1][l + 1];
-            gy_b += neighbor.b * sobel_kernel[k + 1][l + 1];
-        }
-    }
-
-    return {
-        static_cast<char>(clamp(static_cast<int>(
-                sqrt(gx_r * gx_r + gy_r * gy_r)), 0, 255)),
-        static_cast<char>(clamp(static_cast<int>(
-                sqrt(gx_g * gx_g + gy_g * gy_g)), 0, 255)),
-        static_cast<char>(clamp(static_cast<int>(
-                sqrt(gx_b * gx_b + gy_b * gy_b)), 0, 255))
+// Definitions
+ImageMatrix SequentialSobelOperator(
+        const ImageMatrix& image, size_t width, size_t height
+) {
+    ConvolutionKernel convolutionByX = {
+            {-1, 0, +1},
+            {-2, 0, +2},
+            {-1, 0, +1}
     };
-}
 
-std::vector<std::vector<Pixel>> sobel(
-        const std::vector<std::vector<Pixel>>& image) {
-    std::vector<std::vector<Pixel>> result = std::vector<std::vector<Pixel>>(image);
-    for (int y = 0; y < image.size(); y++) {
-        for (int x = 0; x < image[0].size(); x++) {
-            result[y][x] = sobel_pixel(image, x, y);
-        }
-    }
-    return result;
-}
+    ConvolutionKernel convolutionByY = {
+            {-1, -2, -1},
+            {0, 0, 0},
+            {+1, +2, +1}
+    };
 
-std::vector<std::vector<Pixel>> sobel_std(
-        const std::vector<std::vector<Pixel>>& image) {
-    std::vector<std::vector<Pixel>> result = std::vector<std::vector<Pixel>>(image);
-    std::vector<std::thread> threads;
-    int threads_count = static_cast<int>(std::sqrt(image.size()));
-    int rows_per_thread = image.size() / threads_count + 1;
-    for (int t = 0; t < threads_count; t++) {
-        threads.emplace_back([t, rows_per_thread, &result, &image]() {
-            for (int y = t * rows_per_thread;
-                y < image.size() && y < (t + 1) * rows_per_thread;
-                y++) {
-                for (int x = 0; x < image[0].size(); x++) {
-                    result[y][x] = sobel_pixel(image, x, y);
+    ImageMatrix resultMatrix((height - 2) * (width - 2));
+
+    for (size_t y = 1; y < height - 1; ++y) {
+        for (size_t x = 1; x < width - 1; ++x) {
+            int dx = 0;
+            int dy = 0;
+
+            for (int j = -1; j <= 1; ++j) {
+                for (int i = -1; i <= 1; ++i) {
+                    auto intensity = image[(y + j) * width + x + i];
+
+                    dx += intensity * convolutionByX[j + 1][i + 1];
+                    dy += intensity * convolutionByY[j + 1][i + 1];
                 }
             }
-        });
+
+            auto magnitude = std::min(
+                    static_cast<int>(sqrt(dx * dx + dy * dy)),
+                    255);
+
+            resultMatrix[(y - 1) * (width - 2) + (x - 1)] = magnitude;
+        }
     }
-    for (int t = 0; t < threads_count; t++) {
-        threads[t].join();
+
+    return std::move(resultMatrix);
+}
+
+ImageMatrix ParallelSobelOperator(
+        const ImageMatrix& image, size_t width, size_t height
+) {
+    ImageMatrix localImage, localResult, totalParallelResult;
+
+    DistributeImage(image, localImage, width, height);
+
+    if (!localImage.empty()) {
+        localResult = SequentialSobelOperator(
+                localImage, width, localImage.size() / width);
     }
-    return result;
+
+    CollectImage(totalParallelResult, localResult, width - 2, height - 2);
+
+    return std::move(totalParallelResult);
+}
+
+void DistributeImage(const ImageMatrix& image, ImageMatrix& localImage, // NOLINT
+                     size_t width, size_t height) {
+    mpi::communicator world;
+
+    auto rank = world.rank();
+
+    auto [_, localImageSize] = LocalRowsOffsetAndCountForDistribution(
+            width, height, world.size(), rank);
+
+    localImage.resize(localImageSize, 0);
+
+    if (rank == 0) {
+        std::vector<int>
+            processesImagesSizes(world.size()),
+            processesImagesOffsets(world.size());
+
+        for (int i = 0; i < world.size(); ++i) {
+            auto [iProcessRowOffset, iProcessLocalImageSize] =
+                    LocalRowsOffsetAndCountForDistribution(width, height,
+                                                           world.size(), i);
+
+            processesImagesSizes[i] = iProcessLocalImageSize;
+            processesImagesOffsets[i] = iProcessRowOffset;
+        }
+
+        mpi::scatterv(
+                world, image.data(),
+                processesImagesSizes, processesImagesOffsets,
+                localImage.data(), processesImagesSizes[0], 0);
+    } else {
+        mpi::scatterv(
+            world, localImage.data(),
+            localImageSize, 0);
+    }
+}
+
+void CollectImage(ImageMatrix& totalImage, // NOLINT
+                  const ImageMatrix& localImage, size_t width, size_t height) {
+    mpi::communicator world;
+
+    auto rank = world.rank();
+
+    if (rank == 0) {
+        totalImage.resize(width * height, 0);
+
+        std::vector<int> processesImageSizes(world.size());
+
+        for (int i = 0; i < world.size(); ++i) {
+            auto iProcessLocalImageSize = LocalRowsCountForCollection(
+                    width, height, world.size(), i);
+
+            processesImageSizes[i] = iProcessLocalImageSize;
+        }
+
+        mpi::gatherv(
+                world, localImage, totalImage.data(),
+                processesImageSizes, 0);
+    } else {
+        mpi::gatherv(world, localImage, 0);
+    }
+}
+
+size_t LocalRowsCountForCollection(size_t width, size_t height,
+                                   size_t processesCount, size_t processRank
+) {
+    auto distributeRowsCount = height;
+
+    auto rowsPerProcess = distributeRowsCount / processesCount;
+    auto remainder = distributeRowsCount % processesCount;
+
+    auto rank = processRank;
+
+    auto localRowsCount = rowsPerProcess + (rank < remainder ? 1 : 0);
+
+    if (rank >= distributeRowsCount) {
+        return 0;
+    }
+
+    return localRowsCount * width;
+}
+
+std::pair<size_t, size_t> LocalRowsOffsetAndCountForDistribution(
+        size_t width, size_t height, size_t processesCount, size_t processRank
+) {
+    auto distributeRowsCount = height - 2;
+
+    auto rowsPerProcess = distributeRowsCount / processesCount;
+    auto remainder = distributeRowsCount % processesCount;
+
+    auto rank = processRank;
+
+    auto localRowsCount = rowsPerProcess +
+            (rank < remainder ? 1 : 0);
+    auto absoluteRowOffset = rank * rowsPerProcess +
+            (rank < remainder ? rank : remainder);
+
+    if (rank >= distributeRowsCount) {
+        return std::make_pair(0, 0);
+    }
+
+    return std::make_pair(absoluteRowOffset * width,
+                          (localRowsCount + 2) * width);
 }
