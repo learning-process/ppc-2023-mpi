@@ -58,11 +58,16 @@ std::vector<double> solve_linear_system_parallel(
     if (world.rank() == 0) {
         for (int proc = 1; proc < world.size(); proc++) {
             boost::mpi::scatter(
-                world, augmented_matrix[proc * delta],
-                delta * (n + 1), augmented_matrix[proc * delta], 0);
+                world, A[proc * delta], delta, augmented_matrix[proc * delta], 0);
+            boost::mpi::scatter(
+                world, b.begin() + proc * delta, b.begin() + (proc + 1) * delta,
+                augmented_matrix[proc * delta].begin() + n, 0);
         }
     } else {
-        boost::mpi::scatter(world, augmented_matrix[0], delta * (n + 1), augmented_matrix[0], 0);
+        boost::mpi::scatter(
+            world, A[0], delta, augmented_matrix[0], 0);
+        boost::mpi::scatter(
+            world, b.begin(), b.begin() + delta, augmented_matrix[0].begin() + n, 0);
     }
 
     for (int i = 0; i < delta; ++i) {
@@ -83,9 +88,17 @@ std::vector<double> solve_linear_system_parallel(
         }
     }
 
-    boost::mpi::gather(
-        world, augmented_matrix[world.rank() * delta],
-         delta * (n + 1), augmented_matrix[world.rank() * delta], 0);
+    if (world.rank() == 0) {
+        for (int proc = 1; proc < world.size(); proc++) {
+            boost::mpi::gather(
+                world, augmented_matrix[proc * delta], delta * (n + 1),
+                augmented_matrix[proc * delta], 0);
+        }
+    } else {
+        boost::mpi::gather(
+            world, augmented_matrix[0], delta * (n + 1),
+            augmented_matrix[0], 0);
+    }
 
     std::vector<double> solution(n);
     for (int i = 0; i < n; ++i) {
