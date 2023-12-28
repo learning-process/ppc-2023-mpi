@@ -124,8 +124,7 @@ int main(int argc, char** argv) {
     int result = 0;
 
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = 
-                             ::testing::UnitTest::GetInstance()->listeners();
+    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
 
     if (MPI_Init(&argc, &argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, -1);
     result = RUN_ALL_TESTS();
