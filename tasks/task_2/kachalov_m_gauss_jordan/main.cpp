@@ -6,6 +6,8 @@
 #include <boost/mpi/communicator.hpp>
 
 TEST(GaussJordanTests, TestSequentialSolving) {
+    boost::mpi::environment env;
+    boost::mpi::communicator world;
     std::vector<std::vector<double>> A = {{2, 1, -1}, {-3, -1, 2}, {-2, 1, 2}};
     std::vector<double> b = {8, -11, -3};
 
@@ -31,6 +33,8 @@ TEST(GaussJordanTests, TestParallelSolving) {
 }
 
 TEST(GaussJordanTests, TestNoSolution) {
+    boost::mpi::environment env;
+    boost::mpi::communicator world;
     std::vector<std::vector<double>> A = {{2, -1, 3}, {4, 2, 1}, {-6, 3, -2}};
     std::vector<double> b = {9, 8, 1};
 
@@ -43,6 +47,8 @@ TEST(GaussJordanTests, TestNoSolution) {
 }
 
 TEST(GaussJordanTests, TestInfiniteSolutions) {
+    boost::mpi::environment env;
+    boost::mpi::communicator world;
     std::vector<std::vector<double>> A = {{1, 2, 3}, {4, 8, 12}, {7, 14, 21}};
     std::vector<double> b = {6, 18, 33};
 
@@ -58,9 +64,10 @@ TEST(GaussJordanTests, TestInfiniteSolutions) {
 TEST(GaussJordanTests, TestRandomMatrix) {
     boost::mpi::environment env;
     boost::mpi::communicator world;
+    std::vector<std::vector<double>> A;
 
     if (world.rank() == 0) {
-        std::vector<std::vector<double>> A = generate_random_matrix(3, 3);
+        A = generate_random_matrix(3, 3);
     }
     std::vector<double> b = {1, 2, 3};
 
@@ -90,10 +97,11 @@ TEST(GaussJordanTests, TestIdentityMatrix) {
 TEST(GaussJordanTests, TestLargeMatrix) {
     boost::mpi::environment env;
     boost::mpi::communicator world;
+    std::vector<std::vector<double>> A;
 
     const int matrixSize = 10;
     if (world.rank() == 0) {
-        std::vector<std::vector<double>> A = generate_random_matrix(matrixSize, matrixSize);
+        A = generate_random_matrix(matrixSize, matrixSize);
     }
     std::vector<double> b(matrixSize, 1.0);
 
