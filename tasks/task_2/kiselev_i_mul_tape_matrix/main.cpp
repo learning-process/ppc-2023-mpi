@@ -63,7 +63,6 @@ TEST(MulMatrix_test, test_4x4_and_4x4_of_1) {
         vecA[i] = 1;
         vecB[i] = 1;
     }
-  
     std::vector<int> resPar = ParMulMatrix(&vecA, &vecB, n, m);
 
     if (rankProc == 0) {
@@ -109,7 +108,6 @@ TEST(MulMatrix_test, test_6x6_and_6x6_of_progression) {
         vecA[i] = i;
         vecB[i] = i;
     }
-    
     std::vector<int> resPar = ParMulMatrix(&vecA, &vecB, n, m);
 
     if (rankProc == 0) {
