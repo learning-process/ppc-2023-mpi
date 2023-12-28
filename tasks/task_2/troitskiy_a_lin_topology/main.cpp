@@ -6,7 +6,9 @@
 
 TEST(LinearTopology, Test_procs_num_2) {
     // assemble
-    int rank = 0, world_size = 0, data = 0;
+    int rank = 0;
+    int world_size = 0;
+    int data = 0;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
@@ -14,7 +16,7 @@ TEST(LinearTopology, Test_procs_num_2) {
     const int receiving_rank = 1, sending_rank = 0;
 
     if (rank == sending_rank) {
-        data = 42;
+        data = 50;
     }
 
     // act
@@ -22,7 +24,7 @@ TEST(LinearTopology, Test_procs_num_2) {
 
     // assert
     if (rank == receiving_rank) {
-        ASSERT_EQ(42, data);
+        ASSERT_EQ(50, data);
     }
 }
 
@@ -39,7 +41,7 @@ TEST(LinearTopology, Test_descending) {
     const int sending_rank = world_size - 1;
 
     if (rank == sending_rank) {
-        data = 42;
+        data = 50;
     }
 
     // act
@@ -47,7 +49,7 @@ TEST(LinearTopology, Test_descending) {
 
     // assert
     if (rank == receiving_rank) {
-         ASSERT_EQ(42, data);
+         ASSERT_EQ(50, data);
     }
 }
 
@@ -64,7 +66,7 @@ TEST(LinearTopology, Test_mid_descending) {
     const int sending_rank = world_size / 2;
 
     if (rank == sending_rank) {
-        data = 42;
+        data = 50;
     }
 
     // act
@@ -72,7 +74,7 @@ TEST(LinearTopology, Test_mid_descending) {
 
     // assert
     if (rank == receiving_rank) {
-        ASSERT_EQ(42, data);
+        ASSERT_EQ(50, data);
     }
 }
 
@@ -86,7 +88,7 @@ TEST(LinearTopology, Test_ascending) {
     const int receiving_rank = world_size - 1, sending_rank = 0;
 
     if (rank == sending_rank) {
-        data = 42;
+        data = 50;
     }
 
     // act
@@ -94,7 +96,7 @@ TEST(LinearTopology, Test_ascending) {
 
     // assert
     if (rank == receiving_rank) {
-        ASSERT_EQ(42, data);
+        ASSERT_EQ(50, data);
     }
 }
 
@@ -108,7 +110,7 @@ TEST(LinearTopology, Test_mid_ascending) {
     const int receiving_rank = world_size - 1, sending_rank = world_size / 2;
 
     if (rank == sending_rank) {
-        data = 42;
+        data = 50;
     }
 
     // act
@@ -116,7 +118,7 @@ TEST(LinearTopology, Test_mid_ascending) {
 
     // assert
     if (rank == receiving_rank) {
-        ASSERT_EQ(42, data);
+        ASSERT_EQ(50, data);
     }
 }
 
