@@ -1,8 +1,8 @@
 // Copyright 2023 Platonova Maria
 #include <algorithm>
 #include <cmath>
-#include "task_3/platonova_m_sobel_edge/sobel_edge.h"
 #include "../../../3rdparty/unapproved/unapproved.h"
+#include "task_3/platonova_m_sobel_edge/sobel_edge.h"
 
 static std::vector<std::vector<int>> sobel_kernel = {
     { 1, 2, 1},
