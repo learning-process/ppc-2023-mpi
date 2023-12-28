@@ -18,8 +18,8 @@ void getRandMatrix(std::vector<double>* matrix, int N, int n) {
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             (*matrix)[i * N + j] =
-             static_cast<double>(static_cast<int>(gen()) % 200 - 100) 
-             / static_cast<double>(10);
+             static_cast<double>(static_cast<int>(gen()) % 200 - 100)
+              / static_cast<double>(10);
 }
 
 bool isMatrEqual(std::vector<double> matrixa,

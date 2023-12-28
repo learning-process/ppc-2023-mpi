@@ -13,11 +13,13 @@
 
 #include <string>
 
-std::vector<double> sequentialMul(std::vector<double> matrixa, std::vector<double> matrixb, int n);
+std::vector<double> sequentialMul(std::vector<double> matrixa,
+ std::vector<double> matrixb, int n);
 
 void getRandMatrix(std::vector<double>* matrix, int N, int n);
 
-bool isMatrEqual(std::vector<double> matrixa, std::vector<double> matrixb, int n);
+bool isMatrEqual(std::vector<double> matrixa,
+ std::vector<double> matrixb, int n);
 
 void matrMalloc(double** matrix, int n);
 
@@ -25,4 +27,5 @@ void matrCalloc(double** matrix, int n);
 
 void print_matr(std::vector<double> matrix, int Size);
 
-std::vector<double> strassenAlgorithm(std::vector<double> matrixa, std::vector<double> matrixb, int n);
+std::vector<double> strassenAlgorithm(std::vector<double> matrixa,
+ std::vector<double> matrixb, int n);
