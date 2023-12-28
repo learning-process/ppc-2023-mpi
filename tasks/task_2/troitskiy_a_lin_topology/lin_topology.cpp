@@ -1,7 +1,7 @@
 // Copyright 2023 Troitskiy Alexandr
 
 #include <mpi.h>
-#include "./lin_topology.h"
+#include "tasks/task_2/troitskiy_a_lin_topology/lin_topology.h"
 
 
 bool IsInRoute(int current, int source, int destination) {
