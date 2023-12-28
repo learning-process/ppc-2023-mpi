@@ -5,6 +5,7 @@
 #include <vector>
 #include "task_2/bakhtiarov_a_broadcast/broadcast.h"
 
+
 TEST(broadcast, testInt) {
     int rank, size, root = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
