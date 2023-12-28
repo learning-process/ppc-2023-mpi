@@ -5,14 +5,14 @@
 #include <mpi.h>
 #include <iostream>
 #include <string>
-#include <random>
 #include <vector>
+#include <random>
 #include <cstdlib>
 #include <functional>
 #include <algorithm>
 
-int prevRank(int rank);
 int nextRank(int rank);
+int prevRank(int rank);
 bool isDownTime(int rank, int source, int receiver);
 void sendMessage(int* message, int source, int receiver);
 

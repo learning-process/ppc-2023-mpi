@@ -3,7 +3,7 @@
 #include <mpi.h>
 #include <random>
 #include <vector>
-#include "./ring.h"
+#include "task_2/kutarin_a_ring/ring.h"
 
 
 TEST(ringTest, CheckRankAndSize) {
@@ -81,19 +81,19 @@ TEST(ringTest, CorrectWork) {
 
 TEST(ringTest, EdgeCase) {
     int rank = 0;
-    int message = 42;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int message = 42;
     sendMessage(&message, 0, 0);
     ASSERT_EQ(message, 42);
 }
 
 int main(int argc, char** argv) {
-    int rcode = RUN_ALL_TESTS();
     ::testing::InitGoogleTest(&argc, argv);
     ::testing::TestEventListeners& listeners =
      ::testing::UnitTest::GetInstance()->listeners();
     if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
         MPI_Abort(MPI_COMM_WORLD, -1);
+    int rcode = RUN_ALL_TESTS();
     MPI_Finalize();
     return rcode;
 }
