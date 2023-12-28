@@ -8,12 +8,11 @@
 #include <iostream>
 #include <vector>
 
-std::vector<int> MultiplicateMatrix(std::vector<int>* A, std::vector<int>* B,
-                                    std::vector<int>* C, int max_size,
-                                    int count);
-std::vector<int> MultiplicateMatrixP(std::vector<int>* A,
-                                              std::vector<int>* B,
-                                              std::vector<int>* C,
-                                              int max_size);
+std::vector<int> MultiplicateMatrix(
+    std::vector<int>* A, std::vector<int>* B,
+    std::vector<int>* C, int max_size, int count);
+std::vector<int> MultiplicateMatrixP(
+    std::vector<int>* A, std::vector<int>* B,
+    std::vector<int>* C, int max_size);
 
 #endif  // TASKS_TASK_2_KOCHETOV_N_MULTIPLICATEMATRIX_MULTIPLICATE_MATRIX_H_

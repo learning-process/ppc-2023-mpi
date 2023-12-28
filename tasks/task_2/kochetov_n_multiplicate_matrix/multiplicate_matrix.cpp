@@ -1,9 +1,9 @@
 // Copyright 2023 Kochetov Nikolay
 #include "task_2/kochetov_n_multiplicate_matrix/multiplicate_matrix.h"
 
-std::vector<int> MultiplicateMatrix(std::vector<int>* A, std::vector<int>* B,
-                                    std::vector<int>* C, int max_size,
-                                    int count) {
+std::vector<int> MultiplicateMatrix(
+    std::vector<int>* A, std::vector<int>* B,
+    std::vector<int>* C, int max_size, int count) {
     for (int i = 0; i < count; i++) {
         for (int j = 0; j < max_size; j++) {
             (*C)[i * max_size + j] = 0;
@@ -16,10 +16,9 @@ std::vector<int> MultiplicateMatrix(std::vector<int>* A, std::vector<int>* B,
     return (*C);
 }
 
-std::vector<int> MultiplicateMatrixP(std::vector<int>* A,
-                                              std::vector<int>* B,
-                                              std::vector<int>* C,
-                                              int max_size) {
+std::vector<int> MultiplicateMatrixP(
+    std::vector<int>* A, std::vector<int>* B,
+    std::vector<int>* C, int max_size) {
     int rank = 0;
     int size = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -50,7 +49,7 @@ std::vector<int> MultiplicateMatrixP(std::vector<int>* A,
     std::vector<int> localA(sendcount[rank]);
 
     MPI_Scatterv((*A).data(), sendcount.data(), displ.data(), MPI_INT,
-                localA.data(), sendcount[rank], MPI_INT, 0, MPI_COMM_WORLD);
+        localA.data(), sendcount[rank], MPI_INT, 0, MPI_COMM_WORLD);
 
     MPI_Bcast((*B).data(), max_size * max_size, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -59,6 +58,6 @@ std::vector<int> MultiplicateMatrixP(std::vector<int>* A,
         &localA, &(*B), &localC, max_size, count[rank]);
 
     MPI_Gatherv(localC.data(), sendcount[rank], MPI_INT, (*C).data(),
-                sendcount.data(), displ.data(), MPI_INT, 0, MPI_COMM_WORLD);
+        sendcount.data(), displ.data(), MPI_INT, 0, MPI_COMM_WORLD);
     return (*C);
 }
