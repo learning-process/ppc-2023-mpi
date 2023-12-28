@@ -11,9 +11,9 @@
 #include <random>
 #include <utility>
 
-std::vector<double> DoubleRadixSortSeq(std::vector<double> vec);
-std::vector<double> generateRandomDoubleVector(int n, double min, double max);
-void SortByCount(double* input, double* temp, int byte_num, int n);
-std::vector<double> DoubleRadixSortParallel(std::vector<double> vec);
-std::vector<double> MergeVectors(const std::vector<double>& vec1, const std::vector<double>& vec2);
+std::vector<double> SequenceRadixSortDouble(std::vector<double> a , int n);
+std::vector<double> getRandomInput(int n, double fMin, double fMax);
+void CountingSort(double* inp, double* tmp, int byteNum, int n);
+std::vector<double> ParallelRadixSortDouble(std::vector<double> a, int n);
+std::vector<double> merge(const std::vector<double>& a, const std::vector<double>& b);
 #endif  // TASKS_TASK_3_TROITSKIY_A_DOUBLE_SORT_SIMPLE_MERGE_DOUBLE_RADIX_SORT_H_
