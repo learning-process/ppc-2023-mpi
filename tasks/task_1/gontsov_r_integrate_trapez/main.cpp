@@ -1,5 +1,5 @@
 // Copyright 2023 Gontsov Roman
-//#include <gtest-mpi-listener.hpp>
+
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <cmath>
