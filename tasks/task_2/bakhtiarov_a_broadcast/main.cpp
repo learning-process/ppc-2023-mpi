@@ -1,9 +1,9 @@
 // Copyright 2023 Bakhtiarov Alexander
 #include <gtest/gtest.h>
-#include "task_2/bakhtiarov_a_broadcast/broadcast.h"
+#include <mpi.h>
 #include <iostream>
 #include <vector>
-#include <mpi.h>
+#include "task_2/bakhtiarov_a_broadcast/broadcast.h"
 
 TEST(broadcast, testInt) {
     int rank, size, root = 0;
@@ -165,5 +165,3 @@ int main(int argc, char** argv) {
 
     return result;
 }
-
-
