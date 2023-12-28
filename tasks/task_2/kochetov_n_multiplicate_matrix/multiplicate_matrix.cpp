@@ -1,5 +1,5 @@
 // Copyright 2023 Kochetov Nikolay
-#include "tasks/task_2/kochetov_n_multiplicate_matrix/multiplicate_matrix.h"
+#include "task_2/kochetov_n_multiplicate_matrix/multiplicate_matrix.h"
 
 std::vector<int> MultiplicateMatrix(std::vector<int>* A, std::vector<int>* B,
                                     std::vector<int>* C, int max_size,

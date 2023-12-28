@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#include "./multiplicateMatrix.h"
+#include "task_2/kochetov_n_multiplicate_matrix/multiplicate_matrix.h"
 
 TEST(MultiplicateMatrix, Test1) {
     int rank_proc = 0;
