@@ -1,6 +1,6 @@
 // Copyright 2023 Gontsov Roman
+#include "task_3/gontsov_r_monte_carlo_integrate/monte_carlo_integrate.h"
 #include <gtest/gtest.h>
-#include "./monte_carlo_integrate.h"
 #include <vector>
 #include <cmath>
 
