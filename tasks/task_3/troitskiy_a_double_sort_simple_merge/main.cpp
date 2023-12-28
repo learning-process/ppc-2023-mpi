@@ -36,13 +36,13 @@ TEST(MPI_TESTS, Test_size_16) {
     }
 }
 
-TEST(MPI_TESTS, Test_size_48) {
+TEST(MPI_TESTS, Test_size_45) {
     // assemble
     int rank = 0;
     int proc_count = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
-    int n = 48;
+    int n = 45;
     std::vector<double> actual, expected;
     if (rank == 0) {
         actual = generateRandomDoubleVector(n, 1, 100);
@@ -66,7 +66,7 @@ TEST(MPI_TESTS, Test_only_negatives) {
     int proc_count = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
-    int n = 64;
+    int n = 58;
     std::vector<double> actual, expected;
     if (rank == 0) {
         actual = generateRandomDoubleVector(n, 1, 100);
@@ -86,13 +86,13 @@ TEST(MPI_TESTS, Test_only_negatives) {
     }
 }
 
-TEST(MPI_TESTS, Test_1_element) {
+TEST(MPI_TESTS, Test_size_3) {
     // assemble
     int rank = 0;
     int proc_count = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
-    int n = 1;
+    int n = 3;
     std::vector<double> actual, expected;
     if (rank == 0) {
         actual = generateRandomDoubleVector(n, 1, 100);
@@ -109,13 +109,13 @@ TEST(MPI_TESTS, Test_1_element) {
     }
 }
 
-TEST(MPI_TESTS, Test_size_512) {
+TEST(MPI_TESTS, Test_size_450) {
     // assemble
     int rank = 0;
     int proc_count = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
-    int n = 512;
+    int n = 450;
     std::vector<double> actual, expected;
     if (rank == 0) {
         actual = generateRandomDoubleVector(n, 1, 100);
