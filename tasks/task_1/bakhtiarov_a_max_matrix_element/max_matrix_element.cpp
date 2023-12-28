@@ -8,7 +8,6 @@
 #include <stdexcept>
 #include <limits>
 #include "task_1/bakhtiarov_a_max_matrix_element/max_matrix_element.h"
-
 std::vector<int> generate_random_Matrix(int rows, int cols) {
     if ((rows <= 0) || (cols <= 0)) {
         throw std::invalid_argument("Should be greater than zero");
@@ -20,7 +19,6 @@ std::vector<int> generate_random_Matrix(int rows, int cols) {
     }
     return matrix;
 }
-
 int findMaxOfMatrix(const std::vector<int>& global_matrix) {
     int max = std::numeric_limits<int>::min();
     for (const auto& element : global_matrix) {
@@ -28,7 +26,6 @@ int findMaxOfMatrix(const std::vector<int>& global_matrix) {
     }
     return max;
 }
-
 int findMaxOfMatrixParallel(const std::vector<int>& global_matrix,
     int rows, int cols) {
     int size, rank;
