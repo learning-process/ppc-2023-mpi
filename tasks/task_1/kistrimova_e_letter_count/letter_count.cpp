@@ -37,7 +37,8 @@ int count_letters_par(const std::string& str) {
     return g_count;
 }
 std::string generateRandomRow(int size) {
-    const std::string dict = "nhcdhbhdbhbdhvbhdbvhdhvh32843875647474838GHVFCSDXCDFGBNHJKMSXDCFVGBH!@#$%^&*()_+№;%:?*-=,`~<>";
+    const std::string dict =
+        "nhbdhvbhdbvhdhvh328438756474MSXDCFVGBH!@#$%^&*()_+№;%:?*-=,`~<>";
     std::string result;
     result.reserve(size);
     for (int i = 0; i < size; ++i) {
