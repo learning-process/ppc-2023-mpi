@@ -1,8 +1,8 @@
 // Copyright 2023 Gontsov Roman
 #include <gtest/gtest.h>
+#include "./monte_carlo_integrate.h"
 #include <vector>
 #include <cmath>
-#include "./monte_carlo_integrate.h"
 
 const double relative_error = 0.1;
 

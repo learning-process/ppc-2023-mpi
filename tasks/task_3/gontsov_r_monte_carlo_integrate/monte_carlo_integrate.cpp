@@ -1,8 +1,9 @@
 // Copyright 2023 Gontsov Roman
-#include <random>
-#include <iostream>
+
 #include "task_3/gontsov_r_monte_carlo_integrate/monte_carlo_integrate.h"
 #include "../../../3rdparty/unapproved/unapproved.h"
+#include <random>
+#include <iostream>
 
 double getIntegralMonteCarlo(
     const std::function<double(const std::vector<double>&)>& f,
