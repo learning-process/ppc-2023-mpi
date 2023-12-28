@@ -1,5 +1,5 @@
 // Copyright 2023 Kiselev Igor
-#include "task_3/kiselev_i_strassen_mul/strassen_mul.h"
+#include "task_3/kiselev_i_strassen_mul_double/strassen_mul.h"
 
 std::vector<std::vector<double>> sumMatrix(const std::vector<std::vector<double>> &sumA,
     const std::vector<std::vector<double>> &sumB, int size, bool sign) {
