@@ -1,4 +1,4 @@
-// Copyright 2023 Troitskiy Alexandr
+// Copyright 2023 Troitskiy Alexander
 #pragma once
 #include <mpi.h>
 #include <vector>
