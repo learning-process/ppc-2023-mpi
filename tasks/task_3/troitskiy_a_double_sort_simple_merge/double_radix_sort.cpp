@@ -1,6 +1,6 @@
 // Copyright 2023 Troitskiy Alexandr
 
-#include "tasks/task_3/troitskiy_a_double_sort_simple_merge/double_radix_sort.h"
+#include "task_3/troitskiy_a_double_sort_simple_merge/double_radix_sort.h"
 
 void SortByCount(double *input, double *temp, int byte_num, int n) {
     std::vector<std::vector<int>> count(256);
