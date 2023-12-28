@@ -56,7 +56,8 @@ std::vector<double> sumMatrixColParallel
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    std::vector<double> localMatrix(countAndOffsetDistribution(row, rank).first * col);
+    std::vector<double> localMatrix(
+        countAndOffsetDistribution(row, rank).first * col);
 
     std::pair<std::vector<int>, std::vector<int>> dist1;
     std::vector<int> counts1, offsets1;
@@ -65,9 +66,12 @@ std::vector<double> sumMatrixColParallel
         counts1 = dist1.first;
         offsets1 = dist1.second;
     }
-    MPI_Scatterv(matrix.data(), counts1.data(), offsets1.data(), MPI_DOUBLE, localMatrix.data(), localMatrix.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(matrix.data(), counts1.data(), offsets1.data(),
+     MPI_DOUBLE, localMatrix.data(), localMatrix.size(),
+      MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    auto localResult = sumMatrixColEquential(localMatrix, localMatrix.size() / col, col);
+    auto localResult = sumMatrixColEquential(localMatrix,
+     localMatrix.size() / col, col);
 
     std::vector<double> globalResult(row, 0.0);
 
@@ -78,7 +82,9 @@ std::vector<double> sumMatrixColParallel
         counts2 = dist2.first;
         offsets2 = dist2.second;
     }
-    MPI_Gatherv(localResult.data(), localResult.size(), MPI_DOUBLE, globalResult.data(), counts2.data(), offsets2.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(localResult.data(), localResult.size(),
+     MPI_DOUBLE, globalResult.data(), counts2.data(), offsets2.data(),
+      MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     return globalResult;
 }
@@ -92,7 +98,8 @@ std::pair<int, int> countAndOffsetDistribution
     int remainder = row % size;
 
     auto localCount = rowPerProc + (rank < remainder ? 1 : 0);
-    auto localOffset = rank * rowPerProc + (rank < remainder ? rank : remainder);
+    auto localOffset = rank * rowPerProc +
+     (rank < remainder ? rank : remainder);
 
     return std::make_pair(localCount, localOffset);
 }
