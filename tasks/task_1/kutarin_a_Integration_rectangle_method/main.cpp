@@ -1,7 +1,7 @@
 // Copyright 2023 Kutarin Aleksandr
 #include <gtest/gtest.h>
 #include <math.h>
-#include "task_1/kutarin_a_integration_rectangle_method/integrating_rect.h"
+#include "task_1/kutarin_a_Integration_rectangle_method/integrating_rect.h"
 #define ESTIMATE 0.01
 
 TEST(Parallel_Integral, sin) {
