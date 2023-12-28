@@ -3,7 +3,8 @@
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 
-std::vector<double> solve_linear_system_sequential(const std::vector<std::vector<double>>& A, const std::vector<double>& b) {
+std::vector<double> solve_linear_system_sequential(
+    const std::vector<std::vector<double>>& A, const std::vector<double>& b) {
     int n = A.size();
     std::vector<std::vector<double>> augmented_matrix(n, std::vector<double>(n + 1, 0.0));
 
@@ -38,7 +39,8 @@ std::vector<double> solve_linear_system_sequential(const std::vector<std::vector
     return solution;
 }
 
-std::vector<double> solve_linear_system_parallel(const std::vector<std::vector<double>>& A, const std::vector<double>& b) {
+std::vector<double> solve_linear_system_parallel(
+    const std::vector<std::vector<double>>& A, const std::vector<double>& b) {
     boost::mpi::environment env;
     boost::mpi::communicator world;
 
@@ -55,7 +57,9 @@ std::vector<double> solve_linear_system_parallel(const std::vector<std::vector<d
 
     if (world.rank() == 0) {
         for (int proc = 1; proc < world.size(); proc++) {
-            boost::mpi::scatter(world, augmented_matrix[proc * delta], delta * (n + 1), augmented_matrix[proc * delta], 0);
+            boost::mpi::scatter(
+                world, augmented_matrix[proc * delta],
+                delta * (n + 1), augmented_matrix[proc * delta], 0);
         }
     } else {
         boost::mpi::scatter(world, augmented_matrix[0], delta * (n + 1), augmented_matrix[0], 0);
@@ -79,7 +83,9 @@ std::vector<double> solve_linear_system_parallel(const std::vector<std::vector<d
         }
     }
 
-    boost::mpi::gather(world, augmented_matrix[world.rank() * delta], delta * (n + 1), augmented_matrix[world.rank() * delta], 0);
+    boost::mpi::gather(
+        world, augmented_matrix[world.rank() * delta],
+         delta * (n + 1), augmented_matrix[world.rank() * delta], 0);
 
     std::vector<double> solution(n);
     for (int i = 0; i < n; ++i) {

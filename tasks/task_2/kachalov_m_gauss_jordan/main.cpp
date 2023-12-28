@@ -34,12 +34,11 @@ TEST(GaussJordanTests, TestNoSolution) {
     std::vector<double> b = {9, 8, 1};
 
     std::vector<double> parallelSolution = solve_linear_system_parallel(A, b);
-    if (world.rank() == 0){
+    if (world.rank() == 0) {
        std::vector<double> sequentialSolution = solve_linear_system_sequential(A, b);
        ASSERT_TRUE(sequentialSolution.empty());
-       ASSERT_TRUE(parallelSolution.empty()); 
+       ASSERT_TRUE(parallelSolution.empty());
     }
-
 }
 
 TEST(GaussJordanTests, TestInfiniteSolutions) {
@@ -48,7 +47,7 @@ TEST(GaussJordanTests, TestInfiniteSolutions) {
 
     std::vector<double> parallelSolution = solve_linear_system_parallel(A, b);
 
-    if (world.rank() == 0){
+    if (world.rank() == 0) {
        std::vector<double> sequentialSolution = solve_linear_system_sequential(A, b);
        ASSERT_EQ(sequentialSolution.size(), 0);
        ASSERT_EQ(parallelSolution.size(), 0);
