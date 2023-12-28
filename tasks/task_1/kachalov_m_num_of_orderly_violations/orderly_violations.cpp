@@ -1,8 +1,9 @@
+// Copyright 2023 Kachalov Mikhail
 #include "task_1/kachalov_m_num_of_orderly_violations/orderly_violations.h"
-#include <boost/mpi/communicator.hpp>
-#include <boost/mpi/collectives.hpp>
 #include <random>
 #include <ctime>
+#include <boost/mpi/communicator.hpp>
+#include <boost/mpi/collectives.hpp>
 
 int num_of_orderly_violations(const std::vector<int>& vec) {
     int violations = 0;

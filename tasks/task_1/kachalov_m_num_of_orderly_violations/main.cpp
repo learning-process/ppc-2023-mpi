@@ -1,3 +1,4 @@
+// Copyright 2023 Kachalov Mikhail
 #include <gtest/gtest.h>
 #include <vector>
 #include "./orderly_violations.h"
@@ -7,6 +8,7 @@
 TEST(OrderlyViolationsTests, TestEmptyVector) {
     boost::mpi::communicator world;
     std::vector<int> vec;
+
     int parallelViolations = parallel_num_of_orderly_violations(vec);
 
     if (world.rank() == 0) {
@@ -18,6 +20,7 @@ TEST(OrderlyViolationsTests, TestEmptyVector) {
 TEST(OrderlyViolationsTests, TestIncreasingOrder) {
     boost::mpi::communicator world;
     std::vector<int> vec = {1, 2, 3, 4, 5};
+
     int parallelViolations = parallel_num_of_orderly_violations(vec);
 
     if (world.rank() == 0) {
@@ -29,6 +32,7 @@ TEST(OrderlyViolationsTests, TestIncreasingOrder) {
 TEST(OrderlyViolationsTests, TestDecreasingOrder) {
     boost::mpi::communicator world;
     std::vector<int> vec = {5, 4, 3, 2, 1};
+
     int parallelViolations = parallel_num_of_orderly_violations(vec);
 
     if (world.rank() == 0) {
@@ -40,6 +44,7 @@ TEST(OrderlyViolationsTests, TestDecreasingOrder) {
 TEST(OrderlyViolationsTests, TestEqualElements) {
     boost::mpi::communicator world;
     std::vector<int> vec = {1, 1, 1, 1, 1};
+
     int parallelViolations = parallel_num_of_orderly_violations(vec);
 
     if (world.rank() == 0) {
@@ -51,10 +56,11 @@ TEST(OrderlyViolationsTests, TestEqualElements) {
 TEST(OrderlyViolationsTests, TestRandomVector) {
     boost::mpi::communicator world;
     std::vector<int> vec;
-    if (world.rank() == 0)
-    {
+
+    if (world.rank() == 0) {
         vec = get_random_vector(100);
     }
+
     int parallelViolations = parallel_num_of_orderly_violations(vec);
 
     if (world.rank() == 0) {
@@ -66,10 +72,11 @@ TEST(OrderlyViolationsTests, TestRandomVector) {
 TEST(OrderlyViolationsTests, TestLargeVector) {
     boost::mpi::communicator world;
     std::vector<int> vec;
-    if (world.rank() == 0)
-    {
+
+    if (world.rank() == 0) {
         vec = get_random_vector(1000);
     }
+
     int parallelViolations = parallel_num_of_orderly_violations(vec);
 
     if (world.rank() == 0) {
