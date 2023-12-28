@@ -8,7 +8,7 @@
 TEST(GaussJordanTests, TestSequentialSolving) {
     std::vector<std::vector<double>> A = {{2, 1, -1}, {-3, -1, 2}, {-2, 1, 2}};
     std::vector<double> b = {8, -11, -3};
-    
+
     if (world.rank() == 0) {
         std::vector<double> sequentialSolution = solve_linear_system_sequential(A, b);
         ASSERT_EQ(sequentialSolution.size(), b.size());
