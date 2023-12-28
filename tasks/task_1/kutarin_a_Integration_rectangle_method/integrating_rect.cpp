@@ -1,6 +1,9 @@
 // Copyright 2023 Kutarin Aleksandr
-#include "task_1/kutarin_a_integration_rectangle_method/integrating_rect.h"
+#include "task_1/kutarin_a_Integration_rectangle_method/integrating_rect.h"
 #include <math.h>
+
+
+
 double sin_func(double x) { return sin(x); }
 double cos_func(double x) { return cos(x); }
 double sin_cos(double x) { return sin(x) * cos(x); }
