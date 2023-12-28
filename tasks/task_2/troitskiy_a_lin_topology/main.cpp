@@ -48,14 +48,17 @@ TEST(LinearTopology, Test_procs_num_2) {
 //     }
 // }
 
-TEST(MPI_TESTS, Test_mid_descending) {
+TEST(LinearTopology, Test_mid_descending) {
     // assemble
-    int rank = 0, world_size = 0, data = 0;
+    int rank = 0;
+    int world_size = 0;
+    int data = 0;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 
-    const int receiving_rank = 0, sending_rank = world_size / 2;
+    const int receiving_rank = 0;
+    const int sending_rank = world_size / 2;
 
     if (rank == sending_rank) {
         data = 42;
