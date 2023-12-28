@@ -1,7 +1,7 @@
 // Copyright 2023 Kochetov Nikolay
 #include <gtest/gtest.h>
 #include <vector>
-#include "./max_of_vector_elements.h"
+#include "task_1/kochetov_n_max_of_vector_elements/max_of_vector_elements.h"
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 
@@ -94,7 +94,8 @@ int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator comm;
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
+    ::testing::TestEventListeners& listeners =
+        ::testing::UnitTest::GetInstance()->listeners();
     if (comm.rank() != 0) {
         delete listeners.Release(listeners.default_result_printer());
     }
