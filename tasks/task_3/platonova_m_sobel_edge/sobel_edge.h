@@ -15,16 +15,17 @@ struct Pixel {
     bool operator==(const Pixel& o) const;
 };
 
-using Image = std::vector<std::vector<Pixel>>;
 
-Image white_image(int w, int h);
+std::vector<std::vector<Pixel>> white_image(int w, int h);
 
-Image black_image(int w, int h);
+std::vector<std::vector<Pixel>> black_image(int w, int h);
 
-Image random_image(int w, int h);
+std::vector<std::vector<Pixel>> random_image(int w, int h);
 
-Image sobel(const Image& image);
+std::vector<std::vector<Pixel>> sobel(
+            const std::vector<std::vector<Pixel>>& image);
 
-Image sobel_std(const Image& image);
+std::vector<std::vector<Pixel>> sobel_std(
+            const std::vector<std::vector<Pixel>>& image);
 
 #endif  // TASKS_TASK_3_PLATONOVA_M_SOBEL_EDGE_SOBEL_EDGE_H_

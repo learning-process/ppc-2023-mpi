@@ -1,6 +1,7 @@
 // Copyright 2023 Platonova Maria
 #include <algorithm>
 #include <cmath>
+#include "../../../3rdparty/unapproved/unapproved.h"
 #include "task_3/platonova_m_sobel_edge/sobel_edge.h"
 
 static std::vector<std::vector<int>> sobel_kernel = {
@@ -21,26 +22,27 @@ static int clamp(int value, int min, int max) {
     return std::max(min, std::min(value, max));
 }
 
-static Pixel get_pixel(const Image& image, int x, int y) {
+static Pixel get_pixel(
+    const std::vector<std::vector<Pixel>>& image, int x, int y) {
     return image[clamp(y, 0, image.size() - 1)]
                 [clamp(x, 0, image[0].size() - 1)];
 }
 
-Image white_image(int w, int h) {
+std::vector<std::vector<Pixel>> white_image(int w, int h) {
     const Pixel white = { 255, 255, 255 };
-    Image res(h, std::vector<Pixel>(w, white));
+    std::vector<std::vector<Pixel>> res(h, std::vector<Pixel>(w, white));
     return res;
 }
 
-Image black_image(int w, int h) {
+std::vector<std::vector<Pixel>> black_image(int w, int h) {
     const Pixel black = { 0, 0, 0 };
-    Image res(h, std::vector<Pixel>(w, black));
+    std::vector<std::vector<Pixel>> res(h, std::vector<Pixel>(w, black));
     return res;
 }
 
-Image random_image(int w, int h) {
+std::vector<std::vector<Pixel>> random_image(int w, int h) {
     const Pixel black = { 0, 0, 0 };
-    Image res(h, std::vector<Pixel>(w, black));
+    std::vector<std::vector<Pixel>> res(h, std::vector<Pixel>(w, black));
     std::random_device rnd_device;
     std::mt19937 mt_gen(rnd_device());
     for (int y = 0; y < res.size(); y++) {
@@ -53,7 +55,8 @@ Image random_image(int w, int h) {
     return res;
 }
 
-static Pixel sobel_pixel(const Image& image, int x, int y) {
+static Pixel sobel_pixel(
+        const std::vector<std::vector<Pixel>>& image, int x, int y) {
     int gx_r = 0;
     int gx_g = 0;
     int gx_b = 0;
@@ -88,8 +91,9 @@ static Pixel sobel_pixel(const Image& image, int x, int y) {
     };
 }
 
-Image sobel(const Image& image) {
-    Image result = Image(image);
+std::vector<std::vector<Pixel>> sobel(
+        const std::vector<std::vector<Pixel>>& image) {
+    std::vector<std::vector<Pixel>> result = std::vector<std::vector<Pixel>>(image);
     for (int y = 0; y < image.size(); y++) {
         for (int x = 0; x < image[0].size(); x++) {
             result[y][x] = sobel_pixel(image, x, y);
@@ -98,8 +102,9 @@ Image sobel(const Image& image) {
     return result;
 }
 
-Image sobel_std(const Image& image) {
-    Image result = Image(image);
+std::vector<std::vector<Pixel>> sobel_std(
+        const std::vector<std::vector<Pixel>>& image) {
+    std::vector<std::vector<Pixel>> result = std::vector<std::vector<Pixel>>(image);
     std::vector<std::thread> threads;
     int threads_count = static_cast<int>(std::sqrt(image.size()));
     int rows_per_thread = image.size() / threads_count + 1;

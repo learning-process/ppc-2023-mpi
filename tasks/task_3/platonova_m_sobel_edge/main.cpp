@@ -5,56 +5,56 @@
 #include "task_3/platonova_m_sobel_edge/sobel_edge.h"
 
 TEST(STD_Sobel, Empty_Image) {
-    Image image = white_image(15, 15);
-    Image excected = black_image(15, 15);
-    Image result = sobel_std(image);
+    std::vector<std::vector<Pixel>> image = white_image(15, 15);
+    std::vector<std::vector<Pixel>> excected = black_image(15, 15);
+    std::vector<std::vector<Pixel>> result = sobel_std(image);
     ASSERT_EQ(true, true);
 }
 
 TEST(STD_Sobel, Image_3x3_Mono) {
-    Image image = {
+    std::vector<std::vector<Pixel>> image = {
         { {255, 255, 0}, {255, 255, 0}, {255, 255, 0} },
         { {255, 255, 0}, {255, 255, 0}, {255, 255, 0} },
         { {255, 255, 0}, {255, 255, 0}, {255, 255, 0} }
     };
-    Image expected = sobel(image);
-    Image result = sobel_std(image);
+    std::vector<std::vector<Pixel>> expected = sobel(image);
+    std::vector<std::vector<Pixel>> result = sobel_std(image);
     ASSERT_EQ(expected, result);
 }
 
 TEST(STD_Sobel, Image_3x3_Duo) {
-    Image image = {
+    std::vector<std::vector<Pixel>> image = {
         { {255, 255, 0}, {255, 255, 0}, {0, 0, 255} },
         { {255, 255, 0}, {255, 255, 0}, {0, 0, 255} },
         { {0, 0, 255}, {0, 0, 255}, {0, 0, 255} }
     };
-    Image expected = sobel(image);
-    Image result = sobel_std(image);
+    std::vector<std::vector<Pixel>> expected = sobel(image);
+    std::vector<std::vector<Pixel>> result = sobel_std(image);
     ASSERT_EQ(expected, result);
 }
 
 TEST(STD_Sobel, Image_3x3_Triple) {
-    Image image = {
+    std::vector<std::vector<Pixel>> image = {
         { {255, 0, 0}, {255, 0, 0}, {255, 0, 0} },
         { {0, 255, 0}, {0, 255, 0}, {0, 255, 255} },
         { {0, 255, 0}, {0, 255, 0}, {0, 255, 255} }
     };
-    Image expected = sobel(image);
-    Image result = sobel_std(image);
+    std::vector<std::vector<Pixel>> expected = sobel(image);
+    std::vector<std::vector<Pixel>> result = sobel_std(image);
     ASSERT_EQ(expected, result);
 }
 
 TEST(STD_Sobel, Image_300x300) {
-    Image image = random_image(300, 300);
-    Image expected = sobel(image);
-    Image result = sobel_std(image);
+    std::vector<std::vector<Pixel>> image = random_image(300, 300);
+    std::vector<std::vector<Pixel>> expected = sobel(image);
+    std::vector<std::vector<Pixel>> result = sobel_std(image);
     ASSERT_EQ(expected, result);
 }
 
 TEST(STD_Sobel, Image_500x2000) {
-    Image image = random_image(500, 2000);
-    Image expected = sobel(image);
-    Image result = sobel_std(image);
+    std::vector<std::vector<Pixel>> image = random_image(500, 2000);
+    std::vector<std::vector<Pixel>> expected = sobel(image);
+    std::vector<std::vector<Pixel>> result = sobel_std(image);
     ASSERT_EQ(expected, result);
 }
 
