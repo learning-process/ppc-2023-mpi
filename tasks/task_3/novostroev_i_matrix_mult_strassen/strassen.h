@@ -1,22 +1,28 @@
 // Copyright 2023 Novostroev Ivan
 #pragma once
 #include <mpi.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 #include <vector>
 #include <random>
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <utility>
 
-std::vector<double> genVec(int n);
+#include <string>
 
-std::vector<double> mult(const std::vector<double>& A,
-                         const std::vector<double>& B, int n);
+std::vector<double> sequentialMul(std::vector<double> matrixa, std::vector<double> matrixb, int n);
 
-std::vector<double> add(std::vector<double> A, std::vector<double> B);
+void getRandMatrix(std::vector<double>* matrix, int N, int n);
 
-std::vector<double> sub(const std::vector<double>& A,
- const std::vector<double>& B);
+bool isMatrEqual(std::vector<double> matrixa, std::vector<double> matrixb, int n);
 
-std::vector<double> strassen(const std::vector<double>& A,
- const std::vector<double>& B, std::size_t n);
+void matrMalloc(double** matrix, int n);
 
-std::vector<double> strassenMPI(const std::vector<double>& A,
- const std::vector<double>& B,
-  std::size_t n, int rank, int size);
+void matrCalloc(double** matrix, int n);
+
+void print_matr(std::vector<double> matrix, int Size);
+
+std::vector<double> strassenAlgorithm(std::vector<double> matrixa, std::vector<double> matrixb, int n);

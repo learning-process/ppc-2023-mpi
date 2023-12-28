@@ -1,121 +1,145 @@
 // Copyright 2023 Novostroev Ivan
 #include "task_3/novostroev_i_matrix_mult_strassen/strassen.h"
 
-std::vector<double> genVec(int n) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<double> dis(0.0, 9.0);
-    std::vector<double> vec(n);
-
+std::vector<double> sequentialMul(std::vector<double> matrixa,
+ std::vector<double> matrixb, int n) {
+    std::vector<double> resmatrix(n * n);
     for (int i = 0; i < n; i++)
-        vec[i] = dis(gen);
-
-    return vec;
+        for (int j = 0; j < n; j++)
+            for (int k = 0; k < n; k++)
+                resmatrix[i * n + j] +=
+                 matrixa[i * n + k] * matrixb[k * n + j];
+    return resmatrix;
 }
 
-std::vector<double> mult(const std::vector<double>& A,
-                               const std::vector<double>& B, int n) {
-    std::vector<double> C(n * n, 0);
+void getRandMatrix(std::vector<double>* matrix, int N, int n) {
+    std::random_device dev;
+    std::mt19937 gen(dev());
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            (*matrix)[i * N + j] =
+             static_cast<double>(static_cast<int>(gen()) % 200 - 100) 
+             / static_cast<double>(10);
+}
 
-    for (std::size_t i = 0; i < n; i++) {
-        for (std::size_t j = 0; j < n; j++) {
-            for (std::size_t k = 0; k < n; k++) {
-                C[i * n + j] += A.at(i * n + k) * B.at(k * n + j);
+bool isMatrEqual(std::vector<double> matrixa,
+ std::vector<double> matrixb, int n) {
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            if (abs(matrixa[i * n + j] - matrixb[i * n + j]) > 0.00001)
+                return false;
+    return true;
+}
+
+void matrMalloc(double** matrix, int n) {
+    *matrix = reinterpret_cast<double*>(malloc(n * n * sizeof(double)));
+}
+
+void matrCalloc(double** matrix, int n) {
+    *matrix = reinterpret_cast<double*>(calloc(n * n, sizeof(double)));
+}
+
+void print_matr(std::vector<double> matrix, int Size) {
+    for (int i = 0; i < Size; i++) {
+        for (int j = 0; j < Size; j++)
+            std::cout << matrix[i * Size + j] << " ";
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+std::vector<double> strassenAlgorithm(std::vector<double> matrixa,
+ std::vector<double> matrixb, int n) {
+    int size;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int sqrtSize = static_cast<int>(sqrt(static_cast<double>(size)));
+    if (sqrtSize * sqrtSize != size)
+        throw 0;
+
+    std::vector<double> cmatrix(n * n);
+    std::vector<int> coordinates_of_grid(2);
+    std::vector<int> dimSize(2, sqrtSize);
+    std::vector<int> periodic(2, 0);
+    std::vector<int> subDims(2);
+    subDims = { 0, 1 };
+    MPI_Comm cgrid;
+    MPI_Comm ccolumn;
+    MPI_Comm crow;
+
+    MPI_Cart_create(MPI_COMM_WORLD, 2,
+     dimSize.data(), periodic.data(), 0, &cgrid);
+    MPI_Cart_coords(cgrid, rank, 2, coordinates_of_grid.data());
+    MPI_Cart_sub(cgrid, subDims.data(), &crow);
+    std::swap(subDims[0], subDims[1]);
+    MPI_Cart_sub(cgrid, subDims.data(), &ccolumn);
+
+    int BSize = static_cast<int>(ceil(static_cast<double>(n) / sqrtSize));
+    int BBSize = BSize * BSize;
+    std::vector<double> pAblock(BBSize, 0);
+    std::vector<double> pBblock(BBSize, 0);
+    std::vector<double> pCblock(BBSize, 0);
+    if (rank == 0) {
+        for (int i = 0; i < BSize; i++)
+            for (int j = 0; j < BSize; j++) {
+                pAblock[i * BSize + j] = matrixa[i * n + j];
+                pBblock[i * BSize + j] = matrixb[i * n + j];
             }
+    }
+    int enlarged_size = BSize * sqrtSize;
+    MPI_Datatype typeofblock;
+    MPI_Type_vector(BSize, BSize, enlarged_size, MPI_DOUBLE, &typeofblock);
+    MPI_Type_commit(&typeofblock);
+
+    MPI_Status Status;
+    if (rank == 0) {
+        for (int l = 1; l < size; l++) {
+            MPI_Send(matrixa.data() + (l % sqrtSize) * BSize +
+             (l / sqrtSize) * n * BSize, 1, typeofblock, l, 0, cgrid);
+            MPI_Send(matrixb.data() + (l % sqrtSize) * BSize +
+             (l / sqrtSize) * n * BSize, 1, typeofblock, l, 1, cgrid);
         }
-    }
-    return C;
-}
-
-std::vector<double> add(std::vector<double> A, std::vector<double> B) {
-    std::vector<double> C(A.size());
-    for (int i = 0; i < A.size(); i++) C[i] = A[i] + B[i];
-    return C;
-}
-
-std::vector<double> sub(const std::vector<double>& A,
- const std::vector<double>& B) {
-    std::vector<double> C(A.size());
-    for (int i = 0; i < A.size(); i++) C[i] = A[i] - B[i];
-    return C;
-}
-
-std::vector<double> strassen(const std::vector<double>& A,
- const std::vector<double>& B, std::size_t n) {
-    if (n == 1) {
-        std::vector<double> C = {A[0] * B[0]};
-        return C;
+    } else {
+        MPI_Recv(pAblock.data(), BBSize, MPI_DOUBLE, 0, 0, cgrid, &Status);
+        MPI_Recv(pBblock.data(), BBSize, MPI_DOUBLE, 0, 1, cgrid, &Status);
     }
 
-    std::size_t m = n / 2;
-    std::vector<double> A11(m * m), A12(m * m), A21(m * m), A22(m * m);
-    std::vector<double> B11(m * m), B12(m * m), B21(m * m), B22(m * m);
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < m; j++) {
-            A11[i * m + j] = A[i * n + j];
-            A12[i * m + j] = A[i * n + (j + m)];
-            A21[i * m + j] = A[(i + m) * n + j];
-            A22[i * m + j] = A[(i + m) * n + (j + m)];
-            B11[i * m + j] = B[i * n + j];
-            B12[i * m + j] = B[i * n + (j + m)];
-            B21[i * m + j] = B[(i + m) * n + j];
-            B22[i * m + j] = B[(i + m) * n + (j + m)];
-        }
+
+    for (int i = 0; i < sqrtSize; i++) {
+        std::vector<double> tmpmatra(BBSize);
+        int bcast = (coordinates_of_grid[0] + i) % sqrtSize;
+        if (coordinates_of_grid[1] == bcast) tmpmatra = pAblock;
+        MPI_Bcast(tmpmatra.data(), BBSize, MPI_DOUBLE, bcast, crow);
+        for (int j = 0; j < BSize; j++)
+            for (int k = 0; k < BSize; k++) {
+                double temp = 0;
+                for (int l = 0; l < BSize; l++)
+                    temp += tmpmatra[j * BSize + l] * pBblock[l * BSize + k];
+                pCblock[j * BSize + k] += temp;
+            }
+        int nextp = coordinates_of_grid[0] + 1;
+        if (coordinates_of_grid[0] == sqrtSize - 1) nextp = 0;
+        int prevp = coordinates_of_grid[0] - 1;
+        if (coordinates_of_grid[0] == 0) prevp = sqrtSize - 1;
+        MPI_Sendrecv_replace(pBblock.data(), BBSize,
+         MPI_DOUBLE, prevp, 0, nextp, 0, ccolumn, &Status);
     }
-    std::vector<double> P1 = strassen(A11, sub(B12, B22), m);
-    std::vector<double> P2 = strassen(add(A11, A12), B22, m);
-    std::vector<double> P3 = strassen(add(A21, A22), B11, m);
-    std::vector<double> P4 = strassen(A22, sub(B21, B11), m);
-    std::vector<double> P5 = strassen(add(A11, A22), add(B11, B22), m);
-    std::vector<double> P6 = strassen(sub(A12, A22), add(B21, B22), m);
-    std::vector<double> P7 = strassen(sub(A11, A21), add(B11, B12), m);
-
-    std::vector<double> C(n * n);
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < m; j++) {
-            C[i * n + j] =
-                P5[i * m + j] + P4[i * m + j] - P2[i * m + j] + P6[i * m + j];
-            C[i * n + (j + m)] = P1[i * m + j] + P2[i * m + j];
-            C[(i + m) * n + j] = P3[i * m + j] + P4[i * m + j];
-            C[(i + m) * n + (j + m)] =
-                P5[i * m + j] + P1[i * m + j] - P3[i * m + j] - P7[i * m + j];
-        }
-    }
-
-    return C;
-}
-
-std::vector<double> strassenMPI(const std::vector<double>& A,
-                                const std::vector<double>& B,
-                                std::size_t n, int rank, int size) {
-    std::size_t m = n / 2;
-    std::vector<double> A_local(m * m), B_local(m * m), C_local(m * m, 0.0);
-
-    MPI_Scatter(A.data(), m * m,
-     MPI_DOUBLE, A_local.data(), m * m,
-      MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Scatter(B.data(), m * m,
-     MPI_DOUBLE, B_local.data(), m * m,
-      MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-    std::vector<double> P_local = strassen(A_local, B_local, m);
-
-    MPI_Gather(P_local.data(), m * m,
-     MPI_DOUBLE, C_local.data(), m * m,
-      MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {
-        std::vector<double> C(n * n);
-        for (int i = 0; i < size; ++i) {
-            for (std::size_t j = 0; j < m; ++j) {
-                for (std::size_t k = 0; k < m; ++k) {
-                    C[((i / (n / m)) * m + j) * n + (i % (n / m) * m + k)]
-                     = C_local[i * m * m + j * m + k];
-                }
-            }
-        }
-        return C;
+        for (int i = 0; i < BSize; i++)
+            for (int j = 0; j < BSize; j++)
+                cmatrix[i * n + j] = pCblock[i * BSize + j];
+    }
+    if (rank != 0)
+        MPI_Send(pCblock.data(), BBSize, MPI_DOUBLE, 0, 3, MPI_COMM_WORLD);
+    if (rank == 0) {
+        for (int i = 1; i < size; i++)
+            MPI_Recv(cmatrix.data() + (i % sqrtSize) * BSize +
+            (i / sqrtSize) * n *
+            BSize, BBSize, typeofblock, i, 3, MPI_COMM_WORLD, &Status);
     }
 
-    return std::vector<double>();
+    MPI_Type_free(&typeofblock);
+    return cmatrix;
 }
