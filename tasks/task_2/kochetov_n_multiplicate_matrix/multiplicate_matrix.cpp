@@ -55,7 +55,8 @@ std::vector<int> MultiplicateMatrixP(std::vector<int>* A,
     MPI_Bcast((*B).data(), max_size * max_size, MPI_INT, 0, MPI_COMM_WORLD);
 
     std::vector<int> localC(sendcount[rank]);
-    localC = MultiplicateMatrix(&localA, &(*B), &localC, max_size, count[rank]);
+    localC = MultiplicateMatrix(
+        &localA, &(*B), &localC, max_size, count[rank]);
 
     MPI_Gatherv(localC.data(), sendcount[rank], MPI_INT, (*C).data(),
                 sendcount.data(), displ.data(), MPI_INT, 0, MPI_COMM_WORLD);
