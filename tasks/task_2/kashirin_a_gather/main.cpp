@@ -1,12 +1,10 @@
-
 // Copyright 2023 Kashirin Alexander
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
 #include "./gather.h"
 
-TEST(TEST_GATHER, Test_1)
-{
+TEST(TEST_GATHER, Test_1){
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -22,8 +20,7 @@ TEST(TEST_GATHER, Test_1)
     }
 }
 
-TEST(TEST_GATHER, Test_int)
-{
+TEST(TEST_GATHER, Test_int){
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -33,15 +30,15 @@ TEST(TEST_GATHER, Test_int)
     for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] = rank * 4 + i;
     std::vector<int> recvbuf(numProc * sendbuf.size());
 
-    Gather(sendbuf.data(), sendbuf.size(), MPI_INT, recvbuf.data(), sendbuf.size(), MPI_INT, 0, MPI_COMM_WORLD);
+    Gather(sendbuf.data(), sendbuf.size(), MPI_INT,
+        recvbuf.data(), sendbuf.size(), MPI_INT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         for (int i = 0; i < recvbuf.size(); i++)
             EXPECT_EQ(i, recvbuf[i]);
     }
 }
 
-TEST(TEST_GATHER, Test_float)
-{
+TEST(TEST_GATHER, Test_float){
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -51,15 +48,15 @@ TEST(TEST_GATHER, Test_float)
     for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] = rank * 4 + i + 0.5;
     std::vector<float> recvbuf(numProc * sendbuf.size());
 
-    Gather(sendbuf.data(), sendbuf.size(), MPI_FLOAT, recvbuf.data(), sendbuf.size(), MPI_FLOAT, 0, MPI_COMM_WORLD);
+    Gather(sendbuf.data(), sendbuf.size(), MPI_FLOAT,
+        recvbuf.data(), sendbuf.size(), MPI_FLOAT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         for (int i = 0; i < recvbuf.size(); i++)
             EXPECT_EQ(i + 0.5, recvbuf[i]);
     }
 }
 
-TEST(TEST_GATHER, Test_double)
-{
+TEST(TEST_GATHER, Test_double){
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -69,7 +66,8 @@ TEST(TEST_GATHER, Test_double)
     for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] =  rank * 4 + i + 0.5;
     std::vector<double> recvbuf(numProc * sendbuf.size());
 
-    Gather(sendbuf.data(), sendbuf.size(), MPI_DOUBLE, recvbuf.data(), sendbuf.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    Gather(sendbuf.data(), sendbuf.size(), MPI_DOUBLE,
+        recvbuf.data(), sendbuf.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         for (int i = 0; i < recvbuf.size(); i++)
             EXPECT_EQ(i + 0.5, recvbuf[i]);
@@ -77,8 +75,7 @@ TEST(TEST_GATHER, Test_double)
 
 }
 
-TEST(TEST_GATHER, Test_time)
-{
+TEST(TEST_GATHER, Test_time){
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -107,13 +104,11 @@ TEST(TEST_GATHER, Test_time)
     }
 }
 
-TEST(TEST_GATHER, Test_wrong_root)
-{
+TEST(TEST_GATHER, Test_wrong_root){
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-
     std::vector<int> sendbuf(4);
     for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] = rank * 4 + i;
     std::vector<int> recvbuf(numProc * sendbuf.size());
@@ -123,8 +118,7 @@ TEST(TEST_GATHER, Test_wrong_root)
     }
 }
 
-TEST(TEST_GATHER, Test_wrong_type)
-{
+TEST(TEST_GATHER, Test_wrong_type){
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);

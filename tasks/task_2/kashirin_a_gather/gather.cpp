@@ -1,5 +1,5 @@
+// Copyright 2023 Kashirin Alexander
 #include "task_2/kashirin_a_gather/gather.h"
-
 
 int Gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, void* recvbuf,
     int recvcount, MPI_Datatype recvtype, int root, MPI_Comm comm) {
@@ -19,24 +19,26 @@ int Gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, void* recv
     void* tmpBuf = std::malloc(numbytes * (numProc - rankProc));
     std::memcpy(tmpBuf, sendbuf, numbytes);
 
-    if (numProc == 1) { std::memcpy(recvbuf, tmpBuf, numbytes);}
-
-    else {
+    if (numProc == 1) {
+        std::memcpy(recvbuf, tmpBuf, numbytes);
+    } else {
         if (rankProc != 0) {
             if (next < numProc) {
-                MPI_Recv(reinterpret_cast<char*>(tmpBuf) + 1 * recvcount * sizeofType, recvcount * (numProc - rankProc - 1),
+                MPI_Recv(reinterpret_cast<char*>(tmpBuf) + 1 * recvcount * sizeofType,
+                    recvcount * (numProc - rankProc - 1),
                     sendtype, next, 0, comm, MPI_STATUS_IGNORE);
-                MPI_Send(tmpBuf, sendcount * (numProc - rankProc), sendtype, previous, 0, comm);
+                MPI_Send(tmpBuf, sendcount * (numProc - rankProc),
+                    sendtype, previous, 0, comm);
             } else {
                 MPI_Send(tmpBuf, sendcount, sendtype, previous, 0, comm);
             }
         } else {
-            MPI_Recv(reinterpret_cast<char*>(tmpBuf) + 1 * recvcount * sizeofType, recvcount * (numProc - rankProc - 1),
+            MPI_Recv(reinterpret_cast<char*>(tmpBuf) + 1 * recvcount * sizeofType,
+                recvcount * (numProc - rankProc - 1),
                 sendtype, next, 0, comm, MPI_STATUS_IGNORE);
             if (rankProc == root) {
                 std::memcpy(recvbuf, tmpBuf, numbytes * (numProc - rankProc));
-            }
-            else {
+            } else {
                 MPI_Send(tmpBuf, sendcount * numProc, sendtype, root, 0, comm);
             }
         }
