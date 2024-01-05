@@ -93,7 +93,7 @@ TEST(TEST_GATHER, Test_time) {
         recvbuf2.data(), sendbuf.size(), MPI_FLOAT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         time3 = MPI_Wtime();
-        std::cout << "Gather time = " << time2 - time1 
+        std::cout << "Gather time = " << time2 - time1
             << std::endl << "MPI_Gather time = " << time3 - time2 << std::endl;
         for (int i = 0; i < recvbuf.size(); i++) {
             EXPECT_EQ(i + 0.5, recvbuf[i]);
