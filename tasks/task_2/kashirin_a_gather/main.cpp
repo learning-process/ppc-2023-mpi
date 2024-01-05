@@ -4,7 +4,7 @@
 #include <iostream>
 #include "./gather.h"
 
-TEST(TEST_GATHER, Test_1){
+TEST(TEST_GATHER, Test_1) {
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -12,7 +12,6 @@ TEST(TEST_GATHER, Test_1){
 
     std::vector<int> sendbuf = { 1 };
     std::vector<int> recvbuf(numProc);
- 
     Gather(sendbuf.data(), 1, MPI_INT, recvbuf.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         for (int i = 0; i < recvbuf.size(); i++)
@@ -20,7 +19,7 @@ TEST(TEST_GATHER, Test_1){
     }
 }
 
-TEST(TEST_GATHER, Test_int){
+TEST(TEST_GATHER, Test_int) {
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -38,7 +37,7 @@ TEST(TEST_GATHER, Test_int){
     }
 }
 
-TEST(TEST_GATHER, Test_float){
+TEST(TEST_GATHER, Test_float) {
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -56,7 +55,7 @@ TEST(TEST_GATHER, Test_float){
     }
 }
 
-TEST(TEST_GATHER, Test_double){
+TEST(TEST_GATHER, Test_double) {
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -72,10 +71,9 @@ TEST(TEST_GATHER, Test_double){
         for (int i = 0; i < recvbuf.size(); i++)
             EXPECT_EQ(i + 0.5, recvbuf[i]);
     }
-
 }
 
-TEST(TEST_GATHER, Test_time){
+TEST(TEST_GATHER, Test_time) {
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -95,8 +93,8 @@ TEST(TEST_GATHER, Test_time){
         recvbuf2.data(), sendbuf.size(), MPI_FLOAT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         time3 = MPI_Wtime();
-        std::cout << "Gather time = " << time2 - time1 << std::endl << "MPI_Gather time = " << time3 - time2 << std::endl;
-       
+        std::cout << "Gather time = " << time2 - time1 
+            << std::endl << "MPI_Gather time = " << time3 - time2 << std::endl;
         for (int i = 0; i < recvbuf.size(); i++) {
             EXPECT_EQ(i + 0.5, recvbuf[i]);
             EXPECT_EQ(i + 0.5, recvbuf2[i]);
@@ -104,7 +102,7 @@ TEST(TEST_GATHER, Test_time){
     }
 }
 
-TEST(TEST_GATHER, Test_wrong_root){
+TEST(TEST_GATHER, Test_wrong_root) {
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -118,7 +116,7 @@ TEST(TEST_GATHER, Test_wrong_root){
     }
 }
 
-TEST(TEST_GATHER, Test_wrong_type){
+TEST(TEST_GATHER, Test_wrong_type) {
     int numProc;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
