@@ -1,13 +1,16 @@
-#pragma once
+// Copyright 2023 Vetoshnikova Ekaterina
 
-#include <iostream> 
-#include <stdlib.h>
-#include <time.h>
+
+#ifndef TASKS_TASK_1_VETOSHNIKOVA_K_VECTOR_DOT_PRODUCT_VECTOR_DOT_PRODUCT_H_
+#define TASKS_TASK_1_VETOSHNIKOVA_K_VECTOR_DOT_PRODUCT_VECTOR_DOT_PRODUCT_H_
+
+#include <mpi.h>
 #include <vector>
 
-using namespace std;
+std::vector<int> vector_generation(int mn, int mx, int sz);
+int getParallelOperations(std::vector<int> global_vec_a, std::vector<int> global_vec_b,
+    int count_size_vector);
+int getSequentialOperations(std::vector<int> a, std::vector<int> b,
+    int count_size_vector);
 
-vector<int> vector_generation(int n);
-
-int getParallelOperations(vector<int> global_vec_a, int count_size_vector_a,
-	                      vector<int> global_vec_b, int count_size_vector_b);
+#endif  // TASKS_TASK_1_VETOSHNIKOVA_K_VECTOR_DOT_PRODUCT_VECTOR_DOT_PRODUCT_H_

@@ -1,17 +1,18 @@
 ﻿// Copyright 2023 Vetoshnikova Ekaterina
 
+
 #include "task_2/vetoshnikova_k_bubble_sort/bubble_sort.h"
 
-std::vector<int> array_generation(int mn, int mx, int sz) {
-    std::vector<int> arr(sz);
-    for (int i = 0; i < sz; i++) { 
+int* array_generation(int mn, int mx, int sz) {
+    int* arr = new int[sz];
+    for (int i = 0; i < sz; i++) {
         arr[i] = mn + (std::rand() % (mx - mn + 1));
     }
 
     return arr;
 }
 
-void SequentialBubbleSort(std::vector<int>& arr, int count_size_arr) {
+void SequentialBubbleSort(int* arr, int count_size_arr) {
     for (int i = 0; i < count_size_arr; i++) {
         int j;
         if (i % 2 == 0) j = 1;
@@ -22,16 +23,16 @@ void SequentialBubbleSort(std::vector<int>& arr, int count_size_arr) {
                 std::swap(arr[j], arr[j + 1]);
             }
         }
-    }	
+    }
 }
 
-void ParallelBubbleSort(std::vector<int>& global_arr, int count_size_arr) {
+void ParallelBubbleSort(int* global_arr, int count_size_arr) {
     int ProcNum;
     int ProcRank;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    std::vector<int> counts_element(ProcNum);
-    std::vector<int> dis(ProcNum);
+    int* counts_element = new int[ProcNum];
+    int* dis = new int[ProcNum];
     int delta     = count_size_arr / ProcNum;
     int remainder = count_size_arr % ProcNum;
 
@@ -44,12 +45,12 @@ void ParallelBubbleSort(std::vector<int>& global_arr, int count_size_arr) {
         else
             dis[i] = 0;
     }
-    std::vector<int> arr_local(counts_element[ProcRank]);
-    MPI_Scatterv(global_arr.data(), counts_element.data(), dis.data(), MPI_INT,
-        arr_local.data(), counts_element[ProcRank], MPI_INT, 0, MPI_COMM_WORLD);
+    int* arr_local = new int[counts_element[ProcRank]];
+    MPI_Scatterv(global_arr, counts_element, dis, MPI_INT,
+        arr_local, counts_element[ProcRank], MPI_INT, 0, MPI_COMM_WORLD);
     SequentialBubbleSort(arr_local, counts_element[ProcRank]);
-    MPI_Gatherv(arr_local.data(), counts_element[ProcRank], MPI_INT,
-        global_arr.data(), counts_element.data(), dis.data(), MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(arr_local, counts_element[ProcRank], MPI_INT,
+        global_arr, counts_element, dis, MPI_INT, 0, MPI_COMM_WORLD);
     if (ProcRank == 0) {
         SequentialBubbleSort(global_arr, count_size_arr);
     }

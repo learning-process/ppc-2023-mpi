@@ -1,52 +1,117 @@
-#include <iostream> 
-#include <stdlib.h>
-#include <time.h>
-#include <vector>
-#include <boost/mpi/communicator.hpp>
-#include <boost/mpi/collectives.hpp>
+// Copyright 2023 Vetoshnikova Ekaterina
 
-using namespace std;
 
-vector<int> vector_generation(int n) {
+#include <gtest/gtest.h>
+#include <mpi.h>
+#include <iostream>
+#include "./vector_dot_product.h"
 
-	vector<int> res_vec(n);
+TEST(Parallel_Vector_Dot_Product, Test_equals_0) {
+    int ProcRank;
+    int ProcNum;
+    int count_size_vector = 4;
 
-	srand(time(NULL));
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
 
-	for (int i = 0; i < n; i++) { res_vec[i] = rand() % 100; }
+    std::vector<int> a{ 1, 1, 1, 1 };
+    std::vector<int> b{ 1, -1, 1, -1 };
 
-	return res_vec;
+    int res = getParallelOperations(a, b, count_size_vector);
+
+    if (ProcRank == 0) {
+        int refRes = getSequentialOperations(a, b, count_size_vector);
+        ASSERT_EQ(res, refRes);
+    }
+}
+
+TEST(Parallel_Vector_Dot_Product, Test_random_vectors) {
+    int ProcRank;
+    int ProcNum;
+    int count_size_vector = 22;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+
+    std::vector<int> a = vector_generation(5, 40, count_size_vector);
+    std::vector<int> b = vector_generation(2, 25, count_size_vector);
+
+    int res = getParallelOperations(a, b, count_size_vector);
+
+    if (ProcRank == 0) {
+        int refRes = getSequentialOperations(a, b, count_size_vector);
+        ASSERT_EQ(res, refRes);
+    }
+}
+
+TEST(Parallel_Vector_Dot_Product, Test_negative_elements) {
+    int ProcRank;
+    int ProcNum;
+    int count_size_vector = 15;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+
+    std::vector<int> a = vector_generation(-20, 0, count_size_vector);
+    std::vector<int> b = vector_generation(-5, 50, count_size_vector);
+
+    int res = getParallelOperations(a, b, count_size_vector);
+
+    if (ProcRank == 0) {
+        int refRes = getSequentialOperations(a, b, count_size_vector);
+        ASSERT_EQ(res, refRes);
+    }
+}
+
+TEST(Parallel_Vector_Dot_Product, Test_0_vector) {
+    int ProcRank;
+    int ProcNum;
+    int count_size_vector = 7;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+
+    std::vector<int> a{0, 0, 0, 0, 0, 0, 0};
+    std::vector<int> b = vector_generation(10, 100, count_size_vector);
+
+    int res = getParallelOperations(a, b, count_size_vector);
+
+    if (ProcRank == 0) {
+        int refRes = getSequentialOperations(a, b, count_size_vector);
+        ASSERT_EQ(res, refRes);
+    }
+}
+
+TEST(Parallel_Vector_Dot_Product, Test_random_vectors_2) {
+    int ProcRank;
+    int ProcNum;
+    int count_size_vector = 28;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+
+    std::vector<int> a = vector_generation(-50, 0, count_size_vector);
+    std::vector<int> b = vector_generation(-100, 0, count_size_vector);
+
+    int res = getParallelOperations(a, b, count_size_vector);
+
+    if (ProcRank == 0) {
+        int refRes = getSequentialOperations(a, b, count_size_vector);
+        ASSERT_EQ(res, refRes);
+    }
 }
 
 int main(int argc, char** argv) {
+    int result = 0;
 
-	boost::mpi::environment env(argc, argv);
-	boost::mpi::communicator world;
+    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::TestEventListeners& listeners =
+        ::testing::UnitTest::GetInstance()->listeners();
 
-	vector<int> global_vec_a;
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
+        MPI_Abort(MPI_COMM_WORLD, -1);
+    result = RUN_ALL_TESTS();
+    MPI_Finalize();
 
-	const int count_size_vector = 9;
-
-	if (world.rank() == 0) {
-		global_vec_a = vector_generation(count_size_vector);
-	}
-
-
-	int ProcNum = world.size();
-	int ProcRank = world.rank();
-
-	boost::mpi::broadcast(world, count_size_vector, 0);
-
-	int delta = count_size_vector / ProcNum;
-
-	if (ProcRank != 0) {
-		vector<int> a(delta);
-		vector<int> b(delta);
-	}
-
-	boost::mpi::scatter(world, global_vec_a, a, 0);
-
-	std::cout << world.rank() << ": " << a << '\n';
-
-
+    return result;
 }
