@@ -1,5 +1,4 @@
-﻿// Copyright 2023 Vetoshnikova Ekaterina
-
+﻿  // Copyright 2023 Vetoshnikova Ekaterina
 
 #include "task_2/vetoshnikova_k_bubble_sort/bubble_sort.h"
 
