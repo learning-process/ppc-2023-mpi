@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-void radixSort(std::vector<int>* nums); 
+void radixSort(std::vector<int>* nums);
 void radixSortUnsigned(std::vector<int>* nums);
 int checkMPIResult(int result);
 
