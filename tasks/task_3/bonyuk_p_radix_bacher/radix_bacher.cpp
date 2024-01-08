@@ -12,13 +12,13 @@
 
 #include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
-void radixSort(std::vector<int>& nums) {
+void radixSort(std::vector<int>* nums) {
     if (nums.empty()) {
         return;
     }
-
-    int maxNum = *std::max_element(nums.begin(), nums.end());
-    int minNum = *std::min_element(nums.begin(), nums.end());
+	auto& nums_ref = *nums;
+    int maxNum = *std::max_element(nums_ref.begin(), nums_ref.end());
+    int minNum = *std::min_element(nums_ref.begin(), nums_ref.end());
 
     std::vector<int> negatives, positives;
     for (int num : nums) {
@@ -37,7 +37,7 @@ void radixSort(std::vector<int>& nums) {
     nums.insert(nums.end(), positives.begin(), positives.end());
 }
 
-void radixSortUnsigned(std::vector<int>& nums) {
+void radixSortUnsigned(std::vector<int>* nums) {
     if (nums.empty()) return;
 
     std::vector<int> output(nums.size());
@@ -79,13 +79,13 @@ int checkMPIResult(int result) {
     }
     return result;
 }
-void compareExchange(std::vector<int>& local_nums, int i, int j, int dir) {
+void compareExchange(std::vector<int>* local_nums, int i, int j, int dir) {
     if (dir == (local_nums[i] > local_nums[j])) {
         std::swap(local_nums[i], local_nums[j]);
     }
 }
 
-void batcherMerge(std::vector<int>& local_nums, int numProcs, int myRank) {
+void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
     int local_size = local_nums.size();
     int n = local_size * numProcs;
     int t = log2(n);
