@@ -2,8 +2,9 @@
 
 #ifndef TASKS_TASK_2_PUSHKAREV_I_JACOBI_METHOD_JACOBI_METHOD_H_
 #define TASKS_TASK_2_PUSHKAREV_I_JACOBI_METHOD_JACOBI_METHOD_H_
-#include <vector>
 #include <mpi.h>
+#include <vector>
+
 
 std::vector<double> Jacobi(const std::vector<double>& A,
     const std::vector<double>& b,

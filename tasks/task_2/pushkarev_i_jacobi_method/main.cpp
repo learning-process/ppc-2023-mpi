@@ -1,12 +1,11 @@
 // Copyright 2023 Pushkarev Ilya
 
-#include "./jacobi_method.h"
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>
+#include "./jacobi_method.h"
 
-TEST(Parallel_Jacobi_method, Exception_matrix_wrong_size)
-{
+TEST(Parallel_Jacobi_method, Exception_matrix_wrong_size){
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -15,20 +14,16 @@ TEST(Parallel_Jacobi_method, Exception_matrix_wrong_size)
 
 
     ASSERT_ANY_THROW(Jacobi(mat, b, 1));
-
 }
 
-TEST(Parallel_Jacobi_method, Exception_matrix_zeros)
-{
+TEST(Parallel_Jacobi_method, Exception_matrix_zeros){
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     std::vector<double> mat{1, 2, 3, 4, 5, 6, 7, 8, 0};
     std::vector<double> b{1, 1, 1};
 
-
     ASSERT_ANY_THROW(Jacobi(mat, b, 1));
-
 }
 
 
@@ -88,11 +83,7 @@ int main(int argc, char** argv) {
     int result_code = 0;
     int rankProc = 0;
     int numProc = 0;
-
     
-
-
-
     ::testing::InitGoogleTest(&argc, argv);
 
     ::testing::TestEventListeners& listeners =
