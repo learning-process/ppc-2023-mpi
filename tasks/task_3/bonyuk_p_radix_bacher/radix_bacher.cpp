@@ -12,7 +12,7 @@
 
 #include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
-void radixSort(std::vector<int>& nums) {
+void radixSort(const std::vector<int>& nums) {
     if (nums.empty()) {
         return;
     }
@@ -37,7 +37,7 @@ void radixSort(std::vector<int>& nums) {
     nums.insert(nums.end(), positives.begin(), positives.end());
 }
 
-void radixSortUnsigned(std::vector<int>& nums) {
+void radixSortUnsigned(const std::vector<int>& nums) {
     if (nums.empty()) return;
 
     std::vector<int> output(nums.size());
@@ -68,7 +68,6 @@ void radixSortUnsigned(std::vector<int>& nums) {
 }
 
 int checkMPIResult(int result) {
-
     if (result != MPI_SUCCESS) {
         char errorString[BUFSIZ];
         int lengthOfErrorString, errorClass;
@@ -80,13 +79,13 @@ int checkMPIResult(int result) {
     }
     return result;
 }
-void compareExchange(std::vector<int>& local_nums, int i, int j, int dir) {
+void compareExchange(const std::vector<int>& local_nums, int i, int j, int dir) {
     if (dir == (local_nums[i] > local_nums[j])) {
         std::swap(local_nums[i], local_nums[j]);
     }
 }
 
-void batcherMerge(std::vector<int>& local_nums, int numProcs, int myRank) {
+void batcherMerge(const std::vector<int>& local_nums, int numProcs, int myRank) {
     int local_size = local_nums.size();
     int n = local_size * numProcs;
     int t = log2(n);
@@ -98,9 +97,7 @@ void batcherMerge(std::vector<int>& local_nums, int numProcs, int myRank) {
         int d = p;
         while (d > 0) {
             for (int i = 0; i < n - d; ++i) {
-
                 if ((i & p) == r) {
-
                     int idx1 = i / local_size;
                     int idx2 = (i + d) / local_size;
                     int local_idx1 = i % local_size;
@@ -114,7 +111,8 @@ void batcherMerge(std::vector<int>& local_nums, int numProcs, int myRank) {
                             MPI_Sendrecv(&local_value, 1, MPI_INT, partner, 0,
                             &remote_value, 1, MPI_INT, partner, 0,
                             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                            bool needSwap = (myRank < partner) ? (local_value > remote_value) : (local_value < remote_value);
+                            bool needSwap = (myRank < partner) ? (local_value > remote_value) :
+                               (local_value < remote_value);
                             if (needSwap) {
                                 if (myRank == idx1) {
                                     local_nums[local_idx1] = remote_value;
