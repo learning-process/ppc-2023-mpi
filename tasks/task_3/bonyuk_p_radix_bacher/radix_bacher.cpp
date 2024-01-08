@@ -6,6 +6,7 @@
 #include <cmath>
 #include <ctime>
 #include <random>
+#include <iostream>
 #include <utility>
 #include <vector>
 #include <functional>
@@ -13,7 +14,7 @@
 #include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
 void radixSort(std::vector<int>* nums) {
-    if (nums.empty()) {
+    if (nums->empty()) {
         return;
     }
     auto& nums_ref = *nums;
@@ -38,7 +39,7 @@ void radixSort(std::vector<int>* nums) {
 }
 
 void radixSortUnsigned(std::vector<int>* nums) {
-    if (nums.empty()) return;
+    if (nums->empty()) return;
     auto& nums_ref = *nums;
     std::vector<int> output(nums_ref.size());
     int maxNum = *std::max_element(nums_ref.begin(), nums_ref.end());
@@ -80,13 +81,13 @@ int checkMPIResult(int result) {
     return result;
 }
 void compareExchange(std::vector<int>* local_nums, int i, int j, int dir) {
-    if (dir == (local_nums[i] > local_nums[j])) {
-        std::swap(local_nums[i], local_nums[j]);
+    if (dir == ((*local_nums)[i] > (*local_nums)[j])) {
+        std::swap((*local_nums)[i], (*local_nums)[j]);
     }
 }
 
 void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
-    int local_size = local_nums.size();
+	int local_size = local_nums->size();
     int n = local_size * numProcs;
     int t = log2(n);
     int p = 1 << (t - 1);
@@ -106,20 +107,20 @@ void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
                     if (myRank == idx1 || myRank == idx2) {
                         if (idx1 != idx2) {
                             int partner = myRank == idx1 ? idx2 : idx1;
-                            int local_value = myRank == idx1 ? local_nums[local_idx1] : local_nums[local_idx2];
+                            int local_value = myRank == idx1 ? (*local_nums)[local_idx1] : (*local_nums)[local_idx2];
                             int remote_value;
                             MPI_Sendrecv(&local_value, 1, MPI_INT, partner, 0,
-                            &remote_value, 1, MPI_INT, partner, 0,
-                            MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                                &remote_value, 1, MPI_INT, partner, 0,
+                                MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                             bool needSwap = (myRank < partner) ? (local_value > remote_value) :
                                (local_value < remote_value);
                             if (needSwap) {
                                 if (myRank == idx1) {
-                                    local_nums[local_idx1] = remote_value;
+                                    (*local_nums)[local_idx1] = remote_value;
                                 } else {
-                                    local_nums[local_idx2] = remote_value;
+                                    (*local_nums)[local_idx2] = remote_value;
                                 }
-                            }
+							}
                         } else {
                             if (local_idx1 < local_idx2 && local_nums[local_idx1] > local_nums[local_idx2]) {
                                 std::swap(local_nums[local_idx1], local_nums[local_idx2]);
