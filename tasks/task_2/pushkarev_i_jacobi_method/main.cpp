@@ -5,7 +5,7 @@
 #include <iostream>
 #include "./jacobi_method.h"
 
-TEST(Parallel_Jacobi_method, Exception_matrix_wrong_size){
+TEST(Parallel_Jacobi_method, Exception_matrix_wrong_size) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -16,7 +16,7 @@ TEST(Parallel_Jacobi_method, Exception_matrix_wrong_size){
     ASSERT_ANY_THROW(Jacobi(mat, b, 1));
 }
 
-TEST(Parallel_Jacobi_method, Exception_matrix_zeros){
+TEST(Parallel_Jacobi_method, Exception_matrix_zeros) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -34,7 +34,6 @@ TEST(Parallel_Jacobi_method, Task1_N2) {
     std::vector<double> mat{10, 15, 5, 20};
     std::vector<double> b{0, 10};
     std::vector<double> res = Jacobi(mat, b, 1);
-    
     std::vector<double> expect {0, 0.5};
 
     if (rank == 0) {
@@ -83,7 +82,6 @@ int main(int argc, char** argv) {
     int result_code = 0;
     int rankProc = 0;
     int numProc = 0;
-    
     ::testing::InitGoogleTest(&argc, argv);
 
     ::testing::TestEventListeners& listeners =
