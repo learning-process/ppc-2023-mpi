@@ -87,7 +87,7 @@ void compareExchange(std::vector<int>* local_nums, int i, int j, int dir) {
 }
 
 void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
-	int local_size = local_nums->size();
+    int local_size = local_nums->size();
     int n = local_size * numProcs;
     int t = log2(n);
     int p = 1 << (t - 1);
@@ -120,7 +120,7 @@ void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
                                 } else {
                                     (*local_nums)[local_idx2] = remote_value;
                                 }
-							}
+                            }
                         } else {
                             if (local_idx1 < local_idx2 && local_nums[local_idx1] > local_nums[local_idx2]) {
                                 std::swap(local_nums[local_idx1], local_nums[local_idx2]);
