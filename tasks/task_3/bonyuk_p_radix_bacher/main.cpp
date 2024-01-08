@@ -1,9 +1,9 @@
 ﻿  //  Copyright 2023 Bonyuk Petr
-#include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
 #include <mpi.h>
 #include <gtest/gtest.h>
 
+#include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
 TEST(RadixSortTest, PositiveTest) {
     std::vector<int> v = { 10, 7, 3, 1, 9, 5, 4, 8 };

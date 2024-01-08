@@ -1,5 +1,4 @@
 //  Copyright 2023 Bonyuk Petr
-#include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
 #include <mpi.h>
 
@@ -10,6 +9,8 @@
 #include <utility>
 #include <vector>
 #include <functional>
+
+#include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
 void radixSort(std::vector<int>& nums) {
     if (nums.empty()) {
@@ -65,6 +66,7 @@ void radixSortUnsigned(std::vector<int>& nums) {
         exp *= 10;
     }
 }
+
 int checkMPIResult(int result) {
 
     if (result != MPI_SUCCESS) {
