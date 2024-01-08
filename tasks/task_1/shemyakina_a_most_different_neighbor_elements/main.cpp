@@ -1,9 +1,8 @@
 // Copyright 2023 Shemyakina Alesya
-
-#include "task_1/shemyakina_a_most_different_neighbor_elements/most_different_neighbor_elements.h"
-#include <mpi.h>
 #include <gtest/gtest.h>
+#include <mpi.h>
 #include <numeric>
+#include "task_1/shemyakina_a_most_different_neighbor_elements/most_different_neighbor_elements.h"
 
 TEST(Most_Different_Neighbor_Elements, TestDifferents) {
     int rank;

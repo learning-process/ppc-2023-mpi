@@ -1,14 +1,12 @@
 // Copyright 2023 Shemyakina Alesya
-
-#include "task_1/shemyakina_a_most_different_neighbor_elements/most_different_neighbor_elements.h"
+#include <mpi.h>
+#include <random>
 #include <algorithm>
 #include <numeric>
 #include <iostream>
-#include <mpi.h>
-#include <random>
+#include "task_1/shemyakina_a_most_different_neighbor_elements/most_different_neighbor_elements.h"
 
 std::vector<int> VecRandNum(int vector_size, int min_value, int max_value) {
-
     std::vector<int> vec(vector_size);
     for (auto &element : vec) {
         element = min_value + (std::rand() % (max_value - min_value + 1));
@@ -17,7 +15,6 @@ std::vector<int> VecRandNum(int vector_size, int min_value, int max_value) {
 }
 
 int SequentialGet(const std::vector<int> &vec) {
-
     int maxDiff = 0;
     for (int i = 1; i < vec.size(); i++) {
         maxDiff = std::max(maxDiff, abs(vec[i] - vec[i - 1]));
@@ -27,7 +24,6 @@ int SequentialGet(const std::vector<int> &vec) {
 
 int ParallelGet(const std::vector<int> &vec) {
     int size_world, rank;
-
     MPI_Comm_size(MPI_COMM_WORLD, &size_world);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
