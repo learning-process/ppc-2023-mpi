@@ -8,7 +8,7 @@
 
 #include "task_3/pushkarev_i_shortest_path_moore/shortest_path_moore.h"
 
-std::vector<int> mooore(int rank, int procs, int n, std::vector<int> matr, const bool& has_negative_cycle) {
+std::vector<int> mooore(int rank, int procs, int n, std::vector<int> matr, bool* has_negative_cycle) {
     boost::mpi::communicator world;
     int loc_n;
 
@@ -69,7 +69,7 @@ std::vector<int> mooore(int rank, int procs, int n, std::vector<int> matr, const
             if (queue_active[u]) {
                 q_counter[u]++;
                 if (q_counter[u] >= loc_n) {
-                    has_negative_cycle = true;
+                    *has_negative_cycle = true;
                     return {};
                 }
             }

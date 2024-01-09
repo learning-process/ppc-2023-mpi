@@ -15,7 +15,7 @@ TEST(MOORE, Test_Graph_1) {
         0, 5, 4, 0
     };
     bool has_negative_cycle = false;
-    auto dist = mooore(world.rank(), world.size(), 4, matr, has_negative_cycle);
+    auto dist = mooore(world.rank(), world.size(), 4, matr, &has_negative_cycle);
     if (world.rank() == 0) {
         ASSERT_EQ(has_negative_cycle, false);
         ASSERT_EQ(dist[0], 0);
@@ -34,7 +34,7 @@ TEST(MOORE, Test_Graph_2) {
         10, 10, 2, 0
     };
     bool has_negative_cycle = false;
-    auto dist = mooore(world.rank(), world.size(), 4, matr, has_negative_cycle);
+    auto dist = mooore(world.rank(), world.size(), 4, matr, &has_negative_cycle);
     if (world.rank() == 0) {
         ASSERT_EQ(has_negative_cycle, false);
         ASSERT_EQ(dist[0], 0);
@@ -53,7 +53,7 @@ TEST(MOORE, Test_Graph_3) {
         10, 10, -1, 0
     };
     bool has_negative_cycle = false;
-    auto dist = mooore(world.rank(), world.size(), 4, matr, has_negative_cycle);
+    auto dist = mooore(world.rank(), world.size(), 4, matr, &has_negative_cycle);
     if (world.rank() == 0) {
         ASSERT_EQ(has_negative_cycle, true);
     }
@@ -68,7 +68,7 @@ TEST(MOORE, Test_Graph_4) {
         0, 5, 4, 0
     };
     bool has_negative_cycle = false;
-    auto dist = mooore(world.rank(), world.size(), 4, matr, has_negative_cycle);
+    auto dist = mooore(world.rank(), world.size(), 4, matr, &has_negative_cycle);
     if (world.rank() == 0) {
         ASSERT_EQ(has_negative_cycle, false);
         ASSERT_EQ(dist[0], 0);
@@ -87,7 +87,7 @@ TEST(MOORE, Test_Graph_5) {
         21, 1, -19, 0
     };
     bool has_negative_cycle = false;
-    auto dist = mooore(world.rank(), world.size(), 4, matr, has_negative_cycle);
+    auto dist = mooore(world.rank(), world.size(), 4, matr, &has_negative_cycle);
     if (world.rank() == 0) {
         ASSERT_EQ(has_negative_cycle, false);
         ASSERT_EQ(dist[0], 0);
