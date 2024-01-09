@@ -1,13 +1,14 @@
 // Copyright 2023 Pushkarev Ilya
 
 #include <algorithm>
+#include <functional>
 #include <boost/mpi/collectives.hpp>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/operations.hpp>
 
 #include "task_3/pushkarev_i_shortest_path_moore/shortest_path_moore.h"
 
-std::vector<int> mooore(int rank, int procs, int n, std::vector<int> matr, bool& has_negative_cycle) {
+std::vector<int> mooore(int rank, int procs, int n, std::vector<int> matr, const bool& has_negative_cycle) {
     boost::mpi::communicator world;
     int loc_n;
 
