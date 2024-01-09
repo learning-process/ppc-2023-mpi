@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
-#include "lib.h"
+#include "./shortest_path_moore.h"
 
 
 TEST(MOORE, Test_Graph_1) {
@@ -111,3 +111,4 @@ int main(int argc, char** argv) {
     }
     return RUN_ALL_TESTS();
 }
+
