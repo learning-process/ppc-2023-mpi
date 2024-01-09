@@ -64,6 +64,19 @@ TEST(MPI_TESTS, Test_random) {
   }
 }
 
+TEST(MPI_TESTS, Test_size_zero) {
+  int rank = 0;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+  std::vector<int> vec{};
+  int par_result = par_num_of_alternations_signs(vec);
+
+  if (rank == 0) {
+    int seq_result = seq_num_of_alternations_signs(vec);
+    ASSERT_EQ(par_result, seq_result);
+  }
+}
+
 int main(int argc, char** argv) {
   int run = 0;
   int rank = 0;
