@@ -176,4 +176,4 @@ matrix<double> cannonsMultiplication(matrix<double>* A, matrix<double>* B) {
 }
 
 // template<class T>
-// bool comp(const matrix<T>& a, const matrix<T>& b) 
+// bool comp(const matrix<T>& a, const matrix<T>& b)

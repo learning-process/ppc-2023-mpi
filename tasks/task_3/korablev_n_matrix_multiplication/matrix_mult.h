@@ -12,9 +12,6 @@
 
 template<class T>
 class matrix {
- private:
-
-
  public:
     T* m;
     int numRows, numColums;
