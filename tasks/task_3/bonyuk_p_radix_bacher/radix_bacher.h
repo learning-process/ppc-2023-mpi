@@ -7,10 +7,10 @@
 #include <utility>
 #include <vector>
 
-void radixSort(std::vector<int>* nums);
-void radixSortUnsigned(std::vector<int>* nums);
+void radixSort(std::vector<int>& nums);
+void radixSortUnsigned(std::vector<int>& nums);
 int checkMPIResult(int result);
 
-void compareExchange(std::vector<int>* local_nums, int i, int j, int dir);
-void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank);
+void compareExchange(std::vector<int>& local_nums, int i, int j, int dir);
+void batcherMerge(std::vector<int>& local_nums, int numProcs, int myRank);
 #endif  // TASKS_TASK_3_BONYUK_P_RADIX_BACHER_RADIX_BACHER_H_

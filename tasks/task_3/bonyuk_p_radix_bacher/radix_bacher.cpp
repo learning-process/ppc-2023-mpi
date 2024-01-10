@@ -6,23 +6,22 @@
 #include <cmath>
 #include <ctime>
 #include <random>
-#include <iostream>
 #include <utility>
 #include <vector>
 #include <functional>
 
 #include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
-void radixSort(std::vector<int>* nums) {
-    if (nums->empty()) {
+void radixSort(std::vector<int>& nums) {
+    if (nums.empty()) {
         return;
     }
-    auto& nums_ref = *nums;
-    int maxNum = *std::max_element(nums_ref.begin(), nums_ref.end());
-    int minNum = *std::min_element(nums_ref.begin(), nums_ref.end());
+
+    int maxNum = *std::max_element(nums.begin(), nums.end());
+    int minNum = *std::min_element(nums.begin(), nums.end());
 
     std::vector<int> negatives, positives;
-    for (int num : nums_ref) {
+    for (int num : nums) {
         if (num < 0)
             negatives.push_back(-num);
         else
@@ -33,21 +32,21 @@ void radixSort(std::vector<int>* nums) {
     radixSortUnsigned(negatives);
     std::transform(negatives.begin(), negatives.end(), negatives.begin(), std::negate<int>());
     std::reverse(negatives.begin(), negatives.end());
-    nums_ref.clear();
-    nums_ref.insert(nums_ref.end(), negatives.begin(), negatives.end());
-    nums_ref.insert(nums_ref.end(), positives.begin(), positives.end());
+    nums.clear();
+    nums.insert(nums.end(), negatives.begin(), negatives.end());
+    nums.insert(nums.end(), positives.begin(), positives.end());
 }
 
-void radixSortUnsigned(std::vector<int>* nums) {
-    if (nums->empty()) return;
-    auto& nums_ref = *nums;
-    std::vector<int> output(nums_ref.size());
-    int maxNum = *std::max_element(nums_ref.begin(), nums_ref.end());
+void radixSortUnsigned(std::vector<int>& nums) {
+    if (nums.empty()) return;
+
+    std::vector<int> output(nums.size());
+    int maxNum = *std::max_element(nums.begin(), nums.end());
     int exp = 1;
     while (maxNum / exp > 0) {
         std::vector<int> count(10, 0);
 
-        for (int num : nums_ref) {
+        for (int num : nums) {
             count[(num / exp) % 10]++;
         }
 
@@ -55,13 +54,13 @@ void radixSortUnsigned(std::vector<int>* nums) {
             count[i] += count[i - 1];
         }
 
-        for (int i = nums_ref.size() - 1; i >= 0; i--) {
-            output[count[(nums_ref[i] / exp) % 10] - 1] = nums_ref[i];
-            count[(nums_ref[i] / exp) % 10]--;
+        for (int i = nums.size() - 1; i >= 0; i--) {
+            output[count[(nums[i] / exp) % 10] - 1] = nums[i];
+            count[(nums[i] / exp) % 10]--;
         }
 
-        for (int i = 0; i < nums_ref.size(); i++) {
-            nums_ref[i] = output[i];
+        for (int i = 0; i < nums.size(); i++) {
+            nums[i] = output[i];
          }
 
         exp *= 10;
@@ -80,14 +79,14 @@ int checkMPIResult(int result) {
     }
     return result;
 }
-void compareExchange(std::vector<int>* local_nums, int i, int j, int dir) {
-    if (dir == ((*local_nums)[i] > (*local_nums)[j])) {
-        std::swap((*local_nums)[i], (*local_nums)[j]);
+void compareExchange(std::vector<int>& local_nums, int i, int j, int dir) {
+    if (dir == (local_nums[i] > local_nums[j])) {
+        std::swap(local_nums[i], local_nums[j]);
     }
 }
 
-void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
-    int local_size = local_nums->size();
+void batcherMerge(std::vector<int>& local_nums, int numProcs, int myRank) {
+    int local_size = local_nums.size();
     int n = local_size * numProcs;
     int t = log2(n);
     int p = 1 << (t - 1);
@@ -107,23 +106,23 @@ void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
                     if (myRank == idx1 || myRank == idx2) {
                         if (idx1 != idx2) {
                             int partner = myRank == idx1 ? idx2 : idx1;
-                            int local_value = myRank == idx1 ? (*local_nums)[local_idx1] : (*local_nums)[local_idx2];
+                            int local_value = myRank == idx1 ? local_nums[local_idx1] : local_nums[local_idx2];
                             int remote_value;
                             MPI_Sendrecv(&local_value, 1, MPI_INT, partner, 0,
-                                &remote_value, 1, MPI_INT, partner, 0,
-                                MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                            &remote_value, 1, MPI_INT, partner, 0,
+                            MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                             bool needSwap = (myRank < partner) ? (local_value > remote_value) :
                                (local_value < remote_value);
                             if (needSwap) {
                                 if (myRank == idx1) {
-                                    (*local_nums)[local_idx1] = remote_value;
+                                    local_nums[local_idx1] = remote_value;
                                 } else {
-                                    (*local_nums)[local_idx2] = remote_value;
+                                    local_nums[local_idx2] = remote_value;
                                 }
                             }
                         } else {
-                            if (local_idx1 < local_idx2 && (*local_nums)[local_idx1] >(*local_nums)[local_idx2]) {
-                                std::swap((*local_nums)[local_idx1], (*local_nums)[local_idx2]);
+                            if (local_idx1 < local_idx2 && local_nums[local_idx1] > local_nums[local_idx2]) {
+                                std::swap(local_nums[local_idx1], local_nums[local_idx2]);
                             }
                         }
                     }
