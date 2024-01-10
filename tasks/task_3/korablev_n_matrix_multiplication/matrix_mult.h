@@ -13,10 +13,11 @@
 template<class T>
 class matrix {
  private:
-    T* m;
-    int numRows, numColums;
+
 
  public:
+    T* m;
+    int numRows, numColums;
     matrix();
     matrix(const matrix<T>& c);
     matrix(const int _numRows, const int _numColums);
@@ -138,6 +139,16 @@ matrix<T>& matrix<T>::operator=(const matrix<T>& c) {
     for (int i = 0; i < numRows * numColums; i++)
         m[i] = c.m[i];
     return *this;
+}
+
+template<class T>
+bool comp(const matrix<T>& a, const matrix<T>& b) {
+  if (a.numRows != b.numRows || a.numColums != b.numColums)
+    return false;
+  for (int i = 0; i < a.numRows * a.numColums; i++)
+    if (a.m[i] != b.m[i])
+      return false;
+  return true;
 }
 
 template<class T>

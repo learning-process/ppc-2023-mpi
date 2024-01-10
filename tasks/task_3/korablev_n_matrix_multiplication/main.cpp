@@ -36,7 +36,9 @@ TEST(cannons_mult_test, mult_test_1) {
     matrix<double> ans = cannonsMultiplication(&a, &b);
     if (procRank == 0) {
         matrix<double> c = a * b;
-        ASSERT_TRUE(ans == c);
+        ASSERT_TRUE(comp(ans, c));
+
+        // ASSERT_TRUE(ans == c);
     }
 }
 
