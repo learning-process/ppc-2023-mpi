@@ -108,11 +108,11 @@ void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
                             int partner = myRank == idx1 ? idx2 : idx1;
                             int local_value = myRank == idx1 ? (*local_nums)[local_idx1] : (*local_nums)[local_idx2];
                             int remote_value;
-                            MPI_Sendrecv(&local_value, 1, MPI_INT, partner, 0,
+                            checkMPIResult(MPI_Sendrecv(&local_value, 1, MPI_INT, partner, 0,
                                 &remote_value, 1, MPI_INT, partner, 0,
-                                MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                                MPI_COMM_WORLD, MPI_STATUS_IGNORE));
                             bool needSwap = (myRank < partner) ? (local_value > remote_value) :
-                               (local_value < remote_value);
+                                (local_value < remote_value);
                             if (needSwap) {
                                 if (myRank == idx1) {
                                     (*local_nums)[local_idx1] = remote_value;
@@ -120,9 +120,9 @@ void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
                                     (*local_nums)[local_idx2] = remote_value;
                                 }
                             }
-                        } else {
+						} else {
                             if (local_idx1 < local_idx2 && (*local_nums)[local_idx1] >(*local_nums)[local_idx2]) {
-                                std::swap((*local_nums)[local_idx1], (*local_nums)[local_idx2]);
+                               std::swap((*local_nums)[local_idx1], (*local_nums)[local_idx2]);
                             }
                         }
                     }
@@ -134,7 +134,7 @@ void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
                 q >>= 1;
             } else {
                 d = 0;
-                }
+            }
         }
         p >>= 1;
     }

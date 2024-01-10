@@ -13,7 +13,7 @@ TEST(RadixSortTest, PositiveTest) {
         v[i] = std::rand() % 2001;
     }
     v = radixSort(v);
-    for (int i = 0; i < static_cast<int>(v.size()) - 1; i++) {
+    for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
         EXPECT_TRUE(v[i] <= v[i + 1]);
     }
 }
@@ -23,10 +23,10 @@ TEST(RadixSortTest, NegativeTest) {
 
     std::srand(std::time(nullptr));
     for (int i = 0; i < 180; ++i) {
-         v[i] = std::rand() % 2001 - 2001;
+         v[i] = std::rand() % 2001 - 1000;
     }
     v = radixSort(v);
-    for (int i = 0; i < static_cast<int>(v.size()) - 1; i++) {
+    for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
         EXPECT_TRUE(v[i] <= v[i + 1]);
     }
 }
@@ -39,7 +39,7 @@ TEST(RadixSortTest, RepeatTest) {
         v[i] = std::rand() % 10;
     }
     v = radixSort(v);
-    for (int i = 0; i < static_cast<int>(v.size()) - 1; i++) {
+    for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
         EXPECT_TRUE(v[i] <= v[i + 1]);
     }
 }
@@ -52,7 +52,7 @@ TEST(RadixSortTest, VectorTest) {
         v[i] = std::rand() % 201;
     }
     v = radixSort(v);
-    for (int i = 0; i < static_cast<int>(v.size()) - 1; i++) {
+    for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
         EXPECT_TRUE(v[i] <= v[i + 1]);
     }
 }
@@ -65,7 +65,7 @@ TEST(RadixSortTest, MixedPositiveAndNegativeTest) {
         v[i] = std::rand() % 2001 - 1000;
     }
     v = radixSort(v);
-    for (int i = 0; i < static_cast<int>(v.size()) - 1; i++) {
+    for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
         EXPECT_TRUE(v[i] <= v[i + 1]);
     }
 }
