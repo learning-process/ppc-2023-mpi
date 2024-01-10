@@ -37,8 +37,6 @@ TEST(cannons_mult_test, mult_test_1) {
     if (procRank == 0) {
         matrix<double> c = a * b;
         ASSERT_TRUE(comp(ans, c));
-
-        // ASSERT_TRUE(ans == c);
     }
 }
 
@@ -55,7 +53,8 @@ TEST(cannons_mult_test, mult_test_2) {
     }
     matrix<double> ans = cannonsMultiplication(&a, &b);
     if (procRank == 0) {
-        ASSERT_TRUE(ans == a * b);
+        matrix<double> c = a * b;
+        ASSERT_TRUE(comp(ans, c));
     }
 }
 
@@ -72,7 +71,8 @@ TEST(cannons_mult_test, mult_test_3) {
     }
     matrix<double> ans = cannonsMultiplication(&a, &b);
     if (procRank == 0) {
-        ASSERT_TRUE(ans == a * b);
+        matrix<double> c = a * b;
+        ASSERT_TRUE(comp(ans, c));
     }
 }
 
@@ -89,7 +89,8 @@ TEST(cannons_mult_test, mult_test_4) {
     }
     matrix<double> ans = cannonsMultiplication(&a, &b);
     if (procRank == 0) {
-        ASSERT_TRUE(ans == a * b);
+        matrix<double> c = a * b;
+        ASSERT_TRUE(comp(ans, c));
     }
 }
 
