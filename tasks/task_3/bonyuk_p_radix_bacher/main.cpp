@@ -5,12 +5,12 @@
 #include <iostream>
 #include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
-TEST(RadixSortTest, PositiveTest) {
+TEST(RadixSortTest, OneTest) {
     std::vector<int> v(180);
 
     std::srand(std::time(nullptr));
     for (int i = 0; i < 180; ++i) {
-        v[i] = std::rand() % 2001;
+        v[i] = std::rand() % 2001 - 1000;
     }
     v = radixSort(v);
     for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
@@ -18,12 +18,12 @@ TEST(RadixSortTest, PositiveTest) {
     }
 }
 
-TEST(RadixSortTest, NegativeTest) {
+TEST(RadixSortTest, TwoTest) {
     std::vector<int> v(180);
 
     std::srand(std::time(nullptr));
     for (int i = 0; i < 180; ++i) {
-         v[i] = std::rand() % 2001 - 1000;
+         v[i] = std::rand() % 11 - 5;
     }
     v = radixSort(v);
     for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
@@ -31,12 +31,12 @@ TEST(RadixSortTest, NegativeTest) {
     }
 }
 
-TEST(RadixSortTest, RepeatTest) {
+TEST(RadixSortTest, ThreeTest) {
     std::vector<int> v(180);
 
     std::srand(std::time(nullptr));
     for (int i = 0; i < 180; ++i) {
-        v[i] = std::rand() % 10;
+        v[i] = std::rand() % 101 - 50;
     }
     v = radixSort(v);
     for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
@@ -44,12 +44,12 @@ TEST(RadixSortTest, RepeatTest) {
     }
 }
 
-TEST(RadixSortTest, VectorTest) {
+TEST(RadixSortTest, FourTest) {
     std::vector<int> v(180);
 
     std::srand(std::time(nullptr));
     for (int i = 0; i < 180; ++i) {
-        v[i] = std::rand() % 201;
+        v[i] = std::rand() % 201 - 100;
     }
     v = radixSort(v);
     for (int i = 0; i < static_cast<int>(v.size()) - 1; ++i) {
