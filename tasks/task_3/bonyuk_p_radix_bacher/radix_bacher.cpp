@@ -122,8 +122,8 @@ void batcherMerge(std::vector<int>* local_nums, int numProcs, int myRank) {
                                 }
                             }
                         } else {
-                            if (local_idx1 < local_idx2 && local_nums[local_idx1] > local_nums[local_idx2]) {
-                                std::swap(local_nums[local_idx1], local_nums[local_idx2]);
+                            if (local_idx1 < local_idx2 && (*local_nums)[local_idx1] >(*local_nums)[local_idx2]) {
+                                std::swap((*local_nums)[local_idx1], (*local_nums)[local_idx2]);
                             }
                         }
                     }
