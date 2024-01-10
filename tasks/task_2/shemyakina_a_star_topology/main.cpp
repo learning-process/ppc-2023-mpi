@@ -66,7 +66,6 @@ TEST(Star_Topology, Test3_Master) {
     }
 }
 
-
 TEST(Star_Topology, Test_Yourself) {
     int size, rank;
 
