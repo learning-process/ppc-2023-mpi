@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-void radixSort(std::vector<int>* nums);
-void radixSortUnsigned(std::vector<int>& nums);
+std::vector<int> radixSort(std::vector<int> nums);
+std::vector<int> radixSortUnsigned(std::vector<int> nums);
 int checkMPIResult(int result);
 
 void compareExchange(std::vector<int>* local_nums, int i, int j, int dir);

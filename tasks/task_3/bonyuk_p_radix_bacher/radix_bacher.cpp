@@ -13,32 +13,32 @@
 
 #include "task_3/bonyuk_p_radix_bacher/radix_bacher.h"
 
-void radixSort(std::vector<int> nums) {
-    if (nums->empty()) {
-        return;
+std::vector<int> radixSort(std::vector<int> nums) {
+    if (nums.empty()) {
+        return nums;
     }
-    auto& nums_ref = *nums;
-    int maxNum = *std::max_element(nums_ref.begin(), nums_ref.end());
-    int minNum = *std::min_element(nums_ref.begin(), nums_ref.end());
+    int maxNum = *std::max_element(nums.begin(), nums.end());
+    int minNum = *std::min_element(nums.begin(), nums.end());
 
     std::vector<int> negatives, positives;
-    for (int num : nums_ref) {
+    for (int num : nums) {
         if (num < 0)
             negatives.push_back(-num);
         else
             positives.push_back(num);
     }
 
-    radixSortUnsigned(positives);
-    radixSortUnsigned(negatives);
+    positives = radixSortUnsigned(positives);
+    negatives = radixSortUnsigned(negatives);
     std::transform(negatives.begin(), negatives.end(), negatives.begin(), std::negate<int>());
     std::reverse(negatives.begin(), negatives.end());
-    nums_ref.clear();
-    nums_ref.insert(nums_ref.end(), negatives.begin(), negatives.end());
-    nums_ref.insert(nums_ref.end(), positives.begin(), positives.end());
+    nums.clear();
+    nums.insert(nums.end(), negatives.begin(), negatives.end());
+    nums.insert(nums.end(), positives.begin(), positives.end());
+    return nums;
 }
 
-void radixSortUnsigned(std::vector<int>& nums) {
+std::vector<int> radixSortUnsigned(std::vector<int> nums) {
     std::vector<int> output(nums.size());
     int maxNum = *std::max_element(nums.begin(), nums.end());
     int exp = 1;
@@ -53,17 +53,18 @@ void radixSortUnsigned(std::vector<int>& nums) {
             count[i] += count[i - 1];
         }
 
-        for (int i = nums_ref.size() - 1; i >= 0; i--) {
+		for (int i = nums.size() - 1; i >= 0; i--) {
             output[count[(nums[i] / exp) % 10] - 1] = nums[i];
             count[(nums[i] / exp) % 10]--;
         }
 
         for (int i = 0; i < nums.size(); i++) {
             nums[i] = output[i];
-         }
+        }
 
         exp *= 10;
     }
+    return nums;
 }
 
 int checkMPIResult(int result) {
