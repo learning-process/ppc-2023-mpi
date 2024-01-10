@@ -22,7 +22,7 @@ TEST(RadixSortTest, NegativeTest) {
 TEST(RadixSortTest, RepeatTest) {
     std::vector<int> v = { 10, 7, 3, 1, 9, 7, 9, 8 };
     std::vector<int> const expected_v = { 1, 3, 7, 7, 8, 9, 9, 10 };
-	radixSort(&v);
+    radixSort(&v);
     EXPECT_EQ(v, expected_v);
 }
 
