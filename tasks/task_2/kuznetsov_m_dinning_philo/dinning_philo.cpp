@@ -1,7 +1,7 @@
   // Copyright 2023 Kuznetsov Mikhail
 #include "task_2/kuznetsov_m_dinning_philo/dinning_philo.h"
-#include <cstring>
 #include <mpi.h>
+#include <cstring>
 #include <iostream>
 
 
