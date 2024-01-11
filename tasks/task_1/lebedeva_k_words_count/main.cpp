@@ -125,6 +125,7 @@ TEST(Count_Of_Words, Test_Large_String) {
         ASSERT_EQ(reference_count, count);
     }
 }
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
