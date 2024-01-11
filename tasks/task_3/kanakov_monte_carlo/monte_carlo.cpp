@@ -1,5 +1,5 @@
 // Copyright 2023 Kanakov Roman
-#include "../tasks/task_3/kanakov_monte_carlo/monte_carlo.h"
+#include "monte_carlo.h"
 #include <random>
 #include <mpi.h>
 

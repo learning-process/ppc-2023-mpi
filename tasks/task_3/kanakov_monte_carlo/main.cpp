@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include "./monte_carlo.h"
-#include <mpi.h>
 
 using std::array;
 using std::function;
