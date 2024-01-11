@@ -1,11 +1,11 @@
 // Copyright 2023 Kanakov Roman
 #ifndef TASKS_TASK_3_KANAKOV_MONTE_CARLO_MONTE_CARLO_H_
 #define TASKS_TASK_3_KANAKOV_MONTE_CARLO_MONTE_CARLO_H_
+#include <mpi.h>
 #include <cstdint>
 #include <array>
 #include <functional>
 #include <random>
-#include <mpi.h>
 
 template <size_t dim>
 double multiple_integral_monte_carlo_parallel(
@@ -95,5 +95,4 @@ double multiple_integral_monte_carlo_sequential(
 
     return total_sum;
 }
-
 #endif  // TASKS_TASK_3_KANAKOV_MONTE_CARLO_MONTE_CARLO_H_
