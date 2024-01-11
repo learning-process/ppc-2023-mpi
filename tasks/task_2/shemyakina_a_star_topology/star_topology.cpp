@@ -8,7 +8,6 @@ void StarData(MPI_Comm world, int master, int source, int receiver, int tag, voi
     MPI_Comm_size(world, &size);
     MPI_Comm_rank(world, &rank);
 
-
     if (!(source < size && receiver < size)) return;
     if (receiver - source == 0) return;
 
