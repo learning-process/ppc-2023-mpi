@@ -1,4 +1,4 @@
-//Copyright 2023 Kanakov Roman
+// Copyright 2023 Kanakov Roman
 #include "task_2/kanakov_method_gauss_jordan/method_gauss_jordan.h"
 #include <iostream>
 #include <algorithm>

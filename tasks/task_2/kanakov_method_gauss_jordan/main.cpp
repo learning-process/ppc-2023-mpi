@@ -1,4 +1,4 @@
-//Copyright 2023 Kanakov Roman
+// Copyright 2023 Kanakov Roman
 #include <gtest/gtest.h>
 #include <random>
 #include <boost/mpi/communicator.hpp>
