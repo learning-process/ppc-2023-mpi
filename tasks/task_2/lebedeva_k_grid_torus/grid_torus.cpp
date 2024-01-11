@@ -1,7 +1,7 @@
 // Copyright 2023 Lebedeva Ksenia
 
 #include <algorithm>
-#include "./torus_grid.h"
+#include "./grid_torus.h"
 #include "task_2/lebedeva_k_grid_torus/grid_torus.h"
 
 int getNext(int sender, int receiver) {
