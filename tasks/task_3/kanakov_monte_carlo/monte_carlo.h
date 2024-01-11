@@ -1,7 +1,6 @@
 // Copyright 2023 Kanakov Roman
 #ifndef TASKS_TASK_3_KANAKOV_MONTE_CARLO_MONTE_CARLO_H_
 #define TASKS_TASK_3_KANAKOV_MONTE_CARLO_MONTE_CARLO_H_
-
 #include <cstdint>
 #include <array>
 #include <functional>
