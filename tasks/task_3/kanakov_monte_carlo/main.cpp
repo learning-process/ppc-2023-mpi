@@ -2,7 +2,7 @@
 #include <math.h>
 #include <gtest/gtest.h>
 #include <vector>
-#include "./monte_carlo.h"
+#include "task_3/kanakov_monte_carlo/monte_carlo.h"
 
 using std::array;
 using std::function;
