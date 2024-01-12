@@ -1,10 +1,11 @@
 // Copyright 2023 Shipitsyn Alexey
-#include <gtest/gtest.h>
-#include <boost/mpi/environment.hpp>
-#include <boost/mpi/communicator.hpp>
 #include <mpi.h>
 #include <vector>
 #include <numeric>
+#include <gtest/gtest.h>
+#include <boost/mpi/environment.hpp>
+#include <boost/mpi/communicator.hpp>
+
 #include "task_1/shipitsyn_a_average_of_vector_elements/average_of_vector_elements.h"
 
 
