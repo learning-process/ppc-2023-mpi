@@ -1,14 +1,12 @@
 // Copyright 2023 Shipitsyn Alexey
 #include <gtest/gtest.h>
-#include <vector>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
-
-#include <gtest/gtest.h>
 #include <mpi.h>
 #include <vector>
 #include <numeric>
 #include "task_1/shipitsyn_a_average_of_vector_elements/average_of_vector_elements.h"
+
 
 TEST(Parallel_Vector_Average, Vector) {
     int world_size;
