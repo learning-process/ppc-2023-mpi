@@ -23,9 +23,37 @@ struct image {
             }
         }
     }
-    image(const image& img);
-    image& operator=(image img);
+    image(const image& img) {
+        m = img.m;
+        n = img.n;
+        data = new int* [m];
+        for (int i = 0; i < m; i++) {
+            data[i] = new int[n];
+            for (int j = 0; j < n; j++) {
+                data[i][j] = img.data[i][j];
+            }
+        }
+    }
+    image& operator=(image img) {
+        if (this == &img) return img;
+        for (int v = 0; v < m; v++) {
+            delete data[v];
+        }
+        delete[]data;
+        m = img.m;
+        n = img.n;
+        data = new int* [m];
+        for (int i = 0; i < m; i++) {
+            data[i] = new int[n];
+            for (int k = 0; k < n; k++) {
+                data[i][k] = img.data[i][k];
+            }
+            return *this;
+        }
+    }
     ~image() {
+        delete[]data[0];
+        delete[]data;
     }
 };
 void ParallelMarkingComponent(image* img);
