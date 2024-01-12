@@ -145,9 +145,3 @@ void ParallelMarkingComponent(image* img) {
     }
     img->count = res;
 }
-
-image::image(const image& img) {
-}
-
-image& image::operator=(image img) {
-}
