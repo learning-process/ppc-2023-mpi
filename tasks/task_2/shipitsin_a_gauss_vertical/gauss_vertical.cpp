@@ -5,7 +5,7 @@
 #include <random>
 #include <cmath>
 #include <iomanip>
-#include "task2/shipitsin_a_gauss_vertical/gauss_vertical.h"
+#include "task_2/shipitsin_a_gauss_vertical/gauss_vertical.h"
 
 #define EPSILON 0.000001
 
