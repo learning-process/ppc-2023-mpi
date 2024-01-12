@@ -6,7 +6,6 @@
 
 
 TEST(TEST_CCS, Test_constructor) {
-
     int rank;
     int numProc;
 
@@ -30,7 +29,6 @@ TEST(TEST_CCS, Test_constructor) {
 }
 
 TEST(TEST_CCS, Test_mult1) {
-
     int rank;
     int numProc;
 
@@ -65,8 +63,6 @@ TEST(TEST_CCS, Test_mult1) {
 }
 
 TEST(TEST_CCS, Test_mult2) {
-
-
     int rank;
     int numProc;
 

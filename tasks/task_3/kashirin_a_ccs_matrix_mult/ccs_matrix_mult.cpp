@@ -18,7 +18,7 @@ ClassMatrix::ClassMatrix(const int* matrix, int rows, int cols) {
     for (j = 0; j < cols; j++) {
         ccsMatrix.ColPtr[j + 1] = ccsMatrix.ColPtr[j];
         for (i = 0; i < rows; i++) {
-            if (matrix[j + i * cols]!= 0 ) {
+            if (matrix[j + i * cols] != 0 ) {
                 ccsMatrix.vals++;
                 ccsMatrix.ColPtr[j + 1]++;
             }
@@ -31,7 +31,7 @@ ClassMatrix::ClassMatrix(const int* matrix, int rows, int cols) {
         for (j = 0; j < cols; j++) {
             for (i = 0; i < rows; i++) {
                 int ind = j + i * cols;
-                if (matrix[ind]!=0) {
+                if ( matrix[ind] != 0 ) {
                     ccsMatrix.Values[k] = matrix[ind];
                     ccsMatrix.RowInd[k] = i;
                     k++;
@@ -90,11 +90,9 @@ ClassMatrix ClassMatrix::operator*(const ClassMatrix& m) const {
             while ((ks < kf) && (ls < lf)) {
                 if (a.ccsMatrix.RowInd[ks] < m.ccsMatrix.RowInd[ls]) {
                     ks++;
-                }
-                else if (a.ccsMatrix.RowInd[ks] > m.ccsMatrix.RowInd[ls]) {
+                } else if (a.ccsMatrix.RowInd[ks] > m.ccsMatrix.RowInd[ls]) {
                     ls++;
-                }
-                else {
+                } else {
                     sum += a.ccsMatrix.Values[ks] * m.ccsMatrix.Values[ls];
                     ks++;
                     ls++;
@@ -178,8 +176,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
         for (i = 1; i < numProc; i++) {
             MPI_Send(m.ccsMatrix.ColPtr + remain + i * (chunkSize), chunkSize + 1, MPI_INT, i, 0, MPI_COMM_WORLD);
         }
-    }
-    else {
+    } else {
         m.ccsMatrix.ColPtr = new int[chunkSize + 1];
         MPI_Recv(m.ccsMatrix.ColPtr, chunkSize + 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
@@ -198,8 +195,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
                 }
                 else if (a.ccsMatrix.RowInd[ks] > m.ccsMatrix.RowInd[ls]) {
                     ls++;
-                }
-                else {
+                } else {
                     sum += a.ccsMatrix.Values[ks] * m.ccsMatrix.Values[ls];
                     ks++;
                     ls++;
@@ -216,8 +212,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
     int temp_vals = tmpValues.size();
     a.clear();
     int* res_vals;
-    if (rank == 0) { res_vals = new int[numProc]; }
-    else { m.clear(); }
+    if (rank == 0) { res_vals = new int[numProc]; } else { m.clear(); }
     MPI_Gather(&temp_vals, 1, MPI_INT, res_vals, 1, MPI_INT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         for (i = 0; i < numProc; i++) {
@@ -242,8 +237,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
             offset += res_vals[i];
         }
         delete[] res_vals;
-    }
-    else {
+    } else {
         MPI_Send(tmpValues.data(), temp_vals, MPI_INT, 0, 0, MPI_COMM_WORLD);
         MPI_Send(tmpRows.data(), temp_vals, MPI_INT, 0, 1, MPI_COMM_WORLD);
         MPI_Send(tmpColPtr + 1, chunkSize, MPI_INT, 0, 2, MPI_COMM_WORLD);

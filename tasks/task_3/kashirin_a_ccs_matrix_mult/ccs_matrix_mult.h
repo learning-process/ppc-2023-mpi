@@ -8,24 +8,25 @@
 #include <algorithm>
 
 struct StructMatrix {
-	int* Values = nullptr; int vals = 0;
-	int* RowInd = nullptr; int rows = 0;
-	int* ColPtr = nullptr; int cols = 0;
+    int* Values = nullptr; int vals = 0;
+    int* RowInd = nullptr; int rows = 0;
+    int* ColPtr = nullptr; int cols = 0;
 };
 
 class ClassMatrix {
 public:
-	StructMatrix ccsMatrix;
-	friend ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
-	ClassMatrix() {}
-	ClassMatrix(const int* matrix, int rows, int cols);
-	explicit ClassMatrix(StructMatrix* props);
-	ClassMatrix TransposeCCS() const;
-	ClassMatrix& operator=(const ClassMatrix& sm);
-	ClassMatrix& operator=(ClassMatrix&& sm);
-	ClassMatrix operator*(const ClassMatrix& m) const;
-	void clear();
-	~ClassMatrix();
+
+    StructMatrix ccsMatrix;
+    friend ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
+    ClassMatrix() {}
+    ClassMatrix(const int* matrix, int rows, int cols);
+    explicit ClassMatrix(StructMatrix* props);
+    ClassMatrix TransposeCCS() const;
+    ClassMatrix& operator=(const ClassMatrix& sm);
+    ClassMatrix& operator=(ClassMatrix&& sm);
+    ClassMatrix operator*(const ClassMatrix& m) const;
+    void clear();
+    ~ClassMatrix();
 };
 
 ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
