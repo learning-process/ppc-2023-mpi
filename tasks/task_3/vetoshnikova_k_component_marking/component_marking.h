@@ -26,6 +26,7 @@ struct image {
     image(const image& img) {
         m = img.m;
         n = img.n;
+        count = img.count;
         data = new int* [m];
         for (int i = 0; i < m; i++) {
             data[i] = new int[n];
@@ -42,6 +43,7 @@ struct image {
         delete[]data;
         m = img.m;
         n = img.n;
+        count = img.count;
         data = new int* [m];
         for (int i = 0; i < m; i++) {
             data[i] = new int[n];
