@@ -14,18 +14,18 @@ struct StructMatrix {
 };
 
 class ClassMatrix {
-  public:
-    StructMatrix ccsMatrix;
-    friend ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
-    ClassMatrix() {}
-    ClassMatrix(const int* matrix, int rows, int cols);
-    explicit ClassMatrix(StructMatrix* props);
-    ClassMatrix TransposeCCS() const;
-    ClassMatrix& operator=(const ClassMatrix& sm);
-    ClassMatrix& operator=(ClassMatrix&& sm);
-    ClassMatrix operator*(const ClassMatrix& m) const;
-    void clear();
-    ~ClassMatrix();
+ public:
+  StructMatrix ccsMatrix;
+  friend ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
+  ClassMatrix() {}
+  ClassMatrix(const int* matrix, int rows, int cols);
+  explicit ClassMatrix(StructMatrix* props);
+  ClassMatrix TransposeCCS() const;
+  ClassMatrix& operator=(const ClassMatrix& sm);
+  ClassMatrix& operator=(ClassMatrix&& sm);
+  ClassMatrix operator*(const ClassMatrix& m) const;
+  void clear();
+  ~ClassMatrix();
 };
 
 ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
