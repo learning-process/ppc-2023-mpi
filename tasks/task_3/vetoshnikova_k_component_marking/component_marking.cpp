@@ -2,7 +2,7 @@
 
 #include "task_3/vetoshnikova_k_component_marking/component_marking.h"
 
-void ParallelMarkingСomponent(image* img) {
+void ParallelMarkingComponent(image* img) {
     int ProcNum;
     int ProcRank;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
@@ -15,9 +15,10 @@ void ParallelMarkingСomponent(image* img) {
 
     if (ProcRank == 0) {
         count_string_pr = delta + remainder;
-    } else
+    }
+    else {
         count_string_pr = delta;
-
+    }
     int label = ProcRank * 100;
     int* global_image, * local_image;
     global_image = new int[img->m * img->n];
@@ -38,8 +39,10 @@ void ParallelMarkingСomponent(image* img) {
             MPI_Send(&global_image[i * img->n * delta + remainder * img->n], delta * img->n,
                 MPI_INT, i, 0, MPI_COMM_WORLD);
         }
-    } else
+    }
+    else {
         MPI_Recv(&local_image[0], delta * img->n, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+    }
     for (int i = 0; i < count_string_pr; i++) {
         for (int j = 0; j < img->n; j++) {
            local_img->data[i][j] = local_image[i * img->n + j];
@@ -138,7 +141,7 @@ void ParallelMarkingСomponent(image* img) {
                         fl = 0;
                         res--;
                     }
-                }   
+                }
             }
         }
     }

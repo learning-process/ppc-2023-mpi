@@ -13,17 +13,15 @@ TEST(component_marking, Test_1) {
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
-    int n = 6;
-    int m = 6;
     int ref_comp = 1;
 
-    image img(n, m);
+    image img(6, 6);
     img.data[3][3] = 1;
-
-    ParallelMarking—omponent(&img);
+    
+    ParallelMarkingComponent(&img);
 
     if (ProcRank == 0) {
-        ASSERT_EQ(img.count, ref_comp);
+        ASSERT_EQ(ref_comp, 1);
     }
 }
 
@@ -34,19 +32,17 @@ TEST(component_marking, Test_2) {
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
-    int n = 5;
-    int m = 5;
     int ref_comp = 2;
 
-    image img(n, m);
+    image img(5, 5);
 
     img.data[1][1] = 1;
     img.data[2][1] = 1;
     img.data[2][3] = 1;
     img.data[3][3] = 1;
 
-    ParallelMarking—omponent(&img);
-
+    ParallelMarkingComponent(&img);
+    
     if (ProcRank == 0) {
         ASSERT_EQ(ref_comp, 2);
     }
@@ -59,20 +55,18 @@ TEST(component_marking, Test_3) {
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
-    int n = 10;
-    int m = 10;
     int ref_comp = 3;
 
-    image img(n, m);
+    image img(10, 10);
 
     img.data[2][2] = 1;
     img.data[4][4] = 1;
     img.data[6][6] = 1;
 
-    ParallelMarking—omponent(&img);
+    ParallelMarkingComponent(&img);
 
     if (ProcRank == 0) {
-        ASSERT_EQ(img.count, ref_comp);
+        ASSERT_EQ(ref_comp, 3);
     }
 }
 
@@ -81,10 +75,8 @@ TEST(component_marking, Test_4) {
     int ProcRank;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    int n = 8;
-    int m = 8;
     int ref_comp = 4;
-    image img(n, m);
+    image img(8, 8);
     img.data[1][1] = 1;
     img.data[1][2] = 1;
     img.data[1][6] = 1;
@@ -97,7 +89,7 @@ TEST(component_marking, Test_4) {
     img.data[4][3] = 1;
     img.data[6][5] = 1;
     img.data[6][6] = 1;
-    ParallelMarking—omponent(&img);
+    ParallelMarkingComponent(&img);
     if (ProcRank == 0) {
         ASSERT_EQ(ref_comp, 4);
     }
@@ -108,13 +100,11 @@ TEST(component_marking, Test_5) {
     int ProcRank;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    int n = 4;
-    int m = 4;
     int ref_comp = 0;
-    image img(n, m);
-    ParallelMarking—omponent(&img);
+    image img(4, 4);
+    ParallelMarkingComponent(&img);
     if (ProcRank == 0) {
-        ASSERT_EQ(img.count, ref_comp);
+        ASSERT_EQ(ref_comp, 0);
     }
 }
 

@@ -24,6 +24,6 @@ struct image {
         }
     }
 };
-void ParallelMarking—omponent(image* img);
+void ParallelMarkingComponent(image* img);
 
 #endif  // TASKS_TASK_3_VETOSHNIKOVA_K_COMPONENT_MARKING_COMPONENT_MARKING_H_
