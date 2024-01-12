@@ -17,13 +17,13 @@ TEST(component_marking, Test_1) {
     int m = 6;
     int ref_comp = 1;
 
-    image image(n, m);
-    image.data[3][3] = 1;
+    image img(n, m);
+    img.data[3][3] = 1;
 
-    ParallelMarking—omponent(&image);
+    ParallelMarking—omponent(&img);
 
     if (ProcRank == 0) {
-        ASSERT_EQ(image.count, ref_comp);
+        ASSERT_EQ(img.count, ref_comp);
     }
 }
 
@@ -38,14 +38,14 @@ TEST(component_marking, Test_2) {
     int m = 5;
     int ref_comp = 2;
 
-    image image(n, m);
+    image img(n, m);
 
-    image.data[1][1] = 1;
-    image.data[2][1] = 1;
-    image.data[2][3] = 1;
-    image.data[3][3] = 1;
+    img.data[1][1] = 1;
+    img.data[2][1] = 1;
+    img.data[2][3] = 1;
+    img.data[3][3] = 1;
 
-    ParallelMarking—omponent(&image);
+    ParallelMarking—omponent(&img);
 
     if (ProcRank == 0) {
         ASSERT_EQ(ref_comp, 2);
@@ -63,16 +63,16 @@ TEST(component_marking, Test_3) {
     int m = 10;
     int ref_comp = 3;
 
-    image image(n, m);
+    image img(n, m);
 
-    image.data[2][2] = 1;
-    image.data[4][4] = 1;
-    image.data[6][6] = 1;
+    img.data[2][2] = 1;
+    img.data[4][4] = 1;
+    img.data[6][6] = 1;
 
-    ParallelMarking—omponent(&image);
+    ParallelMarking—omponent(&img);
 
     if (ProcRank == 0) {
-        ASSERT_EQ(image.count, ref_comp);
+        ASSERT_EQ(img.count, ref_comp);
     }
 }
 
@@ -84,20 +84,20 @@ TEST(component_marking, Test_4) {
     int n = 8;
     int m = 8;
     int ref_comp = 4;
-    image image(n, m);
-    image.data[1][1] = 1;
-    image.data[1][2] = 1;
-    image.data[1][6] = 1;
-    image.data[2][1] = 1;
-    image.data[2][2] = 1;
-    image.data[2][6] = 1;
-    image.data[3][6] = 1;
-    image.data[4][1] = 1;
-    image.data[4][2] = 1;
-    image.data[4][3] = 1;
-    image.data[6][5] = 1;
-    image.data[6][6] = 1;
-    ParallelMarking—omponent(&image);
+    image img(n, m);
+    img.data[1][1] = 1;
+    img.data[1][2] = 1;
+    img.data[1][6] = 1;
+    img.data[2][1] = 1;
+    img.data[2][2] = 1;
+    img.data[2][6] = 1;
+    img.data[3][6] = 1;
+    img.data[4][1] = 1;
+    img.data[4][2] = 1;
+    img.data[4][3] = 1;
+    img.data[6][5] = 1;
+    img.data[6][6] = 1;
+    ParallelMarking—omponent(&img);
     if (ProcRank == 0) {
         ASSERT_EQ(ref_comp, 4);
     }
@@ -111,10 +111,10 @@ TEST(component_marking, Test_5) {
     int n = 4;
     int m = 4;
     int ref_comp = 0;
-    image image(n, m);
-    ParallelMarking—omponent(&image);
+    image img(n, m);
+    ParallelMarking—omponent(&img);
     if (ProcRank == 0) {
-        ASSERT_EQ(image.count, ref_comp);
+        ASSERT_EQ(img.count, ref_comp);
     }
 }
 
