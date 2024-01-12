@@ -1,8 +1,9 @@
 // Copyright 2023 Shipitsyn Alexey
 #include <mpi.h>
+#include <gtest/gtest.h>
 #include <vector>
 #include <numeric>
-#include <gtest/gtest.h>
+
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 
