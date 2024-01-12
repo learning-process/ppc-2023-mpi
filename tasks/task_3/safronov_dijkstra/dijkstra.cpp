@@ -1,5 +1,6 @@
 // Copyright 2023 Safronov Mikhail
 #include "task_3/safronov_dijkstra/dijkstra.h"
+const int INF = INT_MAX;
 
 int minDistance(int dist[], bool sptSet[], int n) {
     int min = INT_MAX, min_index;
@@ -11,53 +12,47 @@ int minDistance(int dist[], bool sptSet[], int n) {
     return min_index;
 }
 
-void printSolution(int dist[], int n) {
-    std::cout << "Минимальные расстояния от начальной вершины до всех остальных:\n";
-    for (int i = 0; i < n; i++)
-        std::cout << i << ": " << dist[i] << std::endl;
-}
-
-void dijkstra(int** graph, int n, int src, int* resDist) {
+void dijkstra(MPI_Comm comm, int** graph, int n, int src, int* resDist) {
     int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    const int INF = 99999999;
-    //std::cout << rank <<  " dijkstra " << std::endl;
-    int dist[n];
-    bool sptSet[n];
+    MPI_Comm_rank(comm, &rank);
+    MPI_Comm_size(comm, &size);
 
-    // Calculate the number of vertices each process will handle
-    int verticesPerProcess = (n + size - 1) / size;
-    int startVertex = rank * verticesPerProcess;
-    int endVertex = std::min((rank + 1) * verticesPerProcess, n);
+    int* dist = new int[n];
+    bool* sptSet = new bool[n];
 
     for (int i = 0; i < n; i++) {
-        dist[i] = (i == src) ? 0 : INF;
+        dist[i] = INT_MAX;
         sptSet[i] = false;
     }
 
-    int localDist[n];
-    for (int i = 0; i < n; i++) {
-        localDist[i] = dist[i];
-    }
+    dist[src] = 0;
 
     for (int count = 0; count < n - 1; count++) {
-        int u = minDistance(localDist, sptSet, n);
+        int u = minDistance(dist, sptSet, n);
+
         sptSet[u] = true;
 
-        for (int v = startVertex; v < endVertex; v++) {
-            if (!sptSet[v] && graph[u][v] && localDist[u] != INF &&
-                localDist[u] + graph[u][v] < localDist[v]) {
-                localDist[v] = localDist[u] + graph[u][v];
+        for (int v = 0; v < n; v++) {
+            if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX
+            && dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
             }
         }
-        //std::cout << "before gather" << std::endl;
-        MPI_Allgather(localDist + startVertex, verticesPerProcess, MPI_INT, dist, verticesPerProcess, MPI_INT, MPI_COMM_WORLD);
-        //std::cout << "Allgather 56 after" << std::endl;
     }
 
-    // Gather the final result
-    //std::cout << "before gather" << std::endl;
-    MPI_Gather(localDist + startVertex, verticesPerProcess, MPI_INT, resDist, verticesPerProcess, MPI_INT, 0, MPI_COMM_WORLD);
-    //std::cout << "gather 61 after" << std::endl;
+    int* allDist = new int[size * n];
+    MPI_Gather(dist, n, MPI_INT, allDist, n, MPI_INT, 0, comm);
+
+    if (rank == 0) {
+        for (int i = 0; i < n; i++) {
+            resDist[i] = INT_MAX;
+            for (int j = 0; j < size; j++) {
+                resDist[i] = std::min(resDist[i], allDist[j * n + i]);
+            }
+        }
+    }
+
+    delete[] dist;
+    delete[] sptSet;
+    delete[] allDist;
 }
