@@ -13,9 +13,9 @@ struct StructMatrix {
     int* ColPtr = nullptr; int cols = 0;
 };
 
-class ClassMatrix {
-
-public:
+class ClassMatrix 
+{
+  public:
     StructMatrix ccsMatrix;
     friend ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
     ClassMatrix() {}
