@@ -3,7 +3,7 @@
 const int INF = INT_MAX;
 
 int minDistance(int dist[], bool sptSet[], int n) {
-    int min = INT_MAX, min_index;
+    int min = INT_MAX, min_index = -1;
 
     for (int v = 0; v < n; v++)
         if (!sptSet[v] && dist[v] <= min)
@@ -11,6 +11,7 @@ int minDistance(int dist[], bool sptSet[], int n) {
 
     return min_index;
 }
+
 
 void dijkstra(MPI_Comm comm, int** graph, int n, int src, int* resDist) {
     int rank, size;
