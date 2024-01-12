@@ -1,7 +1,6 @@
 ﻿  // Copyright 2023 Vetoshnikova Ekaterina
 
 #include "task_3/vetoshnikova_k_component_marking/component_marking.h"
-#include "component_marking.h"
 
 void ParallelMarkingComponent(image* img) {
     int ProcNum;
@@ -147,10 +146,8 @@ void ParallelMarkingComponent(image* img) {
     img->count = res;
 }
 
-image::image(const image& img)
-{
+image::image(const image& img) {
 }
 
-image& image::operator=(image img)
-{
+image& image::operator=(image img) {
 }
