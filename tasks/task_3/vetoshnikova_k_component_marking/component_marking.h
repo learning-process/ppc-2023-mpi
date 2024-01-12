@@ -1,8 +1,8 @@
 // Copyright 2023 Vetoshnikova Ekaterina
 
 
-#ifndef TASKS_TASK_3_VETOSHNIKOVA_K_COMPONENT_MARKING_H_
-#define TASKS_TASK_3_VETOSHNIKOVA_K_COMPONENT_MARKING_H_
+#ifndef TASKS_TASK_3_VETOSHNIKOVA_K_COMPONENT_MARKING_COMPONENT_MARKING_H_
+#define TASKS_TASK_3_VETOSHNIKOVA_K_COMPONENT_MARKING_COMPONENT_MARKING_H_
 
 #include <mpi.h>
 #include <iostream>
@@ -24,7 +24,6 @@ struct image {
         }
     }
 };
-
 void ParallelMarking—omponent(image* img);
 
-#endif  // TASKS_TASK_3_VETOSHNIKOVA_K_COMPONENT_MARKING_H_
+#endif  // TASKS_TASK_3_VETOSHNIKOVA_K_COMPONENT_MARKING_COMPONENT_MARKING_H_

@@ -40,7 +40,6 @@ TEST(component_marking, Test_2) {
 
     image image(n, m);
 
-
     image.data[1][1] = 1;
     image.data[2][1] = 1;
     image.data[2][3] = 1;
@@ -80,16 +79,12 @@ TEST(component_marking, Test_3) {
 TEST(component_marking, Test_4) {
     int ProcNum;
     int ProcRank;
-
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-
     int n = 8;
     int m = 8;
     int ref_comp = 4;
-
     image image(n, m);
-
     image.data[1][1] = 1;
     image.data[1][2] = 1;
     image.data[1][6] = 1;
@@ -102,10 +97,7 @@ TEST(component_marking, Test_4) {
     image.data[4][3] = 1;
     image.data[6][5] = 1;
     image.data[6][6] = 1;
-
-
     ParallelMarking—omponent(&image);
-
     if (ProcRank == 0) {
         ASSERT_EQ(ref_comp, 4);
     }
@@ -114,19 +106,13 @@ TEST(component_marking, Test_4) {
 TEST(component_marking, Test_5) {
     int ProcNum;
     int ProcRank;
-
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-
     int n = 4;
     int m = 4;
     int ref_comp = 0;
-
     image image(n, m);
-
-   
     ParallelMarking—omponent(&image);
-
     if (ProcRank == 0) {
         ASSERT_EQ(image.count, ref_comp);
     }

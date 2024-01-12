@@ -16,9 +16,8 @@ void ParallelMarkingСomponent(image* img) {
     if (ProcRank == 0) {
         count_string_pr = delta + remainder;
     }
-    else {
+    else
         count_string_pr = delta;
-    }
 
     int label = ProcRank * 100;
     int* global_image, * local_image;
@@ -41,9 +40,9 @@ void ParallelMarkingСomponent(image* img) {
                 MPI_INT, i, 0, MPI_COMM_WORLD);
         }
     }
-    else {
+    else
         MPI_Recv(&local_image[0], delta * img->n, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
-    }
+    
     for (int i = 0; i < count_string_pr; i++) {
         for (int j = 0; j < img->n; j++) {
             local_img->data[i][j] = local_image[i * img->n + j];
@@ -56,7 +55,7 @@ void ParallelMarkingСomponent(image* img) {
             if (local_img->data[i][j] == 1) {
                 fl = 1;
                 local_img->data[i][j] = label;
-                if (i + 1 < count_string_pr && local_img->data[i + 1][j] == 1) { 
+                if (i + 1 < count_string_pr && local_img->data[i + 1][j] == 1) {
                     int k = i + 1;
                     while (k < count_string_pr && local_img->data[k][j] == 1) {
                         local_img->data[k][j] = label;
@@ -78,13 +77,12 @@ void ParallelMarkingСomponent(image* img) {
                     }
                 }
             }
-            else {
+            else
                 if (fl == 1) {
                     fl = 0;
                     label++;
                     label_count++;
                 }
-            }
         }
     }
     for (int i = 0; i < count_string_pr; i++) {
@@ -101,12 +99,11 @@ void ParallelMarkingСomponent(image* img) {
         MPI_Send(&local_image[0], count_string_pr * img->n,
             MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
-    else {
+    else
         for (int i = 1; i < ProcNum; i++) {
             MPI_Recv(&global_image[i * img->n * delta + remainder * img->n], count_string_pr * img->n,
                 MPI_INT, i, 0, MPI_COMM_WORLD, &status);
         }
-    }
     MPI_Reduce(&label_count, &res, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
     if (ProcRank == 0) {
         for (int i = 0; i < img->m; i++) {
@@ -140,12 +137,11 @@ void ParallelMarkingСomponent(image* img) {
                         k++;
                     }
                 }
-                else {
+                else
                     if (fl == 1) {
                         fl = 0;
                         res--;
                     }
-                }
             }
         }
     }
