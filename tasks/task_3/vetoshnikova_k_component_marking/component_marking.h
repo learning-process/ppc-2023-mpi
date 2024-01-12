@@ -23,6 +23,10 @@ struct image {
             }
         }
     }
+    image(const image& img);
+    image& operator=(image img);
+    ~image() {
+    }
 };
 void ParallelMarkingComponent(image* img);
 
