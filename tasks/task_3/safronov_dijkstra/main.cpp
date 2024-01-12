@@ -4,7 +4,7 @@
 
 
 TEST(DijkstraMPI, ParallelTest_0) {
-    int rank, size, V = 5;
+    int rank, size; const int V = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -62,7 +62,7 @@ TEST(DijkstraMPI, ParallelTest_0) {
 
 
 TEST(DijkstraMPI, ParallelTest_1) {
-    int rank, size, V = 5;
+    int rank, size; const int V = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -119,7 +119,7 @@ TEST(DijkstraMPI, ParallelTest_1) {
 }
 
 TEST(DijkstraMPI, ParallelTest_2) {
-    int rank, size, V = 5;
+    int rank, size; const int V = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -176,7 +176,7 @@ TEST(DijkstraMPI, ParallelTest_2) {
 }
 
 TEST(DijkstraMPI, ParallelTest_3) {
-    int rank, size, V = 5;
+    int rank, size; const int V = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -233,7 +233,7 @@ TEST(DijkstraMPI, ParallelTest_3) {
 }
 
 TEST(DijkstraMPI, ParallelTest_4) {
-    int rank, size, V = 5;
+    int rank, size; const int V = 5;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
