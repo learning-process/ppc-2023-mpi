@@ -18,7 +18,7 @@ ClassMatrix::ClassMatrix(const int* matrix, int rows, int cols) {
     for (j = 0; j < cols; j++) {
         ccsMatrix.ColPtr[j + 1] = ccsMatrix.ColPtr[j];
         for (i = 0; i < rows; i++) {
-            if (matrix[j + i * cols] != 0 ) {
+            if ( matrix[j + i * cols] != 0 ) {
                 ccsMatrix.vals++;
                 ccsMatrix.ColPtr[j + 1]++;
             }
@@ -192,8 +192,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
             while ((ks < kf) && (ls < lf)) {
                 if (a.ccsMatrix.RowInd[ks] < m.ccsMatrix.RowInd[ls]) {
                     ks++;
-                }
-                else if (a.ccsMatrix.RowInd[ks] > m.ccsMatrix.RowInd[ls]) {
+                } else if (a.ccsMatrix.RowInd[ks] > m.ccsMatrix.RowInd[ls]) {
                     ls++;
                 } else {
                     sum += a.ccsMatrix.Values[ks] * m.ccsMatrix.Values[ls];

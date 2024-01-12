@@ -14,8 +14,8 @@ struct StructMatrix {
 };
 
 class ClassMatrix {
-public:
 
+public:
     StructMatrix ccsMatrix;
     friend ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
     ClassMatrix() {}
