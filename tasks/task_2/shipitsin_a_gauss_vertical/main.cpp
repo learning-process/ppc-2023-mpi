@@ -1,3 +1,4 @@
+// Copyright 2023 Shipitsin Alex
 #include <mpi.h>
 #include <gtest/gtest.h>
 #include <vector>

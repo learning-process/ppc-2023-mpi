@@ -1,4 +1,4 @@
-
+// Copyright 2023 Shipitsin Alex
 #ifndef TASKS_TASK_2_SHIPITSIN_A_GAUSS_VERTICAL_GAUSS_VERTICAL_H_
 #define TASKS_TASK_2_SHIPITSIN_A_GAUSS_VERTICAL_GAUSS_VERTICAL_H_
 #include <vector>
@@ -12,4 +12,4 @@ Matrix SequentialGauss(const Matrix& matrix, int rows, int cols,
 Matrix ParallelGauss(const Matrix& matrix, int rows, int cols,
                         const Matrix& vec, int vector_size);
 
-#endif  
+#endif  // TASKS_TASK_2_SHIPITSIN_GAUSS_VERTICAL_H_
