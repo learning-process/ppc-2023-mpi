@@ -2,9 +2,13 @@
 
 #include "task_3/kashirin_a_ccs_matrix_mult/ccs_matrix_mult.h"
 #include <mpi.h>
+#include <limits>
 #include <cmath>
 #include <iostream>
 #include <cstring>
+#include <stdexcept>
+#include <utility>
+#include <algorithm>
 
 
 ClassMatrix::ClassMatrix(const double* matrix, int rows, int cols) {

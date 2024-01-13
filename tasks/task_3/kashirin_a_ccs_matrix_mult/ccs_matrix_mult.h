@@ -4,8 +4,6 @@
 
 #include <iostream>
 #include <vector>
-#include <utility>
-#include <algorithm>
 #include <limits>
 
 struct StructMatrix {
