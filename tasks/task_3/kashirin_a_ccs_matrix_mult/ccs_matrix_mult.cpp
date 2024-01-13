@@ -168,9 +168,9 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
         m.ccsMatrix.RowInd = new int[m.ccsMatrix.vals];
         m.ccsMatrix.ColPtr = nullptr;
     }
-    MPI_Bcast(a.ccsMatrix.Values, a.ccsMatrix.vals, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(a.ccsMatrix.Values, a.ccsMatrix.vals, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast(a.ccsMatrix.RowInd, a.ccsMatrix.vals, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Bcast(m.ccsMatrix.Values, m.ccsMatrix.vals, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(m.ccsMatrix.Values, m.ccsMatrix.vals, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast(m.ccsMatrix.RowInd, m.ccsMatrix.vals, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(a.ccsMatrix.ColPtr, a.ccsMatrix.cols + 1, MPI_INT, 0, MPI_COMM_WORLD);
     int chunkSize = (m.ccsMatrix.cols) / numProc;
@@ -231,7 +231,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
         int offset = res_vals[0];
         for (i = 1; i < numProc; i++) {
             int ind = remain + (chunkSize)*i + 1;
-            MPI_Recv(res.Values + offset, res_vals[i], MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(res.Values + offset, res_vals[i], MPI_DOUBLE, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             MPI_Recv(res.RowInd + offset, res_vals[i], MPI_INT, i, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             MPI_Recv(res.ColPtr + ind, chunkSize, MPI_INT, i, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             for (j = ind; j < ind + chunkSize; j++) {
@@ -241,7 +241,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
         }
         delete[] res_vals;
     } else {
-        MPI_Send(tmpValues.data(), temp_vals, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        MPI_Send(tmpValues.data(), temp_vals, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
         MPI_Send(tmpRows.data(), temp_vals, MPI_INT, 0, 1, MPI_COMM_WORLD);
         MPI_Send(tmpColPtr + 1, chunkSize, MPI_INT, 0, 2, MPI_COMM_WORLD);
         delete[] tmpColPtr;
