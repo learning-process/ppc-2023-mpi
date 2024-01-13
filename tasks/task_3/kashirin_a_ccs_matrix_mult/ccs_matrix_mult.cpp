@@ -7,7 +7,7 @@
 #include <cstring>
 
 
-ClassMatrix::ClassMatrix(const int* matrix, int rows, int cols) {
+ClassMatrix::ClassMatrix(const double* matrix, int rows, int cols) {
     clear();
     ccsMatrix.rows = rows;
     ccsMatrix.cols = cols;
@@ -18,7 +18,7 @@ ClassMatrix::ClassMatrix(const int* matrix, int rows, int cols) {
     for (j = 0; j < cols; j++) {
         ccsMatrix.ColPtr[j + 1] = ccsMatrix.ColPtr[j];
         for (i = 0; i < rows; i++) {
-            if ( matrix[j + i * cols] != 0 ) {
+            if ( !is_zero(matrix[j + i * cols]) ) {
                 ccsMatrix.vals++;
                 ccsMatrix.ColPtr[j + 1]++;
             }
@@ -27,11 +27,11 @@ ClassMatrix::ClassMatrix(const int* matrix, int rows, int cols) {
     if (ccsMatrix.vals > 0) {
         int k = 0;
         ccsMatrix.RowInd = new int[ccsMatrix.vals];
-        ccsMatrix.Values = new int[ccsMatrix.vals];
+        ccsMatrix.Values = new double[ccsMatrix.vals];
         for (j = 0; j < cols; j++) {
             for (i = 0; i < rows; i++) {
                 int ind = j + i * cols;
-                if ( matrix[ind] != 0 ) {
+                if ( !is_zero(matrix[ind]) ) {
                     ccsMatrix.Values[k] = matrix[ind];
                     ccsMatrix.RowInd[k] = i;
                     k++;
@@ -51,7 +51,7 @@ ClassMatrix& ClassMatrix::operator=(const ClassMatrix& sm) {
     ccsMatrix.vals = sm.ccsMatrix.vals;
     ccsMatrix.rows = sm.ccsMatrix.rows;
     ccsMatrix.cols = sm.ccsMatrix.rows;
-    ccsMatrix.Values = new int[ccsMatrix.vals];
+    ccsMatrix.Values = new double[ccsMatrix.vals];
     ccsMatrix.RowInd = new int[ccsMatrix.vals];
     int i;
     for (i = 0; i < ccsMatrix.vals; i++) {
@@ -78,13 +78,13 @@ ClassMatrix ClassMatrix::operator*(const ClassMatrix& m) const {
     res.ColPtr = new int[res.cols + 1];
     std::vector<int> temp_rows_ind_arr;
     temp_rows_ind_arr.reserve(std::max(ccsMatrix.vals, m.ccsMatrix.vals));
-    std::vector<int> temp_vals_arr;
+    std::vector<double> temp_vals_arr;
     temp_vals_arr.reserve(std::max(ccsMatrix.vals, m.ccsMatrix.vals));
     std::memset(res.ColPtr, 0, (res.cols + 1) * sizeof(int));
     ClassMatrix a = TransposeCCS();
     for (j = 0; j < res.cols; j++) {
         for (i = 0; i < res.rows; i++) {
-            int sum = 0;
+            double sum = 0.0;
             int ks = a.ccsMatrix.ColPtr[i], kf = a.ccsMatrix.ColPtr[i + 1];
             int ls = m.ccsMatrix.ColPtr[j], lf = m.ccsMatrix.ColPtr[j + 1];
             while ((ks < kf) && (ls < lf)) {
@@ -98,7 +98,7 @@ ClassMatrix ClassMatrix::operator*(const ClassMatrix& m) const {
                     ls++;
                 }
             }
-            if (sum != 0) {
+            if (!is_zero(sum)) {
                 res.ColPtr[j + 1]++;
                 temp_rows_ind_arr.push_back(i);
                 temp_vals_arr.push_back(sum);
@@ -108,7 +108,7 @@ ClassMatrix ClassMatrix::operator*(const ClassMatrix& m) const {
     }
     res.vals = temp_vals_arr.size();
     res.RowInd = new int[res.vals];
-    res.Values = new int[res.vals];
+    res.Values = new double[res.vals];
     std::copy(temp_rows_ind_arr.begin(), temp_rows_ind_arr.end(), res.RowInd);
     std::copy(temp_vals_arr.begin(), temp_vals_arr.end(), res.Values);
     return ClassMatrix(&res);
@@ -121,7 +121,7 @@ ClassMatrix ClassMatrix::TransposeCCS() const {
     res.vals = ccsMatrix.vals;
     res.ColPtr = new int[res.cols + 2];
     res.RowInd = new int[res.vals];
-    res.Values = new int[res.vals];
+    res.Values = new double[res.vals];
     std::memset(res.ColPtr, 0,
         (res.cols + 2) * sizeof(int));
     int i, j;
@@ -157,10 +157,10 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
     if (rank == 0) { a = m1->TransposeCCS(); }
     MPI_Bcast(&a, sizeof(a), MPI_BYTE, 0, MPI_COMM_WORLD);
     if (rank != 0) {
-        a.ccsMatrix.Values = new int[a.ccsMatrix.vals];
+        a.ccsMatrix.Values = new double[a.ccsMatrix.vals];
         a.ccsMatrix.RowInd = new int[a.ccsMatrix.vals];
         a.ccsMatrix.ColPtr = new int[a.ccsMatrix.cols + 1];
-        m.ccsMatrix.Values = new int[m.ccsMatrix.vals];
+        m.ccsMatrix.Values = new double[m.ccsMatrix.vals];
         m.ccsMatrix.RowInd = new int[m.ccsMatrix.vals];
         m.ccsMatrix.ColPtr = nullptr;
     }
@@ -181,12 +181,12 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
         MPI_Recv(m.ccsMatrix.ColPtr, chunkSize + 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     std::vector<int> tmpRows;
-    std::vector<int> tmpValues;
+    std::vector<double> tmpValues;
     int* tmpColPtr = new int[cols + 1];
     std::memset(tmpColPtr, 0, (cols + 1) * sizeof(int));
     for (j = 0; j < cols; j++) {
         for (i = 0; i < rows; i++) {
-            int sum = 0;
+            double sum = 0.0;
             int ks = a.ccsMatrix.ColPtr[i], kf = a.ccsMatrix.ColPtr[i + 1];
             int ls = m.ccsMatrix.ColPtr[j], lf = m.ccsMatrix.ColPtr[j + 1];
             while ((ks < kf) && (ls < lf)) {
@@ -200,7 +200,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
                     ls++;
                 }
             }
-            if (sum != 0) {
+            if (!is_zero(sum)) {
                 tmpColPtr[j + 1]++;
                 tmpRows.push_back(i);
                 tmpValues.push_back(sum);
@@ -217,7 +217,7 @@ ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2) {
         for (i = 0; i < numProc; i++) {
             res.vals += res_vals[i];
         }
-        res.Values = new int[res.vals];
+        res.Values = new double[res.vals];
         res.RowInd = new int[res.vals];
         res.ColPtr = new int[res.cols + 1];
         std::copy(tmpValues.begin(), tmpValues.end(), res.Values);

@@ -11,10 +11,10 @@ TEST(TEST_CCS, Test_constructor) {
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-    int matrix1[] = { 1, 0,
+    double matrix1[] = { 1, 0,
                       0, 1 };
     ClassMatrix matrix2(matrix1, 2, 2);
-    int elems[] = { 1, 1 };
+    double elems[] = { 1, 1 };
     int rows[] = { 0, 1 };
     int columns[] = { 0, 1, 2 };
     if (rank == 0) {
@@ -36,18 +36,18 @@ TEST(TEST_CCS, Test_mult1) {
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
 
-    int m1[] = {1, 0, 0,
+    double m1[] = {1, 0, 0,
                   0, 1, 0,
                   0, 0, 1 };
     ClassMatrix matrix1(m1, 3, 3);
-    int m2[] = {1, 0, 0,
+    double m2[] = {1, 0, 0,
                   0, 1, 0,
                   0, 0, 1 };
     ClassMatrix matrix2(m2, 3, 3);
     ClassMatrix matrix3;
     matrix3 = matrix1 * matrix2;
 
-    int elems[] = { 1, 1, 1 };
+    double elems[] = { 1, 1, 1 };
     int rows[] = { 0, 1, 2 };
     int columns[] = { 0, 1, 2, 3 };
 
@@ -70,18 +70,18 @@ TEST(TEST_CCS, Test_mult2) {
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
 
-    int m1[] = {1, 0, 0,
+    double m1[] = {1, 0, 0,
                   2, 1, 0,
                   3, 2, 1 };
     ClassMatrix matrix1(m1, 3, 3);
-    int m2[] = {1, 2, 3,
+    double m2[] = {1, 2, 3,
                   0, 1, 2,
                   0, 0, 1 };
     ClassMatrix matrix2(m2, 3, 3);
     ClassMatrix matrix3;
     matrix3 = matrix1 * matrix2;
 
-    int elems[] = { 1, 2, 3, 2, 5, 8, 3, 8, 14 };
+    double elems[] = { 1, 2, 3, 2, 5, 8, 3, 8, 14 };
     int rows[] = { 0, 1, 2, 0, 1, 2, 0, 1, 2 };
     int columns[] = { 0, 3, 6, 9 };
 
@@ -104,11 +104,11 @@ TEST(TEST_CCS, Test_parallel1) {
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
 
-    int m1[] = { 1, 0, 0,
+    double m1[] = { 1, 0, 0,
                   2, 1, 0,
                   3, 2, 1 };
     ClassMatrix matrix1(m1, 3, 3);
-    int m2[] = { 1, 2, 3,
+    double m2[] = { 1, 2, 3,
                   0, 1, 2,
                   0, 0, 1 };
     ClassMatrix matrix2(m2, 3, 3);
@@ -134,12 +134,12 @@ TEST(TEST_CCS, Test_parallel2) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
-    int m1[] = { 1, 0, 4, 0,
+    double m1[] = { 1, 0, 4, 0,
                  0, 1, 4, 4,
                  4, 4, 1, 0,
                  0, 4, 0, 1 };
     ClassMatrix matrix1(m1, 4, 4);
-    int m2[] = { 1, 2, 3, 4,
+    double m2[] = { 1, 2, 3, 4,
                     2, 1, 2, 3,
                     3, 2, 1, 2,
                     4, 3, 2, 1};

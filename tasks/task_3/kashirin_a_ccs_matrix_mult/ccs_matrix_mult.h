@@ -8,17 +8,22 @@
 #include <algorithm>
 
 struct StructMatrix {
-    int* Values = nullptr; int vals = 0;
+    double* Values = nullptr; int vals = 0;
     int* RowInd = nullptr; int rows = 0;
     int* ColPtr = nullptr; int cols = 0;
 };
+
+template<typename T>
+inline bool is_zero(const T& x) {
+    return std::abs(x) <= std::numeric_limits<T>::epsilon();
+}
 
 class ClassMatrix {
  public:
   StructMatrix ccsMatrix;
   friend ClassMatrix MultiplyCCS(ClassMatrix* m1, ClassMatrix* m2);
   ClassMatrix() {}
-  ClassMatrix(const int* matrix, int rows, int cols);
+  ClassMatrix(const double* matrix, int rows, int cols);
   explicit ClassMatrix(StructMatrix* props);
   ClassMatrix TransposeCCS() const;
   ClassMatrix& operator=(const ClassMatrix& sm);
