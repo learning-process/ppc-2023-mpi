@@ -6,6 +6,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <limits>
 
 struct StructMatrix {
     double* Values = nullptr; int vals = 0;
