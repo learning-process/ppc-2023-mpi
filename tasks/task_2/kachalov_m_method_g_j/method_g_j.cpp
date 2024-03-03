@@ -3,10 +3,10 @@
 #include <random>
 #include <ctime>
 #include <functional>
+#include <algorithm>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 #include <boost/mpi/status.hpp>
-#include <algorithm>
 
 std::vector<double> RandomMatrix(int size, std::mt19937 *gen) {
     std::vector<double> matrix(size * size);
