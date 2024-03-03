@@ -5,130 +5,179 @@
 #include <algorithm>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
+#include <boost/mpi/timer.hpp>
+#include <boost/serialization/vector.hpp>
 #include "./method_g_j.h"
 
-TEST(MethodGJTests, TestEmptyMatrixSequential) {
+TEST(Gauss_Jordan_Method_MPI, trivial_system) {
     boost::mpi::communicator world;
-    std::vector<double> matrix;
-    std::vector<double> constants;
-    if (world.rank() == 0) {
-        ASSERT_THROW(sequential_method_g_j(matrix, constants), std::invalid_argument);
-    }
-}
-
-TEST(MethodGJTests, TestEmptyMatrixParallel) {
-    boost::mpi::communicator world;
-    std::vector<double> matrix;
-    std::vector<double> constants;
+    auto status = world.iprobe();
+    std::vector<double> s = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    std::vector<double> c = {0, 0, 0};
+    std::vector<double> realSolution = {0, 0, 0};
 
     if (world.rank() == 0) {
-        ASSERT_THROW(parallel_method_g_j(matrix, constants), std::invalid_argument);
+        std::cout << "sequential method\n";
+        auto l = sequential_method_g_j(s, c);
+        auto iterator = realSolution.begin();
+        for (auto i : l) {
+            ASSERT_NEAR(i, *iterator, std::numeric_limits<double>::epsilon());
+            iterator++;
+        }
+        std::cout << "parallel method \n";
     }
-}
 
-TEST(MethodGJTests, TestCorrectSolutionSequential) {
-    boost::mpi::communicator world;
-    std::vector<double> matrix = {2, 1, -1, -3, -1, 2, 1, 1, 1};
-    std::vector<double> constants = {8, -11, -3};
+    auto result = parallel_method_g_j(s, c);
 
     if (world.rank() == 0) {
-        std::vector<double> result = sequential_method_g_j(matrix, constants);
-        std::vector<double> expected = {2, -1, 3};
-        ASSERT_EQ(result, expected);
+        auto iterator = realSolution.begin();
+        for (auto i : result) {
+            ASSERT_NEAR(i, *iterator, std::numeric_limits<double>::epsilon());
+            iterator++;
+        }
     }
+
+    while ((status = world.iprobe()).has_value())
+        world.recv(status.value().source(), status.value().tag());
 }
 
-TEST(MethodGJTests, TestCorrectSolutionParallel) {
+TEST(Gauss_Jordan_Method_MPI, upper_triangle_system) {
     boost::mpi::communicator world;
-    std::vector<double> matrix = {2, 1, -1, -3, -1, 2, 1, 1, 1};
-    std::vector<double> constants = {8, -11, -3};
+    auto status = world.iprobe();
+    std::vector<double> s = {1, 2, 1, 0, 8, 4, 0, 0, 16};
+    std::vector<double> c = {1, 2, 4};
+    std::vector<double> realSolution = {0.5, 0.125, 0.25};
 
     if (world.rank() == 0) {
-        std::vector<double> result = parallel_method_g_j(matrix, constants);
-        std::vector<double> expected = {2, -1, 3};
-        ASSERT_EQ(result, expected);
+        std::cout << "sequential method\n";
+        auto l = sequential_method_g_j(s, c);
+        auto iterator = realSolution.begin();
+        for (auto i : l) {
+            ASSERT_NEAR(i, *iterator, std::numeric_limits<double>::epsilon());
+            iterator++;
+        }
+        std::cout << "parallel method \n";
     }
-}
 
-TEST(MethodGJTests, TestZeroDeterminantSequential) {
-    boost::mpi::communicator world;
-    std::vector<double> matrix = {1, 2, 3, 2, 4, 6, 3, 6, 9};
-    std::vector<double> constants = {3, 6, 9};
+    auto result = parallel_method_g_j(s, c);
 
     if (world.rank() == 0) {
-        ASSERT_THROW(sequential_method_g_j(matrix, constants), std::invalid_argument);
+        auto iterator = realSolution.begin();
+        for (auto i : result) {
+            ASSERT_NEAR(i, *iterator, std::numeric_limits<double>::epsilon());
+            iterator++;
+        }
     }
+
+    while ((status = world.iprobe()).has_value())
+        world.recv(status.value().source(), status.value().tag());
 }
 
-TEST(MethodGJTests, TestZeroDeterminantParallel) {
+TEST(Gauss_Jordan_Method_MPI, big_random_system) {
     boost::mpi::communicator world;
-    std::vector<double> matrix = {1, 2, 3, 2, 4, 6, 3, 6, 9};
-    std::vector<double> constants = {3, 6, 9};
+    std::uniform_real_distribution r(-3.0, 5.0);
+    std::random_device rd;
+    auto status = world.iprobe();
+    int matrixSize = 1000;
+    std::vector<double> s(matrixSize * matrixSize);
+    std::vector<double> c(matrixSize);
 
     if (world.rank() == 0) {
-        ASSERT_THROW(parallel_method_g_j(matrix, constants), std::invalid_argument);
+        for (int i = 0; i < matrixSize * matrixSize; ++i)
+            s[i] = r(rd);
+        for (int i = 0; i < matrixSize; ++i)
+            c[i] = r(rd);
+
+        boost::mpi::timer timer;
+        sequential_method_g_j(s, c);
+        std::cout << "seq method time: " << timer.elapsed() << "\n";
     }
+
+    boost::mpi::timer timer;
+    parallel_method_g_j(s, c);
+
+    if (world.rank() == 0)
+        std::cout << "par method time: " << timer.elapsed() << "\n";
+
+    while ((status = world.iprobe()).has_value())
+        world.recv(status.value().source(), status.value().tag());
 }
 
-TEST(MethodGJTests, TestRandomMatrixSequential) {
+TEST(Gauss_Jordan_Method_MPI, no_solutions) {
     boost::mpi::communicator world;
-    std::vector<double> constants = {1, 2, 3};
+    auto status = world.iprobe();
+    std::vector<double> s = {1, 2, 3, 1, 2, 3, 0, 0, 4};
+    std::vector<double> c = {1, 2, 1};
 
     if (world.rank() == 0) {
-        std::vector<double> matrix = RandomMatrix(3, &gen);
-        ASSERT_NO_THROW(sequential_method_g_j(matrix, constants));
+        std::cout << "sequential method\n";
+        ASSERT_ANY_THROW(sequential_method_g_j(s, c));
+        std::cout << "parallel method \n";
     }
+
+    ASSERT_ANY_THROW(parallel_method_g_j(s, c));
+
+    while ((status = world.iprobe()).has_value())
+        world.recv(status.value().source(), status.value().tag());
 }
 
-TEST(MethodGJTests, TestRandomMatrixParallel) {
+TEST(Gauss_Jordan_Method_MPI, square_matrix) {
     boost::mpi::communicator world;
-    std::vector<double> constants = {1, 2, 3};
+    auto status = world.iprobe();
+    std::vector<double> s = {1, 2, 3, 2, 3, 4, 3, 4, 5};
+    std::vector<double> c = {1, 2, 4};
+    std::vector<double> realSolution = {0.5, 0.125, 0.25};
 
     if (world.rank() == 0) {
-        std::vector<double> matrix = RandomMatrix(3, &gen);
-        ASSERT_NO_THROW(parallel_method_g_j(matrix, constants));
-    }
-}
+        std::cout << "Sequential method\n";
+        auto seqResult = sequential_method_g_j(s, c);
+        for (int i = 0; i < realSolution.size(); ++i) {
+            ASSERT_NEAR(seqResult[i], realSolution[i], std::numeric_limits<double>::epsilon());
+        }
 
-TEST(MethodGJTests, TestIncorrectMatrixSequential) {
-    boost::mpi::communicator world;
-    std::vector<double> matrix = {1, 2, 3, 2, 4, 6};
-    std::vector<double> constants = {3, 6};
+        std::cout << "Parallel method\n";
+    }
+
+    auto resultParallel = parallel_method_g_j(s, c);
 
     if (world.rank() == 0) {
-        ASSERT_THROW(sequential_method_g_j(matrix, constants), std::invalid_argument);
+        for (int i = 0; i < realSolution.size(); ++i) {
+            ASSERT_NEAR(resultParallel[i], realSolution[i], std::numeric_limits<double>::epsilon());
+        }
     }
+
+    while ((status = world.iprobe()).has_value())
+        world.recv(status.value().source(), status.value().tag());
 }
 
-TEST(MethodGJTests, TestIncorrectMatrixParallel) {
+TEST(Gauss_Jordan_Method_MPI, single_equation) {
     boost::mpi::communicator world;
-    std::vector<double> matrix = {1, 2, 3, 2, 4, 6};
-    std::vector<double> constants = {3, 6};
+    auto status = world.iprobe();
+    std::vector<double> s = {2};
+    std::vector<double> c = {4};
+    std::vector<double> realSolution = {2};
 
     if (world.rank() == 0) {
-        ASSERT_THROW(parallel_method_g_j(matrix, constants), std::invalid_argument);
+        std::cout << "sequential method\n";
+        auto result = sequential_method_g_j(s, c);
+        for (int i = 0; i < result.size(); ++i) {
+            ASSERT_NEAR(result[i], realSolution[i], std::numeric_limits<double>::epsilon());
+        }
+        std::cout << "parallel method \n";
     }
-}
 
-TEST(MethodGJTests, TestLargeMatrixSequential) {
-    boost::mpi::communicator world;
-    std::vector<double> constants(100, 1);
+    auto resultParallel = parallel_method_g_j(s, c);
 
     if (world.rank() == 0) {
-        std::vector<double> matrix = RandomMatrix(100, &gen);
-        ASSERT_NO_THROW(sequential_method_g_j(matrix, constants));
+        for (int i = 0; i < resultParallel.size(); ++i) {
+            ASSERT_NEAR(resultParallel[i], realSolution[i], std::numeric_limits<double>::epsilon());
+        }
     }
+
+    while ((status = world.iprobe()).has_value())
+        world.recv(status.value().source(), status.value().tag());
 }
 
-TEST(MethodGJTests, TestLargeMatrixParallel) {
-    boost::mpi::communicator world;
-    std::vector<double> constants(100, 1);
-
-    if (world.rank() == 0) {
-        std::vector<double> matrix = RandomMatrix(100, &gen);
-        ASSERT_NO_THROW(parallel_method_g_j(matrix, constants));
-    }
-}
 
 int main(int argc, char** argv) {
     boost::mpi::environment env(argc, argv);
