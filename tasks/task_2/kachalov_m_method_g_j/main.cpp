@@ -9,7 +9,7 @@
 #include <boost/serialization/vector.hpp>
 #include "./method_g_j.h"
 
-TEST(Gauss_Jordan_Method_MPI, trivial_system) {
+TEST(Gauss_Jordan_Method_MPI, zero_system) {
     boost::mpi::communicator world;
     auto status = world.iprobe();
     std::vector<double> s = {0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -73,7 +73,7 @@ TEST(Gauss_Jordan_Method_MPI, upper_triangle_system) {
         world.recv(status.value().source(), status.value().tag());
 }
 
-TEST(Gauss_Jordan_Method_MPI, big_random_system) {
+TEST(Gauss_Jordan_Method_MPI, large_random_system) {
     boost::mpi::communicator world;
     std::uniform_real_distribution r(-3.0, 5.0);
     std::random_device rd;
@@ -116,35 +116,6 @@ TEST(Gauss_Jordan_Method_MPI, no_solutions) {
     }
 
     ASSERT_ANY_THROW(parallel_method_g_j(s, c));
-
-    while ((status = world.iprobe()).has_value())
-        world.recv(status.value().source(), status.value().tag());
-}
-
-TEST(Gauss_Jordan_Method_MPI, square_matrix) {
-    boost::mpi::communicator world;
-    auto status = world.iprobe();
-    std::vector<double> s = {1, 2, 3, 2, 3, 4, 3, 4, 5};
-    std::vector<double> c = {1, 2, 4};
-    std::vector<double> realSolution = {0.5, 0.125, 0.25};
-
-    if (world.rank() == 0) {
-        std::cout << "Sequential method\n";
-        auto seqResult = sequential_method_g_j(s, c);
-        for (int i = 0; i < realSolution.size(); ++i) {
-            ASSERT_NEAR(seqResult[i], realSolution[i], std::numeric_limits<double>::epsilon());
-        }
-
-        std::cout << "Parallel method\n";
-    }
-
-    auto resultParallel = parallel_method_g_j(s, c);
-
-    if (world.rank() == 0) {
-        for (int i = 0; i < realSolution.size(); ++i) {
-            ASSERT_NEAR(resultParallel[i], realSolution[i], std::numeric_limits<double>::epsilon());
-        }
-    }
 
     while ((status = world.iprobe()).has_value())
         world.recv(status.value().source(), status.value().tag());
