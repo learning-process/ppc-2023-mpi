@@ -2,7 +2,7 @@
 
 #include <mpi.h>
 #include <gtest/gtest.h>
-#include "./scalar_product_of_vectors.h"
+#include "./scalar_product.h"
 
 
 TEST(scalar_product, can_product_vectors_with_100_range) {
