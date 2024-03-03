@@ -1,5 +1,5 @@
 // Copyright 2023 Kachalov Mikhail
-#include "task_1/kachalov_m_num_of_average_of_vector_elements/average_of_vector_elements.h"
+#include "task_1/kachalov_m_average_of_vector_elements/average_of_vector_elements.h"
 #include <random>
 #include <ctime>
 #include <functional>
