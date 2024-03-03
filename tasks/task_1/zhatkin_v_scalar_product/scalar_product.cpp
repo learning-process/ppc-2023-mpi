@@ -1,6 +1,6 @@
 // Copyright Zhatkin Vyacheslav
 
-#include "task_1/zhatkin_v_scalar_producr/scalar_product.h"
+#include "task_1/zhatkin_v_scalar_product/scalar_product.h"
 
 
 std::vector<int> creatRandomVector(const int v_size) {
