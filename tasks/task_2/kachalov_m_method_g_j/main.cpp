@@ -130,7 +130,7 @@ TEST(Gauss_Jordan_Method_MPI, example_system) {
 
     if (world.rank() == 0) {
         std::cout << "sequential method\n";
-        auto l = gaussJordanMethodSequential(s, c);
+        auto l = sequential_method_g_j(s, c);
         auto iterator = realSolution.begin();
         for (auto i : l) {
             ASSERT_NEAR(i, *iterator, std::numeric_limits<double>::epsilon());
@@ -138,7 +138,7 @@ TEST(Gauss_Jordan_Method_MPI, example_system) {
         }
         std::cout << "parallel method \n";
     }
-    auto result = gaussJordanMethodParallel(s, c);
+    auto result = parallel_method_g_j(s, c);
     if (world.rank() == 0) {
         auto iterator = realSolution.begin();
         for (auto i : result) {
