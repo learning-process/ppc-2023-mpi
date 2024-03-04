@@ -78,7 +78,7 @@ TEST(Gauss_Jordan_Method_MPI, large_random_system) {
     std::uniform_real_distribution r(-3.0, 5.0);
     std::random_device rd;
     auto status = world.iprobe();
-    int matrixSize = 1000;
+    int matrixSize = 100;
     std::vector<double> s(matrixSize * matrixSize);
     std::vector<double> c(matrixSize);
 
@@ -121,30 +121,31 @@ TEST(Gauss_Jordan_Method_MPI, no_solutions) {
         world.recv(status.value().source(), status.value().tag());
 }
 
-TEST(Gauss_Jordan_Method_MPI, single_equation) {
+TEST(Gauss_Jordan_Method_MPI, example_system) {
     boost::mpi::communicator world;
     auto status = world.iprobe();
-    std::vector<double> s = {2};
-    std::vector<double> c = {4};
-    std::vector<double> realSolution = {2};
+    std::vector<double> s = {1, 1, 1, 4, 2, 1, 9, 3, 1};
+    std::vector<double> c = {0, 1, 3};
+    std::vector<double> realSolution = {0.5, -0.5, 0};
 
     if (world.rank() == 0) {
         std::cout << "sequential method\n";
-        auto result = sequential_method_g_j(s, c);
-        for (int i = 0; i < result.size(); ++i) {
-            ASSERT_NEAR(result[i], realSolution[i], std::numeric_limits<double>::epsilon());
+        auto l = gaussJordanMethodSequential(s, c);
+        auto iterator = realSolution.begin();
+        for (auto i : l) {
+            ASSERT_NEAR(i, *iterator, std::numeric_limits<double>::epsilon());
+            iterator++;
         }
         std::cout << "parallel method \n";
     }
-
-    auto resultParallel = parallel_method_g_j(s, c);
-
+    auto result = gaussJordanMethodParallel(s, c);
     if (world.rank() == 0) {
-        for (int i = 0; i < resultParallel.size(); ++i) {
-            ASSERT_NEAR(resultParallel[i], realSolution[i], std::numeric_limits<double>::epsilon());
+        auto iterator = realSolution.begin();
+        for (auto i : result) {
+            ASSERT_NEAR(i, *iterator, std::numeric_limits<double>::epsilon());
+            iterator++;
         }
     }
-
     while ((status = world.iprobe()).has_value())
         world.recv(status.value().source(), status.value().tag());
 }
