@@ -1,6 +1,6 @@
 // Copyright 2023 Fedotov Kirill
 #include <gtest/gtest.h>
-#include <gtest-mpi-listener.hpp>
+#include <mpi.h>
 #include <string>
 #include "task_1/fedotov_k_word_count/word_count.h"
 
