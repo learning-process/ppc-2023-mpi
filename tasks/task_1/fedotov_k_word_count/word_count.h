@@ -2,14 +2,13 @@
 #ifndef TASKS_TASK_1_FEDOTOV_K_WORD_COUNT_WORD_COUNT_H_
 #define TASKS_TASK_1_FEDOTOV_K_WORD_COUNT_WORD_COUNT_H_
 
-#include <stdlib.h>
-#include <mpi.h>
-#include <vector>
+#define EMPTY_STRING_ERROR -1
+
 #include <string>
 
-std::string getRandString(int size);
-int getWordsCountParallel(const std::string& str, int size);
-int getWordsCountFragment(const std::string& str, int size);
-int getWordsCountSequentially(const std::string& str, int size);
+int SimpleCount(const std::string);
+int ParallelCount(const std::string);
+int DeltaProcessCount(const std::string);
+std::string getLongString(int size);
 
 #endif  // TASKS_TASK_1_FEDOTOV_K_WORD_COUNT_WORD_COUNT_H_
