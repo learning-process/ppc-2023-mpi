@@ -1,79 +1,89 @@
 // Copyright 2023 Fedotov Kirill
-#include <mpi.h>
-#include <string>
 #include <vector>
+#include <string>
 #include <random>
-#include <ctime>
+#include <algorithm>
+#include <functional>
 #include "task_1/fedotov_k_word_count/word_count.h"
 
 
-bool isLetter(char sym) {
-  return (sym <= 'z' && sym >= 'a') || (sym <= 'Z' && sym >= 'A');
+std::string getRandString(int size) {
+    char ar[60] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz       ";
+    std::random_device dev;
+    std::mt19937 gen(dev());
+    std::string str;
+    for (int i = 0; i < size; i++) {
+        str.push_back(ar[gen() % 59]);
+    }
+    return str;
 }
 
-void randWord(std::string* st, int add_size) {
-  std::vector<std::string> vec{"MPI ", "size ", "vec "};
-  std::mt19937 gen(time(0));
-  for (int i = 0; i < add_size; i++) *st += vec[gen() % 3];
-}
+int getWordsCountParallel(const std::string& str, int size) {
+    if (size == 0) {
+        return 0;
+    }
 
-int getLinearCount(std::string st, int size) {
-  int count = 0;
-  bool flag = 0;
-  for (int i = 0; i < size; i++) {
-    if (isLetter(st[i]) == true) {
-      flag = 1;
+    int proc_count, current_rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
+    MPI_Comm_rank(MPI_COMM_WORLD, &current_rank);
+    int delta = size / proc_count;
+    if (size % proc_count) {
+        delta++;
+    }
+
+    const char* start = str.c_str();
+    std::string local;
+    int glob_count = 0;
+    int loc_count = 0;
+
+    if (current_rank == 0) {
+        for (int proc = 1; proc < proc_count; proc++) {
+            int csize = std::min(delta + 1, size - delta * proc);
+            if (csize > 0) {
+                MPI_Send(start + delta * proc, csize,
+                    MPI_CHAR, proc, 0, MPI_COMM_WORLD);
+            }
+        }
+        int sz = std::min(delta + 1, size);
+        local = std::string(start, sz);
+        loc_count = getWordsCountSequentially(local, sz);
     } else {
-      if (flag == true) count++;
-      flag = false;
+        int csize = std::min(delta + 1, size - delta * current_rank);
+        if (csize > 0) {
+            char* buf = new char[csize];
+            MPI_Status status;
+            MPI_Recv(buf, csize, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &status);
+            local = std::string(buf, csize);
+            delete[] buf;
+            loc_count = getWordsCountFragment(local, csize);
+        }
     }
-  }
 
-  if (flag == true) count++;
-
-  return count;
+    MPI_Reduce(&loc_count, &glob_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    return glob_count;
 }
 
-
-int getCount(const std::string st) {
-  int size, rank;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  int vec_size = 0;
-  if (rank == 0) vec_size = st.size();
-
-  MPI_Bcast(&vec_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-  int local_count = 0;
-  int global_count;
-  int delta = vec_size / size;
-  int rem = vec_size % size;
-
-  if (rank == 0) {
-    for (int i = 1; i < size; i++) {
-      MPI_Send(&st[0] + i * delta + rem, delta, MPI_CHAR, i, 0, MPI_COMM_WORLD);
+int getWordsCountFragment(const std::string& str, int size) {
+    int count = 0;
+    for (int i = 0; i < size - 1; i++) {
+        if ((str[i] == ' ') && (str[i + 1] != ' ')) {
+            count++;
+        }
     }
-  }
 
-  std::vector<char> local_st(delta);
-  if (rank == 0) {
-    local_st = std::vector<char>(st.begin(), st.begin() + delta + rem);
-    local_count =
-        getLinearCount(std::string(&local_st[0], delta + rem), delta + rem);
-  } else {
-    MPI_Status status;
-    MPI_Recv(&local_st[0], delta, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &status);
-    local_count = getLinearCount(std::string(&local_st[0], delta), delta);
-  }
+    return count;
+}
 
-  MPI_Reduce(&local_count, &global_count, 1, MPI_INT, MPI_SUM, 0,
-             MPI_COMM_WORLD);
+int getWordsCountSequentially(const std::string& str, int size) {
+    int count = 0;
+    for (int i = 0; i < size - 1; i++) {
+        if ((str[i] == ' ') && (str[i + 1] != ' ')) {
+            count++;
+        }
+    }
 
-  if (rank == 0 && vec_size >= size) {
-    for (int i = 1; i < size; i++)
-      if (isLetter(st[i * delta + rem - 1]) && isLetter(st[i * delta + rem]))
-        global_count--;
-  }
-  return global_count;
+    if (str[0] != ' ') {
+        count++;
+    }
+    return count;
 }
