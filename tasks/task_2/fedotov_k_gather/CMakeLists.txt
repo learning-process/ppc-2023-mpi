@@ -11,12 +11,12 @@ if( USE_MPI )
     project( ${ProjectId} )
     message( STATUS "-- " ${ProjectId} )
 
-    file(GLOB_RECURSE header_files "*.h")
-    file(GLOB_RECURSE source_files "*.cpp")
-    set(PACK_LIB "${ProjectId}_lib")
-    add_library(${PACK_LIB} STATIC ${header_files} ${source_files})
+    file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.h)
 
-    add_executable( ${ProjectId} ${source_files} )
+    set(PACK_LIB "${ProjectId}_lib")
+    add_library(${PACK_LIB} STATIC ${ALL_SOURCE_FILES} )
+
+    add_executable( ${ProjectId} ${ALL_SOURCE_FILES} )
 
     target_link_libraries(${ProjectId} ${PACK_LIB})
     if( MPI_COMPILE_FLAGS )
@@ -27,10 +27,12 @@ if( USE_MPI )
         set_target_properties( ${ProjectId} PROPERTIES LINK_FLAGS "${MPI_LINK_FLAGS}" )
     endif( MPI_LINK_FLAGS )
     target_link_libraries( ${ProjectId} ${MPI_LIBRARIES} )
-    target_link_libraries(${ProjectId} gtest gtest_main)
+    target_link_libraries(${ProjectId} gtest gtest_main boost_mpi)
 
     enable_testing()
     add_test(NAME ${ProjectId} COMMAND ${ProjectId})
+
+    CPPCHECK_AND_COUNTS_TESTS("${ProjectId}" "${ALL_SOURCE_FILES}")
 else( USE_MPI )
     message( STATUS "-- ${ProjectId} - NOT BUILD!"  )
 endif( USE_MPI )
