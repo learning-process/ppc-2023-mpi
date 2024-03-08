@@ -9,10 +9,11 @@
 
 #include "./min_matrix.h"
 
+
 TEST(Min_value_in_matrix_rows_MPI, Random_Value_Test_1) {
     boost::mpi::communicator world;
     std::vector<int> global_matrix;
-    const int m = 10;
+    const int m = 24;
     const int n = 15;
 
     if (world.rank() == 0) {
