@@ -1,72 +1,74 @@
-// Copyright 2023 Fedotov Kirill
+// Copyright 2024 Fedotov Kirill
 #include <gtest/gtest.h>
 #include <mpi.h>
-#include <vector>
 #include <string>
 #include "../tasks/task_1/fedotov_k_word_count/word_count.h"
 
-TEST(Words_Count_MPI, Just_Count) {
-    std::string str = "She has seen this scene before. It had come to her in dreams many times before.";
-    int res = SimpleCount(str);
-    ASSERT_EQ(res, 16);
+TEST(word_count, sequentalCount) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+  if (rank == 0) {
+    std::string st = "MPI is live ";
+    int res = getLinearCount(st, st.size());
+    ASSERT_EQ(res, 3);
+  }
 }
 
-TEST(Words_Count_MPI, Empty_String_Words_Count_no_throw) {
-    std::string str = "";
-    ASSERT_NO_THROW(SimpleCount(str));
+TEST(word_count, isLetter_with_capital_letter) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+  std::string st = "MPI is live ";
+  if (rank == 0) {
+    bool res = isLetter('A');
+    ASSERT_EQ(res, true);
+  }
 }
 
-TEST(Words_Count_MPI, Parallel_Count) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string testStr = "In fact, it was difficult for anyone to come up with a date they had first appeared.";
-    int res = ParallelCount(testStr);
-    if (rank == 0) {
-        ASSERT_EQ(res, 17);
-    }
-}
-TEST(Words_Count_MPI, Parallel_Count_Complicated_String) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string testStr = "Dragons don't exist they said.";
-    int res = ParallelCount(testStr);
-    if (rank == 0) {
-        ASSERT_EQ(res, 5);
-    }
-}
-TEST(Words_Count_MPI, Parallel_Count_Generated_String) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string testStr = getLongString(50);
-    int res = ParallelCount(testStr);
-    if (rank == 0) {
-        ASSERT_EQ(res, 50);
-    }
+TEST(word_count, isLetter_with_letter) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+  std::string st = "MPI is live ";
+  if (rank == 0) {
+    bool res = isLetter('a');
+    ASSERT_EQ(res, true);
+  }
 }
 
-TEST(Words_Count_MPI, Parallel_Count_Generated_Long_String) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string testStr = getLongString(2500);
-    int res = ParallelCount(testStr);
-    if (rank == 0) {
-        ASSERT_EQ(res, 2500);
-    }
+TEST(word_count, isLetter_with_another_symbol) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+  std::string st = "MPI is live ";
+  if (rank == 0) {
+    bool res = isLetter(';');
+    ASSERT_EQ(res, false);
+  }
+}
+
+TEST(word_count, parallelCount) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  std::string st;
+  if (rank == 0) {
+    randWord(&st, 99);
+  }
+  int res = getCount(st);
+
+  if (rank == 0) {
+    ASSERT_EQ(res, 99);
+  }
 }
 
 int main(int argc, char** argv) {
-    MPI_Init(&argc, &argv);
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
+    int resultCode = 0;
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
-
-    if (rank != 0) {
-        delete listeners.Release(listeners.default_result_printer());
-    }
-
-    int result = RUN_ALL_TESTS();
+    ::testing::TestEventListeners& listeners =::testing::UnitTest::GetInstance()->listeners();
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
+        MPI_Abort(MPI_COMM_WORLD, -1);
+    resultCode = RUN_ALL_TESTS();
     MPI_Finalize();
-    return result;
+    return resultCode;
 }
