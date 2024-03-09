@@ -1,133 +1,171 @@
-// Copyright 2023 Fedotov Kirill
+// Copyright 2024 Fedotov Kirill
 #include <gtest/gtest.h>
 #include <mpi.h>
-#include <iostream>
+#include <vector>
 #include "./gather.h"
 
-TEST(TEST_GATHER, Test_1) {
-    int numProc;
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+using std::vector;
 
-    std::vector<int> sendbuf = { 1 };
-    std::vector<int> recvbuf(numProc);
-    Gather(sendbuf.data(), 1, MPI_INT, recvbuf.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
+TEST(MPI_Gather_Custom, Same_Types) {
+    // Arrange
+    constexpr int ROOT = 0;
+    constexpr int SENDSIZE = 500;
+    int rank, size;
+    vector<int> sendbuf(SENDSIZE);
+    vector<int> recvbuf;
+    vector<int> exp;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int k = rank * sendbuf.size();
+    for (int& i : sendbuf) {
+        i = ++k;
+    }
     if (rank == 0) {
-        for (int i = 0; i < recvbuf.size(); i++)
-            EXPECT_EQ(1, recvbuf[i]);
+        recvbuf.resize(size * sendbuf.size());
+        exp.resize(recvbuf.size());
+    }
+
+    // Act
+    MPI_Gather_c(sendbuf.data(), sendbuf.size(), MPI_INT,
+                 recvbuf.data(), sendbuf.size(), MPI_INT, ROOT, MPI_COMM_WORLD);
+    MPI_Gather(sendbuf.data(), sendbuf.size(), MPI_INT,
+               exp.data(), sendbuf.size(), MPI_INT, ROOT, MPI_COMM_WORLD);
+
+    // Assert
+    if (rank == 0) {
+        ASSERT_EQ(exp, recvbuf);
     }
 }
 
-TEST(TEST_GATHER, Test_int) {
-    int numProc;
-    int rank;
+TEST(MPI_Gather_Custom, Derived_Types) {
+    // Arrange
+    constexpr int ROOT = 0;
+    constexpr int SENDSIZE = 1000;
+    int rank, size;
+    vector<int16_t> sendbuf(SENDSIZE);
+    vector<int> recvbuf;
+    vector<int> exp;
+
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-
-    std::vector<int> sendbuf(4);
-    for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] = rank * 4 + i;
-    std::vector<int> recvbuf(numProc * sendbuf.size());
-
-    Gather(sendbuf.data(), sendbuf.size(), MPI_INT,
-        recvbuf.data(), sendbuf.size(), MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int k = rank * sendbuf.size();
+    for (int16_t& i : sendbuf) {
+        i = ++k;
+    }
     if (rank == 0) {
-        for (int i = 0; i < recvbuf.size(); i++)
-            EXPECT_EQ(i, recvbuf[i]);
+        recvbuf.resize(size * sendbuf.size() / 2);
+        exp.resize(recvbuf.size());
+    }
+
+    // Act
+    MPI_Gather_c(sendbuf.data(), sendbuf.size(), MPI_SHORT,
+                 recvbuf.data(), sendbuf.size() / 2, MPI_INT, ROOT, MPI_COMM_WORLD);
+    MPI_Gather(sendbuf.data(), sendbuf.size(), MPI_SHORT,
+               exp.data(), sendbuf.size() / 2, MPI_INT, ROOT, MPI_COMM_WORLD);
+
+    // Assert
+    if (rank == 0) {
+        ASSERT_EQ(exp, recvbuf);
     }
 }
 
-TEST(TEST_GATHER, Test_float) {
-    int numProc;
-    int rank;
+TEST(MPI_Gather_Custom, Recieve_Comp_Type) {
+    // Arrange
+    constexpr int ROOT = 0;
+    constexpr int SENDSIZE = 500;
+    int rank, size;
+    MPI_Datatype comptype;
+    vector<int> sendbuf(SENDSIZE);
+    vector<int> recvbuf;
+    vector<int> exp;
+
+    MPI_Type_contiguous(sendbuf.size(), MPI_INT, &comptype);
+    MPI_Type_commit(&comptype);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-
-    std::vector<float> sendbuf(4);
-    for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] = rank * 4 + i + 0.5;
-    std::vector<float> recvbuf(numProc * sendbuf.size());
-
-    Gather(sendbuf.data(), sendbuf.size(), MPI_FLOAT,
-        recvbuf.data(), sendbuf.size(), MPI_FLOAT, 0, MPI_COMM_WORLD);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int k = rank * sendbuf.size();
+    for (int& i : sendbuf) {
+        i = ++k;
+    }
     if (rank == 0) {
-        for (int i = 0; i < recvbuf.size(); i++)
-            EXPECT_EQ(i + 0.5, recvbuf[i]);
+        recvbuf.resize(size * sendbuf.size());
+        exp.resize(recvbuf.size());
+    }
+
+    // Act
+    MPI_Gather_c(sendbuf.data(), sendbuf.size(), MPI_INT, recvbuf.data(), 1, comptype, ROOT, MPI_COMM_WORLD);
+    MPI_Gather(sendbuf.data(), sendbuf.size(), MPI_INT, exp.data(), 1, comptype, ROOT, MPI_COMM_WORLD);
+
+    // Assert
+    if (rank == 0) {
+        ASSERT_EQ(exp, recvbuf);
     }
 }
 
-TEST(TEST_GATHER, Test_double) {
-    int numProc;
-    int rank;
+TEST(MPI_Gather_Custom, Same_Comp_Types) {
+    // Arrange
+    constexpr int ROOT = 0;
+    constexpr int SENDSIZE = 500;
+    int rank, size;
+    MPI_Datatype comptype;
+    vector<int> sendbuf(SENDSIZE);
+    vector<int> recvbuf;
+    vector<int> exp;
+
+    MPI_Type_contiguous(sendbuf.size(), MPI_INT, &comptype);
+    MPI_Type_commit(&comptype);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-
-    std::vector<double> sendbuf(4);
-    for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] =  rank * 4 + i + 0.5;
-    std::vector<double> recvbuf(numProc * sendbuf.size());
-
-    Gather(sendbuf.data(), sendbuf.size(), MPI_DOUBLE,
-        recvbuf.data(), sendbuf.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int k = rank * sendbuf.size();
+    for (int& i : sendbuf) {
+        i = ++k;
+    }
     if (rank == 0) {
-        for (int i = 0; i < recvbuf.size(); i++)
-            EXPECT_EQ(i + 0.5, recvbuf[i]);
+        recvbuf.resize(size * sendbuf.size());
+        exp.resize(recvbuf.size());
+    }
+
+    // Act
+    MPI_Gather_c(sendbuf.data(), 1, comptype, recvbuf.data(), 1, comptype, ROOT, MPI_COMM_WORLD);
+    MPI_Gather(sendbuf.data(), 1, comptype, exp.data(), 1, comptype, ROOT, MPI_COMM_WORLD);
+
+    // Assert
+    if (rank == 0) {
+        ASSERT_EQ(exp, recvbuf);
     }
 }
 
-TEST(TEST_GATHER, Test_time) {
-    int numProc;
-    int rank;
+TEST(MPI_Gather_Custom, Send_Comp_Type) {
+    // Arrange
+    constexpr int ROOT = 0;
+    constexpr int SENDSIZE = 500;
+    int rank, size;
+    MPI_Datatype comptype;
+    vector<int> sendbuf(SENDSIZE);
+    vector<int> recvbuf;
+    vector<int> exp;
+
+    MPI_Type_contiguous(sendbuf.size(), MPI_INT, &comptype);
+    MPI_Type_commit(&comptype);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-
-    std::vector<float> sendbuf(4);
-    for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] =  rank * 4 + i + 0.5;
-    std::vector<float> recvbuf(numProc * sendbuf.size());
-    std::vector<float> recvbuf2(numProc * sendbuf.size());
-    double time1, time2, time3;
-    if (rank == 0)time1 = MPI_Wtime();
-    Gather(sendbuf.data(), sendbuf.size(), MPI_FLOAT,
-        recvbuf.data(), sendbuf.size(), MPI_FLOAT, 0, MPI_COMM_WORLD);
-
-    if (rank == 0)time2 = MPI_Wtime();
-    MPI_Gather(sendbuf.data(), sendbuf.size(), MPI_FLOAT,
-        recvbuf2.data(), sendbuf.size(), MPI_FLOAT, 0, MPI_COMM_WORLD);
-    if (rank == 0) {
-        time3 = MPI_Wtime();
-        std::cout << "Gather time = " << time2 - time1
-            << std::endl << "MPI_Gather time = " << time3 - time2 << std::endl;
-        for (int i = 0; i < recvbuf.size(); i++) {
-            EXPECT_EQ(i + 0.5, recvbuf[i]);
-            EXPECT_EQ(i + 0.5, recvbuf2[i]);
-        }
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int k = rank * sendbuf.size();
+    for (int& i : sendbuf) {
+        i = ++k;
     }
-}
-
-TEST(TEST_GATHER, Test_wrong_root) {
-    int numProc;
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-    std::vector<int> sendbuf(4);
-    for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] = rank * 4 + i;
-    std::vector<int> recvbuf(numProc * sendbuf.size());
     if (rank == 0) {
-        EXPECT_ANY_THROW(Gather(sendbuf.data(), sendbuf.size(), MPI_INT,
-            recvbuf.data(), sendbuf.size(), MPI_INT, -1, MPI_COMM_WORLD));
+        recvbuf.resize(size * sendbuf.size());
+        exp.resize(recvbuf.size());
     }
-}
 
-TEST(TEST_GATHER, Test_wrong_type) {
-    int numProc;
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+    // Act
+    MPI_Gather_c(sendbuf.data(), 1, comptype, recvbuf.data(), sendbuf.size(), MPI_INT, ROOT, MPI_COMM_WORLD);
+    MPI_Gather(sendbuf.data(), 1, comptype, exp.data(), sendbuf.size(), MPI_INT, ROOT, MPI_COMM_WORLD);
 
-    std::vector<int> sendbuf(4);
-    for (int i = 0; i < sendbuf.size(); i++) sendbuf[i] = rank * 4 + i;
-    std::vector<int> recvbuf(numProc * sendbuf.size());
+    // Assert
     if (rank == 0) {
-        EXPECT_ANY_THROW(Gather(sendbuf.data(), sendbuf.size(), MPI_CHAR,
-            recvbuf.data(), sendbuf.size(), MPI_CHAR, 0, MPI_COMM_WORLD));
+        ASSERT_EQ(exp, recvbuf);
     }
 }
 
